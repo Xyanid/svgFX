@@ -21,7 +21,7 @@ public abstract class CssBase<TParent extends CssBase> {
     /**
      * Determines in which state a character read from a css text is.
      *
-     * @author rico.hentschel
+     * @author Xyanid
      */
     public enum CharacterState {
 

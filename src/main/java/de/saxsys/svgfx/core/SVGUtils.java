@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * This class provides functionality related to svg processing Created by rico.hentschel on 02.11.2015.
+ * This class provides functionality related to svg processing Created by Xyanid on 02.11.2015.
  */
 public final class SVGUtils {
 

@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Created by rico.hentschel on 05.10.2015.
+ * Created by Xyanid on 05.10.2015.
  */
 public final class CssStyleTest {
 

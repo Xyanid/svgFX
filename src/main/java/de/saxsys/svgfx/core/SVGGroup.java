@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * This group contains svg data provided by an SVG Parser. It allows for the svg data to be switched dynamically via
- * its styleable properties. Created by rico.hentschel on 09.11.2015.
+ * its styleable properties. Created by Xyanid on 09.11.2015.
  */
 public class SVGGroup extends Group implements IStyleableAdditionProvider {
 

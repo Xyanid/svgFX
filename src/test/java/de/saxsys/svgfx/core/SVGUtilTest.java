@@ -13,7 +13,7 @@ import org.junit.Test;
 
 /**
  * Test to ensure the {@link SVGUtils} work as expected.
- * Created by rico.hentschel on 05.10.2015.
+ * Created by Xyanid on 05.10.2015.
  */
 public final class SVGUtilTest {
 

@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * This class is intended to allow the usage of svg file for skins. It simply contains a {@link Group} which holds the loaded svg data if any.
- * rico.hentschel on 21.10.2015.
+ * Xyanid on 21.10.2015.
  */
 class SVGStyleableAddition extends StyleableAdditionBase {
 

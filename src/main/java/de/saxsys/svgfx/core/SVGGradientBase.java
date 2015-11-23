@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Contains basic functionality to handle gradients of svg.
  *
  * @param <TPaint> the type of the paint need
- *                 Created by rico.hentschel on 06.11.2015.
+ *                 Created by Xyanid on 06.11.2015.
  */
 public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBase<TPaint> {
 
