@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -99,7 +100,7 @@ public final class SVGUtils {
     }
 
     /**
-     * Tries to get the {@link Enumerations.CssStyleProperty} from the given {@link CssStyle}. The declaration is
+     * Tries to get the {@link Enumerations.PresentationAttribute} from the given {@link CssStyle}. The declaration is
      * first converted and then consumed.
      *
      * @param style       style which will provide tha data
@@ -111,14 +112,14 @@ public final class SVGUtils {
      * @return true if the declaration is present in the style and was used
      */
     public static <TData> boolean applyStyleDeclaration(final CssStyle style,
-                                                        final Enumerations.CssStyleProperty declaration,
+                                                        final Enumerations.PresentationAttribute declaration,
                                                         final Consumer<TData> consumer,
                                                         final Function<String, TData> converter) {
         return applyStyleDeclaration(style, declaration, consumer, converter, null);
     }
 
     /**
-     * Tries to get the {@link Enumerations.CssStyleProperty} from the given {@link CssStyle}. The declaration is
+     * Tries to get the {@link Enumerations.PresentationAttribute} from the given {@link CssStyle}. The declaration is
      * first converted and then if need be validated and then consumed.
      *
      * @param style       style which will provide tha data
@@ -131,7 +132,7 @@ public final class SVGUtils {
      * @return true if the declaration is present in the style
      */
     public static <TData> boolean applyStyleDeclaration(final CssStyle style,
-                                                        final Enumerations.CssStyleProperty declaration,
+                                                        final Enumerations.PresentationAttribute declaration,
                                                         final Consumer<TData> consumer,
                                                         final Function<String, TData> converter,
                                                         final Function<String, Boolean> validator) {
@@ -175,19 +176,24 @@ public final class SVGUtils {
             throw new IllegalArgumentException("given style must not be null");
         }
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.FILL, shape::setFill, (data) -> parseColor(data, dataProvider));
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.FILL, shape::setFill, (data) -> parseColor(data, dataProvider));
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.STROKE, shape::setStroke, (data) -> parseColor(data, dataProvider));
+        //TODO apply stroke opacity here
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE, shape::setStroke, (data) -> parseColor(data, dataProvider));
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.STROKE_TYPE, shape::setStrokeType, (data) -> StrokeType.valueOf(data.toUpperCase()));
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_TYPE, shape::setStrokeType, (data) -> StrokeType.valueOf(data.toUpperCase()));
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.STROKE_WIDTH, shape::setStrokeWidth, Double::parseDouble);
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_WIDTH, shape::setStrokeWidth, Double::parseDouble);
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.STROKE_DASHOFFSET, shape::setStrokeDashOffset, Double::parseDouble);
+        //TODO apply the stroke dash array here
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.STROKE_LINECAP, shape::setStrokeLineCap, (data) -> StrokeLineCap.valueOf(data.toUpperCase()));
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_DASHOFFSET, shape::setStrokeDashOffset, Double::parseDouble);
 
-        applyStyleDeclaration(style, Enumerations.CssStyleProperty.STROKE_MITERLIMIT, shape::setStrokeMiterLimit, Double::parseDouble);
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_LINEJOIN, shape::setStrokeLineJoin, (data) -> StrokeLineJoin.valueOf(data.toUpperCase()));
+
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_LINECAP, shape::setStrokeLineCap, (data) -> StrokeLineCap.valueOf(data.toUpperCase()));
+
+        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_MITERLIMIT, shape::setStrokeMiterLimit, Double::parseDouble);
     }
 
     // endregion

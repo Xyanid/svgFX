@@ -8,52 +8,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class Enumerations {
 
-    public enum CssStyleProperty {
-
-        FILL("fill"),
-        FILL_RULE("fill-rule"),
-        STROKE("stroke"),
-        STROKE_WIDTH("stroke-width"),
-        STROKE_TYPE("stroke-type"),
-        STROKE_LINECAP("stroke-linecap"),
-        STROKE_MITERLIMIT("stroke-miterlimit"),
-        STROKE_DASHOFFSET("stroke-dashoffset"),
-        COLOR("stop-color"),
-        OPACITY("stop-opacity");
-
-        // region Fields
-
-        private final String name;
-
-        // endregion
-
-        // region Constructor
-
-        /**
-         * Create a new instance.
-         *
-         * @param name the name of the element
-         */
-        CssStyleProperty(final String name) {
-            this.name = name;
-        }
-
-        // endregion
-
-        // region Getter
-
-        /**
-         * Returns the {@link CssStyleProperty#name}.
-         *
-         * @return {@link CssStyleProperty#name}
-         */
-        public final String getName() {
-            return name;
-        }
-
-        // endregion
-    }
-
     /**
      * Contains information which maps a given svg fill rule to the javafx fill rule.
      */
@@ -168,7 +122,20 @@ public final class Enumerations {
         /**
          * Meaning this attributes represents a comma separated list of points.
          */
-        POINTS("points"), X1("x1"), Y1("y1"), X2("x2"), Y2("y2"), D("d"), X("x"), Y("y"), WIDTH("width"), HEIGHT("height"), OFFSET("offset"), TYPE("type"), MEDIA("media"), TITLE("title");
+        POINTS("points"),
+        X1("x1"),
+        Y1("y1"),
+        X2("x2"),
+        Y2("y2"),
+        D("d"),
+        X("x"),
+        Y("y"),
+        WIDTH("width"),
+        HEIGHT("height"),
+        OFFSET("offset"),
+        TYPE("type"),
+        MEDIA("media"),
+        TITLE("title");
 
         // region Fields
 
@@ -187,6 +154,88 @@ public final class Enumerations {
          * @param name the name of the attribute within the svg element
          */
         SvgAttribute(final String name) {
+            this.name = name;
+        }
+
+        // endregion
+
+        // region Getter
+
+        /**
+         * Returns the {@link SvgAttribute#name}.
+         *
+         * @return the {@link SvgAttribute#name}
+         */
+        public final String getName() {
+            return name;
+        }
+
+        // endregion
+    }
+
+    /**
+     * This contains all the presentation attributes an svg element might. The presentation attributes are used for {@link de.saxsys.svgfx.core.SVGShapeBase}.
+     */
+    public enum PresentationAttribute {
+        /**
+         * Determines the color of a stroke, this is either a name or a hexadezimal value representing the color.
+         */
+        STROKE("stroke"),
+        /**
+         * Determines the type of stroke used.
+         */
+        STROKE_TYPE("stroke-type"),
+        /**
+         * Determines the controls the pattern of dashes and gaps used to stroke paths.
+         */
+        STROKE_DASHARRAY("stroke-dasharray"),
+        /**
+         * Determines the dash offset of a stroke.
+         */
+        STROKE_DASHOFFSET("stroke-dashoffset"),
+        /**
+         * Determines the shape to be used at the end of open subpaths when they are stroked.
+         */
+        STROKE_LINECAP("stroke-linecap"),
+        /**
+         * Determines the shape to be used at the corners of paths or basic shapes when they are stroked.
+         */
+        STROKE_LINEJOIN("stroke-linejoin"),
+        /**
+         * Determines a limit on the ratio of the miter length to the stroke-width. When the limit is exceeded, the join is converted from a miter to a bevel.
+         */
+        STROKE_MITERLIMIT("stroke-miterlimit"),
+        /**
+         * Determines the opacity of the outline on the current object.
+         */
+        STROKE_OPACITY("stroke-opacity"),
+        /**
+         * Determines the width of the outline on the current object.
+         */
+        STROKE_WIDTH("stroke-width"),
+
+        FILL("fill"),
+        FILL_RULE("fill-rule"),
+        COLOR("stop-color"),
+        OPACITY("stop-opacity");
+
+        // region Fields
+
+        /**
+         * The name of the attribute within the svg element.
+         */
+        private final String name;
+
+        // endregion
+
+        // region Constructor
+
+        /**
+         * Creates a new instance.
+         *
+         * @param name the name of the attribute within the svg element
+         */
+        PresentationAttribute(final String name) {
             this.name = name;
         }
 

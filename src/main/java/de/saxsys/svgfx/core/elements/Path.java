@@ -53,7 +53,7 @@ import org.xml.sax.Attributes;
 
         if (style != null) {
             //apply the fill rule if need be
-            String ruleValue = style.getCssStyleDeclaration().getPropertyValue(Enumerations.CssStyleProperty.FILL_RULE.getName());
+            String ruleValue = style.getCssStyleDeclaration().getPropertyValue(Enumerations.PresentationAttribute.FILL_RULE.getName());
             if (!StringUtils.isEmpty(ruleValue)) {
                 for (Enumerations.FillRuleMapping fillRule : Enumerations.FillRuleMapping.values()) {
                     if (fillRule.getName().equals(ruleValue)) {

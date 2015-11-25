@@ -68,7 +68,7 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
      *
      * @return the data as the given type or null if the declaration is not present
      */
-    public <TData> TData getPropertyAs(final Enumerations.CssStyleProperty declaration, final Function<String, TData> converter) {
+    public <TData> TData getPropertyAs(final Enumerations.PresentationAttribute declaration, final Function<String, TData> converter) {
 
         return getPropertyAs(declaration.getName(), converter);
     }

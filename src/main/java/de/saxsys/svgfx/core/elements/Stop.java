@@ -38,9 +38,9 @@ import org.xml.sax.Attributes;
 
         CssStyle style = getCssStyle();
 
-        double opacity = style.getCssStyleDeclaration().getPropertyAs(Enumerations.CssStyleProperty.OPACITY, Double::parseDouble);
+        double opacity = style.getCssStyleDeclaration().getPropertyAs(Enumerations.PresentationAttribute.OPACITY, Double::parseDouble);
 
-        String color = style.getCssStyleDeclaration().getPropertyValue(Enumerations.CssStyleProperty.COLOR.getName());
+        String color = style.getCssStyleDeclaration().getPropertyValue(Enumerations.PresentationAttribute.COLOR.getName());
 
         if (color == null) {
             throw new IllegalArgumentException("given color must not be null");
