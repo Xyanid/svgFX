@@ -48,9 +48,9 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
         List<javafx.scene.paint.Stop> stops = new ArrayList<>();
 
         // in this case we are referencing a color and need to ask the data provider to give use the color
-        if (getAttributes().containsKey(Enumerations.SvgAttribute.XLINK_HREF.getName())) {
+        if (getAttributes().containsKey(Enumerations.XLinkAttribute.XLINK_HREF.getName())) {
 
-            String reference = getAttributes().get(Enumerations.SvgAttribute.XLINK_HREF.getName());
+            String reference = getAttributes().get(Enumerations.XLinkAttribute.XLINK_HREF.getName());
 
             LinearGradient gradient = getDataProvider().getData(LinearGradient.class, reference.replaceFirst("#", ""));
 

@@ -57,9 +57,9 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
         CssStyle result = null;
 
         // we may have our own style or need to get a style
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.STYLE.getName()))) {
+        if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.STYLE.getName()))) {
 
-            String attribute = getAttribute(Enumerations.SvgAttribute.STYLE.getName());
+            String attribute = getAttribute(Enumerations.CoreAttribute.STYLE.getName());
 
             result = new CssStyle();
 
@@ -69,9 +69,9 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
                                             attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
                                             Constants.DECLARATION_BLOCK_END));
             // other wise we are referencing a class and want the style here
-        } else if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.CLASS.getName()))) {
+        } else if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.CLASS.getName()))) {
 
-            String styleClass = getAttribute(Enumerations.SvgAttribute.CLASS.getName());
+            String styleClass = getAttribute(Enumerations.CoreAttribute.CLASS.getName());
 
             result = getDataProvider().getStyles().stream().filter(data -> data.getSelectorText().endsWith(styleClass)).findFirst().get();
             // otherwise we might have a parent that provides us with a style so use that one instead
@@ -83,30 +83,18 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * @return the transformation to be applied to this element if the {@link Enumerations.SvgAttribute#TRANSFORM} is present.
+     * @return the transformation to be applied to this element if the {@link Enumerations.CoreAttribute#TRANSFORM} is present.
      * otherwise null.
      *
      * @throws SVGException if there is a transformation which has invalid data for its matrix.
      */
     public final Transform getTransformation() throws SVGException {
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.TRANSFORM.getName()))) {
-            return SVGUtils.getTransform(getAttribute(Enumerations.SvgAttribute.TRANSFORM.getName()));
+        if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()))) {
+            return SVGUtils.getTransform(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()));
         }
 
         return null;
     }
-
-    public final TResult createResult() throws SVGException {
-        TResult result = createResultInternal();
-
-        initializeResult(result);
-
-        return result;
-    }
-
-    // endregion
-
-    //region Abstract
 
     /**
      * Must be overwritten in the actual implementation to create a new result for this element based on the
@@ -118,6 +106,10 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      */
     protected abstract TResult createResultInternal() throws SVGException;
 
+    // endregion
+
+    //region Abstract
+
     /**
      * This method will be called in the {@link #createResult()} and allows to modify the result such as applying a style or transformations.
      *
@@ -126,6 +118,14 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException will be thrown when an error during modification
      */
     protected abstract void initializeResult(TResult result) throws SVGException;
+
+    public final TResult createResult() throws SVGException {
+        TResult result = createResultInternal();
+
+        initializeResult(result);
+
+        return result;
+    }
 
     //endregion
 

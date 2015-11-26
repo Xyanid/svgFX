@@ -37,14 +37,6 @@ public final class SVGUtils {
 
     // region Constructor
 
-    private SVGUtils() {
-
-    }
-
-    // endregion
-
-    // region Methods related to Styling
-
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF)
      * or a reference which can be resolved by the given data provider.
@@ -98,6 +90,10 @@ public final class SVGUtils {
 
         return result;
     }
+
+    // endregion
+
+    // region Methods related to Styling
 
     /**
      * Tries to get the {@link Enumerations.PresentationAttribute} from the given {@link CssStyle}. The declaration is
@@ -196,10 +192,6 @@ public final class SVGUtils {
         applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_MITERLIMIT, shape::setStrokeMiterLimit, Double::parseDouble);
     }
 
-    // endregion
-
-    // region Methods related to Transformation
-
     /**
      * Returns the combined transformations available in the given string. The string must be contain data
      * corresponding to the Svg specification for the transform attribute.
@@ -244,6 +236,10 @@ public final class SVGUtils {
 
         return result;
     }
+
+    // endregion
+
+    // region Methods related to Transformation
 
     /**
      * Gets the {@link Transform} that is represented by the given data. The data must meet the following requirements.
@@ -351,7 +347,7 @@ public final class SVGUtils {
                 }
                 break;
 
-            // default would be a skewY/X which will create a shear matrix and have only one value
+            // default would be a skewY/POSITION_X which will create a shear matrix and have only one value
             // we do not actually need the default but otherwise the compiler will complain that result is not initialized
             case SKEW_X:
             case SKEW_Y:
@@ -377,6 +373,10 @@ public final class SVGUtils {
         }
 
         return result;
+    }
+
+    private SVGUtils() {
+
     }
 
     // endregion

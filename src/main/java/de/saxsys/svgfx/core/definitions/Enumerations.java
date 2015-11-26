@@ -4,6 +4,7 @@ import javafx.scene.shape.FillRule;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * This class contains all enumerations used for processing svg data.
  * Created by Xyanid on 29.10.2015.
  */
 public final class Enumerations {
@@ -67,75 +68,102 @@ public final class Enumerations {
     }
 
     /**
-     * Contains the basic attributes each svg element may have.
+     * Contains the core attributes each svg element may have.
      */
-    public enum SvgAttribute {
+    public enum CoreAttribute {
 
         /**
-         * The id for an element, needed in case this element is referenced by another element.
+         * The id for an element, needed in case an element is referenced by another element.
          */
         ID("id"),
         /**
-         * Meaning this element has a reference to an existing element.
-         */
-        XLINK_HREF("xlink:href"),
-        /**
-         * Meaning the element has a transformation applied.
+         * Represents the transformation to be applied to an element.
          */
         TRANSFORM("transform"),
         /**
-         * Meaning the element has its own style included in a declaration block.
+         * Represents the style of an element, the style need to follow the css text restrictions to be used.
          */
         STYLE("style"),
         /**
-         * Meaning the element has a reference to an existing style.
+         * Represents a class link to an existing style, in this case the element will use this link to style itself.
          */
         CLASS("class"),
         /**
-         * Meaning this attributes represents the center x.
+         * Represents x component of a center position, this element is used for {@link de.saxsys.svgfx.core.elements.Circle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
          */
         CENTER_X("cx"),
         /**
-         * Meaning this attribute represents the center y.
+         * Represents y component of a center position, this element is used for {@link de.saxsys.svgfx.core.elements.Circle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
          */
         CENTER_Y("cy"),
         /**
-         * Meaning this attribute represents radius.
+         * Represents a radius.
          */
         RADIUS("r"),
         /**
-         * Meaning this attribute represents a radius x.
+         * Represents a radius which is used in the x direction.
          */
         RADIUS_X("rx"),
         /**
-         * Meaning this attribute represents a radius y.
+         * Represents a radius which is used in the y direction.
          */
         RADIUS_Y("ry"),
         /**
-         * Meaning this attribute represents focus x.
+         * Represents the focus in x direction, this attribute is used by a radial gradient.
          */
         FOCUS_X("fx"),
         /**
-         * Meaning this attribute represents focus y.
+         * Represents the focus in y direction, this attribute is used by a radial gradient.
          */
         FOCUS_Y("fy"),
         /**
-         * Meaning this attributes represents a comma separated list of points.
+         * Represents a comma separated list of points.
          */
         POINTS("points"),
-        X1("x1"),
-        Y1("y1"),
-        X2("x2"),
-        Y2("y2"),
-        D("d"),
-        X("x"),
-        Y("y"),
+        /**
+         * Represents the start x component of a line.
+         */
+        START_X("x1"),
+        /**
+         * Represents the start y component of a line.
+         */
+        START_Y("y1"),
+        /**
+         * Represents the end x component of a line.
+         */
+        END_X("x2"),
+        /**
+         * Represents the end y component of a line.
+         */
+        END_Y("y2"),
+        /**
+         * Represents a series of path descriptions.
+         */
+        PATH_DESCRIPTION("d"),
+        /**
+         * Represents the x component of a position, how this is used depends on the element it is used in.
+         */
+        POSITION_X("x"),
+        /**
+         * Represents the y component of a position, how this is used depends on the element it is used in.
+         */
+        POSITION_Y("y"),
+        /**
+         * Represents the width of an element.
+         */
         WIDTH("width"),
+        /**
+         * Represents the height of an element.
+         */
         HEIGHT("height"),
+        /**
+         * Represents the offset from a start position.
+         */
         OFFSET("offset"),
-        TYPE("type"),
-        MEDIA("media"),
-        TITLE("title");
+        /**
+         * Represents the type of the element.
+         */
+        TYPE("type");
 
         // region Fields
 
@@ -153,7 +181,7 @@ public final class Enumerations {
          *
          * @param name the name of the attribute within the svg element
          */
-        SvgAttribute(final String name) {
+        CoreAttribute(final String name) {
             this.name = name;
         }
 
@@ -162,9 +190,9 @@ public final class Enumerations {
         // region Getter
 
         /**
-         * Returns the {@link SvgAttribute#name}.
+         * Returns the {@link CoreAttribute#name}.
          *
-         * @return the {@link SvgAttribute#name}
+         * @return the {@link CoreAttribute#name}
          */
         public final String getName() {
             return name;
@@ -213,11 +241,39 @@ public final class Enumerations {
          * Determines the width of the outline on the current object.
          */
         STROKE_WIDTH("stroke-width"),
-
+        /**
+         * Represents a clip path which will be applied to the given element.
+         */
+        CLIP_PATH("clip-path"),
+        /**
+         * Represents the clip rule which determines how an element inside a {@link de.saxsys.svgfx.core.elements.ClipPath} will be used.
+         * It works like the {@link Enumerations.PresentationAttribute#FILL_RULE}.
+         */
+        CLIP_RULE("clip-rule"),
+        /**
+         * Represents the color of the interior of the given graphical element.
+         */
         FILL("fill"),
+        /**
+         * Represents the algorithm which is to be used to determine what side of a path is inside the shape.
+         */
         FILL_RULE("fill-rule"),
-        COLOR("stop-color"),
-        OPACITY("stop-opacity");
+        /**
+         * Represents the color to use for a stop.
+         */
+        STOP_COLOR("stop-color"),
+        /**
+         * Represents the transparency of a gradient, that is, the degree to which the background behind the element is overlaid.
+         */
+        STOP_OPACITY("stop-opacity"),
+        /**
+         * Represents a color which cna be used for other rule such as fill, stroke or stop-color.
+         */
+        COLOR("color"),
+        /**
+         * Represents the transparency of an element, that is, the degree to which the background behind the element is overlaid.
+         */
+        OPACITY("opacity");
 
         // region Fields
 
@@ -244,9 +300,55 @@ public final class Enumerations {
         // region Getter
 
         /**
-         * Returns the {@link SvgAttribute#name}.
+         * Returns the {@link CoreAttribute#name}.
          *
-         * @return the {@link SvgAttribute#name}
+         * @return the {@link CoreAttribute#name}
+         */
+        public final String getName() {
+            return name;
+        }
+
+        // endregion
+    }
+
+    /**
+     * Contains the xlink attributes each svg element may have.
+     */
+    public enum XLinkAttribute {
+
+        /**
+         * Meaning this element has a reference to an existing element.
+         */
+        XLINK_HREF("xlink:href");
+
+        // region Fields
+
+        /**
+         * The name of the attribute within the svg element.
+         */
+        private final String name;
+
+        // endregion
+
+        // region Constructor
+
+        /**
+         * Creates a new instance.
+         *
+         * @param name the name of the attribute within the svg element
+         */
+        XLinkAttribute(final String name) {
+            this.name = name;
+        }
+
+        // endregion
+
+        // region Getter
+
+        /**
+         * Returns the {@link CoreAttribute#name}.
+         *
+         * @return the {@link CoreAttribute#name}
          */
         public final String getName() {
             return name;

@@ -33,10 +33,10 @@ import org.xml.sax.Attributes;
     //region Override SVGElementBase
 
     @Override protected final javafx.scene.shape.Line createResultInternal() throws SVGException {
-        return new javafx.scene.shape.Line(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.X1.getName())),
-                                           Double.parseDouble(getAttribute(Enumerations.SvgAttribute.Y1.getName())),
-                                           Double.parseDouble(getAttribute(Enumerations.SvgAttribute.X2.getName())),
-                                           Double.parseDouble(getAttribute(Enumerations.SvgAttribute.Y2.getName())));
+        return new javafx.scene.shape.Line(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.START_X.getName())),
+                                           Double.parseDouble(getAttribute(Enumerations.CoreAttribute.START_Y.getName())),
+                                           Double.parseDouble(getAttribute(Enumerations.CoreAttribute.END_X.getName())),
+                                           Double.parseDouble(getAttribute(Enumerations.CoreAttribute.END_Y.getName())));
     }
 
     //endregion

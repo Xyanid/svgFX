@@ -33,10 +33,10 @@ import org.xml.sax.Attributes;
 
     @Override protected final javafx.scene.shape.Ellipse createResultInternal() {
 
-        return new javafx.scene.shape.Ellipse(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.CENTER_X.getName())),
-                                              Double.parseDouble(getAttribute(Enumerations.SvgAttribute.CENTER_Y.getName())),
-                                              Double.parseDouble(getAttribute(Enumerations.SvgAttribute.RADIUS_X.getName())),
-                                              Double.parseDouble(getAttribute(Enumerations.SvgAttribute.RADIUS_Y.getName())));
+        return new javafx.scene.shape.Ellipse(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_X.getName())),
+                                              Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName())),
+                                              Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName())),
+                                              Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName())));
     }
 
     //endregion

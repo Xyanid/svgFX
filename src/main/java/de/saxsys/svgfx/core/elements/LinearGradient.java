@@ -44,10 +44,10 @@ import java.util.List;
             throw new SVGException("given linear gradient does not have colors");
         }
 
-        return new javafx.scene.paint.LinearGradient(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.X1.getName())),
-                                                     Double.parseDouble(getAttribute(Enumerations.SvgAttribute.Y1.getName())),
-                                                     Double.parseDouble(getAttribute(Enumerations.SvgAttribute.X2.getName())),
-                                                     Double.parseDouble(getAttribute(Enumerations.SvgAttribute.Y2.getName())),
+        return new javafx.scene.paint.LinearGradient(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.START_X.getName())),
+                                                     Double.parseDouble(getAttribute(Enumerations.CoreAttribute.START_Y.getName())),
+                                                     Double.parseDouble(getAttribute(Enumerations.CoreAttribute.END_X.getName())),
+                                                     Double.parseDouble(getAttribute(Enumerations.CoreAttribute.END_Y.getName())),
                                                      false,
                                                      CycleMethod.NO_CYCLE,
                                                      stops);

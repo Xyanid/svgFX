@@ -62,7 +62,7 @@ import java.util.Set;
 
         Set<CssStyle> result = new HashSet<>();
 
-        if (getAttribute(Enumerations.SvgAttribute.TYPE.getName()) == null || getAttribute(Enumerations.SvgAttribute.TYPE.getName()).equals(CSS_TYPE)) {
+        if (getAttribute(Enumerations.CoreAttribute.TYPE.getName()) == null || getAttribute(Enumerations.CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
 
             StringBuilder builder = new StringBuilder();
 

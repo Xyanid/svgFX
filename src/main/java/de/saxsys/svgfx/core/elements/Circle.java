@@ -33,9 +33,9 @@ import org.xml.sax.Attributes;
 
     @Override protected final javafx.scene.shape.Circle createResultInternal() {
 
-        return new javafx.scene.shape.Circle(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.CENTER_X.getName())),
-                                             Double.parseDouble(getAttribute(Enumerations.SvgAttribute.CENTER_Y.getName())),
-                                             Double.parseDouble(getAttribute(Enumerations.SvgAttribute.RADIUS.getName())));
+        return new javafx.scene.shape.Circle(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_X.getName())),
+                                             Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName())),
+                                             Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS.getName())));
     }
 
     //endregion

@@ -34,13 +34,13 @@ import org.xml.sax.Attributes;
     //region SVGElementBase
 
     @Override protected final javafx.scene.paint.Stop createResultInternal() throws SVGException {
-        double offset = Double.parseDouble(getAttribute(Enumerations.SvgAttribute.OFFSET.getName()));
+        double offset = Double.parseDouble(getAttribute(Enumerations.CoreAttribute.OFFSET.getName()));
 
         CssStyle style = getCssStyle();
 
-        double opacity = style.getCssStyleDeclaration().getPropertyAs(Enumerations.PresentationAttribute.OPACITY, Double::parseDouble);
+        double opacity = style.getCssStyleDeclaration().getPropertyAs(Enumerations.PresentationAttribute.STOP_OPACITY, Double::parseDouble);
 
-        String color = style.getCssStyleDeclaration().getPropertyValue(Enumerations.PresentationAttribute.COLOR.getName());
+        String color = style.getCssStyleDeclaration().getPropertyValue(Enumerations.PresentationAttribute.STOP_COLOR.getName());
 
         if (color == null) {
             throw new IllegalArgumentException("given color must not be null");

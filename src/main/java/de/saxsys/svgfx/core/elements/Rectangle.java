@@ -35,10 +35,10 @@ import org.xml.sax.Attributes;
 
     @Override protected final javafx.scene.shape.Rectangle createResultInternal() {
 
-        return new javafx.scene.shape.Rectangle(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.X.getName())),
-                                                Double.parseDouble(getAttribute(Enumerations.SvgAttribute.Y.getName())),
-                                                Double.parseDouble(getAttribute(Enumerations.SvgAttribute.WIDTH.getName())),
-                                                Double.parseDouble(getAttribute(Enumerations.SvgAttribute.HEIGHT.getName())));
+        return new javafx.scene.shape.Rectangle(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.POSITION_X.getName())),
+                                                Double.parseDouble(getAttribute(Enumerations.CoreAttribute.POSITION_Y.getName())),
+                                                Double.parseDouble(getAttribute(Enumerations.CoreAttribute.WIDTH.getName())),
+                                                Double.parseDouble(getAttribute(Enumerations.CoreAttribute.HEIGHT.getName())));
     }
 
     /**
@@ -50,12 +50,12 @@ import org.xml.sax.Attributes;
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
 
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.RADIUS_X.getName()))) {
-            rect.setArcWidth(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.RADIUS_X.getName())) * 2.0d);
+        if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName()))) {
+            rect.setArcWidth(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName())) * 2.0d);
         }
 
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.RADIUS_Y.getName()))) {
-            rect.setArcHeight(Double.parseDouble(getAttribute(Enumerations.SvgAttribute.RADIUS_Y.getName())) * 2.0d);
+        if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName()))) {
+            rect.setArcHeight(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName())) * 2.0d);
         }
     }
 

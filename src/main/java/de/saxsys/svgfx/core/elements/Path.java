@@ -37,7 +37,7 @@ import org.xml.sax.Attributes;
     @Override protected final SVGPath createResultInternal() {
         SVGPath result = new javafx.scene.shape.SVGPath();
 
-        result.contentProperty().set(getAttribute(Enumerations.SvgAttribute.D.getName()));
+        result.contentProperty().set(getAttribute(Enumerations.CoreAttribute.PATH_DESCRIPTION.getName()));
 
         return result;
     }

@@ -40,7 +40,7 @@ import org.xml.sax.Attributes;
      * @inheritDoc Resolves the needed reference
      */
     @Override protected Node createResultInternal() throws SVGException {
-        String reference = getAttributes().get(Enumerations.SvgAttribute.XLINK_HREF.getName());
+        String reference = getAttributes().get(Enumerations.XLinkAttribute.XLINK_HREF.getName());
         if (StringUtils.isEmpty(reference)) {
             throw new IllegalArgumentException("given use element does not contain a reference");
         }
