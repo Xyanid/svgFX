@@ -1,6 +1,27 @@
-package de.saxsys.svgfx.core;
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
 
+package de.saxsys.svgfx.core.utils;
+
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -60,7 +81,7 @@ public final class SVGUtilTest {
     /**
      * Ensures that matrices which are invalid cause the expected exception.
      */
-    @Test public void invalidMatrix() {
+    @Test public void throwExceptionIfAnInvalidMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("matrix(1,2,3,4,5)");
@@ -87,7 +108,7 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of translate are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
-    @Test public void createTranslate() {
+    @Test public void parseTranslateMatrix() {
 
         Transform transform = null;
 
@@ -135,7 +156,7 @@ public final class SVGUtilTest {
     /**
      * Ensures that matrices which are invalid cause the expected exception.
      */
-    @Test public void invalidTranslate() {
+    @Test public void throwExceptionIfAnInvalidTranslateMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("translate(1,2,3)");
@@ -155,7 +176,7 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
-    @Test public void createScale() {
+    @Test public void parseScaleMatrix() {
 
         Transform transform = null;
 
@@ -203,7 +224,7 @@ public final class SVGUtilTest {
     /**
      * Ensures that scale which are invalid cause the expected exception.
      */
-    @Test public void invalidScale() {
+    @Test public void throwExceptionIfAnInvalidScaleMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("scale(1,2,3)");
@@ -223,7 +244,7 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
-    @Test public void createRotate() {
+    @Test public void parseRotateMatrix() {
 
         Transform transform = null;
 
@@ -269,7 +290,7 @@ public final class SVGUtilTest {
     /**
      * Ensures that scale which are invalid cause the expected exception.
      */
-    @Test public void invalidRotate() {
+    @Test public void throwExceptionIfAnInvalidRotateMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("rotate(1,2)");
@@ -296,7 +317,7 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of skewX are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
-    @Test public void createSkew() {
+    @Test public void parseSkewMatrix() {
 
         Transform transform = null;
 
@@ -346,7 +367,7 @@ public final class SVGUtilTest {
     /**
      * Ensures that scale which are invalid cause the expected exception.
      */
-    @Test public void invalidSkew() {
+    @Test public void throwExceptionIfAnInvalidSkewMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("skewX(1,2)");
@@ -378,9 +399,10 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
-    @Test public void createCombined() {
+    @Test public void parseCombinedMatrices() {
 
         Transform transform = null;
 

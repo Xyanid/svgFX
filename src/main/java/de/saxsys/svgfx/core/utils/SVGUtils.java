@@ -1,5 +1,26 @@
-package de.saxsys.svgfx.core;
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
 
+package de.saxsys.svgfx.core.utils;
+
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.LinearGradient;
 import de.saxsys.svgfx.core.elements.RadialGradient;
@@ -18,7 +39,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Shear;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumSet;
 import java.util.function.Consumer;
@@ -54,7 +74,7 @@ public final class SVGUtils {
             throw new IllegalArgumentException("given dataprovider must not be null or empty");
         }
 
-        if (StringUtils.isEmpty(data)) {
+        if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("given data must not be null or empty");
         }
 
@@ -135,7 +155,7 @@ public final class SVGUtils {
 
         String value = style.getStyle().getPropertyValue(declaration.getName());
 
-        if (StringUtils.isEmpty(value)) {
+        if (StringUtils.isNullOrEmpty(value)) {
             return false;
         }
 
@@ -203,7 +223,7 @@ public final class SVGUtils {
      * @throws SVGException if there is an error in the transformation data of the given string.
      */
     public static Transform getTransform(final String data) throws SVGException {
-        if (StringUtils.isEmpty(data)) {
+        if (StringUtils.isNullOrEmpty(data)) {
             return null;
         }
 
@@ -257,7 +277,7 @@ public final class SVGUtils {
      * @throws SVGException             if there is an error in the transformation data of the given string.
      */
     public static Transform getTransform(final Enumerations.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
-        if (StringUtils.isEmpty(data)) {
+        if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("Given data must not be null or empty");
         }
 

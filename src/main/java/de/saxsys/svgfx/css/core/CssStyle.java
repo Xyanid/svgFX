@@ -1,3 +1,22 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.css.core;
 
 
@@ -8,6 +27,8 @@ import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
+
+import java.util.Map;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
@@ -52,6 +73,31 @@ public class CssStyle extends CssBase implements CSSStyleRule {
      */
     public CssStyleDeclaration getCssStyleDeclaration() {
         return cssStyleDeclaration;
+    }
+
+    /**
+     * Combines this {@link CssStyle} with the given {@link CssStyle}. Note that if the provided style has a {@link CssValue} which is also present in this style, then this value will be used
+     * instead overwritting the existing one in this style.
+     *
+     * @param style the {@link CssStyle} which is be used, must not be null.
+     *
+     * @throws IllegalArgumentException if the given {@link CssStyle} is null.
+     */
+    public void combineWithStyle(final CssStyle style) {
+
+        if (style == null) {
+            throw new IllegalArgumentException("given style must not be null");
+        }
+
+        if (this == style) {
+            return;
+        }
+
+        for (Map.Entry<String, CssValue> entry : style.getCssStyleDeclaration().cssProperties.entrySet()) {
+            cssStyleDeclaration.cssProperties.put(entry.getKey(), entry.getValue());
+        }
+
+        cssStyleDeclaration.setNeedsUpdateCssText(style.getCssStyleDeclaration().getLength() > 0);
     }
 
     //endregion

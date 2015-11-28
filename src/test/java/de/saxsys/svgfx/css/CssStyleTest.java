@@ -1,11 +1,30 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.css;
 
 import de.saxsys.svgfx.css.core.CssStyle;
-import javafx.scene.Node;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Tests the behavior of {@link CssStyle} and hence also the behavior of the {@link de.saxsys.svgfx.css.core.CssStyleDeclaration} and {@link de.saxsys.svgfx.css.core.CssValue}.
  * Created by Xyanid on 05.10.2015.
  */
 public final class CssStyleTest {
@@ -13,18 +32,6 @@ public final class CssStyleTest {
     //region Fields
 
     private final String cssText = ".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:10;}";
-
-    private final String cssDeclarationBlock = "fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:15;";
-
-    private final String cssTextChanged = ".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:15;}";
-
-    private final String cssTextWithComment = ".st0{fill:none;stroke:#808080;/*this is a comment*/stroke-width:3;stroke-miterlimit:10;}";
-
-    private final String cssTextWithCommentAndCssCharacters = ".st0{fill:none;stroke:#808080;/*{\"this is ;:a string\";:}*/stroke-width:3;stroke-miterlimit:10;}";
-
-    private final String cssTextWithString = ".st0{fill:none;stroke:\"#808080\";stroke-width:3;stroke-miterlimit:10;}";
-
-    private final String cssTextWithStringAndCssCharacters = ".st0{fill:none;stroke:\";{ar;asd:j}:sda;asd:\";stroke-width:3;stroke-miterlimit:10;}";
 
     //endregion
 
@@ -50,11 +57,11 @@ public final class CssStyleTest {
 
         CssStyle style = new CssStyle();
 
-        style.setCssText(cssTextWithComment);
+        style.setCssText(".st0{fill:none;stroke:#808080;/*this is a comment*/stroke-width:3;stroke-miterlimit:10;}");
 
         Assert.assertEquals(cssText, style.getCssText());
 
-        style.setCssText(cssTextWithCommentAndCssCharacters);
+        style.setCssText(".st0{fill:none;stroke:#808080;/*{\"this is ;:a string\";:}*/stroke-width:3;stroke-miterlimit:10;}");
 
         Assert.assertEquals(cssText, style.getCssText());
     }
@@ -66,6 +73,10 @@ public final class CssStyleTest {
     @Test public void parseCssTextWithStringIndicatorsAndCssCharactersToCreateCssStyle() {
 
         CssStyle style = new CssStyle();
+
+        String cssTextWithString = ".st0{fill:none;stroke:\"#808080\";stroke-width:3;stroke-miterlimit:10;}";
+
+        String cssTextWithStringAndCssCharacters = ".st0{fill:none;stroke:\";{ar;asd:j}:sda;asd:\";stroke-width:3;stroke-miterlimit:10;}";
 
         style.setCssText(cssTextWithString);
 
@@ -87,13 +98,41 @@ public final class CssStyleTest {
 
         Assert.assertEquals(cssText, style.getCssText());
 
-        style.getCssStyleDeclaration().setCssText(cssDeclarationBlock);
+        style.getCssStyleDeclaration().setCssText("fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:15;");
 
-        Assert.assertEquals(cssTextChanged, style.getCssText());
+        Assert.assertEquals(".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:15;}", style.getCssText());
 
         style.getCssStyleDeclaration().getPropertyCSSValue("stroke-miterlimit").setCssText("10");
 
         Assert.assertEquals(cssText, style.getCssText());
+    }
+
+    /**
+     * Combines two css styles and checks if the properties have been overwritten as expected.
+     */
+    @Test public void combineCssStyles() {
+
+        CssStyle style = new CssStyle();
+
+        style.setCssText(".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:10;}");
+
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("fill"), "none");
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("stroke"), "#808080");
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("stroke-miterlimit"), "10");
+
+        CssStyle otherStyle = new CssStyle();
+
+        otherStyle.setCssText(".st0{stroke-width:3;stroke-miterlimit:15;}");
+
+        Assert.assertEquals(otherStyle.getCssStyleDeclaration().getPropertyValue("stroke-width"), "3");
+        Assert.assertEquals(otherStyle.getCssStyleDeclaration().getPropertyValue("stroke-miterlimit"), "15");
+
+        style.combineWithStyle(otherStyle);
+
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("fill"), "none");
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("stroke"), "#808080");
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("stroke-miterlimit"), "15");
+        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue("stroke-width"), "3");
     }
 
     //endregion

@@ -1,12 +1,34 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.utils.SVGUtils;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.core.CssStyle;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.transform.Transform;
-import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
+
+import java.util.EnumSet;
 
 /**
  * This class represents a basic scg element, which provides some basic functionality to get the style of the class.
@@ -54,10 +76,12 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      */
     public final CssStyle getCssStyle() {
 
-        CssStyle result = null;
+        CssStyle result;
+
+        CssStyle presentationStyle = getPresentationCssStyle();
 
         // we may have our own style or need to get a style
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.STYLE.getName()))) {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.STYLE.getName()))) {
 
             String attribute = getAttribute(Enumerations.CoreAttribute.STYLE.getName());
 
@@ -69,15 +93,17 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
                                             attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
                                             Constants.DECLARATION_BLOCK_END));
             // other wise we are referencing a class and want the style here
-        } else if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.CLASS.getName()))) {
+        } else if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.CLASS.getName()))) {
 
             String styleClass = getAttribute(Enumerations.CoreAttribute.CLASS.getName());
 
             result = getDataProvider().getStyles().stream().filter(data -> data.getSelectorText().endsWith(styleClass)).findFirst().get();
             // otherwise we might have a parent that provides us with a style so use that one instead
-        } else if (getParent() != null) {
-            result = getParent().getCssStyle();
+        } else {
+            result = presentationStyle;
         }
+
+        result.combineWithStyle(presentationStyle);
 
         return result;
     }
@@ -89,7 +115,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException if there is a transformation which has invalid data for its matrix.
      */
     public final Transform getTransformation() throws SVGException {
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()))) {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()))) {
             return SVGUtils.getTransform(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()));
         }
 
@@ -105,6 +131,46 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException will be thrown when an error during creation occurs
      */
     protected abstract TResult createResultInternal() throws SVGException;
+
+    // endregion
+
+    // region Private
+
+    /**
+     * This method attempts to create a {@link CssStyle} by looking up all the supported {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute}. If any attribute is present a
+     * valid
+     * cssString is returned.
+     *
+     * @return a {@link CssStyle} containing the {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute}s of this element if any or null if no
+     * {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute} exists.
+     */
+    public CssStyle getPresentationCssStyle() {
+
+        CssStyle result = null;
+
+        StringBuilder cssText = new StringBuilder();
+
+        for (Enumerations.PresentationAttribute attribute : EnumSet.allOf(Enumerations.PresentationAttribute.class)) {
+
+            String data = getAttribute(attribute.getName());
+
+            if (StringUtils.isNotNullOrEmpty(data)) {
+                if (cssText.length() == 0) {
+                    cssText.append("presentationStyle" + Constants.DECLARATION_BLOCK_START);
+                }
+
+                cssText.append(String.format("%s%s%s%s", attribute.getName(), Constants.PROPERTY_SEPARATOR, data, Constants.PROPERTY_END));
+            }
+        }
+
+        if (cssText.length() > 0) {
+            cssText.append(Constants.DECLARATION_BLOCK_END);
+            result = new CssStyle();
+            result.consumeCssText(cssText.toString());
+        }
+
+        return result;
+    }
 
     // endregion
 
