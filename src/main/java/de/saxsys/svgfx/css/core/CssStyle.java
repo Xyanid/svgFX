@@ -40,7 +40,7 @@ public class CssStyle extends CssBase implements CSSStyleRule {
 
     private String selectorText;
 
-    private final CssStyleDeclaration cssStyleDeclaration;
+    private CssStyleDeclaration cssStyleDeclaration;
 
     //endregion
 
@@ -51,8 +51,6 @@ public class CssStyle extends CssBase implements CSSStyleRule {
      */
     public CssStyle() {
         super();
-
-        cssStyleDeclaration = new CssStyleDeclaration(this);
     }
 
     /**
@@ -62,8 +60,6 @@ public class CssStyle extends CssBase implements CSSStyleRule {
      */
     public CssStyle(final boolean isModifiable) {
         super(isModifiable);
-
-        cssStyleDeclaration = new CssStyleDeclaration(this);
     }
 
     //endregion
@@ -93,7 +89,7 @@ public class CssStyle extends CssBase implements CSSStyleRule {
             throw new IllegalArgumentException("given style must not be null");
         }
 
-        if (this == style || style.getCssStyleDeclaration() == null) {
+        if (this == style) {
             return;
         }
 
@@ -209,6 +205,10 @@ public class CssStyle extends CssBase implements CSSStyleRule {
         }
 
         setSelectorText(selector.toString());
+
+        if (this.cssStyleDeclaration == null) {
+            this.cssStyleDeclaration = new CssStyleDeclaration(this);
+        }
 
         this.cssStyleDeclaration.setCssText(cssStyleDeclaration.toString());
     }

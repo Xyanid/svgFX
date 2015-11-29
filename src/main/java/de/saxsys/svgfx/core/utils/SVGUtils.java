@@ -20,12 +20,14 @@
 package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.LinearGradient;
 import de.saxsys.svgfx.core.elements.RadialGradient;
 import de.saxsys.svgfx.core.utils.ConvertUtils;
 import de.saxsys.svgfx.css.core.CssStyle;
+import de.saxsys.svgfx.css.core.CssStyleDeclaration;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -56,6 +58,14 @@ public final class SVGUtils {
     // endregion
 
     // region Constructor
+
+    private SVGUtils() {
+
+    }
+
+    // endregion
+
+    // region Methods related to Styling
 
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF)
@@ -111,10 +121,6 @@ public final class SVGUtils {
         return result;
     }
 
-    // endregion
-
-    // region Methods related to Styling
-
     /**
      * Tries to get the {@link Enumerations.PresentationAttribute} from the given {@link CssStyle}. The declaration is
      * first converted and then consumed.
@@ -128,7 +134,7 @@ public final class SVGUtils {
      * @return true if the declaration is present in the style and was used
      */
     public static <TData> boolean applyStyleDeclaration(final CssStyle style,
-                                                        final Enumerations.PresentationAttribute declaration,
+                                                        final SVGElementBase.PresentationAttribute declaration,
                                                         final Consumer<TData> consumer,
                                                         final Function<String, TData> converter) {
         return applyStyleDeclaration(style, declaration, consumer, converter, null);
@@ -148,7 +154,7 @@ public final class SVGUtils {
      * @return true if the declaration is present in the style
      */
     public static <TData> boolean applyStyleDeclaration(final CssStyle style,
-                                                        final Enumerations.PresentationAttribute declaration,
+                                                        final SVGElementBase.PresentationAttribute declaration,
                                                         final Consumer<TData> consumer,
                                                         final Function<String, TData> converter,
                                                         final Function<String, Boolean> validator) {
@@ -192,24 +198,24 @@ public final class SVGUtils {
             throw new IllegalArgumentException("given style must not be null");
         }
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.FILL, shape::setFill, (data) -> parseColor(data, dataProvider));
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.FILL, shape::setFill, (data) -> parseColor(data, dataProvider));
 
         //TODO apply stroke opacity here
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE, shape::setStroke, (data) -> parseColor(data, dataProvider));
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE, shape::setStroke, (data) -> parseColor(data, dataProvider));
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_TYPE, shape::setStrokeType, (data) -> StrokeType.valueOf(data.toUpperCase()));
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_TYPE, shape::setStrokeType, (data) -> StrokeType.valueOf(data.toUpperCase()));
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_WIDTH, shape::setStrokeWidth, Double::parseDouble);
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_WIDTH, shape::setStrokeWidth, Double::parseDouble);
 
         //TODO apply the stroke dash array here
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_DASHOFFSET, shape::setStrokeDashOffset, Double::parseDouble);
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_DASHOFFSET, shape::setStrokeDashOffset, Double::parseDouble);
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_LINEJOIN, shape::setStrokeLineJoin, (data) -> StrokeLineJoin.valueOf(data.toUpperCase()));
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_LINEJOIN, shape::setStrokeLineJoin, (data) -> StrokeLineJoin.valueOf(data.toUpperCase()));
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_LINECAP, shape::setStrokeLineCap, (data) -> StrokeLineCap.valueOf(data.toUpperCase()));
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_LINECAP, shape::setStrokeLineCap, (data) -> StrokeLineCap.valueOf(data.toUpperCase()));
 
-        applyStyleDeclaration(style, Enumerations.PresentationAttribute.STROKE_MITERLIMIT, shape::setStrokeMiterLimit, Double::parseDouble);
+        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_MITERLIMIT, shape::setStrokeMiterLimit, Double::parseDouble);
     }
 
     /**
@@ -229,12 +235,12 @@ public final class SVGUtils {
 
         Transform result = null;
 
-        EnumSet<Enumerations.Matrix> allMatrices = EnumSet.allOf(Enumerations.Matrix.class);
-        allMatrices.remove(Enumerations.Matrix.NONE);
+        EnumSet<SVGElementBase.Matrix> allMatrices = EnumSet.allOf(SVGElementBase.Matrix.class);
+        allMatrices.remove(SVGElementBase.Matrix.NONE);
 
         for (int i = 0; i < data.length(); i++) {
 
-            for (Enumerations.Matrix matrix : allMatrices) {
+            for (SVGElementBase.Matrix matrix : allMatrices) {
                 if (data.startsWith(matrix.getName(), i)) {
 
                     // getting the start and end of the new substring, which contains the data in the braces
@@ -263,25 +269,25 @@ public final class SVGUtils {
 
     /**
      * Gets the {@link Transform} that is represented by the given data. The data must meet the following requirements.
-     * Data can start with the name of the provide {@link Enumerations.Matrix}, in which case checkIfStartWithMatrix must be true,
+     * Data can start with the name of the provide {@link SVGElementBase.Matrix}, in which case checkIfStartWithMatrix must be true,
      * otherwise an exception will occur when the actual data is processed.
      * Data must contain the values separated with a coma (e.g. 1,2,3). Optionally the values can be embraces with ().
      *
      * @param matrix                 the matrix to use
-     * @param data                   the data to be used, must not be null or empty or {@link Enumerations.Matrix#NONE}.
-     * @param checkIfStartWithMatrix determines if the given data is to be checked if it starts with the {@link Enumerations.Matrix#name}
+     * @param data                   the data to be used, must not be null or empty or {@link SVGElementBase.Matrix#NONE}.
+     * @param checkIfStartWithMatrix determines if the given data is to be checked if it starts with the {@link SVGElementBase.Matrix#name}
      *
      * @return a new {@link Transform} which contains the transformation represented by the data.
      *
-     * @throws IllegalArgumentException if the given data is empty or matrix is {@link Enumerations.Matrix#NONE}.
+     * @throws IllegalArgumentException if the given data is empty or matrix is {@link SVGElementBase.Matrix#NONE}.
      * @throws SVGException             if there is an error in the transformation data of the given string.
      */
-    public static Transform getTransform(final Enumerations.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
+    public static Transform getTransform(final SVGElementBase.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
         if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("Given data must not be null or empty");
         }
 
-        if (matrix == Enumerations.Matrix.NONE) {
+        if (matrix == SVGElementBase.Matrix.NONE) {
             throw new IllegalArgumentException("Given matrix must not be NONE");
         }
 
@@ -340,7 +346,7 @@ public final class SVGUtils {
                     double x = Double.parseDouble(values[0].trim());
                     double y = values.length == 2 ? Double.parseDouble(values[1].trim()) : x;
 
-                    if (matrix == Enumerations.Matrix.TRANSLATE) {
+                    if (matrix == SVGElementBase.Matrix.TRANSLATE) {
                         result = new Translate(x, y);
                     } else {
                         result = new Scale(x, y);
@@ -384,7 +390,7 @@ public final class SVGUtils {
                     throw new SVGException(e);
                 }
 
-                if (matrix == Enumerations.Matrix.SKEW_X) {
+                if (matrix == SVGElementBase.Matrix.SKEW_X) {
                     result = new Shear(shearing, 0.0d);
                 } else {
                     result = new Shear(0.0d, shearing);
@@ -395,9 +401,18 @@ public final class SVGUtils {
         return result;
     }
 
-    private SVGUtils() {
+    /**
+     * Returns the desired supported declaration as the desired type if it exits.
+     *
+     * @param declaration declaration to be used
+     * @param converter   converter interfaces to be used
+     * @param <TData>     type of the data
+     *
+     * @return the data as the given type or null if the declaration is not present
+     */
+    public static <TData> TData getPropertyAs(final CssStyleDeclaration declaration, final SVGElementBase.PresentationAttribute attribute, final Function<String, TData> converter) {
 
+        return declaration.getPropertyAs(attribute.getName(), converter);
     }
-
     // endregion
 }

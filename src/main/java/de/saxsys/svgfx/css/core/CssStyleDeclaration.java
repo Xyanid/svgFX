@@ -19,7 +19,7 @@
 
 package de.saxsys.svgfx.css.core;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
@@ -76,20 +76,35 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
 
     //endregion
 
+    // region Private
+
+    /**
+     * Get the default value which will be used as the default value for a {@link CssValue}.
+     *
+     * @param name name of the property for which a default value should be returned
+     *
+     * @return the default value corresponding to the given name or null if not match was found.
+     */
+    private String getDefaultValue(final String name) {
+
+        for (SVGElementBase.PresentationAttribute attribute : SVGElementBase.PresentationAttribute.values()) {
+            if (attribute.getName().equals(name)) {
+                return attribute.getDefaultValue();
+            }
+        }
+
+        return null;
+    }
+
+    // endregion
+
     //region Public
 
     /**
-     * Returns the desired supported declaration as the desired type if it exits.
-     *
-     * @param declaration declaration to be used
-     * @param converter   converter interfaces to be used
-     * @param <TData>     type of the data
-     *
-     * @return the data as the given type or null if the declaration is not present
+     * @return The {@link #cssProperties} as a readonly {@link Map}.
      */
-    public <TData> TData getPropertyAs(final Enumerations.PresentationAttribute declaration, final Function<String, TData> converter) {
-
-        return getPropertyAs(declaration.getName(), converter);
+    public Map<String, CssValue> getUnmodifiableCssValues() {
+        return Collections.unmodifiableMap(cssProperties);
     }
 
     /**
@@ -222,11 +237,13 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
 
                 if (index > -1 && index < property.length() - 1) {
 
-                    CssValue cssValue = new CssValue(this);
+                    String name = property.substring(0, index).trim();
+
+                    CssValue cssValue = new CssValue(this, getDefaultValue(name));
 
                     cssValue.setCssText(property.substring(index + 1).trim());
 
-                    cssProperties.put(property.substring(0, index).trim(), cssValue);
+                    cssProperties.put(name, cssValue);
                 }
 
                 builder.setLength(0);
@@ -266,4 +283,6 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
     }
 
     //endregion
+
+
 }

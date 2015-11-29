@@ -19,35 +19,30 @@
 
 package de.saxsys.svgfx.css.core;
 
-import org.w3c.dom.DOMException;
-import org.w3c.dom.css.CSSValue;
-
 /**
  * This class contains the css value of a property
- * Created by Xyanid on 29.10.2015.
+ *
+ * @author Xyanid on 29.10.2015.
  */
-public class CssValue extends CssBase<CssStyleDeclaration> implements CSSValue {
-
-    // region Enumerations
-
-    /**
-     * Contains a {@link String} which indicates that the {@link de.saxsys.svgfx.css.core.CssValue} of a property is inherited.
-     */
-    public static String INHERIT_INDICATOR = "inherit";
-
-    // endregion
+public abstract class CssContentTypeBase<TValue, TUnit> {
 
     //region Fields
 
     /**
      * The string representation of the value of this CSSValue.
      */
-    private String value;
+    protected TValue value;
 
     /**
      * Contains the default value of this
      */
-    private String defaultValue;
+    protected TValue defaultValue;
+
+    /**
+     * The unit which is placed at the en
+     */
+    protected TUnit unit;
+
 
     //endregion
 
@@ -56,12 +51,9 @@ public class CssValue extends CssBase<CssStyleDeclaration> implements CSSValue {
     /**
      * Creates new instance.
      *
-     * @param parent       the parent of the element
      * @param defaultValue the default value of this to use
      */
-    public CssValue(final CssStyleDeclaration parent, final String defaultValue) {
-        super(parent);
-
+    public CssContentTypeBase(final TValue defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -70,49 +62,38 @@ public class CssValue extends CssBase<CssStyleDeclaration> implements CSSValue {
     //region Getter
 
     /**
-     * Returns the {@link CssValue#value}.
+     * Returns the {@link CssContentTypeBase#value}.
      *
-     * @return {@link CssValue#value}.
+     * @return {@link CssContentTypeBase#value}.
      */
-    public String getValue() {
+    public TValue getValue() {
         return value;
     }
 
     /**
      * @return The {@link #defaultValue}.
      */
-    public String getDefaultValue() {
+    public TValue getDefaultValue() {
         return defaultValue;
     }
 
-    //endregion
-
-    //region Implement CSSValue
-
     /**
-     * @inheritDoc
+     * @return The {@link #unit}.
      */
-    @Override public short getCssValueType() {
-        return CSSValue.CSS_CUSTOM;
+    public TUnit getUnit() {
+        return unit;
     }
 
     //endregion
 
-    //region Override CssBase
+    //region Public
 
     /**
-     * {@inheritDoc}
+     * Consumes the given css text setting the values in the process
+     *
+     * @param cssText text to consume.
      */
-    @Override public void consumeCssText(final String cssText) throws DOMException {
-        value = cssText;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override public String createCssText() {
-        return value;
-    }
+    public abstract void consumeCssValue(final String cssText);
 
     //endregion
 }

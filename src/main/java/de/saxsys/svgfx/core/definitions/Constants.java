@@ -46,6 +46,8 @@ import java.util.List;
  */
 public final class Constants {
 
+    //region Fields
+
     /**
      * contains a list with all the known svg classes for elements.
      */
@@ -67,6 +69,8 @@ public final class Constants {
                                                                                                      Use.class);
 
 
+    //endregion
+
     // region Constructor
 
     /**
@@ -77,5 +81,4 @@ public final class Constants {
     }
 
     // endregion
-
 }

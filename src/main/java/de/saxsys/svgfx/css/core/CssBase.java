@@ -35,39 +35,6 @@ import java.util.function.Function;
  */
 public abstract class CssBase<TParent extends CssBase> {
 
-    // region Enumeration
-
-    /**
-     * Determines in which state a character read from a css text is.
-     *
-     * @author Xyanid
-     */
-    public enum CharacterState {
-
-        /**
-         * Meaning that the character state is not known, thus this value represents an invalid state.
-         */
-        NONE,
-        /**
-         * Meaning that the character of the css string is not inside a comment or string.
-         */
-        DATA,
-        /**
-         * Meaning that the character of the css string is a slash.
-         */
-        SLASH,
-        /**
-         * Meaning that the character of the css string is inside a comment.
-         */
-        COMMENT,
-        /**
-         * Meaning that the character of the css string is inside a string.
-         */
-        STRING,
-    }
-
-    // endregion
-
     // region Field
 
     private final TParent parent;
@@ -204,8 +171,6 @@ public abstract class CssBase<TParent extends CssBase> {
 
     // region Protected
 
-    // CHECKSTYLE:OFF
-
     /**
      * Filters out comments and allows to react differently to characters which are read within a string and outside
      * a string.
@@ -309,8 +274,6 @@ public abstract class CssBase<TParent extends CssBase> {
 
         return new Pair<>(false, false);
     }
-
-    // CHECKSTYLE:ON
 
     // endregion
 

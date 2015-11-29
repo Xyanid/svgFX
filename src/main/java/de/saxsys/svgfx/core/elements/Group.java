@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Group(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public Group(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

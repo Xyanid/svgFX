@@ -62,11 +62,11 @@ import java.util.List;
             throw new SVGException("given radial gradient does not have colors");
         }
 
-        double cx = Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_X.getName()));
-        double cy = Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName()));
+        double cx = Double.parseDouble(getAttribute(CoreAttribute.CENTER_X.getName()));
+        double cy = Double.parseDouble(getAttribute(CoreAttribute.CENTER_Y.getName()));
 
-        double fx = getAttributes().containsKey(Enumerations.CoreAttribute.FOCUS_X.getName()) ? Double.parseDouble(getAttribute(Enumerations.CoreAttribute.FOCUS_X.getName())) : cx;
-        double fy = getAttributes().containsKey(Enumerations.CoreAttribute.FOCUS_Y.getName()) ? Double.parseDouble(getAttribute(Enumerations.CoreAttribute.FOCUS_Y.getName())) : cy;
+        double fx = getAttributes().containsKey(CoreAttribute.FOCUS_X.getName()) ? Double.parseDouble(getAttribute(CoreAttribute.FOCUS_X.getName())) : cx;
+        double fy = getAttributes().containsKey(CoreAttribute.FOCUS_Y.getName()) ? Double.parseDouble(getAttribute(CoreAttribute.FOCUS_Y.getName())) : cy;
 
         double diffX = fx - cx;
         double diffY = fy - cy;
@@ -74,7 +74,7 @@ import java.util.List;
         double distance = diffX != 0 && diffY != 0 ? Math.hypot(diffX, diffY) : 0;
         double angle = diffX != 0 && diffY != 0 ? Math.atan2(diffY, diffX) : 0;
 
-        return new javafx.scene.paint.RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
+        return new javafx.scene.paint.RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
     }
 
     //endregion

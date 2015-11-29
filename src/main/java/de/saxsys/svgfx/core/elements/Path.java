@@ -56,7 +56,7 @@ import org.xml.sax.Attributes;
     @Override protected final SVGPath createResultInternal() {
         SVGPath result = new javafx.scene.shape.SVGPath();
 
-        result.contentProperty().set(getAttribute(Enumerations.CoreAttribute.PATH_DESCRIPTION.getName()));
+        result.contentProperty().set(getAttribute(CoreAttribute.PATH_DESCRIPTION.getName()));
 
         return result;
     }
@@ -72,7 +72,7 @@ import org.xml.sax.Attributes;
 
         if (style != null) {
             //apply the fill rule if need be
-            String ruleValue = style.getCssStyleDeclaration().getPropertyValue(Enumerations.PresentationAttribute.FILL_RULE.getName());
+            String ruleValue = style.getCssStyleDeclaration().getPropertyValue(PresentationAttribute.FILL_RULE.getName());
             if (StringUtils.isNotNullOrEmpty(ruleValue)) {
                 for (Enumerations.FillRuleMapping fillRule : Enumerations.FillRuleMapping.values()) {
                     if (fillRule.getName().equals(ruleValue)) {

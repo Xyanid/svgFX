@@ -41,7 +41,7 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

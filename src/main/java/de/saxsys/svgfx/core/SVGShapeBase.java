@@ -42,7 +42,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

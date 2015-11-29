@@ -81,7 +81,7 @@ import java.util.Set;
 
         Set<CssStyle> result = new HashSet<>();
 
-        if (getAttribute(Enumerations.CoreAttribute.TYPE.getName()) == null || getAttribute(Enumerations.CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
+        if (getAttribute(CoreAttribute.TYPE.getName()) == null || getAttribute(CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
 
             StringBuilder builder = new StringBuilder();
 

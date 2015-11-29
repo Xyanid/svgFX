@@ -42,7 +42,7 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Circle(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public Circle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -52,9 +52,9 @@ import org.xml.sax.Attributes;
 
     @Override protected final javafx.scene.shape.Circle createResultInternal() {
 
-        return new javafx.scene.shape.Circle(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_X.getName())),
-                                             Double.parseDouble(getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName())),
-                                             Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS.getName())));
+        return new javafx.scene.shape.Circle(Double.parseDouble(getAttribute(CoreAttribute.CENTER_X.getName())),
+                                             Double.parseDouble(getAttribute(CoreAttribute.CENTER_Y.getName())),
+                                             Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())));
     }
 
     //endregion

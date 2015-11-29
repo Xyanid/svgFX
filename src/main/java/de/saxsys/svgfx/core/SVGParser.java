@@ -19,7 +19,6 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.ClipPath;
 import de.saxsys.svgfx.core.elements.Defs;
 import de.saxsys.svgfx.core.elements.Group;
@@ -39,8 +38,6 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
 
     /**
      * Creates a new instance of the parser and uses the given elementCreator.
-     *
-     * @throws NoSuchMethodException thrown by the {@link SVGElementCreator} if an element does not have the required constructor
      */
     public SVGParser() {
 
@@ -70,7 +67,7 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
     @Override protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
 
         if (element.getParent() instanceof Defs) {
-            dataProvider.getData().put(element.getAttributes().get(Enumerations.CoreAttribute.ID.getName()), (SVGElementBase) element);
+            dataProvider.getData().put(element.getAttributes().get(SVGElementBase.CoreAttribute.ID.getName()), (SVGElementBase) element);
         } else if (element instanceof Style) {
             dataProvider.getStyles().addAll(((Style) element).getResult());
         } else if (!((element.getParent() instanceof ClipPath) || (element.getParent() instanceof Group)) && element.getResult() instanceof Node) {

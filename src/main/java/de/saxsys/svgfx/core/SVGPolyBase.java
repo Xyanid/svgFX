@@ -60,7 +60,7 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     public List<Double> getPoints() {
         List<Double> actualPoints = new ArrayList<>();
 
-        for (String pointsSplit : getAttribute(Enumerations.CoreAttribute.POINTS.getName()).trim().split(" ")) {
+        for (String pointsSplit : getAttribute(CoreAttribute.POINTS.getName()).trim().split(" ")) {
             String[] pointSplit = pointsSplit.split(",");
             for (String point : pointSplit) {
                 actualPoints.add(Double.parseDouble(point));
