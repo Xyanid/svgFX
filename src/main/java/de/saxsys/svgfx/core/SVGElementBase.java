@@ -67,76 +67,6 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     // region Public
 
     /**
-     * Returns the {@link CssStyle} of this element, which is either a reference to an existing style or the element
-     * itself has a style. If the element itself does not provide a style then the style of the
-     * {@link ElementBase#parent} will be used if it exist. This is a cascading call meaning that at worst case the
-     * last {@link ElementBase#parent} that has a style will be called
-     *
-     * @return the {@link CssStyle} of this element or first style in the {@link ElementBase#parent} tree
-     */
-    public final CssStyle getCssStyle() {
-
-        CssStyle result;
-
-        CssStyle presentationStyle = getPresentationCssStyle();
-
-        // we may have our own style or need to get a style
-        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.STYLE.getName()))) {
-
-            String attribute = getAttribute(Enumerations.CoreAttribute.STYLE.getName());
-
-            result = new CssStyle();
-
-            result.setCssText(String.format("ownStyle%s%s%s%s",
-                                            Constants.DECLARATION_BLOCK_START,
-                                            attribute,
-                                            attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
-                                            Constants.DECLARATION_BLOCK_END));
-            // other wise we are referencing a class and want the style here
-        } else if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.CLASS.getName()))) {
-
-            String styleClass = getAttribute(Enumerations.CoreAttribute.CLASS.getName());
-
-            result = getDataProvider().getStyles().stream().filter(data -> data.getSelectorText().endsWith(styleClass)).findFirst().get();
-            // otherwise we might have a parent that provides us with a style so use that one instead
-        } else {
-            result = presentationStyle;
-        }
-
-        result.combineWithStyle(presentationStyle);
-
-        return result;
-    }
-
-    /**
-     * @return the transformation to be applied to this element if the {@link Enumerations.CoreAttribute#TRANSFORM} is present.
-     * otherwise null.
-     *
-     * @throws SVGException if there is a transformation which has invalid data for its matrix.
-     */
-    public final Transform getTransformation() throws SVGException {
-        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()))) {
-            return SVGUtils.getTransform(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()));
-        }
-
-        return null;
-    }
-
-    /**
-     * Must be overwritten in the actual implementation to create a new result for this element based on the
-     * information available.
-     *
-     * @return a new instance of the result or null of no result was created
-     *
-     * @throws SVGException will be thrown when an error during creation occurs
-     */
-    protected abstract TResult createResultInternal() throws SVGException;
-
-    // endregion
-
-    // region Private
-
-    /**
      * This method attempts to create a {@link CssStyle} by looking up all the supported {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute}. If any attribute is present a
      * valid
      * cssString is returned.
@@ -171,6 +101,110 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
 
         return result;
     }
+
+    /**
+     * Returns the {@link CssStyle} of this element. Since an element can contain a {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute}s, an own {@link CssStyle} or a
+     * reference to an existing {@link CssStyle} there need to be a rule how the {@link CssStyle} is build. The rule is as follows: </br>
+     * {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute}s are preferred if they are present and will overwrite existing attribute of an own
+     * {@link CssStyle} or a referenced {@link CssStyle}. The following example shows an element which has two
+     * {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute}s and an own {@link CssStyle}.
+     * <pre>
+     *     <circle fill="none" stroke="#808080" style="fill:#111111; stroke:#001122 fill-rule:odd" />
+     * </pre>
+     * this will result in fill = none, stroke = #808080 and fill-rule = odd. The same behavior is to be expected if the {@link CssStyle} would be a reference e.g.
+     * <pre>
+     *     .st1{fill:#111111; stroke:#001122 fill-rule:odd}
+     *     <circle fill="none" stroke="#808080" class="st1" />
+     * </pre>
+     * An own {@link CssStyle} is always preferred before a referenced {@link CssStyle} and will overwrite existing attributes just as a
+     * {@link de.saxsys.svgfx.core.definitions.Enumerations.PresentationAttribute} would. The following example shows an element which has an own
+     * {@link CssStyle} and a reference to a {@link CssStyle}.
+     * <pre>
+     *     .st1{fill:none; stroke:#808080 fill-rule:odd}
+     *     <circle style="fill:#111111; stroke:#001122" class="st1"/>
+     * </pre>
+     * this will result in fill = 111111, stroke = #001122 and fill-rule = odd.
+     *
+     * @return the {@link CssStyle} of this element or first style in the {@link ElementBase#parent} tree
+     */
+    public final CssStyle getCssStyle() {
+
+        CssStyle result = null;
+
+        // first we get a referenced style class if any
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.CLASS.getName()))) {
+
+            String styleClass = getAttribute(Enumerations.CoreAttribute.CLASS.getName());
+
+            CssStyle referencedStyle = getDataProvider().getStyles().stream().filter(data -> data.getSelectorText().endsWith(styleClass)).findFirst().get();
+
+            if (referencedStyle != null) {
+                result = referencedStyle;
+            }
+        }
+
+        // if an own style is present it will be used overwriting other attributes in the process
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.STYLE.getName()))) {
+
+            String attribute = getAttribute(Enumerations.CoreAttribute.STYLE.getName());
+
+            CssStyle ownStyle = new CssStyle();
+
+            ownStyle.setCssText(String.format("ownStyle%s%s%s%s",
+                                              Constants.DECLARATION_BLOCK_START,
+                                              attribute,
+                                              attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
+                                              Constants.DECLARATION_BLOCK_END));
+
+            if (result == null) {
+                result = ownStyle;
+            } else {
+                result.combineWithStyle(ownStyle);
+            }
+        }
+
+        // if a presentation style is present it will be used overwriting other attributes in the process
+        CssStyle presentationStyle = getPresentationCssStyle();
+        if (presentationStyle != null) {
+
+            if (result == null) {
+                result = presentationStyle;
+            } else {
+                result.combineWithStyle(presentationStyle);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @return the transformation to be applied to this element if the {@link Enumerations.CoreAttribute#TRANSFORM} is present.
+     * otherwise null.
+     *
+     * @throws SVGException if there is a transformation which has invalid data for its matrix.
+     */
+    public final Transform getTransformation() throws SVGException {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()))) {
+            return SVGUtils.getTransform(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()));
+        }
+
+        return null;
+    }
+
+    /**
+     * Must be overwritten in the actual implementation to create a new result for this element based on the
+     * information available.
+     *
+     * @return a new instance of the result or null of no result was created
+     *
+     * @throws SVGException will be thrown when an error during creation occurs
+     */
+    protected abstract TResult createResultInternal() throws SVGException;
+
+    // endregion
+
+    // region Package Private
+
 
     // endregion
 

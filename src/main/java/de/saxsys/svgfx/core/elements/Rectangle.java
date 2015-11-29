@@ -69,11 +69,11 @@ import org.xml.sax.Attributes;
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
 
-        if (StringUtils.isNullOrEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName()))) {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName()))) {
             rect.setArcWidth(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName())) * 2.0d);
         }
 
-        if (StringUtils.isNullOrEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName()))) {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName()))) {
             rect.setArcHeight(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName())) * 2.0d);
         }
     }
