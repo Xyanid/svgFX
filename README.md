@@ -28,3 +28,5 @@ This will look up the file in the path of the resource folder.
 	-saxsys-svg-url: "svg/maximize.svg";
 }
 ```
+
+### Note that I plan to extract the SVGGroup from the lib and put it inside an own library in the coming versions.
