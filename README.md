@@ -14,14 +14,14 @@ In your FXML use the SVGGroup like this, note that you will need to import the g
 ```
 In your CSS style there are different ways to configure the path to the svg file you want to load.
 
-1. Direct link
+* Direct link
 This is a direct link to the svg file you want to load.
 ```xml
 #svgGroup {
 	-saxsys-svg-url: "D:\svg\maximize.svg";
 }
 ```
-2. Resource folder
+* Resource folder
 This will look up the file in the path of the resource folder.
 ```xml
 #svgGroup {
