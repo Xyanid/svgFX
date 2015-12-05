@@ -19,17 +19,30 @@
 
 package de.saxsys.svgfx.core;
 
+import javafx.util.Pair;
+
 /**
- * This is the base class which is used by
- * Created by Xyanid on 30.11.2015.
+ * @author Xyanid on 29.10.2015.
  */
-public abstract class SVGContentType<TValue, TUnit> {
+public class SVGCssContentTypeString extends SVGCssContentTypeBase<String, Void> {
 
-    //region Fields
+    //region Constructor
 
-    private TUnit unit;
+    /**
+     * Creates new instance.
+     */
+    public SVGCssContentTypeString(SVGDataProvider dataProvider) {
+        super(null, dataProvider);
+    }
 
     //endregion
 
+    //region Override CssContentTypeBase
 
+    @Override public Pair<String, Void> getValueAndUnit(String cssText) {
+
+        return new Pair<>(cssText, null);
+    }
+
+    //endregion
 }

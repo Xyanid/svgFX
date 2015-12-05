@@ -17,15 +17,12 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.css.core;
+package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Pair;
-
-import java.util.Optional;
 
 /**
  * Represents a {@link Paint} used to color fill and strokes, the default value is {@link Color#TRANSPARENT}.
@@ -35,11 +32,6 @@ import java.util.Optional;
 public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
 
     // region
-
-    /**
-     * Indicator representing that no color will be used.
-     */
-    private static final String NONE = "none";
 
     /**
      * Indicator representing that the color is to be retrieved from the color attribute.
@@ -81,14 +73,14 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
 
     //region Override CssContentTypeBase
 
-    @Override public Optional<Pair<Paint, Void>> getValueAndUnit(final String cssText) {
+    @Override public Pair<Paint, Void> getValueAndUnit(final String cssText) {
         willUseColorAttribute = CURRENT_COLOR.equals(cssText);
 
         if (willUseColorAttribute) {
-            return Optional.empty();
+            return null;
         }
 
-        return Optional.of(new Pair<>(SVGUtils.parseColor(cssText, getDataProvider()), null));
+        return new Pair<>(SVGUtils.parseColor(cssText, getDataProvider()), null);
     }
 
     //endregion

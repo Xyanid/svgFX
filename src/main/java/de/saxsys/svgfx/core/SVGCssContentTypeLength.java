@@ -17,12 +17,9 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.css.core;
+package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
 import javafx.util.Pair;
-
-import java.util.Optional;
 
 /**
  * This class represents a svg length content type
@@ -93,8 +90,7 @@ public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCs
         /**
          * Creates a new instance.
          *
-         * @param name             the name of the attribute within the svg element
-         * @param contentTypeClass the content type class to use
+         * @param name the name of the attribute within the svg element
          */
         Unit(final String name) {
             this.name = name;
@@ -131,7 +127,10 @@ public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCs
 
     //region Override CssContentTypeBase
 
-    @Override public Optional<Pair<Double, Unit>> getValueAndUnit(final String cssText) {
+    /**
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeLength}
+     */
+    @Override public Pair<Double, Unit> getValueAndUnit(final String cssText) {
 
         Unit usedUnit = Unit.NONE;
 
@@ -142,7 +141,7 @@ public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCs
             }
         }
 
-        return Optional.of(new Pair<Double, Unit>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length())), usedUnit));
+        return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length())), usedUnit);
     }
 
     //endregion

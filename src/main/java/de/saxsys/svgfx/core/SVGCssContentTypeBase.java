@@ -17,12 +17,10 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.css.core;
+package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.css.core.CssContentTypeBase;
 import javafx.util.Pair;
-
-import java.util.Optional;
 
 /**
  * /**
@@ -41,6 +39,11 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
      */
     public static String INHERIT_INDICATOR = "inherit";
 
+    /**
+     * Contains a {@link String} which indicates that the {@link SVGCssContentTypeBase} of a property is none, meaning its not used.
+     */
+    public static String NONE_INDICATOR = "none";
+
     // endregion
 
     //region Fields
@@ -49,6 +52,11 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
      * Determines whether the value will be retrieved from its parent.
      */
     private boolean isInherited;
+
+    /**
+     * Determines that the value is none, so no data will be processed.
+     */
+    private boolean isNone;
 
     /**
      * Determines the data provider to use when additional data is needed.
@@ -82,6 +90,13 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
     }
 
     /**
+     * @return The {@link #isNone}.
+     */
+    public boolean getIsNone() {
+        return isNone;
+    }
+
+    /**
      * @return The {@link #dataProvider}.
      */
     public SVGDataProvider getDataProvider() {
@@ -93,11 +108,11 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
     //region Public
 
     /**
-     * This will prevent the parsing of cssText which is marked as being inherited.
+     * This will be called if actual data is present in the css text, this is the case if the cssText is not {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
-     * @param cssText cssText which is not equal to {@link #INHERIT_INDICATOR}.
+     * @param cssText cssText which is not equal to {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      */
-    protected abstract Optional<Pair<TValue, TUnit>> getValueAndUnit(String cssText);
+    protected abstract Pair<TValue, TUnit> getValueAndUnit(String cssText);
 
     //endregion
 
@@ -108,15 +123,17 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
      *
      * @param cssText text to consume.
      */
-    @Override public final void consumeCssValue(final String cssText) {
+    @Override public final void parseCssValue(final String cssText) {
         isInherited = INHERIT_INDICATOR.equals(cssText);
 
-        if (!isInherited) {
-            Optional<Pair<TValue, TUnit>> data = getValueAndUnit(cssText);
+        isNone = NONE_INDICATOR.equals(cssText);
 
-            if (data.isPresent()) {
-                value = data.get().getKey();
-                unit = data.get().getValue();
+        if (!isInherited && !isNone) {
+            Pair<TValue, TUnit> data = getValueAndUnit(cssText);
+
+            if (data != null) {
+                value = data.getKey();
+                unit = data.getValue();
             }
         }
     }

@@ -21,6 +21,7 @@ package de.saxsys.svgfx.css.core;
 
 
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.w3c.dom.DOMException;
 
@@ -55,13 +56,56 @@ public abstract class CssStyleNew {
         STRING
     }
 
+    /**
+     * Determines what kind of selector is used in the style if any.
+     */
+    private enum Selector {
+        NONE("."),
+        CLASS("."),
+        ID("#");
+
+        // region Fields
+
+        private final String name;
+
+        // endregion
+
+        // region Constructor
+
+        Selector(final String name) {
+            this.name = name;
+        }
+
+        // endregion
+
+        // region Getter
+
+        public String getName() {
+            return name;
+        }
+
+        // endregion
+    }
+
     // endregion
 
     //region Fields
 
+    /**
+     * Determines the selector of the style
+     */
+    private Selector selector;
+
+    /**
+     * The name of the style excluding the class or id selector
+     */
     private String name;
 
+    /**
+     * Contains all the properties provided by this style.
+     */
     private final Map<String, CssContentTypeBase> properties;
+
 
     //endregion
 
@@ -108,6 +152,28 @@ public abstract class CssStyleNew {
     }
 
     /**
+     * Sets the {@link #name} also parsing any selector the name might have.
+     *
+     * @param name the name to use which might contain the selector.
+     */
+    private void setNameAndSelector(final String name) {
+        if (StringUtils.isNotNullOrEmpty(name)) {
+            if (name.startsWith(Selector.ID.getName())) {
+                selector = Selector.ID;
+                this.name = name.replace(Selector.ID.getName(), "");
+            } else if (name.startsWith(Selector.CLASS.getName())) {
+                selector = Selector.CLASS;
+                this.name = name.replace(Selector.CLASS.getName(), "");
+            } else {
+                selector = Selector.NONE;
+                this.name = name;
+            }
+        } else {
+            this.name = name;
+        }
+    }
+
+    /**
      * Creates at new {@link CssContentTypeBase} based on the given name.
      *
      * @param name name of the property
@@ -115,6 +181,10 @@ public abstract class CssStyleNew {
      * @return a new {@link CssContentTypeBase}.
      */
     protected abstract CssContentTypeBase createContentType(final String name);
+
+    // endregion
+
+    // region Private
 
     /**
      * Returns the {@link CssContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
@@ -167,10 +237,6 @@ public abstract class CssStyleNew {
         }
     }
 
-    //endregion
-
-    // region Abstract
-
     /**
      * Consumes the given css text and set the style. the css text must follow the default rules of a css style.
      */
@@ -216,9 +282,10 @@ public abstract class CssStyleNew {
 
                 // if the declaration block starts we set the current data as the name of the css style
                 if (character == Constants.DECLARATION_BLOCK_START) {
-                    name = dataBuilder.toString().trim();
+                    setNameAndSelector(dataBuilder.toString().trim());
                     isInsideDeclarationBlock = true;
                     dataBuilder.setLength(0);
+                    continue;
 
                     // we have found the end of a property so we consume if if possible and add it
                 } else if (character == Constants.PROPERTY_END) {
@@ -233,12 +300,13 @@ public abstract class CssStyleNew {
 
                         CssContentTypeBase content = createContentType(name);
 
-                        content.consumeCssValue(property.substring(index + 1).trim());
+                        content.parseCssValue(property.substring(index + 1).trim());
 
                         properties.put(name, content);
                     }
 
                     dataBuilder.setLength(0);
+                    continue;
 
                     // at this point we have reached the end of the style and stop doing what ever we did
                 } else if (character == Constants.DECLARATION_BLOCK_END) {
@@ -246,6 +314,8 @@ public abstract class CssStyleNew {
                     isInsideDeclarationBlock = false;
                     break;
                 }
+
+                dataBuilder.append(character);
             }
             // we are inside a string in which case we only add data if we are inside the declaration block already
             else if (isInsideDeclarationBlock) {

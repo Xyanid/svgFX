@@ -17,10 +17,13 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.css.core;
+package de.saxsys.svgfx.core;
 
 
-import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.css.core.CssContentTypeBase;
+import de.saxsys.svgfx.css.core.CssStyleNew;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
@@ -46,7 +49,7 @@ public class SVGCssStyle extends CssStyleNew {
         /**
          * Determines the controls the pattern of dashes and gaps used to stroke paths.
          */
-        STROKE_DASHARRAY("stroke-dasharray", null),
+        STROKE_DASHARRAY("stroke-dasharray", SVGCssContentTypeStrokeDashArray.class),
         /**
          * Determines the dash offset of a stroke.
          */
@@ -87,11 +90,11 @@ public class SVGCssStyle extends CssStyleNew {
         /**
          * Represents the algorithm which is to be used to determine what side of a path is inside the shape.
          */
-        FILL_RULE("fill-rule", SVGCssContentTypeLength.class),
+        FILL_RULE("fill-rule", SVGCssContentTypeFillRule.class),
         /**
          * Represents the color to use for a stop.
          */
-        STOP_COLOR("stop-color", SVGCssContentTypeLength.class),
+        STOP_COLOR("stop-color", SVGCssContentTypePaint.class),
         /**
          * Represents the transparency of a gradient, that is, the degree to which the background behind the element is overlaid.
          */
@@ -157,22 +160,35 @@ public class SVGCssStyle extends CssStyleNew {
 
     // endregion
 
+    // region Fields
+
+    private final SVGDataProvider provider;
+
+    // endregion
+
     //region Constructor
 
     /**
      * Creates a new instance.
+     *
+     * @param provider the data provider to use
      */
-    public SVGCssStyle() {
+    public SVGCssStyle(final SVGDataProvider provider) {
         super();
+
+        this.provider = provider;
     }
 
     /**
      * Creates a new instance.
      *
-     * @param name the name to of this style.
+     * @param name     the name to of this style.
+     * @param provider the data provider to use
      */
-    public SVGCssStyle(final String name) {
+    public SVGCssStyle(final String name, final SVGDataProvider provider) {
         super(name);
+
+        this.provider = provider;
     }
 
     //endregion
@@ -192,8 +208,8 @@ public class SVGCssStyle extends CssStyleNew {
         for (PresentationAttribute attribute : PresentationAttribute.values()) {
             if (attribute.getName().equals(name)) {
                 try {
-                    return attribute.getContentTypeClass().newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
+                    return attribute.getContentTypeClass().getConstructor(SVGDataProvider.class).newInstance(provider);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                     throw new SVGException("could not create an element for Content type class", e);
                 }
             }

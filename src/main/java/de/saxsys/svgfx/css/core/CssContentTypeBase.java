@@ -93,7 +93,7 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
      *
      * @param cssText text to consume.
      */
-    public abstract void consumeCssValue(final String cssText);
+    public abstract void parseCssValue(final String cssText);
 
     //endregion
 }
