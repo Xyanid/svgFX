@@ -19,6 +19,8 @@
 
 package de.saxsys.svgfx.css.core;
 
+import de.saxsys.svgfx.core.utils.CompareUtils;
+
 /**
  * This class contains the css value of a property
  *
@@ -36,7 +38,7 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
     /**
      * Contains the default value of this
      */
-    protected TValue defaultValue;
+    protected final TValue defaultValue;
 
     /**
      * The unit which is placed at the en
@@ -59,7 +61,7 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
 
     //endregion
 
-    //region Getter
+    //region Getter/Setter
 
     /**
      * Returns the {@link CssContentTypeBase#value}.
@@ -68,6 +70,16 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
      */
     public TValue getValue() {
         return value;
+    }
+
+
+    /**
+     * Sets the {@link #value}.
+     *
+     * @param value the value to use.
+     */
+    public void setValue(TValue value) {
+        this.value = value;
     }
 
     /**
@@ -94,6 +106,35 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
      * @param cssText text to consume.
      */
     public abstract void parseCssValue(final String cssText);
+
+    //endregion
+
+    //region Override Object
+
+    /**
+     * @return the XORed hash of
+     */
+    @Override public int hashCode() {
+        return (value == null ? 991 : value.hashCode()) ^ (unit == null ? 997 : unit.hashCode());
+    }
+
+    /**
+     * Checks whether the object is reference equal or if its also a {@link CssContentTypeBase} and its {@link #value} and {@link #unit} are the same.
+     *
+     * @param obj object to check.
+     *
+     * @return true if the object is the same otherwise false.
+     */
+    @Override public boolean equals(Object obj) {
+        boolean result = this == obj;
+
+        if (!result && obj instanceof CssContentTypeBase) {
+            CssContentTypeBase base = (CssContentTypeBase) obj;
+            result = CompareUtils.areEqualOrNull(value, base.value) && CompareUtils.areEqualOrNull(unit, base.unit);
+        }
+
+        return result;
+    }
 
     //endregion
 }

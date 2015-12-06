@@ -32,9 +32,11 @@ import java.util.Map;
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
+ * @param <TProperty> type of the properties of this style.
+ *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyleNew {
+public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
 
     // region Enumeration
 
@@ -104,7 +106,7 @@ public abstract class CssStyleNew {
     /**
      * Contains all the properties provided by this style.
      */
-    private final Map<String, CssContentTypeBase> properties;
+    private final Map<String, TProperty> properties;
 
 
     //endregion
@@ -147,7 +149,7 @@ public abstract class CssStyleNew {
      *
      * @return the {@link CssStyleNew#properties} as an unmodifiable list.
      */
-    public final Map<String, CssContentTypeBase> getUnmodifiableProperties() {
+    public final Map<String, TProperty> getUnmodifiableProperties() {
         return Collections.unmodifiableMap(properties);
     }
 
@@ -173,6 +175,10 @@ public abstract class CssStyleNew {
         }
     }
 
+    // endregion
+
+    //region Abstract
+
     /**
      * Creates at new {@link CssContentTypeBase} based on the given name.
      *
@@ -180,9 +186,9 @@ public abstract class CssStyleNew {
      *
      * @return a new {@link CssContentTypeBase}.
      */
-    protected abstract CssContentTypeBase createContentType(final String name);
+    protected abstract TProperty createContentType(final String name);
 
-    // endregion
+    //endregion
 
     // region Private
 
@@ -193,13 +199,24 @@ public abstract class CssStyleNew {
      *
      * @return the {@link CssContentTypeBase} in the given map or null.
      */
-    public final CssContentTypeBase getCssContentType(final String name) {
+    public final TProperty getCssContentType(final String name) {
         return properties.get(name);
     }
 
     // endregion
 
     // region Public
+
+    /**
+     * Determines if the given property in contain in he style.
+     *
+     * @param name name of the property to look for.
+     *
+     * @return true if a property with the name exists otherwise false.
+     */
+    public final boolean hasCssContentType(String name) {
+        return properties.containsKey(name);
+    }
 
     /**
      * Returns the {@link CssContentTypeBase} in the given map of properties as the desired type using the provided key or null if no such content type exist.
@@ -210,13 +227,12 @@ public abstract class CssStyleNew {
      *
      * @return the {@link CssContentTypeBase} in the given map or null.
      */
-    public final <TContent extends CssContentTypeBase> TContent getCssContentType(final String name, final Class<TContent> clazz) {
+    public final <TContent extends TProperty> TContent getCssContentType(final String name, final Class<TContent> clazz) {
         return clazz.cast(properties.get(name));
     }
 
     /**
-     * Combines this {@link CssStyleNew} with the given {@link CssStyleNew}. Note that if the provided style has a {@link CssValue} which is also present in this style, then this value will be used
-     * instead overwritting the existing one in this style.
+     * Combines this {@link CssStyleNew} with the given {@link CssStyleNew}, overwriting existing properties and adding new ones.
      *
      * @param style the {@link CssStyleNew} which is be used, must not be null.
      *
@@ -232,7 +248,7 @@ public abstract class CssStyleNew {
             return;
         }
 
-        for (Map.Entry<String, CssContentTypeBase> entry : style.getUnmodifiableProperties().entrySet()) {
+        for (Map.Entry<String, TProperty> entry : style.getUnmodifiableProperties().entrySet()) {
             properties.put(entry.getKey(), entry.getValue());
         }
     }
@@ -241,6 +257,10 @@ public abstract class CssStyleNew {
      * Consumes the given css text and set the style. the css text must follow the default rules of a css style.
      */
     public final void parseCssText(final String cssText) throws DOMException {
+
+        name = null;
+        selector = Selector.NONE;
+        properties.clear();
 
         StringBuilder dataBuilder = new StringBuilder();
 
@@ -298,9 +318,9 @@ public abstract class CssStyleNew {
 
                         String name = property.substring(0, index).trim();
 
-                        CssContentTypeBase content = createContentType(name);
+                        TProperty content = createContentType(StringUtils.stripStringIndicators(name));
 
-                        content.parseCssValue(property.substring(index + 1).trim());
+                        content.parseCssValue(StringUtils.stripStringIndicators(property.substring(index + 1).trim()));
 
                         properties.put(name, content);
                     }
@@ -342,7 +362,7 @@ public abstract class CssStyleNew {
     }
 
     /**
-     * Determines if the given object equals the provided object.
+     * Determines if the given object areEqualOrNull the provided object.
      * This is based on the {@link #name} of object.
      *
      * @param obj, object to compare to

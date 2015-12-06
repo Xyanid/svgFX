@@ -20,7 +20,6 @@
 package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
 import de.saxsys.svgfx.xml.core.IDataProvider;
 
 import java.util.HashMap;
@@ -44,7 +43,7 @@ public class SVGDataProvider implements IDataProvider {
     /**
      * Contains all the available styles.
      */
-    private final Set<CssStyle> styles = new HashSet<>();
+    private final Set<SVGCssStyle> styles = new HashSet<>();
 
     //endregion
 
@@ -64,7 +63,7 @@ public class SVGDataProvider implements IDataProvider {
      *
      * @return the styles contained in the svg file
      */
-    public final Set<CssStyle> getStyles() {
+    public final Set<SVGCssStyle> getStyles() {
         return styles;
     }
 

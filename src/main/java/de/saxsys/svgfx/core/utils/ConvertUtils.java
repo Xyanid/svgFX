@@ -23,23 +23,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * This class provides convenient functions to handle converting data from one type to another using functional
- * interfaces Created by Xyanid on 29.10.2015.
+ * This class provides convenient functions to handle converting data from one type to another using functional interfaces
+ *
+ * @author by Xyanid on 29.10.2015.
  */
 public final class ConvertUtils {
 
     // region Constructor
-
-    /**
-     *
-     */
-    private ConvertUtils() {
-
-    }
-
-    // endregion
-
-    // region Methods
 
     /**
      * Tries to apply the given string as data to the consumer interfaces using the given converter to parse the data
@@ -54,6 +44,10 @@ public final class ConvertUtils {
     public static <TInput, TOutput> void applyData(final TInput data, final Consumer<TOutput> consumer, final Function<TInput, TOutput> converter) {
         applyData(data, consumer, converter, null);
     }
+
+    // endregion
+
+    // region Methods
 
     /**
      * Tries to apply the given string as data to the consumer interfaces using the given converter to parse the data
@@ -102,6 +96,13 @@ public final class ConvertUtils {
         }
 
         return converter.apply(data);
+    }
+
+    /**
+     *
+     */
+    private ConvertUtils() {
+
     }
 
     // endregion

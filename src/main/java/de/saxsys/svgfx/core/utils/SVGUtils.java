@@ -19,22 +19,21 @@
 
 package de.saxsys.svgfx.core.utils;
 
+import de.saxsys.svgfx.core.SVGCssContentTypeLength;
+import de.saxsys.svgfx.core.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.SVGCssContentTypeStrokeLineCap;
+import de.saxsys.svgfx.core.SVGCssContentTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.SVGCssContentTypeStrokeType;
+import de.saxsys.svgfx.core.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.LinearGradient;
 import de.saxsys.svgfx.core.elements.RadialGradient;
-import de.saxsys.svgfx.core.utils.ConvertUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
-import de.saxsys.svgfx.css.core.CssStyleDeclaration;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -43,11 +42,11 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
 import java.util.EnumSet;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
- * This class provides functionality related to svg processing Created by Xyanid on 02.11.2015.
+ * This class provides functionality related to svg processing
+ *
+ * @author by Xyanid on 02.11.2015.
  */
 public final class SVGUtils {
 
@@ -58,14 +57,6 @@ public final class SVGUtils {
     // endregion
 
     // region Constructor
-
-    private SVGUtils() {
-
-    }
-
-    // endregion
-
-    // region Methods related to Styling
 
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF)
@@ -121,70 +112,21 @@ public final class SVGUtils {
         return result;
     }
 
-    /**
-     * Tries to get the {@link Enumerations.PresentationAttribute} from the given {@link CssStyle}. The declaration is
-     * first converted and then consumed.
-     *
-     * @param style       style which will provide tha data
-     * @param declaration declaration to be used
-     * @param consumer    consumer which will use that converted data
-     * @param converter   converter which will parse the provided data into the desired type
-     * @param <TData>     type of the data
-     *
-     * @return true if the declaration is present in the style and was used
-     */
-    public static <TData> boolean applyStyleDeclaration(final CssStyle style,
-                                                        final SVGElementBase.PresentationAttribute declaration,
-                                                        final Consumer<TData> consumer,
-                                                        final Function<String, TData> converter) {
-        return applyStyleDeclaration(style, declaration, consumer, converter, null);
-    }
+    // endregion
 
-    /**
-     * Tries to get the {@link Enumerations.PresentationAttribute} from the given {@link CssStyle}. The declaration is
-     * first converted and then if need be validated and then consumed.
-     *
-     * @param style       style which will provide tha data
-     * @param declaration declaration to be used
-     * @param consumer    consumer which will use that converted data
-     * @param converter   converter which will parse the provided data into the desired type
-     * @param validator   validator to use, may be null if not needed in which case no validation is performed
-     * @param <TData>     type of the data
-     *
-     * @return true if the declaration is present in the style
-     */
-    public static <TData> boolean applyStyleDeclaration(final CssStyle style,
-                                                        final SVGElementBase.PresentationAttribute declaration,
-                                                        final Consumer<TData> consumer,
-                                                        final Function<String, TData> converter,
-                                                        final Function<String, Boolean> validator) {
-
-        String value = style.getStyle().getPropertyValue(declaration.getName());
-
-        if (StringUtils.isNullOrEmpty(value)) {
-            return false;
-        }
-
-        if (validator != null && !validator.apply(value)) {
-            return false;
-        }
-
-        ConvertUtils.applyData(value, consumer, converter);
-
-        return true;
-    }
+    // region Methods related to Styling
 
     /**
      * Applies the basic style every {@link Shape} supports to the given shape.
      *
      * @param shape        {@link Shape} to which the the styles should be applied, must not be null
-     * @param style        {@link CssStyle} to use, must not be null
+     * @param style        {@link SVGCssStyle} to use, must not be null
      * @param dataProvider the {@link SVGDataProvider} to be used
      * @param <TShape>     type of the shape to be used
      *
      * @throws IllegalArgumentException if either shape or style is null
      */
-    public static <TShape extends Shape> void applyStyle(final TShape shape, final CssStyle style, final SVGDataProvider dataProvider) throws IllegalArgumentException {
+    public static <TShape extends Shape> void applyStyle(final TShape shape, final SVGCssStyle style, final SVGDataProvider dataProvider) throws IllegalArgumentException {
 
         if (dataProvider == null) {
             throw new IllegalArgumentException("given dataProvider must not be null");
@@ -198,24 +140,40 @@ public final class SVGUtils {
             throw new IllegalArgumentException("given style must not be null");
         }
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.FILL, shape::setFill, (data) -> parseColor(data, dataProvider));
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName())) {
+            shape.setFill(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
+        }
 
         //TODO apply stroke opacity here
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE, shape::setStroke, (data) -> parseColor(data, dataProvider));
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName())) {
+            shape.setStroke(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+        }
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_TYPE, shape::setStrokeType, (data) -> StrokeType.valueOf(data.toUpperCase()));
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_TYPE.getName())) {
+            shape.setStrokeType(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_TYPE.getName(), SVGCssContentTypeStrokeType.class).getValue());
+        }
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_WIDTH, shape::setStrokeWidth, Double::parseDouble);
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName())) {
+            shape.setStrokeWidth(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue());
+        }
 
         //TODO apply the stroke dash array here
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_DASHOFFSET, shape::setStrokeDashOffset, Double::parseDouble);
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHOFFSET.getName())) {
+            shape.setStrokeDashOffset(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHOFFSET.getName(), SVGCssContentTypeLength.class).getValue());
+        }
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_LINEJOIN, shape::setStrokeLineJoin, (data) -> StrokeLineJoin.valueOf(data.toUpperCase()));
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINEJOIN.getName())) {
+            shape.setStrokeLineJoin(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINEJOIN.getName(), SVGCssContentTypeStrokeLineJoin.class).getValue());
+        }
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_LINECAP, shape::setStrokeLineCap, (data) -> StrokeLineCap.valueOf(data.toUpperCase()));
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName())) {
+            shape.setStrokeLineCap(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName(), SVGCssContentTypeStrokeLineCap.class).getValue());
+        }
 
-        applyStyleDeclaration(style, SVGElementBase.PresentationAttribute.STROKE_MITERLIMIT, shape::setStrokeMiterLimit, Double::parseDouble);
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName())) {
+            shape.setStrokeWidth(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue());
+        }
     }
 
     /**
@@ -262,10 +220,6 @@ public final class SVGUtils {
 
         return result;
     }
-
-    // endregion
-
-    // region Methods related to Transformation
 
     /**
      * Gets the {@link Transform} that is represented by the given data. The data must meet the following requirements.
@@ -401,18 +355,13 @@ public final class SVGUtils {
         return result;
     }
 
-    /**
-     * Returns the desired supported declaration as the desired type if it exits.
-     *
-     * @param declaration declaration to be used
-     * @param converter   converter interfaces to be used
-     * @param <TData>     type of the data
-     *
-     * @return the data as the given type or null if the declaration is not present
-     */
-    public static <TData> TData getPropertyAs(final CssStyleDeclaration declaration, final SVGElementBase.PresentationAttribute attribute, final Function<String, TData> converter) {
+    // endregion
 
-        return declaration.getPropertyAs(attribute.getName(), converter);
+    // region Methods related to Transformation
+
+    private SVGUtils() {
+
     }
+
     // endregion
 }

@@ -19,12 +19,11 @@
 
 package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.css.core.CssStyle;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
 
@@ -35,7 +34,7 @@ import java.util.Set;
  * This class represents the style element from svg
  * Created by Xyanid on 27.10.2015.
  */
-@SVGElementMapping("style") public class Style extends SVGElementBase<Set<CssStyle>> {
+@SVGElementMapping("style") public class Style extends SVGElementBase<Set<SVGCssStyle>> {
 
     //region Static
     /**
@@ -72,14 +71,18 @@ import java.util.Set;
 
     //region SVGElementBase
 
+    @Override protected void initializeResult(Set<SVGCssStyle> cssStyles) throws SVGException {
+
+    }
+
     /**
      * @inheritDoc
      *
      * This implementation does not use the given data
      */
-    @Override protected final Set<CssStyle> createResultInternal() {
+    @Override protected final Set<SVGCssStyle> createResultInternal() {
 
-        Set<CssStyle> result = new HashSet<>();
+        Set<SVGCssStyle> result = new HashSet<>();
 
         if (getAttribute(CoreAttribute.TYPE.getName()) == null || getAttribute(CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
 
@@ -99,9 +102,9 @@ import java.util.Set;
 
                     if (lastDeclarationEnd > -1 && lastDeclarationEnd < counter) {
 
-                        CssStyle style = new CssStyle();
+                        SVGCssStyle style = new SVGCssStyle(getDataProvider());
 
-                        style.setCssText(builder.toString());
+                        style.parseCssText(builder.toString());
 
                         result.add(style);
 
@@ -119,10 +122,6 @@ import java.util.Set;
         }
 
         return result;
-    }
-
-    @Override protected void initializeResult(Set<CssStyle> cssStyles) throws SVGException {
-
     }
 
     /**

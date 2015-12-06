@@ -19,14 +19,13 @@
 
 package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
 import javafx.scene.Node;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
@@ -55,6 +54,10 @@ import org.xml.sax.Attributes;
 
     //region SVGElementBase
 
+    @Override protected void initializeResult(Node node) throws SVGException {
+
+    }
+
     /**
      * @inheritDoc Resolves the needed reference
      */
@@ -73,7 +76,7 @@ import org.xml.sax.Attributes;
 
         //apply style to the element if its a shape and we have a style for this use element
         if (result instanceof Shape) {
-            CssStyle style = getCssStyle();
+            SVGCssStyle style = getCssStyle();
 
             if (style != null) {
                 SVGUtils.applyStyle((Shape) result, style, getDataProvider());
@@ -81,10 +84,6 @@ import org.xml.sax.Attributes;
         }
 
         return result;
-    }
-
-    @Override protected void initializeResult(Node node) throws SVGException {
-
     }
 
 

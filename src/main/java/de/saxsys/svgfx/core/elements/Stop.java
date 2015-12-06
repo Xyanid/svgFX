@@ -19,13 +19,15 @@
 
 package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGCssContentTypeLength;
+import de.saxsys.svgfx.core.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.xml.sax.Attributes;
 
 /**
@@ -52,24 +54,28 @@ import org.xml.sax.Attributes;
 
     //region SVGElementBase
 
+    @Override protected final void initializeResult(javafx.scene.paint.Stop stop) throws SVGException {
+
+    }
+
     @Override protected final javafx.scene.paint.Stop createResultInternal() throws SVGException {
         double offset = Double.parseDouble(getAttribute(CoreAttribute.OFFSET.getName()));
 
-        CssStyle style = getCssStyle();
+        SVGCssStyle style = getCssStyle();
 
-        double opacity = SVGUtils.getPropertyAs(style.getCssStyleDeclaration(), PresentationAttribute.STOP_OPACITY, Double::parseDouble);
+        double opacity = 0.0d;
 
-        String color = style.getCssStyleDeclaration().getPropertyValue(PresentationAttribute.STOP_COLOR.getName());
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName())) {
+            opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeLength.class).getValue();
+        }
 
-        if (color == null) {
+        Paint paint = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypePaint.class).getValue();
+
+        if (paint == null) {
             throw new IllegalArgumentException("given color must not be null");
         }
 
-        return new javafx.scene.paint.Stop(offset, Color.web(color, opacity));
-    }
-
-    @Override protected final void initializeResult(javafx.scene.paint.Stop stop) throws SVGException {
-
+        return new javafx.scene.paint.Stop(offset, (Color) paint);
     }
 
     //endregion

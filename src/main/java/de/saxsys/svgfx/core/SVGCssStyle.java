@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssStyle extends CssStyleNew {
+public class SVGCssStyle extends CssStyleNew<SVGCssContentTypeBase> {
 
     // region Enumeration
 
@@ -118,7 +118,7 @@ public class SVGCssStyle extends CssStyleNew {
         /**
          * Determines the default value for this
          */
-        private final Class<? extends CssContentTypeBase> contentTypeClass;
+        private final Class<? extends SVGCssContentTypeBase> contentTypeClass;
 
         // endregion
 
@@ -130,7 +130,7 @@ public class SVGCssStyle extends CssStyleNew {
          * @param name             the name of the attribute within the svg element
          * @param contentTypeClass the content type class to use
          */
-        PresentationAttribute(final String name, final Class<? extends CssContentTypeBase> contentTypeClass) {
+        PresentationAttribute(final String name, final Class<? extends SVGCssContentTypeBase> contentTypeClass) {
             this.name = name;
             this.contentTypeClass = contentTypeClass;
         }
@@ -151,7 +151,7 @@ public class SVGCssStyle extends CssStyleNew {
         /**
          * @return the {@link #contentTypeClass}.
          */
-        public final Class<? extends CssContentTypeBase> getContentTypeClass() {
+        public final Class<? extends SVGCssContentTypeBase> getContentTypeClass() {
             return contentTypeClass;
         }
 
@@ -203,7 +203,7 @@ public class SVGCssStyle extends CssStyleNew {
      *
      * @return a {@link CssContentTypeBase} or null if the name is not supported.
      */
-    @Override protected CssContentTypeBase createContentType(String name) {
+    @Override protected SVGCssContentTypeBase createContentType(String name) {
 
         for (PresentationAttribute attribute : PresentationAttribute.values()) {
             if (attribute.getName().equals(name)) {

@@ -19,6 +19,7 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.utils.CompareUtils;
 import de.saxsys.svgfx.css.core.CssContentTypeBase;
 import javafx.util.Pair;
 
@@ -119,7 +120,7 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
     // region Abstract
 
     /**
-     * Consumes the given css text setting the values in the process
+     * Consumes the given css text setting the values in the process.
      *
      * @param cssText text to consume.
      */
@@ -139,4 +140,35 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
     }
 
     // endregion
+
+    //region Override Object
+
+    /**
+     * @return the XORed hash of
+     */
+    @Override public int hashCode() {
+        return Boolean.hashCode(isNone) ^ Boolean.hashCode(isInherited) ^ super.hashCode();
+    }
+
+    /**
+     * Checks whether the object is reference equal or if its also a {@link SVGCssContentTypeBase} and its {@link #isNone} and {@link #isInherited} are the same.
+     *
+     * @param obj object to check.
+     *
+     * @return true if the object is the same otherwise false.
+     */
+    @Override public boolean equals(Object obj) {
+
+        boolean result = super.equals(obj);
+
+        // in this case the object might be the same be we also need to check if inherit and none are the same
+        if (result && obj instanceof SVGCssContentTypeBase) {
+            SVGCssContentTypeBase base = (SVGCssContentTypeBase) obj;
+            result = isNone == base.isNone && isInherited == base.isInherited;
+        }
+
+        return result;
+    }
+
+    //endregion
 }

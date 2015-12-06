@@ -20,7 +20,6 @@
 package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
@@ -57,7 +56,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
     @Override protected void initializeResult(TShape shape) throws SVGException {
         super.initializeResult(shape);
 
-        CssStyle style = getCssStyle();
+        SVGCssStyle style = getCssStyle();
 
         if (style != null) {
 

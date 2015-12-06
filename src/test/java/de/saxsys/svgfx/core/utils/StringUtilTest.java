@@ -28,9 +28,9 @@ import org.junit.Test;
  */
 public final class StringUtilTest {
     /**
-     * will test the {@link StringUtils#replaceLast(String, String, String)}.
+     * Will if the last character in a string is replaces if it was found.
      */
-    @Test public void replaceLast() {
+    @Test public void replaceLastOccurrenceInString() {
         String test = "this is a test;";
 
         //first we test the string version
@@ -46,5 +46,15 @@ public final class StringUtilTest {
         Assert.assertEquals(test, StringUtils.replaceLast(test, '-', ' '));
 
         Assert.assertEquals(null, StringUtils.replaceLast(null, '-', ' '));
+    }
+
+    /**
+     * Test if string characters are removed at the start and end.
+     */
+    @Test public void removeStringIndicators() {
+        String test = "\"this\" is a test;\"";
+
+        //first we test the string version
+        Assert.assertEquals("this\" is a test;", StringUtils.stripStringIndicators(test));
     }
 }

@@ -19,13 +19,12 @@
 
 package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGCssContentTypeFillRule;
+import de.saxsys.svgfx.core.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGElementBase;
 import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGShapeBase;
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
 import javafx.scene.shape.SVGPath;
 import org.xml.sax.Attributes;
 
@@ -68,17 +67,12 @@ import org.xml.sax.Attributes;
     @Override protected final void initializeResult(SVGPath path) {
         super.initializeResult(path);
 
-        CssStyle style = getCssStyle();
+        SVGCssStyle style = getCssStyle();
 
         if (style != null) {
-            //apply the fill rule if need be
-            String ruleValue = style.getCssStyleDeclaration().getPropertyValue(PresentationAttribute.FILL_RULE.getName());
-            if (StringUtils.isNotNullOrEmpty(ruleValue)) {
-                for (Enumerations.FillRuleMapping fillRule : Enumerations.FillRuleMapping.values()) {
-                    if (fillRule.getName().equals(ruleValue)) {
-                        path.setFillRule(fillRule.getRule());
-                    }
-                }
+
+            if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName())) {
+                path.setFillRule(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue());
             }
         }
     }
