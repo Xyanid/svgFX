@@ -19,8 +19,10 @@
 
 package de.saxsys.svgfx.core;
 
-import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a dash array used for strokes, the default value is an empty array.
@@ -29,10 +31,19 @@ import javafx.util.Pair;
  */
 public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGCssContentTypeLength[], Void> {
 
+    // region Fields
+
+    /**
+     * Contains the dashValues as double.
+     */
+    private final List<Double> dashValues = new ArrayList<>();
+
+    // endregion
+
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeLineJoin#MITER}.
+     * Creates new instance with a default value of an empty array.
      */
     public SVGCssContentTypeStrokeDashArray(SVGDataProvider dataProvider) {
         super(new SVGCssContentTypeLength[]{}, dataProvider);
@@ -40,10 +51,21 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
 
     //endregion
 
+    // region Public
+
+    /**
+     * @return the {@link #dashValues}.
+     */
+    public final List<Double> getDashValues() {
+        return dashValues;
+    }
+
+    // endregion
+
     //region Override CssContentTypeBase
 
     /**
-     * {@inheritDoc} This implementation will parse the given data as a coma separated list of values.
+     * {@inheritDoc} This implementation will parse the given data as a coma separated list of dashValues.
      *
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeLength}
      */
@@ -52,10 +74,12 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
         String[] values = cssText.split(",");
 
         SVGCssContentTypeLength[] array = new SVGCssContentTypeLength[values.length];
+        dashValues.clear();
 
         for (int i = 0; i < values.length; i++) {
             array[i] = new SVGCssContentTypeLength(getDataProvider());
             array[i].parseCssValue(values[i].trim());
+            dashValues.add(array[i].getValue());
         }
 
         return new Pair<>(array, null);

@@ -159,6 +159,10 @@ public final class SVGCssContentTypeTest {
                 Assert.assertEquals(length.getValue(), value, 0.01d);
                 Assert.assertEquals(length.getUnit(), unit);
             }
+
+            for (Double valueDouble : contentType.getDashValues()) {
+                Assert.assertEquals(valueDouble, value, 0.01d);
+            }
         }
     }
 

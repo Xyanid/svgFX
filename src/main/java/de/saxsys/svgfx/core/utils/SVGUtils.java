@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGCssContentTypeLength;
 import de.saxsys.svgfx.core.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.SVGCssContentTypeStrokeDashArray;
 import de.saxsys.svgfx.core.SVGCssContentTypeStrokeLineCap;
 import de.saxsys.svgfx.core.SVGCssContentTypeStrokeLineJoin;
 import de.saxsys.svgfx.core.SVGCssContentTypeStrokeType;
@@ -157,7 +158,10 @@ public final class SVGUtils {
             shape.setStrokeWidth(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue());
         }
 
-        //TODO apply the stroke dash array here
+        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHARRAY.getName())) {
+            shape.getStrokeDashArray().clear();
+            shape.getStrokeDashArray().addAll(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHARRAY.getName(), SVGCssContentTypeStrokeDashArray.class).getDashValues());
+        }
 
         if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHOFFSET.getName())) {
             shape.setStrokeDashOffset(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHOFFSET.getName(), SVGCssContentTypeLength.class).getValue());
