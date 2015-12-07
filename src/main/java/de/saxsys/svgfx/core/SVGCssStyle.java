@@ -21,7 +21,7 @@ package de.saxsys.svgfx.core;
 
 
 import de.saxsys.svgfx.css.core.CssContentTypeBase;
-import de.saxsys.svgfx.css.core.CssStyleNew;
+import de.saxsys.svgfx.css.core.CssStyle;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssStyle extends CssStyleNew<SVGCssContentTypeBase> {
+public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
 
     // region Enumeration
 

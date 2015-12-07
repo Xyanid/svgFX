@@ -19,10 +19,10 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.Circle;
 import de.saxsys.svgfx.core.elements.Group;
-import de.saxsys.svgfx.css.core.CssStyle;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.FillRule;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -51,30 +51,30 @@ public class SVGElementBaseTest {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(EnumSet.allOf(SVGElementBase.PresentationAttribute.class).size());
+        Mockito.when(attributes.getLength()).thenReturn(EnumSet.allOf(SVGCssStyle.PresentationAttribute.class).size());
 
         int counter = 0;
 
-        for (SVGElementBase.PresentationAttribute attribute : EnumSet.allOf(SVGElementBase.PresentationAttribute.class)) {
+        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
             Mockito.when(attributes.getQName(counter)).thenReturn(attribute.getName());
             Mockito.when(attributes.getValue(counter)).thenReturn(String.format("%d", counter++));
         }
 
         Circle circle = new Circle("circle", attributes, null, new SVGDataProvider());
 
-        CssStyle style = circle.getPresentationCssStyle();
+        SVGCssStyle style = circle.getPresentationCssStyle();
 
         Assert.assertNotNull(style);
 
         counter = 0;
 
-        for (SVGElementBase.PresentationAttribute attribute : EnumSet.allOf(SVGElementBase.PresentationAttribute.class)) {
-            Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(attribute.getName()), String.format("%d", counter++));
+        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
+            Assert.assertEquals(style.getCssContentType(attribute.getName()).getDefaultValue(), String.format("%d", counter++));
         }
     }
 
     /**
-     * Ensures that {@link SVGElementBase.PresentationAttribute}s will be preferred and own {@link CssStyle} attributes are kept.
+     * Ensures that {@link SVGCssStyle.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
     @Test public void ensureThatPresentationStyleIsPreferredAndOwnCssStyleAttributesAreKept() {
 
@@ -82,29 +82,29 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("none");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.PresentationAttribute.STROKE.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("#808080");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.PresentationAttribute.FILL_RULE.getName());
-        Mockito.when(attributes.getValue(2)).thenReturn("odd");
+        Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.FILL_RULE.getName());
+        Mockito.when(attributes.getValue(2)).thenReturn("evenodd");
         Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("fill:#101010;stroke:#080808;stroke-width:50;");
 
         Circle circle = new Circle("circle", attributes, null, new SVGDataProvider());
 
-        CssStyle style = circle.getCssStyle();
+        SVGCssStyle style = circle.getCssStyle();
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.FILL.getName()), "none");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.STROKE.getName()), "#808080");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.FILL_RULE.getName()), "odd");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.STROKE_WIDTH.getName()), "50");
+        Assert.assertTrue(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getIsNone());
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 50.0d, 0.01d);
     }
 
     /**
-     * Ensures that {@link SVGElementBase.PresentationAttribute}s will be preferred and own {@link CssStyle} attributes are kept.
+     * Ensures that {@link SVGCssStyle.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
     @Test public void ensureThatOwnStyleIsPreferredAndReferencedCssStyleAttributesAreKept() {
 
@@ -117,9 +117,9 @@ public class SVGElementBaseTest {
         Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.CLASS.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("st1");
 
-        CssStyle referencedStyle = new CssStyle();
+        SVGCssStyle referencedStyle = new SVGCssStyle(new SVGDataProvider());
 
-        referencedStyle.consumeCssText("st1{fill:none;stroke:#001122;fill-rule:odd;}");
+        referencedStyle.parseCssText("st1{fill:none;stroke:#001122;fill-rule:odd;}");
 
         SVGDataProvider dataProvider = new SVGDataProvider();
 
@@ -127,18 +127,19 @@ public class SVGElementBaseTest {
 
         Circle circle = new Circle("circle", attributes, null, dataProvider);
 
-        CssStyle style = circle.getCssStyle();
+        SVGCssStyle style = circle.getCssStyle();
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.FILL.getName()), "#101010");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.STROKE.getName()), "#080808");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.FILL_RULE.getName()), "odd");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.STROKE_WIDTH.getName()), "50");
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#101010"));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#080808"));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 50.0d, 0.01d);
     }
 
     /**
-     * Ensures that attributes of {@link CssStyle} can be inherited and that values which are not present on the {@link CssStyle} of the parent will not return data but will not cause any exceptions.
+     * Ensures that attributes of {@link SVGCssStyle} can be inherited and that values which are not present on the {@link SVGCssStyle} of the parent will not return data but will not cause any
+     * exceptions.
      */
     @Test public void ensureThatCssStyleAttributesAreInherited() {
 
@@ -151,9 +152,9 @@ public class SVGElementBaseTest {
 
         SVGDataProvider dataProvider = new SVGDataProvider();
 
-        CssStyle referencedStyle = new CssStyle();
+        SVGCssStyle referencedStyle = new SVGCssStyle(dataProvider);
 
-        referencedStyle.consumeCssText("st1{fill-rule:inherit;}");
+        referencedStyle.parseCssText("st1{fill-rule:inherit;}");
 
         dataProvider.getStyles().add(referencedStyle);
 
@@ -161,7 +162,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("inherit");
         Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("stroke:inherit;");
@@ -170,12 +171,12 @@ public class SVGElementBaseTest {
 
         Circle circle = new Circle("circle", attributes, group, dataProvider);
 
-        CssStyle style = circle.getCssStyle();
+        SVGCssStyle style = circle.getCssStyle();
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.FILL.getName()), "#000000");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.STROKE.getName()), "#111111");
-        Assert.assertEquals(style.getCssStyleDeclaration().getPropertyValue(SVGElementBase.PresentationAttribute.FILL_RULE.getName()), "evenodd");
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#000000"));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#111111"));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
     }
 }

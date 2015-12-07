@@ -32,11 +32,11 @@ import java.util.Map;
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
- * @param <TProperty> type of the properties of this style.
+ * @param <TContentType> type of the properties of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
+public abstract class CssStyle<TContentType extends CssContentTypeBase> {
 
     // region Enumeration
 
@@ -106,7 +106,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
     /**
      * Contains all the properties provided by this style.
      */
-    private final Map<String, TProperty> properties;
+    private final Map<String, TContentType> properties;
 
 
     //endregion
@@ -116,7 +116,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
     /**
      * Creates a new instance.
      */
-    public CssStyleNew() {
+    public CssStyle() {
         super();
 
         properties = new HashMap<>();
@@ -127,7 +127,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
      *
      * @param name the name to of this style.
      */
-    public CssStyleNew(final String name) {
+    public CssStyle(final String name) {
         this();
 
         this.name = name;
@@ -145,11 +145,11 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
     }
 
     /**
-     * Returns the {@link CssStyleNew#properties} as an unmodifiable list.
+     * Returns the {@link CssStyle#properties} as an unmodifiable list.
      *
-     * @return the {@link CssStyleNew#properties} as an unmodifiable list.
+     * @return the {@link CssStyle#properties} as an unmodifiable list.
      */
-    public final Map<String, TProperty> getUnmodifiableProperties() {
+    public final Map<String, TContentType> getUnmodifiableProperties() {
         return Collections.unmodifiableMap(properties);
     }
 
@@ -186,7 +186,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
      *
      * @return a new {@link CssContentTypeBase}.
      */
-    protected abstract TProperty createContentType(final String name);
+    protected abstract TContentType createContentType(final String name);
 
     //endregion
 
@@ -199,7 +199,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
      *
      * @return the {@link CssContentTypeBase} in the given map or null.
      */
-    public final TProperty getCssContentType(final String name) {
+    public final TContentType getCssContentType(final String name) {
         return properties.get(name);
     }
 
@@ -227,18 +227,18 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
      *
      * @return the {@link CssContentTypeBase} in the given map or null.
      */
-    public final <TContent extends TProperty> TContent getCssContentType(final String name, final Class<TContent> clazz) {
+    public final <TContent extends TContentType> TContent getCssContentType(final String name, final Class<TContent> clazz) {
         return clazz.cast(properties.get(name));
     }
 
     /**
-     * Combines this {@link CssStyleNew} with the given {@link CssStyleNew}, overwriting existing properties and adding new ones.
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, overwriting existing properties and adding new ones.
      *
-     * @param style the {@link CssStyleNew} which is be used, must not be null.
+     * @param style the {@link CssStyle} which is be used, must not be null.
      *
-     * @throws IllegalArgumentException if the given {@link CssStyleNew} is null.
+     * @throws IllegalArgumentException if the given {@link CssStyle} is null.
      */
-    public final void combineWithStyle(final CssStyleNew style) {
+    public final <TContentTypeOther extends TContentType> void combineWithStyle(final CssStyle<TContentTypeOther> style) {
 
         if (style == null) {
             throw new IllegalArgumentException("given style must not be null");
@@ -248,7 +248,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
             return;
         }
 
-        for (Map.Entry<String, TProperty> entry : style.getUnmodifiableProperties().entrySet()) {
+        for (Map.Entry<String, TContentTypeOther> entry : style.properties.entrySet()) {
             properties.put(entry.getKey(), entry.getValue());
         }
     }
@@ -318,7 +318,7 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
 
                         String name = property.substring(0, index).trim();
 
-                        TProperty content = createContentType(StringUtils.stripStringIndicators(name));
+                        TContentType content = createContentType(StringUtils.stripStringIndicators(name));
 
                         content.parseCssValue(StringUtils.stripStringIndicators(property.substring(index + 1).trim()));
 
@@ -373,8 +373,8 @@ public abstract class CssStyleNew<TProperty extends CssContentTypeBase> {
 
         boolean result = super.equals(obj);
 
-        if (!result && obj != null && CssStyleNew.class.isAssignableFrom(obj.getClass())) {
-            CssStyleNew other = (CssStyleNew) obj;
+        if (!result && obj != null && CssStyle.class.isAssignableFrom(obj.getClass())) {
+            CssStyle other = (CssStyle) obj;
 
             result = name == null ? other.getName() == null : name.equals(other.getName());
         }
