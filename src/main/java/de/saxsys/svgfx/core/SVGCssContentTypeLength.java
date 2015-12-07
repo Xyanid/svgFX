@@ -21,6 +21,8 @@ package de.saxsys.svgfx.core;
 
 import javafx.util.Pair;
 
+import java.util.EnumSet;
+
 /**
  * This class represents a svg length content type
  *
@@ -134,14 +136,14 @@ public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCs
 
         Unit usedUnit = Unit.NONE;
 
-        for (Unit unit : Unit.values()) {
+        for (Unit unit : EnumSet.complementOf(EnumSet.of(Unit.NONE))) {
             if (cssText.endsWith(unit.getName())) {
                 usedUnit = unit;
                 break;
             }
         }
 
-        return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length())), usedUnit);
+        return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length()).replaceAll(",", ".")), usedUnit);
     }
 
     //endregion

@@ -36,7 +36,7 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     /**
      * Indicator representing that the color is to be retrieved from the color attribute.
      */
-    private static final String CURRENT_COLOR = "currentColor ";
+    private static final String CURRENT_COLOR = "currentColor";
 
     // endregion
 
@@ -45,7 +45,7 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     /**
      * Determines that the color is to be retrieved from the color attribute.
      */
-    private boolean willUseColorAttribute;
+    private boolean isCurrentColor;
 
     // endregion
 
@@ -63,10 +63,10 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     // region Getter
 
     /**
-     * @return The {@link #willUseColorAttribute}.
+     * @return The {@link #isCurrentColor}.
      */
-    public boolean getWillUseColorAttribute() {
-        return willUseColorAttribute;
+    public boolean getIsCurrentColor() {
+        return isCurrentColor;
     }
 
     // endregion
@@ -74,9 +74,9 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     //region Override CssContentTypeBase
 
     @Override public Pair<Paint, Void> getValueAndUnit(final String cssText) {
-        willUseColorAttribute = CURRENT_COLOR.equals(cssText);
+        isCurrentColor = CURRENT_COLOR.equals(cssText);
 
-        if (willUseColorAttribute) {
+        if (isCurrentColor) {
             return null;
         }
 
