@@ -1,11 +1,30 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.core.CssStyle;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.transform.Transform;
-import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 
 /**
@@ -57,7 +76,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
         CssStyle result = null;
 
         // we may have our own style or need to get a style
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.STYLE.getName()))) {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.SvgAttribute.STYLE.getName()))) {
 
             String attribute = getAttribute(Enumerations.SvgAttribute.STYLE.getName());
 
@@ -69,7 +88,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
                                             attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
                                             Constants.DECLARATION_BLOCK_END));
             // other wise we are referencing a class and want the style here
-        } else if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.CLASS.getName()))) {
+        } else if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.SvgAttribute.CLASS.getName()))) {
 
             String styleClass = getAttribute(Enumerations.SvgAttribute.CLASS.getName());
 
@@ -89,24 +108,12 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException if there is a transformation which has invalid data for its matrix.
      */
     public final Transform getTransformation() throws SVGException {
-        if (StringUtils.isNotEmpty(getAttribute(Enumerations.SvgAttribute.TRANSFORM.getName()))) {
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.SvgAttribute.TRANSFORM.getName()))) {
             return SVGUtils.getTransform(getAttribute(Enumerations.SvgAttribute.TRANSFORM.getName()));
         }
 
         return null;
     }
-
-    public final TResult createResult() throws SVGException {
-        TResult result = createResultInternal();
-
-        initializeResult(result);
-
-        return result;
-    }
-
-    // endregion
-
-    //region Abstract
 
     /**
      * Must be overwritten in the actual implementation to create a new result for this element based on the
@@ -118,6 +125,10 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      */
     protected abstract TResult createResultInternal() throws SVGException;
 
+    // endregion
+
+    //region Abstract
+
     /**
      * This method will be called in the {@link #createResult()} and allows to modify the result such as applying a style or transformations.
      *
@@ -126,6 +137,14 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException will be thrown when an error during modification
      */
     protected abstract void initializeResult(TResult result) throws SVGException;
+
+    public final TResult createResult() throws SVGException {
+        TResult result = createResultInternal();
+
+        initializeResult(result);
+
+        return result;
+    }
 
     //endregion
 
