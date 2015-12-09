@@ -116,7 +116,7 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
     //region Implement CSSStyleDeclaration
 
     /**
-     * @inheritDoc The value is stripped of its lengthType
+     * {@inheritDoc} The value is stripped of its lengthType
      */
     @Override public String getPropertyValue(final String propertyName) {
 
@@ -131,14 +131,14 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public CSSValue getPropertyCSSValue(final String propertyName) {
         return cssProperties.get(propertyName);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public String removeProperty(final String propertyName) throws DOMException {
 
@@ -150,28 +150,28 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public String getPropertyPriority(final String propertyName) {
         return null;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public void setProperty(final String propertyName, final String value, final String priority) throws DOMException {
 
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public int getLength() {
         return cssProperties.size();
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public String item(final int index) {
 
@@ -186,7 +186,7 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public CSSRule getParentRule() {
         return getParent();
@@ -197,7 +197,7 @@ public class CssStyleDeclaration extends CssBase<CssStyle> implements CSSStyleDe
     //region Override CssBase
 
     /**
-     * @inheritDoc This method will throw an exception if the an unclosed comment or string is present in the declarationBlock
+     * {@inheritDoc} This method will throw an exception if the an unclosed comment or string is present in the declarationBlock
      */
     @Override public void consumeCssText(final String cssText) throws DOMException {
 

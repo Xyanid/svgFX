@@ -56,7 +56,7 @@ import org.xml.sax.Attributes;
     //region SVGElementBase
 
     /**
-     * @inheritDoc Resolves the needed reference
+     * {@inheritDoc} Resolves the needed reference
      */
     @Override protected Node createResultInternal() throws SVGException {
         String reference = getAttributes().get(Enumerations.SvgAttribute.XLINK_HREF.getName());

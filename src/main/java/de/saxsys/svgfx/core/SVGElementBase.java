@@ -151,7 +151,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     // region Override ElementBase
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public final TResult getResult() throws SVGException {
 
@@ -163,19 +163,19 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public void startProcessing() throws SVGException {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public void processCharacterData(final char[] ch, final int start, final int length) throws SVGException {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override public void endProcessing() throws SVGException {
     }
