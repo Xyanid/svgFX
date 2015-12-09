@@ -63,13 +63,14 @@ import org.xml.sax.Attributes;
 
         SVGCssStyle style = getCssStyle();
 
+        //TODO use opacity here
         double opacity = 0.0d;
 
         if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName())) {
             opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeLength.class).getValue();
         }
 
-        Paint paint = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypePaint.class).getValue();
+        Paint paint = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName(), SVGCssContentTypePaint.class).getValue();
 
         if (paint == null) {
             throw new IllegalArgumentException("given color must not be null");
