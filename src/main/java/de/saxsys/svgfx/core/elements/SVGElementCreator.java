@@ -17,8 +17,9 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.xml.core.IElementCreator;
 import de.saxsys.svgfx.xml.elements.ElementBase;
@@ -32,7 +33,7 @@ import java.util.Map;
 /**
  * Creates all the needed svg elements, this class will automatically load all the constructors of classes which
  * reside in the de.saxsys.svg.elements package, are derived from {@link SVGElementBase} and have the {@link SVGElementMapping} applied
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 public class SVGElementCreator implements IElementCreator<SVGDataProvider> {
 

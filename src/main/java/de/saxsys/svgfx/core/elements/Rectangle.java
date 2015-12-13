@@ -20,17 +20,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.SVGShapeBase;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("rect") public class Rectangle extends SVGShapeBase<javafx.scene.shape.Rectangle> {
 

@@ -20,15 +20,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
 import javafx.scene.Group;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents the svg element from svg
- * Created by Xyanid on 24.10.2015.
+ * @author Xyanid on 24.10.2015.
  */
 @SVGElementMapping("svg") public class Svg extends SVGElementBase<Group> {
 
@@ -50,12 +48,12 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected Group createResultInternal() throws SVGException {
-        return null;
-    }
-
     @Override protected void initializeResult(Group group) throws SVGException {
 
+    }
+
+    @Override protected Group createResultInternal() throws SVGException {
+        return null;
     }
 
     //endregion

@@ -20,15 +20,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a stop element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("defs") public class Defs extends SVGElementBase<Node> {
 
@@ -50,12 +48,12 @@ import org.xml.sax.Attributes;
 
     //region SVGElementBase
 
-    @Override protected final Node createResultInternal() throws SVGException {
-        return null;
-    }
-
     @Override protected final void initializeResult(Node node) throws SVGException {
 
+    }
+
+    @Override protected final Node createResultInternal() throws SVGException {
+        return null;
     }
 
     //endregion

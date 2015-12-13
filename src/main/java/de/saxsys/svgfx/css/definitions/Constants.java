@@ -20,7 +20,7 @@
 package de.saxsys.svgfx.css.definitions;
 
 /**
- * Contains all constants related to css. Created by Xyanid on 29.10.2015.
+ * Contains all constants related to css. @author Xyanid on 29.10.2015.
  */
 public final class Constants {
 

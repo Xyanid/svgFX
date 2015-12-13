@@ -19,12 +19,10 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.SVGCssStyle;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
+import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -32,7 +30,7 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a stop element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("stop") public class Stop extends SVGElementBase<javafx.scene.paint.Stop> {
 

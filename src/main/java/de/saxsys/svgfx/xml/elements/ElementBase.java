@@ -37,7 +37,7 @@ import java.util.Map;
  * @param <TDataProvider> the type of the {@link IDataProvider} to be used
  * @param <TResult>       the type of result provided by the element
  * @param <TParent>       the type of parent of this element
- *                        Created by Xyanid on 24.10.2015.
+ *                        @author Xyanid on 24.10.2015.
  */
 public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, TParent extends ElementBase<TDataProvider, ?, ?>> {
 

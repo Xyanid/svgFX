@@ -29,6 +29,8 @@ import de.saxsys.svgfx.core.elements.Path;
 import de.saxsys.svgfx.core.elements.Polyline;
 import de.saxsys.svgfx.core.elements.RadialGradient;
 import de.saxsys.svgfx.core.elements.Rectangle;
+import de.saxsys.svgfx.core.elements.SVGElementCreator;
+import de.saxsys.svgfx.core.elements.SVGElementMapping;
 import de.saxsys.svgfx.core.elements.Stop;
 import de.saxsys.svgfx.core.elements.Style;
 import de.saxsys.svgfx.core.elements.Svg;
@@ -40,7 +42,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
 /**
- * Created by Xyanid on 05.10.2015.
+ * @author Xyanid on 05.10.2015.
  */
 public final class SVGElementCreatorTest {
 

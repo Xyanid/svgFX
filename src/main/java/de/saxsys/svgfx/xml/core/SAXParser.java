@@ -41,7 +41,7 @@ import java.io.InputStream;
  *
  * @param <TResult>         the type of the result provided by this parser
  * @param <TDataProvider>   the type of the {@link IDataProvider}
- * @param <TElementCreator> the type of the {@link IElementCreator} Created by Xyanid on 24.10.2015.
+ * @param <TElementCreator> the type of the {@link IElementCreator} @author Xyanid on 24.10.2015.
  */
 public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TElementCreator extends IElementCreator<TDataProvider>> extends DefaultHandler {
 
@@ -178,15 +178,6 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     }
 
     /**
-     * Gets the property State.
-     *
-     * @return the State property
-     */
-    public final ReadOnlyProperty<State> stateProperty() {
-        return state.getReadOnlyProperty();
-    }
-
-    /**
      * gets the {@link SAXParser#attemptedParses}.
      *
      * @return the {@link SAXParser#attemptedParses}
@@ -229,10 +220,6 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
         return state.get() != State.IDLE && state.get() != State.FINISHED;
     }
 
-    // endregion
-
-    // region Abstract
-
     /**
      * This method will be called as soon as the parsing of the document has started and set the current {@link #result}.
      * Ideally a new result will be initialized here so it can be filled when the document is processed.
@@ -242,6 +229,10 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      * @throws SAXException when an error occurs
      */
     protected abstract TResult enteringDocument() throws SAXException;
+
+    // endregion
+
+    // region Abstract
 
     /**
      * This method will be called as soon as the parsing of the document has been finished, the current {@link #result}
@@ -278,6 +269,15 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      * @throws SAXException when an error occurs
      */
     protected abstract void consumeElementEnd(final TResult result, final TDataProvider dataProvider, final ElementBase<TDataProvider, ?, ?> element) throws SAXException;
+
+    /**
+     * Gets the property State.
+     *
+     * @return the State property
+     */
+    public final ReadOnlyProperty<State> stateProperty() {
+        return state.getReadOnlyProperty();
+    }
 
     // endregion
 

@@ -17,10 +17,12 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.LinearGradient;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
  * Contains basic functionality to handle gradients of svg.
  *
  * @param <TPaint> the type of the paint need
- *                 Created by Xyanid on 06.11.2015.
+ *                 @author Xyanid on 06.11.2015.
  */
 public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBase<TPaint> {
 

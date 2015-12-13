@@ -25,7 +25,7 @@ import org.xml.sax.Attributes;
 /**
  * This interfaces is used to create an instance of an element.
  *
- * @param <TDataProvider> the type of the {@link IDataProvider} Created by Xyanid on 25.10.2015.
+ * @param <TDataProvider> the type of the {@link IDataProvider} @author Xyanid on 25.10.2015.
  */
 public interface IElementCreator<TDataProvider extends IDataProvider> {
 

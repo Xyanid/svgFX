@@ -17,9 +17,9 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.SVGDataProvider;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
@@ -30,7 +30,7 @@ import java.util.List;
  * Base class for polygons and polyline.
  *
  * @param <TShape> the type of shape this element creates
- *                 Created by Xyanid on 07.11.2015.
+ *                 @author Xyanid on 07.11.2015.
  */
 public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TShape> {
 

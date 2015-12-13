@@ -19,10 +19,8 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGCssStyle;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
@@ -32,7 +30,7 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a use element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("use") public class Use extends SVGElementBase<Node> {
 

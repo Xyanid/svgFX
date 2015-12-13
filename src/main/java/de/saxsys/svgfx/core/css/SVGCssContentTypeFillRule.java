@@ -17,31 +17,45 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.css;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.definitions.Enumerations;
+import javafx.scene.shape.FillRule;
 import javafx.util.Pair;
 
 /**
+ * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
+ *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeString extends SVGCssContentTypeBase<String, Void> {
+public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, Void> {
 
     //region Constructor
 
     /**
-     * Creates new instance.
+     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
      */
-    public SVGCssContentTypeString(SVGDataProvider dataProvider) {
-        super(null, dataProvider);
+    public SVGCssContentTypeFillRule(SVGDataProvider dataProvider) {
+        super(FillRule.EVEN_ODD, dataProvider);
     }
 
     //endregion
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<String, Void> getValueAndUnit(String cssText) {
+    @Override public Pair<FillRule, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(cssText, null);
+        FillRule rule = FillRule.EVEN_ODD;
+
+        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
+            if (mapping.getName().equals(cssText)) {
+                rule = mapping.getRule();
+                break;
+            }
+        }
+
+        return new Pair<>(rule, null);
     }
 
     //endregion

@@ -17,33 +17,34 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.css;
 
-import javafx.scene.shape.StrokeLineJoin;
+import de.saxsys.svgfx.core.SVGDataProvider;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
+ * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeStrokeLineJoin extends SVGCssContentTypeBase<StrokeLineJoin, Void> {
+public class SVGCssContentTypeStrokeType extends SVGCssContentTypeBase<StrokeType, Void> {
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeLineJoin#MITER}.
+     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
      */
-    public SVGCssContentTypeStrokeLineJoin(SVGDataProvider dataProvider) {
-        super(StrokeLineJoin.MITER, dataProvider);
+    public SVGCssContentTypeStrokeType(SVGDataProvider dataProvider) {
+        super(StrokeType.CENTERED, dataProvider);
     }
 
     //endregion
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
-        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
+    @Override public Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
+        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

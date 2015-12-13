@@ -24,7 +24,7 @@ import javafx.scene.control.Control;
 
 /**
  * Base class from which all SkinAddition should derive
- * Created by Xyanid on 08.11.2015.
+ * @author Xyanid on 08.11.2015.
  */
 abstract class StyleableAdditionBase {
 

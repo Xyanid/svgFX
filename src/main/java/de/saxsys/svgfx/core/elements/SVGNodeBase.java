@@ -17,19 +17,22 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import javafx.scene.shape.Shape;
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
+import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a base class which contains shape element from svg.
  *
- * @param <TShape> type of the shape represented by this element
- *                 Created by Xyanid on 25.10.2015.
+ * @param <TNode> type of the shape represented by this element
+ *                @author Xyanid on 25.10.2015.
  */
-public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TShape> {
+public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNode> {
 
     //region Constructor
 
@@ -41,26 +44,24 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    public SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
     //endregion
 
-    // region Override SVGNodeBase
+    // region Override SVGElementBase
 
     /**
      * {@inheritDoc}
-     * Applies the css style the the element if possible.
+     * Will apply the transformation to the element.
      */
-    @Override protected void initializeResult(TShape shape) throws SVGException {
-        super.initializeResult(shape);
+    @Override protected void initializeResult(TNode node) throws SVGException {
 
-        SVGCssStyle style = getCssStyle();
+        Transform transform = getTransformation();
 
-        if (style != null) {
-
-            SVGUtils.applyStyle(shape, style, getDataProvider());
+        if (transform != null) {
+            node.getTransforms().add(transform);
         }
     }
 

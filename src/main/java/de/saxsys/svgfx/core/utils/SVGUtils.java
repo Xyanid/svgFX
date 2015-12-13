@@ -19,15 +19,15 @@
 
 package de.saxsys.svgfx.core.utils;
 
-import de.saxsys.svgfx.core.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.SVGCssContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.SVGCssContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.SVGCssContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.SVGCssContentTypeStrokeType;
-import de.saxsys.svgfx.core.SVGCssStyle;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
+import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.LinearGradient;
 import de.saxsys.svgfx.core.elements.RadialGradient;

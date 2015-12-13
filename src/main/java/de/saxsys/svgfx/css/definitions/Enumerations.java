@@ -21,7 +21,7 @@ package de.saxsys.svgfx.css.definitions;
 
 /**
  * This file contains all the enumerations that are used for parsing svg data.
- * Created by Xyanid on 01.11.2015.
+ * @author Xyanid on 01.11.2015.
  */
 public final class Enumerations {
 

@@ -17,9 +17,12 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.css;
 
 
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.elements.SVGShapeBase;
 import de.saxsys.svgfx.css.core.CssContentTypeBase;
 import de.saxsys.svgfx.css.core.CssStyle;
 
@@ -35,7 +38,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
     // region Enumeration
 
     /**
-     * This contains all the presentation attributes an svg element might. The presentation attributes are used for {@link de.saxsys.svgfx.core.SVGShapeBase}.
+     * This contains all the presentation attributes an svg element might. The presentation attributes are used for {@link SVGShapeBase}.
      */
     public enum PresentationAttribute {
         /**

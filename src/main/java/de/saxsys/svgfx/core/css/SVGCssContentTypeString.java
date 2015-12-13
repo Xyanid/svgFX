@@ -17,23 +17,33 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.css;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import de.saxsys.svgfx.core.SVGDataProvider;
+import javafx.util.Pair;
 
 /**
- * Interface to be applied to all elements which are actual svg elements.
- * Created by Xyanid on 01.11.2015.
+ * @author Xyanid on 29.10.2015.
  */
-@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE) public @interface SVGElementMapping {
+public class SVGCssContentTypeString extends SVGCssContentTypeBase<String, Void> {
+
+    //region Constructor
 
     /**
-     * Returns the name of the svg element this element corresponds to.
-     *
-     * @return the name of the svg element this element corresponds to
+     * Creates new instance.
      */
-    String value();
+    public SVGCssContentTypeString(SVGDataProvider dataProvider) {
+        super(null, dataProvider);
+    }
+
+    //endregion
+
+    //region Override CssContentTypeBase
+
+    @Override public Pair<String, Void> getValueAndUnit(String cssText) {
+
+        return new Pair<>(cssText, null);
+    }
+
+    //endregion
 }

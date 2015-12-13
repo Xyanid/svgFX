@@ -17,8 +17,19 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.css;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
+import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeString;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.StrokeLineCap;
@@ -29,7 +40,7 @@ import org.junit.Test;
 
 /**
  * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGCssContentTypeBase}.
- * Created by Xyanid on 05.10.2015.
+ * @author Xyanid on 05.10.2015.
  */
 public final class SVGCssStyleTest {
 

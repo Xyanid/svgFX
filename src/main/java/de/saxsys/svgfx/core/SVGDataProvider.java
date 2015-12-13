@@ -19,6 +19,8 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.xml.core.IDataProvider;
 
@@ -29,7 +31,7 @@ import java.util.Set;
 
 /**
  * Holds an provides data for parsed svg elements
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 public class SVGDataProvider implements IDataProvider {
 

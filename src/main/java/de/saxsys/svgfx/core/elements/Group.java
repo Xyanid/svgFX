@@ -20,10 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.SVGNodeBase;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
@@ -31,7 +28,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This class represents the style element from svg
- * Created by Xyanid on 27.10.2015.
+ * @author Xyanid on 27.10.2015.
  */
 @SVGElementMapping("g") public class Group extends SVGNodeBase<javafx.scene.Group> {
 

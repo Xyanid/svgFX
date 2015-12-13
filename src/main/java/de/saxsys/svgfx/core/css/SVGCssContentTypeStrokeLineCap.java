@@ -17,44 +17,35 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.css;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import javafx.scene.shape.FillRule;
+import de.saxsys.svgfx.core.SVGDataProvider;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
+ * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, Void> {
+public class SVGCssContentTypeStrokeLineCap extends SVGCssContentTypeBase<StrokeLineCap, Void> {
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
+     * Creates new instance with a default value of {@link StrokeLineJoin#MITER}.
      */
-    public SVGCssContentTypeFillRule(SVGDataProvider dataProvider) {
-        super(FillRule.EVEN_ODD, dataProvider);
+    public SVGCssContentTypeStrokeLineCap(SVGDataProvider dataProvider) {
+        super(StrokeLineCap.SQUARE, dataProvider);
     }
 
     //endregion
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<FillRule, Void> getValueAndUnit(final String cssText) {
-
-        FillRule rule = FillRule.EVEN_ODD;
-
-        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
-            if (mapping.getName().equals(cssText)) {
-                rule = mapping.getRule();
-                break;
-            }
-        }
-
-        return new Pair<>(rule, null);
+    @Override public Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
+        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

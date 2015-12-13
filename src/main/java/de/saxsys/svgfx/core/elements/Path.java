@@ -19,18 +19,15 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGCssContentTypeFillRule;
-import de.saxsys.svgfx.core.SVGCssStyle;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
-import de.saxsys.svgfx.core.SVGShapeBase;
 import javafx.scene.shape.SVGPath;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("path") public class Path extends SVGShapeBase<SVGPath> {
 

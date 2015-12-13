@@ -20,17 +20,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
-import de.saxsys.svgfx.core.SVGShapeBase;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("circle") public class Circle extends SVGShapeBase<javafx.scene.shape.Circle> {
+@SVGElementMapping("circle") public class SVGCircle extends SVGShapeBase<javafx.scene.shape.Circle> {
 
     //region Constructor
 
@@ -42,7 +38,7 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Circle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    public SVGCircle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

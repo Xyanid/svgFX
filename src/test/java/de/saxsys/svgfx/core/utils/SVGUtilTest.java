@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -34,7 +35,7 @@ import org.junit.Test;
 
 /**
  * Test to ensure the {@link SVGUtils} work as expected.
- * Created by Xyanid on 05.10.2015.
+ * @author Xyanid on 05.10.2015.
  */
 public final class SVGUtilTest {
 
@@ -47,7 +48,7 @@ public final class SVGUtilTest {
     //region Tests
 
     /**
-     * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}}.
      */
     @Test public void createMatrix() {
 
@@ -106,7 +107,7 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of translate are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * This test will create ensure that all types of translate are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
     @Test public void parseTranslateMatrix() {
 
@@ -174,7 +175,7 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
     @Test public void parseScaleMatrix() {
 
@@ -242,7 +243,7 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
     @Test public void parseRotateMatrix() {
 
@@ -315,7 +316,7 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of skewX are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * This test will create ensure that all types of skewX are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
     @Test public void parseSkewMatrix() {
 
@@ -400,7 +401,7 @@ public final class SVGUtilTest {
 
     /**
      * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
-     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
     @Test public void parseCombinedMatrices() {
 

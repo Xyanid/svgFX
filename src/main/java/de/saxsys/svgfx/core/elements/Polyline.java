@@ -21,14 +21,11 @@ package de.saxsys.svgfx.core.elements;
 
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
-import de.saxsys.svgfx.core.SVGPolyBase;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a polyline element from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("polyline") public class Polyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
 

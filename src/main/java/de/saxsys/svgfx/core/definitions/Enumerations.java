@@ -23,7 +23,7 @@ import javafx.scene.shape.FillRule;
 
 /**
  * This class contains all enumerations used for processing svg data.
- * Created by Xyanid on 29.10.2015.
+ * @author Xyanid on 29.10.2015.
  */
 public final class Enumerations {
 

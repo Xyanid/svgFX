@@ -17,11 +17,14 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.css.core.CssContentTypeBase;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.transform.Transform;
@@ -33,7 +36,7 @@ import java.util.Map;
 /**
  * This class represents a basic scg element, which provides some basic functionality to get the style of the class.
  *
- * @param <TResult> The type of the result this element will provide Created by Xyanid on 28.10.2015.
+ * @param <TResult> The type of the result this element will provide @author Xyanid on 28.10.2015.
  */
 public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvider, TResult, SVGElementBase<?>> {
 
@@ -61,11 +64,11 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
          */
         CLASS("class"),
         /**
-         * Represents x component of a center position, this element is used for {@link de.saxsys.svgfx.core.elements.Circle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
+         * Represents x component of a center position, this element is used for {@link SVGCircle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
          */
         CENTER_X("cx"),
         /**
-         * Represents y component of a center position, this element is used for {@link de.saxsys.svgfx.core.elements.Circle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
+         * Represents y component of a center position, this element is used for {@link SVGCircle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
          */
         CENTER_Y("cy"),
         /**
@@ -498,9 +501,15 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException thrown when an exception during creation occurs.
      */
     public final TResult createResult() throws SVGException {
-        TResult result = createResultInternal();
 
-        initializeResult(result);
+        TResult result;
+
+        try {
+            result = createResultInternal();
+            initializeResult(result);
+        } catch (Exception e) {
+            throw new SVGException(String.format("Creation of element %s failed", getClass().getName()), e);
+        }
 
         return result;
     }

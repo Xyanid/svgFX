@@ -17,19 +17,24 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
-import javafx.scene.Node;
-import javafx.scene.transform.Transform;
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGNodeBase;
+import de.saxsys.svgfx.core.utils.SVGUtils;
+import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a base class which contains shape element from svg.
  *
- * @param <TNode> type of the shape represented by this element
- *                Created by Xyanid on 25.10.2015.
+ * @param <TShape> type of the shape represented by this element
+ *                 @author Xyanid on 25.10.2015.
  */
-public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNode> {
+public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TShape> {
 
     //region Constructor
 
@@ -41,24 +46,26 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
     //endregion
 
-    // region Override SVGElementBase
+    // region Override SVGNodeBase
 
     /**
      * {@inheritDoc}
-     * Will apply the transformation to the element.
+     * Applies the css style the the element if possible.
      */
-    @Override protected void initializeResult(TNode node) throws SVGException {
+    @Override protected void initializeResult(TShape shape) throws SVGException {
+        super.initializeResult(shape);
 
-        Transform transform = getTransformation();
+        SVGCssStyle style = getCssStyle();
 
-        if (transform != null) {
-            node.getTransforms().add(transform);
+        if (style != null) {
+
+            SVGUtils.applyStyle(shape, style, getDataProvider());
         }
     }
 

@@ -17,34 +17,23 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core;
+package de.saxsys.svgfx.core.elements;
 
-import javafx.scene.shape.StrokeType;
-import javafx.util.Pair;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
- *
- * @author Xyanid on 29.10.2015.
+ * Interface to be applied to all elements which are actual svg elements.
+ * @author Xyanid on 01.11.2015.
  */
-public class SVGCssContentTypeStrokeType extends SVGCssContentTypeBase<StrokeType, Void> {
-
-    //region Constructor
+@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE) public @interface SVGElementMapping {
 
     /**
-     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
+     * Returns the name of the svg element this element corresponds to.
+     *
+     * @return the name of the svg element this element corresponds to
      */
-    public SVGCssContentTypeStrokeType(SVGDataProvider dataProvider) {
-        super(StrokeType.CENTERED, dataProvider);
-    }
-
-    //endregion
-
-    //region Override CssContentTypeBase
-
-    @Override public Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
-        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
-    }
-
-    //endregion
+    String value();
 }

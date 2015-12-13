@@ -19,10 +19,8 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGCssStyle;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
@@ -32,7 +30,7 @@ import java.util.Set;
 
 /**
  * This class represents the style element from svg
- * Created by Xyanid on 27.10.2015.
+ * @author Xyanid on 27.10.2015.
  */
 @SVGElementMapping("style") public class Style extends SVGElementBase<Set<SVGCssStyle>> {
 

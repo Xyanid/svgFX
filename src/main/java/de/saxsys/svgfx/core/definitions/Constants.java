@@ -19,8 +19,8 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.elements.Circle;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.ClipPath;
 import de.saxsys.svgfx.core.elements.Defs;
 import de.saxsys.svgfx.core.elements.Ellipse;
@@ -42,7 +42,7 @@ import java.util.List;
 
 /**
  * Contains constant values of
- * Created by Xyanid on 01.11.2015.
+ * @author Xyanid on 01.11.2015.
  */
 public final class Constants {
 
@@ -51,7 +51,7 @@ public final class Constants {
     /**
      * contains a list with all the known svg classes for elements.
      */
-    public static final List<Class<? extends SVGElementBase<?>>> SVG_ELEMENT_CLASSES = Arrays.asList(Circle.class,
+    public static final List<Class<? extends SVGElementBase<?>>> SVG_ELEMENT_CLASSES = Arrays.asList(SVGCircle.class,
                                                                                                      ClipPath.class,
                                                                                                      Defs.class,
                                                                                                      Ellipse.class,

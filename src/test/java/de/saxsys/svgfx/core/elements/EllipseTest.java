@@ -27,7 +27,7 @@ import org.junit.Test;
 import java.net.URL;
 
 /**
- * Created by Xyanid on 05.10.2015.
+ * @author Xyanid on 05.10.2015.
  */
 public final class EllipseTest {
 

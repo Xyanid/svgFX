@@ -20,11 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.SVGGradientBase;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.CycleMethod;
 import org.xml.sax.Attributes;
 
@@ -32,7 +28,7 @@ import java.util.List;
 
 /**
  * This Class represents a radial gradient from svg
- * Created by Xyanid on 25.10.2015.
+ * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("radialGradient") public class RadialGradient extends SVGGradientBase<javafx.scene.paint.RadialGradient> {
 

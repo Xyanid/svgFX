@@ -20,16 +20,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGElementBase;
-import de.saxsys.svgfx.core.SVGElementMapping;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.SVGNodeBase;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * This class represents a clipPath element from svg Created by Xyanid on 25.10.2015.
+ * This class represents a clipPath element from svg @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("clipPath") public class ClipPath extends SVGNodeBase<Node> {
 

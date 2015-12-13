@@ -24,7 +24,7 @@ import org.junit.Test;
 
 /**
  * This class will test all methods of the {@link StringUtils}
- * Created by Xyanid on 28.10.2015.
+ * @author Xyanid on 28.10.2015.
  */
 public final class StringUtilTest {
     /**
