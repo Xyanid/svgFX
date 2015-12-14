@@ -21,8 +21,6 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.elements.LinearGradient;
-import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;

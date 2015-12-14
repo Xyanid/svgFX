@@ -219,13 +219,13 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     }
 
     /**
-     * Returns the {@link CssContentTypeBase} in the given map of properties as the desired type using the provided key or null if no such content type exist.
+     * Returns the {@link CssContentTypeBase} in the {@link #properties} as the desired type using the provided key or null if no such content type exist.
      *
      * @param <TContent> type of the content desired.
      * @param name       name of the property
      * @param clazz      class of the type of the property used for casting.
      *
-     * @return the {@link CssContentTypeBase} in the given map or null.
+     * @return the {@link CssContentTypeBase} or null.
      */
     public final <TContent extends TContentType> TContent getCssContentType(final String name, final Class<TContent> clazz) {
         return clazz.cast(properties.get(name));

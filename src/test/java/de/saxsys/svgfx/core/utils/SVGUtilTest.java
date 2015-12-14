@@ -19,10 +19,11 @@
 
 package de.saxsys.svgfx.core.utils;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.Constants;
+import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -32,9 +33,12 @@ import javafx.scene.transform.Translate;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.xml.sax.Attributes;
 
 /**
  * Test to ensure the {@link SVGUtils} work as expected.
+ *
  * @author Xyanid on 05.10.2015.
  */
 public final class SVGUtilTest {
@@ -46,6 +50,89 @@ public final class SVGUtilTest {
     //endregion
 
     //region Tests
+
+    /**
+     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     */
+    @Test public void ensureResolveIRICauseTheExpectedExceptions() {
+
+        try {
+            SVGUtils.resolveIRI(null, new SVGDataProvider(), SVGElementBase.class);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertTrue(e.getMessage().contains("data"));
+        }
+
+        try {
+            SVGUtils.resolveIRI("", new SVGDataProvider(), SVGElementBase.class);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertTrue(e.getMessage().contains("data"));
+        }
+
+        try {
+            SVGUtils.resolveIRI("test", null, SVGElementBase.class);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertTrue(e.getMessage().contains("dataprovider"));
+        }
+
+        try {
+            SVGUtils.resolveIRI("test", new SVGDataProvider(), null);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertTrue(e.getMessage().contains("clazz"));
+        }
+
+        try {
+            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDataProvider(), SVGCircle.class);
+            Assert.fail();
+        } catch (SVGException e) {
+            Assert.assertTrue(e.getMessage().contains("reference"));
+        }
+
+        try {
+            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDataProvider(), SVGCircle.class);
+            Assert.fail();
+        } catch (SVGException e) {
+            Assert.assertTrue(e.getMessage().contains("reference"));
+        }
+    }
+
+    /**
+     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     */
+    @Test public void ensureResolveIRICanResolveReference() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(0);
+
+        SVGDataProvider dataProvider = Mockito.mock(SVGDataProvider.class);
+
+        Mockito.when(dataProvider.getData(Mockito.anyObject(), Mockito.anyString())).thenReturn(new SVGCircle("circle", attributes, null, dataProvider));
+
+        SVGCircle circle = SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
+
+        Assert.assertNotNull(circle);
+    }
+
+    /**
+     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     */
+    @Test public void ensureResolveIRICanNotResolveReference() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(0);
+
+        try {
+            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test1)", new SVGDataProvider(), SVGCircle.class);
+            Assert.fail();
+        } catch (SVGException e) {
+            Assert.assertTrue(e.getMessage().contains("reference"));
+        }
+    }
 
     /**
      * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}}.

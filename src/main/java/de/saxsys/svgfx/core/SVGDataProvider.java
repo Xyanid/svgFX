@@ -24,6 +24,7 @@ import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.xml.core.IDataProvider;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,24 +41,24 @@ public class SVGDataProvider implements IDataProvider {
     /**
      * Contains all the data provided by this data provider.
      */
-    private final Map<String, SVGElementBase> data = new HashMap<>();
+    final Map<String, SVGElementBase> data = new HashMap<>();
 
     /**
      * Contains all the available styles.
      */
-    private final Set<SVGCssStyle> styles = new HashSet<>();
+    final Set<SVGCssStyle> styles = new HashSet<>();
 
     //endregion
 
     //region Public
 
     /**
-     * Returns the {@link SVGDataProvider#data}.
+     * Returns the {@link SVGDataProvider#data} as an unmodifiable map.
      *
-     * @return {@link SVGDataProvider#data}
+     * @return {@link SVGDataProvider#data} as an unmodifiable map.
      */
-    public final Map<String, SVGElementBase> getData() {
-        return data;
+    public final Map<String, SVGElementBase> getUnmodifiableData() {
+        return Collections.unmodifiableMap(data);
     }
 
     /**

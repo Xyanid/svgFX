@@ -21,7 +21,6 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.elements.SVGElementBase;
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
@@ -30,7 +29,8 @@ import org.xml.sax.Attributes;
  * This class represents a base class which contains shape element from svg.
  *
  * @param <TNode> type of the shape represented by this element
- *                @author Xyanid on 25.10.2015.
+ *
+ * @author Xyanid on 25.10.2015.
  */
 public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNode> {
 
@@ -59,9 +59,13 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
     @Override protected void initializeResult(TNode node) throws SVGException {
 
         Transform transform = getTransformation();
-
         if (transform != null) {
             node.getTransforms().add(transform);
+        }
+
+        Node clip = getClipPath();
+        if (clip != null) {
+            node.setClip(clip);
         }
     }
 

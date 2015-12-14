@@ -56,11 +56,6 @@ public final class Constants {
     public static final String PROPERTY_END_STRING = String.valueOf(PROPERTY_END);
 
     /**
-     * Indicator which determines that instead of an actual value value, another value is referenced.
-     */
-    public static final String PROPERTY_VALUE_REFERENCE_URL = "url(#";
-
-    /**
      * Indicator which determines that the value of the property is set to none.
      */
     public static final String PROPERTY_VALUE_NONE = "none";

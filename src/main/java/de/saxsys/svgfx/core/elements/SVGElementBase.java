@@ -22,11 +22,13 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.elements.ElementBase;
+import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
@@ -471,17 +473,23 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * This method will be called in the {@link #createResult()} and allows to modify the result such as applying a style or transformations.
+     * Returns a node which represents the clip path to be applied to this element.
      *
-     * @param result the result which should be modified.
-     *
-     * @throws SVGException will be thrown when an error during modification
+     * @return the clip path to use or null if this element does not have a clip path.
      */
-    protected abstract void initializeResult(final TResult result) throws SVGException;
+    public final Node getClipPath() {
 
-    // endregion
+        SVGCssStyle style = getCssStyle();
 
-    //region Abstract
+        if (style != null) {
+            SVGCssContentTypeString referenceIRI = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
+            if (referenceIRI != null) {
+                return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), ClipPath.class).getResult();
+            }
+        }
+
+        return null;
+    }
 
     /**
      * Must be overwritten in the actual implementation to create a new result for this element based on the
@@ -492,6 +500,19 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * @throws SVGException will be thrown when an error during creation occurs
      */
     protected abstract TResult createResultInternal() throws SVGException;
+
+    // endregion
+
+    //region Abstract
+
+    /**
+     * This method will be called in the {@link #createResult()} and allows to modify the result such as applying a style or transformations.
+     *
+     * @param result the result which should be modified.
+     *
+     * @throws SVGException will be thrown when an error during modification
+     */
+    protected abstract void initializeResult(final TResult result) throws SVGException;
 
     /**
      * Creates a result represented by this element.

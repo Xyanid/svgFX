@@ -68,6 +68,10 @@ public final class Constants {
                                                                                                      Svg.class,
                                                                                                      Use.class);
 
+    /**
+     * Indicator which determines that instead of an actual value value, another value is referenced.
+     */
+    public static final String IRI_IDENTIFIER = "url(#";
 
     //endregion
 

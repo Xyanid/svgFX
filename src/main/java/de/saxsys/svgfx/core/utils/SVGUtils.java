@@ -19,6 +19,8 @@
 
 package de.saxsys.svgfx.core.utils;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
@@ -26,11 +28,9 @@ import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.LinearGradient;
 import de.saxsys.svgfx.core.elements.RadialGradient;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -60,50 +60,88 @@ public final class SVGUtils {
     // region Constructor
 
     /**
-     * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF)
-     * or a reference which can be resolved by the given data provider.
+     * Returns the element which might be referenced by the given data. The data will need to start with the {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} in order to be
+     * resolved as a reference.
      *
-     * @param data     data to be resolved
-     * @param provider the {@link SVGDataProvider} to be used
+     * @param data              the string which contains the reference to resolve.
+     * @param dataProvider      the {@link SVGDataProvider} which contains the data which is referenced.
+     * @param clazz             the class of the element that is expected.
+     * @param <TSVGElementBase> the type of element which is expected.
      *
-     * @return {@link Paint} which represents the color
+     * @return the {@link SVGElementBase} which is referenced by the data or null if the data does not reference an element.
      *
-     * @throws IllegalArgumentException if the the data is empty, the provider is null.
+     * @throws SVGException             if the data references a resource which is not contained in the {@link SVGDataProvider}.
+     * @throws IllegalArgumentException if either the data is null or empty, the dataProvider is null or the clazz is null.
      */
-    public static Paint parseColor(final String data, final SVGDataProvider provider) {
+    public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data, final SVGDataProvider dataProvider, final Class<TSVGElementBase> clazz)
+            throws SVGException {
 
-        if (provider == null) {
-            throw new IllegalArgumentException("given dataprovider must not be null or empty");
+        if (dataProvider == null) {
+            throw new IllegalArgumentException("given dataprovider must not be null");
+        }
+
+        if (clazz == null) {
+            throw new IllegalArgumentException("given clazz must not be null");
         }
 
         if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("given data must not be null or empty");
         }
 
-        int index = data.indexOf(Constants.PROPERTY_VALUE_REFERENCE_URL);
+        TSVGElementBase result = null;
 
-        Paint result = null;
+        int index = data.indexOf(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER);
 
         if (index > -1) {
 
-            String reference = data.substring(Constants.PROPERTY_VALUE_REFERENCE_URL.length(), data.length() - 1);
 
-            // check if its a linear gradient color or linear gradient
-            LinearGradient linearGradientColor = provider.getData(LinearGradient.class, reference);
-            if (linearGradientColor != null) {
-                result = linearGradientColor.getResult();
-                // check if its a radial gradient
-            } else {
-                RadialGradient radialGradient = provider.getData(RadialGradient.class, reference);
-                if (radialGradient != null) {
-                    result = radialGradient.getResult();
-                }
+            try {
+                result = dataProvider.getData(clazz, data.substring(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length(), data.length() - 1));
+            } catch (Exception e) {
+                throw new SVGException("An error occurred during the parsing of the reference", e);
+            }
+
+            if (result == null) {
+                throw new SVGException("given reference could not be resolved");
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF)
+     * or a reference which can be resolved by the given data dataProvider.
+     *
+     * @param data         data to be resolved
+     * @param dataProvider the {@link SVGDataProvider} to be used, must not be null
+     *
+     * @return {@link Paint} which represents the color
+     *
+     * @throws SVGException             if the data references another element which is not found in the given data dataProvider.
+     * @throws IllegalArgumentException if the the data is empty, the dataProvider is null.
+     */
+    public static Paint parseColor(final String data, final SVGDataProvider dataProvider) throws SVGException, IllegalArgumentException {
+
+        if (StringUtils.isNullOrEmpty(data)) {
+            throw new IllegalArgumentException("given data must not be null or empty");
+        }
+
+        SVGElementBase reference = resolveIRI(data, dataProvider, SVGElementBase.class);
+
+        Paint result = null;
+
+        if (reference != null) {
+
+            if (reference instanceof LinearGradient) {
+                result = ((LinearGradient) reference).getResult();
+            } else if (reference instanceof RadialGradient) {
+                result = ((RadialGradient) reference).getResult();
             }
 
             if (result == null) {
                 throw new IllegalArgumentException("given data can not be resolved to a color");
             }
-
         } else if (data.equals(Constants.PROPERTY_VALUE_NONE)) {
             result = Color.TRANSPARENT;
         } else {
