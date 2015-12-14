@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This parser is used to create SVG path data for javafx
+ *
  * @author Xyanid on 24.10.2015.
  */
 public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SVGElementCreator> {
@@ -72,7 +73,8 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
             dataProvider.getUnmodifiableData().put(element.getAttributes().get(SVGElementBase.CoreAttribute.ID.getName()), (SVGElementBase) element);
         } else if (element instanceof Style) {
             dataProvider.getStyles().addAll(((Style) element).getResult());
-        } else if (!((element.getParent() instanceof ClipPath) || (element.getParent() instanceof Group)) && element.getResult() instanceof Node) {
+            //elements which are inside a group or clip Path as well as clipPath elements will not be added
+        } else if (!((element instanceof ClipPath) || (element.getParent() instanceof ClipPath) || (element.getParent() instanceof Group)) && element.getResult() instanceof Node) {
             result.getChildren().add((Node) element.getResult());
         }
     }
