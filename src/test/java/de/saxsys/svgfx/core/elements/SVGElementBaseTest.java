@@ -241,4 +241,12 @@ public class SVGElementBaseTest {
 
         Assert.assertEquals(30.0d, transform.getTx(), 0.01d);
     }
+
+    /**
+     *
+     */
+    @Test public void ensureNoClipPathIsReturnedIfNoStyleExists() {
+
+
+    }
 }

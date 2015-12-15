@@ -25,7 +25,6 @@ import javafx.beans.property.ReadOnlyProperty;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -113,11 +112,6 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     private final ReadOnlyObjectWrapper<State> state = new ReadOnlyObjectWrapper<>(State.IDLE);
 
     /**
-     *
-     */
-    private boolean disallowDoctypeDecl = true;
-
-    /**
      * Contains the result of this handler, it may only be valid after this handler was used to parse actual data.
      */
     private TResult result;
@@ -173,7 +167,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      *
      * @return {@link SAXParser#result}
      */
-    public TResult getResult() {
+    public final TResult getResult() {
         return result;
     }
 
@@ -182,7 +176,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      *
      * @return the {@link SAXParser#attemptedParses}
      */
-    public long getAttemptedParses() {
+    public final long getAttemptedParses() {
         return attemptedParses;
     }
 
@@ -191,7 +185,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      *
      * @return the {@link SAXParser#successfulParses}
      */
-    public long getSuccessfulParses() {
+    public final long getSuccessfulParses() {
         return successfulParses;
     }
 
@@ -200,7 +194,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      *
      * @param value value to be used for {@link SAXParser#successfulParses}
      */
-    public void setSuccessfulParses(final long value) {
+    public final void setSuccessfulParses(final long value) {
         successfulParses = value;
     }
 
@@ -214,10 +208,23 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     }
 
     /**
-     * determines if the praser is busy doing its work, this is the case if the state is not IDLE or FINISHED.
+     * Sets the value of {@link #state}.
+     *
+     * @param state the state to use.
      */
-    private boolean isBusy() {
-        return state.get() != State.IDLE && state.get() != State.FINISHED;
+    private void setState(State state) {
+        synchronized (this.state) {
+            this.state.set(state);
+        }
+    }
+
+    /**
+     * determines if the parser is busy doing its work, this is the case if the state is not IDLE or FINISHED.
+     */
+    public final boolean isBusy() {
+        synchronized (this.state) {
+            return state.get() != State.IDLE && state.get() != State.FINISHED;
+        }
     }
 
     /**
@@ -347,7 +354,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
         }
 
         try {
-            state.set(State.PREPARING);
+            setState(State.PREPARING);
 
             dataProvider.clear();
 
@@ -358,14 +365,6 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
             reader.setContentHandler(this);
 
             reader.setFeature("http://xml.org/sax/features/validation", false);
-
-            if (disallowDoctypeDecl) {
-                try {
-                    reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                } catch (SAXNotRecognizedException e) {
-                    disallowDoctypeDecl = false;
-                }
-            }
 
             reader.parse(data);
 
@@ -386,20 +385,20 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
         currentElement = null;
 
-        state.set(State.STARTING);
+        setState(State.STARTING);
     }
 
     @Override public final void endDocument() throws SAXException {
         currentElement = null;
 
-        state.set(State.FINISHED);
+        setState(State.FINISHED);
 
         leavingDocument(result);
     }
 
     @Override public final void startElement(final String namespaceURI, final String localName, final String qName, final Attributes attributes) throws SAXException {
 
-        state.set(State.PARSING_ENTERING_ELEMENT);
+        setState(State.PARSING_ENTERING_ELEMENT);
 
         ElementBase<TDataProvider, ?, ?> nextElement = elementCreator.createElement(qName, attributes, currentElement, dataProvider);
 
@@ -416,12 +415,12 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
             consumeElementStart(result, dataProvider, currentElement);
         }
 
-        state.set(State.PARSING_ENTERING_ELEMENT_FINISHED);
+        setState(State.PARSING_ENTERING_ELEMENT_FINISHED);
     }
 
     @Override public final void endElement(final String namespaceURI, final String localName, final String qName) throws SAXException {
 
-        state.set(State.PARSING_LEAVING_ELEMENT);
+        setState(State.PARSING_LEAVING_ELEMENT);
 
         if (currentElement != null && currentElement.getName().equals(qName)) {
 
@@ -434,18 +433,18 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
             currentElement = currentElement.getParent();
         }
 
-        state.set(State.PARSING_LEAVING_ELEMENT_FINISHED);
+        setState(State.PARSING_LEAVING_ELEMENT_FINISHED);
     }
 
     @Override public final void characters(final char[] ch, final int start, final int length) throws SAXException {
 
-        state.set(State.PARSING_ENTERING_ELEMENT_CHARACTERS);
+        setState(State.PARSING_ENTERING_ELEMENT_CHARACTERS);
 
         if (currentElement != null) {
             currentElement.processCharacterData(ch, start, length);
         }
 
-        state.set(State.PARSING_ENTERING_ELEMENT_CHARACTERS_FINISHED);
+        setState(State.PARSING_ENTERING_ELEMENT_CHARACTERS_FINISHED);
     }
 
     // endregion
