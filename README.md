@@ -13,7 +13,7 @@ Yet to come.
 
 #### Development Snapshot
 
-Here we develop new features. This release is unstable and shouldn't be used in production. 
+Here you get new features. This release is unstable and shouldn't be used in production. 
 
 ```xml
 <dependency>
