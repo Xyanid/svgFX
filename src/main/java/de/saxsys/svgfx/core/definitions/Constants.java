@@ -19,29 +19,30 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.elements.SVGCircle;
-import de.saxsys.svgfx.core.elements.ClipPath;
 import de.saxsys.svgfx.core.elements.Defs;
-import de.saxsys.svgfx.core.elements.Ellipse;
-import de.saxsys.svgfx.core.elements.Group;
-import de.saxsys.svgfx.core.elements.Line;
 import de.saxsys.svgfx.core.elements.LinearGradient;
-import de.saxsys.svgfx.core.elements.Path;
-import de.saxsys.svgfx.core.elements.Polygon;
-import de.saxsys.svgfx.core.elements.Polyline;
 import de.saxsys.svgfx.core.elements.RadialGradient;
-import de.saxsys.svgfx.core.elements.Rectangle;
+import de.saxsys.svgfx.core.elements.SVGCircle;
+import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGEllipse;
+import de.saxsys.svgfx.core.elements.SVGGroup;
+import de.saxsys.svgfx.core.elements.SVGLine;
+import de.saxsys.svgfx.core.elements.SVGPath;
+import de.saxsys.svgfx.core.elements.SVGPolygon;
+import de.saxsys.svgfx.core.elements.SVGPolyline;
+import de.saxsys.svgfx.core.elements.SVGRectangle;
+import de.saxsys.svgfx.core.elements.SVGRoot;
+import de.saxsys.svgfx.core.elements.SVGStyle;
+import de.saxsys.svgfx.core.elements.SVGUse;
 import de.saxsys.svgfx.core.elements.Stop;
-import de.saxsys.svgfx.core.elements.Style;
-import de.saxsys.svgfx.core.elements.Svg;
-import de.saxsys.svgfx.core.elements.Use;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Contains constant values of
+ *
  * @author Xyanid on 01.11.2015.
  */
 public final class Constants {
@@ -52,26 +53,31 @@ public final class Constants {
      * contains a list with all the known svg classes for elements.
      */
     public static final List<Class<? extends SVGElementBase<?>>> SVG_ELEMENT_CLASSES = Arrays.asList(SVGCircle.class,
-                                                                                                     ClipPath.class,
+                                                                                                     SVGClipPath.class,
                                                                                                      Defs.class,
-                                                                                                     Ellipse.class,
-                                                                                                     Group.class,
-                                                                                                     Line.class,
+                                                                                                     SVGEllipse.class,
+                                                                                                     SVGGroup.class,
+                                                                                                     SVGLine.class,
                                                                                                      LinearGradient.class,
-                                                                                                     Path.class,
-                                                                                                     Polyline.class,
-                                                                                                     Polygon.class,
+                                                                                                     SVGPath.class,
+                                                                                                     SVGPolyline.class,
+                                                                                                     SVGPolygon.class,
                                                                                                      RadialGradient.class,
-                                                                                                     Rectangle.class,
+                                                                                                     SVGRectangle.class,
                                                                                                      Stop.class,
-                                                                                                     Style.class,
-                                                                                                     Svg.class,
-                                                                                                     Use.class);
+                                                                                                     SVGStyle.class,
+                                                                                                     SVGRoot.class,
+                                                                                                     SVGUse.class);
 
     /**
      * Indicator which determines that instead of an actual value value, another value is referenced.
      */
     public static final String IRI_IDENTIFIER = "url(#";
+
+    /**
+     * Indicator which determines that instead of an actual value value, another value is referenced.
+     */
+    public static final String IRI_FRAGMENT_IDENTIFIER = "#";
 
     //endregion
 

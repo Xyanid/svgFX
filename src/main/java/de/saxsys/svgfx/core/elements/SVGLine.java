@@ -19,15 +19,18 @@
 
 package de.saxsys.svgfx.core.elements;
 
-
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import javafx.scene.shape.Line;
 import org.xml.sax.Attributes;
 
 /**
- * This class represents a polyline element from svg
+ * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("polyline") public class Polyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
+@SVGElementMapping("line")
+public class SVGLine extends SVGShapeBase<Line> {
 
     //region Constructor
 
@@ -39,17 +42,20 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Polyline(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGLine(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
     //endregion
 
-    //region Constructor
+    //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Polyline createResultInternal() {
-
-        return new javafx.scene.shape.Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
+    @Override
+    protected final Line createResultInternal() throws SVGException {
+        return new Line(Double.parseDouble(getAttribute(CoreAttribute.START_X.getName())),
+                        Double.parseDouble(getAttribute(CoreAttribute.START_Y.getName())),
+                        Double.parseDouble(getAttribute(CoreAttribute.END_X.getName())),
+                        Double.parseDouble(getAttribute(CoreAttribute.END_Y.getName())));
     }
 
     //endregion

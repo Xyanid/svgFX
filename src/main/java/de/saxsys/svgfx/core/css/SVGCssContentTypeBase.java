@@ -124,7 +124,8 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
      *
      * @param cssText text to consume.
      */
-    @Override public final void parseCssValue(final String cssText) {
+    @Override
+    public final void parseCssValue(final String cssText) {
         isInherited = INHERIT_INDICATOR.equals(cssText);
 
         isNone = NONE_INDICATOR.equals(cssText);
@@ -146,7 +147,8 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
     /**
      * @return the XORed hash of
      */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return Boolean.hashCode(isNone) ^ Boolean.hashCode(isInherited) ^ super.hashCode();
     }
 
@@ -157,7 +159,8 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
      *
      * @return true if the object is the same otherwise false.
      */
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
 
         boolean result = super.equals(obj);
 

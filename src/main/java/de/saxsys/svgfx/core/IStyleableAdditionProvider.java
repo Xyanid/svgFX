@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core;
 
 /**
  * This interface is to be attached to all the {@link javafx.scene.control.Skin}s that use a {@link StyleableAdditionBase}
+ *
  * @author Xyanid on 08.11.2015.
  */
 interface IStyleableAdditionProvider {

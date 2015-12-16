@@ -32,6 +32,7 @@ import java.util.Set;
 
 /**
  * Holds an provides data for parsed svg elements
+ *
  * @author Xyanid on 25.10.2015.
  */
 public class SVGDataProvider implements IDataProvider {
@@ -82,6 +83,27 @@ public class SVGDataProvider implements IDataProvider {
     }
 
     /**
+     * Sets the given data into the map.
+     *
+     * @param key  the key of the identifier of the data, must not be null or epmty.
+     * @param data the the data that should be set, must not be null.
+     *
+     * @throws IllegalArgumentException if either key is null or empty or data is null.
+     */
+    public final void setData(final String key, SVGElementBase data) {
+
+        if (StringUtils.isNullOrEmpty(key)) {
+            throw new IllegalArgumentException("given key must not be null or empty");
+        }
+
+        if (data == null) {
+            throw new IllegalArgumentException("given data must not be null");
+        }
+
+        this.data.put(key, data);
+    }
+
+    /**
      * Returns the data of the given key as the desired type if it exists.
      *
      * @param clazz   class to be used, must not be null
@@ -116,7 +138,8 @@ public class SVGDataProvider implements IDataProvider {
     /**
      * Resets the data provider clearing all the stored data and styles.
      */
-    @Override public final void clear() {
+    @Override
+    public final void clear() {
         data.clear();
         styles.clear();
     }

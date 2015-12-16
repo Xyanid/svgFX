@@ -380,7 +380,8 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
     // region Override DefaultHandler
 
-    @Override public final void startDocument() throws SAXException {
+    @Override
+    public final void startDocument() throws SAXException {
         result = enteringDocument();
 
         currentElement = null;
@@ -388,7 +389,8 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
         setState(State.STARTING);
     }
 
-    @Override public final void endDocument() throws SAXException {
+    @Override
+    public final void endDocument() throws SAXException {
         currentElement = null;
 
         setState(State.FINISHED);
@@ -396,7 +398,8 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
         leavingDocument(result);
     }
 
-    @Override public final void startElement(final String namespaceURI, final String localName, final String qName, final Attributes attributes) throws SAXException {
+    @Override
+    public final void startElement(final String namespaceURI, final String localName, final String qName, final Attributes attributes) throws SAXException {
 
         setState(State.PARSING_ENTERING_ELEMENT);
 
@@ -418,7 +421,8 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
         setState(State.PARSING_ENTERING_ELEMENT_FINISHED);
     }
 
-    @Override public final void endElement(final String namespaceURI, final String localName, final String qName) throws SAXException {
+    @Override
+    public final void endElement(final String namespaceURI, final String localName, final String qName) throws SAXException {
 
         setState(State.PARSING_LEAVING_ELEMENT);
 
@@ -428,15 +432,15 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
             consumeElementEnd(result, dataProvider, currentElement);
 
-            // clear the previous element that was processed before the current one, so we can also end its
-            // processing if need be
+            // clear the previous element that was processed before the current one, so we can also end its processing if need be
             currentElement = currentElement.getParent();
         }
 
         setState(State.PARSING_LEAVING_ELEMENT_FINISHED);
     }
 
-    @Override public final void characters(final char[] ch, final int start, final int length) throws SAXException {
+    @Override
+    public final void characters(final char[] ch, final int start, final int length) throws SAXException {
 
         setState(State.PARSING_ENTERING_ELEMENT_CHARACTERS);
 

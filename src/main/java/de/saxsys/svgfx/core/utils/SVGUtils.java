@@ -74,7 +74,7 @@ public final class SVGUtils {
      * @throws IllegalArgumentException if either the data is null or empty, the dataProvider is null or the clazz is null.
      */
     public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data, final SVGDataProvider dataProvider, final Class<TSVGElementBase> clazz)
-            throws SVGException {
+            throws SVGException, IllegalArgumentException {
 
         if (dataProvider == null) {
             throw new IllegalArgumentException("given dataprovider must not be null");
@@ -102,7 +102,7 @@ public final class SVGUtils {
             }
 
             if (result == null) {
-                throw new SVGException("given reference could not be resolved");
+                throw new SVGException(String.format("given reference %s could not be resolved", data));
             }
         }
 
@@ -220,7 +220,7 @@ public final class SVGUtils {
 
     /**
      * Returns the combined transformations available in the given string. The string must be contain data
-     * corresponding to the Svg specification for the transform attribute.
+     * corresponding to the SVGRoot specification for the transform attribute.
      *
      * @param data the string which contains the transformation data.
      *

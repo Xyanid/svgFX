@@ -24,7 +24,7 @@
 
 <!--
     Checkstyle configuration that checks the Google coding conventions from:
-    -  Google Java Style
+    -  Google Java SVGStyle
        https://google-styleguide.googlecode.com/svn-history/r130/trunk/javaguide.html
     Checkstyle is very configurable. Be sure to read the documentation at
     http://checkstyle.sf.net (or in your downloaded distribution).

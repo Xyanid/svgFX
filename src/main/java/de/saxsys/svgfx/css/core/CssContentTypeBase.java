@@ -114,7 +114,8 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
     /**
      * @return the XORed hash of
      */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return (value == null ? 991 : value.hashCode()) ^ (unit == null ? 997 : unit.hashCode());
     }
 
@@ -125,7 +126,8 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
      *
      * @return true if the object is the same otherwise false.
      */
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
         boolean result = this == obj;
 
         if (!result && obj instanceof CssContentTypeBase) {

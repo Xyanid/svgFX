@@ -19,17 +19,18 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.SVGPath;
+import de.saxsys.svgfx.core.utils.StringUtils;
+import javafx.scene.shape.Ellipse;
 import org.xml.sax.Attributes;
 
 /**
- * This class represents a line element from svg
+ * This class represents a svg ellipse element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("path") public class Path extends SVGShapeBase<SVGPath> {
+@SVGElementMapping("ellipse")
+public class SVGEllipse extends SVGShapeBase<Ellipse> {
 
     //region Constructor
 
@@ -41,7 +42,7 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Path(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -49,29 +50,16 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final SVGPath createResultInternal() {
-        SVGPath result = new javafx.scene.shape.SVGPath();
+    @Override
+    protected final Ellipse createResultInternal() {
 
-        result.contentProperty().set(getAttribute(CoreAttribute.PATH_DESCRIPTION.getName()));
+        String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
+        String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());
 
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     * Applies the file rule to the path.
-     */
-    @Override protected final void initializeResult(SVGPath path) {
-        super.initializeResult(path);
-
-        SVGCssStyle style = getCssStyle();
-
-        if (style != null) {
-
-            if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName())) {
-                path.setFillRule(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue());
-            }
-        }
+        return new Ellipse(StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX),
+                           StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY),
+                           Double.parseDouble(getAttribute(CoreAttribute.RADIUS_X.getName())),
+                           Double.parseDouble(getAttribute(CoreAttribute.RADIUS_Y.getName())));
     }
 
     //endregion

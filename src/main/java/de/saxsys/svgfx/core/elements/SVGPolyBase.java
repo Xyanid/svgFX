@@ -20,6 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
@@ -30,9 +31,24 @@ import java.util.List;
  * Base class for polygons and polyline.
  *
  * @param <TShape> the type of shape this element creates
- *                 @author Xyanid on 07.11.2015.
+ *
+ * @author Xyanid on 07.11.2015.
  */
 public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TShape> {
+
+    // region Static
+
+    /**
+     * Determines the delimiter that separated a pair of points.
+     */
+    private static String POINTS_DELIMITER = " ";
+
+    /**
+     * Determines the delimiter that separated a the positions of a point.
+     */
+    private static String POSITIONS_DELIMITER = ",";
+
+    // endregion
 
     //region Constructor
 
@@ -56,15 +72,27 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      * Returns the list of points contained by the attributes.
      *
      * @return the list of points contained by the attributes
+     *
+     * @throws IllegalArgumentException if any of the points in the corresponding attribute does not provide x and y position.
      */
-    public List<Double> getPoints() {
+    public final List<Double> getPoints() throws IllegalArgumentException {
         List<Double> actualPoints = new ArrayList<>();
 
-        for (String pointsSplit : getAttribute(CoreAttribute.POINTS.getName()).trim().split(" ")) {
-            String[] pointSplit = pointsSplit.split(",");
-            for (String point : pointSplit) {
-                actualPoints.add(Double.parseDouble(point));
+        String points = getAttribute(CoreAttribute.POINTS.getName());
+
+        if (StringUtils.isNullOrEmpty(points)) {
+            return actualPoints;
+        }
+
+        for (String pointsSplit : points.trim().split(POINTS_DELIMITER)) {
+            String[] pointSplit = pointsSplit.split(POSITIONS_DELIMITER);
+
+            if (pointSplit.length != 2) {
+                throw new IllegalArgumentException("At least one point does not provide x and y position");
             }
+
+            actualPoints.add(Double.parseDouble(pointSplit[0]));
+            actualPoints.add(Double.parseDouble(pointSplit[1]));
         }
 
         return actualPoints;

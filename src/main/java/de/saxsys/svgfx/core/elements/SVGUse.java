@@ -21,14 +21,18 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import javafx.scene.Group;
+import de.saxsys.svgfx.core.utils.SVGUtils;
+import de.saxsys.svgfx.core.utils.StringUtils;
+import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
 /**
- * This class represents the svg element from svg
- * @author Xyanid on 24.10.2015.
+ * This class represents a use element from svg
+ *
+ * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("svg") public class Svg extends SVGElementBase<Group> {
+@SVGElementMapping("use")
+public class SVGUse extends SVGElementBase<Node> {
 
     //region Constructor
 
@@ -40,20 +44,32 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Svg(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGUse(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGElementBase
+    //region SVGElementBase
 
-    @Override protected void initializeResult(Group group) throws SVGException {
+    /**
+     * {@inheritDoc} Resolves the needed reference.
+     *
+     * @throws SVGException if the {@link de.saxsys.svgfx.core.elements.SVGElementBase.XLinkAttribute#XLINK_HREF} is empty or null.
+     */
+    @Override
+    protected Node createResultInternal() throws SVGException {
+        String reference = getAttributes().get(XLinkAttribute.XLINK_HREF.getName());
+        if (StringUtils.isNullOrEmpty(reference)) {
+            throw new SVGException("XLink attribute is invalid.");
+        }
 
+        return (Node) SVGUtils.resolveIRI(reference, getDataProvider(), SVGElementBase.class).createResult();
     }
 
-    @Override protected Group createResultInternal() throws SVGException {
-        return null;
+    @Override
+    protected void initializeResult(Node node) throws SVGException {
+
     }
 
     //endregion

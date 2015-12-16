@@ -32,9 +32,13 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
+
+import java.util.Map;
 
 /**
  * Test to ensure the {@link SVGUtils} work as expected.
@@ -54,7 +58,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
      */
-    @Test public void ensureResolveIRICauseTheExpectedExceptions() {
+    @Test
+    public void ensureResolveIRICauseTheExpectedExceptions() {
 
         try {
             SVGUtils.resolveIRI(null, new SVGDataProvider(), SVGElementBase.class);
@@ -102,15 +107,16 @@ public final class SVGUtilTest {
     /**
      * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
      */
-    @Test public void ensureResolveIRICanResolveReference() {
+    @Test
+    public void ensureResolveIRICanResolveReference() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGDataProvider dataProvider = Mockito.mock(SVGDataProvider.class);
+        SVGDataProvider dataProvider = new SVGDataProvider();
 
-        Mockito.when(dataProvider.getData(Mockito.anyObject(), Mockito.anyString())).thenReturn(new SVGCircle("circle", attributes, null, dataProvider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", new SVGCircle("circle", attributes, null, dataProvider));
 
         SVGCircle circle = SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
 
@@ -120,7 +126,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
      */
-    @Test public void ensureResolveIRICanNotResolveReference() {
+    @Test
+    public void ensureResolveIRICanNotResolveReference() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -130,14 +137,15 @@ public final class SVGUtilTest {
             SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test1)", new SVGDataProvider(), SVGCircle.class);
             Assert.fail();
         } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains("reference"));
+            Assert.assertTrue(e.getMessage().contains(Constants.IRI_IDENTIFIER + "test1)"));
         }
     }
 
     /**
      * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}}.
      */
-    @Test public void createMatrix() {
+    @Test
+    public void createMatrix() {
 
         Transform transform = null;
 
@@ -169,7 +177,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that matrices which are invalid cause the expected exception.
      */
-    @Test public void throwExceptionIfAnInvalidMatrixIsProvided() {
+    @Test
+    public void throwExceptionIfAnInvalidMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("matrix(1,2,3,4,5)");
@@ -196,7 +205,8 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of translate are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
-    @Test public void parseTranslateMatrix() {
+    @Test
+    public void parseTranslateMatrix() {
 
         Transform transform = null;
 
@@ -244,7 +254,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that matrices which are invalid cause the expected exception.
      */
-    @Test public void throwExceptionIfAnInvalidTranslateMatrixIsProvided() {
+    @Test
+    public void throwExceptionIfAnInvalidTranslateMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("translate(1,2,3)");
@@ -264,7 +275,8 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
-    @Test public void parseScaleMatrix() {
+    @Test
+    public void parseScaleMatrix() {
 
         Transform transform = null;
 
@@ -312,7 +324,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that scale which are invalid cause the expected exception.
      */
-    @Test public void throwExceptionIfAnInvalidScaleMatrixIsProvided() {
+    @Test
+    public void throwExceptionIfAnInvalidScaleMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("scale(1,2,3)");
@@ -332,7 +345,8 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
-    @Test public void parseRotateMatrix() {
+    @Test
+    public void parseRotateMatrix() {
 
         Transform transform = null;
 
@@ -378,7 +392,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that scale which are invalid cause the expected exception.
      */
-    @Test public void throwExceptionIfAnInvalidRotateMatrixIsProvided() {
+    @Test
+    public void throwExceptionIfAnInvalidRotateMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("rotate(1,2)");
@@ -405,7 +420,8 @@ public final class SVGUtilTest {
     /**
      * This test will create ensure that all types of skewX are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
-    @Test public void parseSkewMatrix() {
+    @Test
+    public void parseSkewMatrix() {
 
         Transform transform = null;
 
@@ -455,7 +471,8 @@ public final class SVGUtilTest {
     /**
      * Ensures that scale which are invalid cause the expected exception.
      */
-    @Test public void throwExceptionIfAnInvalidSkewMatrixIsProvided() {
+    @Test
+    public void throwExceptionIfAnInvalidSkewMatrixIsProvided() {
 
         try {
             SVGUtils.getTransform("skewX(1,2)");
@@ -490,7 +507,8 @@ public final class SVGUtilTest {
      * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
      * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
      */
-    @Test public void parseCombinedMatrices() {
+    @Test
+    public void parseCombinedMatrices() {
 
         Transform transform = null;
 

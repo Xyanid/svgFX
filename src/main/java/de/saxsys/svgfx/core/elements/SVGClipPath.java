@@ -21,21 +21,19 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import javafx.scene.shape.Shape;
+import de.saxsys.svgfx.xml.elements.ElementBase;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /**
- * This class represents a base class which contains shape element from svg.
- *
- * @param <TShape> type of the shape represented by this element
- *
- * @author Xyanid on 25.10.2015.
+ * This class represents a clipPath element from svg @author Xyanid on 25.10.2015.
  */
-public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TShape> {
+@SVGElementMapping("clipPath")
+public class SVGClipPath extends SVGNodeBase<Group> {
 
-    //region Constructor
+    // region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
@@ -45,28 +43,32 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    public SVGClipPath(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
-    //endregion
+    // endregion
 
-    // region Override SVGNodeBase
+    // region SVGElementBase
 
-    /**
-     * {@inheritDoc}
-     * Applies the css style the the element if possible.
-     */
     @Override
-    protected void initializeResult(TShape shape) throws SVGException {
-        super.initializeResult(shape);
+    protected final Group createResultInternal() throws SVGException {
 
-        SVGCssStyle style = getCssStyle();
+        Group result = new Group();
 
-        if (style != null) {
+        int counter = 0;
 
-            SVGUtils.applyStyle(shape, style, getDataProvider());
+        for (ElementBase child : getChildren()) {
+            try {
+                result.getChildren().add((Node) child.getResult());
+            } catch (SAXException e) {
+                throw new SVGException(String.format("Could not get result from child %d", counter), e);
+            }
+
+            counter++;
         }
+
+        return result;
     }
 
     // endregion

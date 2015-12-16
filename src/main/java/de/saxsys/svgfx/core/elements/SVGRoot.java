@@ -20,13 +20,17 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import javafx.scene.Group;
 import org.xml.sax.Attributes;
 
 /**
- * This class represents a line element from svg
- * @author Xyanid on 25.10.2015.
+ * This class represents the svg element from svg
+ *
+ * @author Xyanid on 24.10.2015.
  */
-@SVGElementMapping("polygon") public class Polygon extends SVGPolyBase<javafx.scene.shape.Polygon> {
+@SVGElementMapping("svg")
+public class SVGRoot extends SVGElementBase<Group> {
 
     //region Constructor
 
@@ -38,7 +42,7 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Polygon(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGRoot(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -46,9 +50,14 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Polygon createResultInternal() {
+    @Override
+    protected Group createResultInternal() throws SVGException {
+        return null;
+    }
 
-        return new javafx.scene.shape.Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
+    @Override
+    protected void initializeResult(Group group) throws SVGException {
+
     }
 
     //endregion

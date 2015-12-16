@@ -22,13 +22,16 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.StringUtils;
+import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("rect") public class Rectangle extends SVGShapeBase<javafx.scene.shape.Rectangle> {
+@SVGElementMapping("rect")
+public class SVGRectangle extends SVGShapeBase<Rectangle> {
 
     //region Constructor
 
@@ -40,7 +43,7 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Rectangle(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -48,10 +51,14 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Rectangle createResultInternal() {
+    @Override
+    protected final javafx.scene.shape.Rectangle createResultInternal() {
 
-        return new javafx.scene.shape.Rectangle(Double.parseDouble(getAttribute(CoreAttribute.POSITION_X.getName())),
-                                                Double.parseDouble(getAttribute(CoreAttribute.POSITION_Y.getName())),
+        String positionX = getAttribute(CoreAttribute.POSITION_X.getName());
+        String positionY = getAttribute(CoreAttribute.POSITION_Y.getName());
+
+        return new javafx.scene.shape.Rectangle(StringUtils.isNullOrEmpty(positionX) ? 0.0d : Double.parseDouble(positionX),
+                                                StringUtils.isNullOrEmpty(positionY) ? 0.0d : Double.parseDouble(positionY),
                                                 Double.parseDouble(getAttribute(CoreAttribute.WIDTH.getName())),
                                                 Double.parseDouble(getAttribute(CoreAttribute.HEIGHT.getName())));
     }
@@ -60,7 +67,8 @@ import org.xml.sax.Attributes;
      * {@inheritDoc}
      * Applies the corner radius if any.
      */
-    @Override protected void initializeResult(javafx.scene.shape.Rectangle rect) throws SVGException {
+    @Override
+    protected void initializeResult(Rectangle rect) throws SVGException {
         super.initializeResult(rect);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason

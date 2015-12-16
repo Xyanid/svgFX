@@ -20,13 +20,17 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.utils.StringUtils;
+import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("circle") public class SVGCircle extends SVGShapeBase<javafx.scene.shape.Circle> {
+@SVGElementMapping("circle")
+public class SVGCircle extends SVGShapeBase<Circle> {
 
     //region Constructor
 
@@ -46,11 +50,15 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Circle createResultInternal() {
+    @Override
+    protected final Circle createResultInternal() {
 
-        return new javafx.scene.shape.Circle(Double.parseDouble(getAttribute(CoreAttribute.CENTER_X.getName())),
-                                             Double.parseDouble(getAttribute(CoreAttribute.CENTER_Y.getName())),
-                                             Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())));
+        String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
+        String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());
+
+        return new Circle(StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX),
+                          StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY),
+                          Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())));
     }
 
     //endregion

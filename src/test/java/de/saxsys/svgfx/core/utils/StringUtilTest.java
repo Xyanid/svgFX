@@ -24,13 +24,15 @@ import org.junit.Test;
 
 /**
  * This class will test all methods of the {@link StringUtils}
+ *
  * @author Xyanid on 28.10.2015.
  */
 public final class StringUtilTest {
     /**
      * Will if the last character in a string is replaces if it was found.
      */
-    @Test public void replaceLastOccurrenceInString() {
+    @Test
+    public void replaceLastOccurrenceInString() {
         String test = "this is a test;";
 
         //first we test the string version
@@ -51,7 +53,8 @@ public final class StringUtilTest {
     /**
      * Test if string characters are removed at the start and end.
      */
-    @Test public void removeStringIndicators() {
+    @Test
+    public void removeStringIndicators() {
         String test = "\"this\" is a test;\"";
 
         //first we test the string version

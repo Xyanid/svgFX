@@ -17,18 +17,21 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.elements;
+package de.saxsys.svgfx.core.elements.mocks;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGPolyBase;
+import javafx.scene.shape.Polygon;
 import org.xml.sax.Attributes;
 
 /**
- * This class represents a line element from svg
- * @author Xyanid on 25.10.2015.
+ * This class is purely used to test the functionality of {@link SVGPolyBase}
+ *
+ * @author Xyanid on 22.12.2015.
  */
-@SVGElementMapping("ellipse") public class Ellipse extends SVGShapeBase<javafx.scene.shape.Ellipse> {
-
-    //region Constructor
+public class SVGPolyBaseMock extends SVGPolyBase<Polygon> {
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
@@ -38,21 +41,12 @@ import org.xml.sax.Attributes;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Ellipse(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGPolyBaseMock(String name, Attributes attributes, SVGElementBase<SVGDataProvider> parent, SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
-    //endregion
-
-    //region Override SVGElementBase
-
-    @Override protected final javafx.scene.shape.Ellipse createResultInternal() {
-
-        return new javafx.scene.shape.Ellipse(Double.parseDouble(getAttribute(CoreAttribute.CENTER_X.getName())),
-                                              Double.parseDouble(getAttribute(CoreAttribute.CENTER_Y.getName())),
-                                              Double.parseDouble(getAttribute(CoreAttribute.RADIUS_X.getName())),
-                                              Double.parseDouble(getAttribute(CoreAttribute.RADIUS_Y.getName())));
+    @Override
+    protected Polygon createResultInternal() throws SVGException {
+        return null;
     }
-
-    //endregion
 }

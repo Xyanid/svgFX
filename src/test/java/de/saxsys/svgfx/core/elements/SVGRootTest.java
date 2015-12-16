@@ -19,46 +19,31 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGParser;
-import org.hamcrest.core.IsInstanceOf;
+import de.saxsys.svgfx.core.SVGDataProvider;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.net.URL;
+import org.mockito.Mockito;
+import org.xml.sax.Attributes;
 
 /**
+ * This test will ensure that svg svg elements are fully supported.
+ *
  * @author Xyanid on 05.10.2015.
  */
-public final class PolylineTest {
+public final class SVGRootTest {
 
     /**
-     *
+     * Ensures that no result is created when calling SVGRoot
      */
-    @Test public void parse() {
+    @Test
+    public void ensureNoResultIsCreated() {
 
-        SVGParser parser;
+        Attributes attributes = Mockito.mock(Attributes.class);
 
-        parser = new SVGParser();
+        Mockito.when(attributes.getLength()).thenReturn(0);
 
-        Assert.assertNull(parser.getResult());
+        SVGRoot root = new SVGRoot("svg", attributes, null, new SVGDataProvider());
 
-        URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/elements/polyline.svg");
-
-        Assert.assertNotNull(url);
-
-        try {
-
-            parser.parse(url.getFile());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(parser.getResult());
-
-        Assert.assertEquals(parser.getResult().getChildren().size(), 2);
-
-        Assert.assertThat(parser.getResult().getChildren().get(0), new IsInstanceOf(javafx.scene.shape.Polyline.class));
+        Assert.assertNull(root.getResult());
     }
 }

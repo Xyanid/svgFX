@@ -19,12 +19,11 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.elements.ClipPath;
 import de.saxsys.svgfx.core.elements.Defs;
-import de.saxsys.svgfx.core.elements.Group;
+import de.saxsys.svgfx.core.elements.SVGClipPath;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementCreator;
-import de.saxsys.svgfx.core.elements.Style;
+import de.saxsys.svgfx.core.elements.SVGStyle;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Node;
@@ -51,15 +50,18 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
 
     //region Override SAXParser
 
-    @Override protected javafx.scene.Group enteringDocument() {
+    @Override
+    protected javafx.scene.Group enteringDocument() {
         return new javafx.scene.Group();
     }
 
-    @Override protected void leavingDocument(final javafx.scene.Group result) {
+    @Override
+    protected void leavingDocument(final javafx.scene.Group result) {
 
     }
 
-    @Override protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) {
+    @Override
+    protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) {
 
         //definitions will not be kept as children
         if (element instanceof Defs && element.getParent() != null) {
@@ -67,14 +69,16 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
         }
     }
 
-    @Override protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
+    @Override
+    protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
 
         if (element.getParent() instanceof Defs) {
-            dataProvider.getUnmodifiableData().put(element.getAttributes().get(SVGElementBase.CoreAttribute.ID.getName()), (SVGElementBase) element);
-        } else if (element instanceof Style) {
-            dataProvider.getStyles().addAll(((Style) element).getResult());
-            //elements which are inside a group or clip Path as well as clipPath elements will not be added
-        } else if (!((element instanceof ClipPath) || (element.getParent() instanceof ClipPath) || (element.getParent() instanceof Group)) && element.getResult() instanceof Node) {
+            dataProvider.setData(element.getAttributes().get(SVGElementBase.CoreAttribute.ID.getName()), (SVGElementBase) element);
+        } else if (element instanceof SVGStyle) {
+            dataProvider.getStyles().addAll(((SVGStyle) element).getResult());
+            //elements which are inside a group or clip SVGPath as well as clipPath elements will not be added
+        } else if (!((element instanceof SVGClipPath) || (element.getParent() instanceof SVGClipPath) || (element.getParent() instanceof de.saxsys.svgfx.core.elements.SVGGroup)) &&
+                   element.getResult() instanceof Node) {
             result.getChildren().add((Node) element.getResult());
         }
     }

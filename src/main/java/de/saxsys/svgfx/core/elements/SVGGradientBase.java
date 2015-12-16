@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
  * Contains basic functionality to handle gradients of svg.
  *
  * @param <TPaint> the type of the paint need
- *                 @author Xyanid on 06.11.2015.
+ *
+ * @author Xyanid on 06.11.2015.
  */
 public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBase<TPaint> {
 
@@ -94,7 +95,8 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     // region Override SVGElementBase
 
-    @Override protected final void initializeResult(TPaint paint) throws SVGException {
+    @Override
+    protected final void initializeResult(TPaint paint) throws SVGException {
 
         // TODO figure out how to apply transformation to a paint if that is possible
     }

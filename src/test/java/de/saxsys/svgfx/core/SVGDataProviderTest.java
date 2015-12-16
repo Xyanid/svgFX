@@ -20,8 +20,9 @@
 package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.elements.Rectangle;
 import de.saxsys.svgfx.core.elements.SVGCircle;
+import de.saxsys.svgfx.core.elements.SVGRectangle;
+import de.saxsys.svgfx.core.elements.SVGStyle;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,20 +46,22 @@ public class SVGDataProviderTest {
 
     //region Tests
 
-    @Before public void setUp() {
+    @Before
+    public void setUp() {
         Mockito.when(ATTRIBUTES.getLength()).thenReturn(0);
     }
 
     /**
      * Ensure that {@link SVGDataProvider#getUnmodifiableData()} is set correctly when adding and removing data.
      */
-    @Test public void testGetUnmodifiableData() throws Exception {
+    @Test
+    public void testGetUnmodifiableData() throws Exception {
 
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
         Assert.assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
 
-        DATA_PROVIDER.data.put("test", new Rectangle("rect", ATTRIBUTES, null, DATA_PROVIDER));
+        DATA_PROVIDER.data.put("test", new SVGRectangle("rect", ATTRIBUTES, null, DATA_PROVIDER));
 
         Assert.assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
 
@@ -70,7 +73,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#getStyles()} is set correctly when adding and removing data.
      */
-    @Test public void testGetStyles() throws Exception {
+    @Test
+    public void testGetStyles() {
 
         DATA_PROVIDER.styles.add(new SVGCssStyle("test", DATA_PROVIDER));
 
@@ -84,7 +88,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#hasData(String)} works as intended.
      */
-    @Test public void testHasData() throws Exception {
+    @Test
+    public void testHasData() {
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
         Assert.assertTrue(DATA_PROVIDER.hasData("test"));
@@ -95,14 +100,29 @@ public class SVGDataProviderTest {
     }
 
     /**
+     * Ensure that {@link SVGDataProvider#setData(String, de.saxsys.svgfx.core.elements.SVGElementBase)} works as intended and adds and overwrites elements in {@link SVGDataProvider#data}.
+     */
+    @Test
+    public void testSetData() {
+        DATA_PROVIDER.setData("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
+
+        Assert.assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+
+        DATA_PROVIDER.setData("test", new SVGStyle("style", ATTRIBUTES, null, DATA_PROVIDER));
+
+        Assert.assertNotNull(DATA_PROVIDER.getData(SVGStyle.class, "test"));
+    }
+
+    /**
      * Ensure that {@link SVGDataProvider#getData(Class, String)} works as intended.
      */
-    @Test public void testGetData() throws Exception {
+    @Test
+    public void testGetData() {
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
         Assert.assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
 
-        Assert.assertNull(DATA_PROVIDER.getData(Rectangle.class, "test"));
+        Assert.assertNull(DATA_PROVIDER.getData(SVGRectangle.class, "test"));
 
         DATA_PROVIDER.data.remove("test");
 
@@ -112,7 +132,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#clear()} works as intended.
      */
-    @Test public void testClear() throws Exception {
+    @Test
+    public void testClear() {
 
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 

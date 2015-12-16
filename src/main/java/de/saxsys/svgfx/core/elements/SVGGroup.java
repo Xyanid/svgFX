@@ -28,9 +28,11 @@ import org.xml.sax.SAXException;
 
 /**
  * This class represents the style element from svg
+ *
  * @author Xyanid on 27.10.2015.
  */
-@SVGElementMapping("g") public class Group extends SVGNodeBase<javafx.scene.Group> {
+@SVGElementMapping("g")
+public class SVGGroup extends SVGNodeBase<javafx.scene.Group> {
 
     //region Constructor
 
@@ -42,7 +44,7 @@ import org.xml.sax.SAXException;
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Group(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    public SVGGroup(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -50,7 +52,8 @@ import org.xml.sax.SAXException;
 
     //region SVGElementBase
 
-    @Override protected final javafx.scene.Group createResultInternal() throws SVGException {
+    @Override
+    protected final javafx.scene.Group createResultInternal() throws SVGException {
         javafx.scene.Group result = new javafx.scene.Group();
 
         result.setOpacity(1.0d);

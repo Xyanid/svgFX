@@ -20,20 +20,17 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
 /**
- * This class represents a base class which contains shape element from svg.
- *
- * @param <TShape> type of the shape represented by this element
+ * This class represents a line element from svg
  *
  * @author Xyanid on 25.10.2015.
  */
-public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TShape> {
+@SVGElementMapping("path")
+public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
 
     //region Constructor
 
@@ -45,29 +42,40 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    public SVGPath(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
     //endregion
 
-    // region Override SVGNodeBase
+    //region Override SVGElementBase
+
+    @Override
+    protected final javafx.scene.shape.SVGPath createResultInternal() {
+        javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
+
+        result.setContent(getAttribute(CoreAttribute.PATH_DESCRIPTION.getName()));
+
+        return result;
+    }
 
     /**
      * {@inheritDoc}
-     * Applies the css style the the element if possible.
+     * Applies the file rule to the path.
      */
     @Override
-    protected void initializeResult(TShape shape) throws SVGException {
-        super.initializeResult(shape);
+    protected final void initializeResult(javafx.scene.shape.SVGPath path) {
+        super.initializeResult(path);
 
         SVGCssStyle style = getCssStyle();
 
         if (style != null) {
 
-            SVGUtils.applyStyle(shape, style, getDataProvider());
+            if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName())) {
+                path.setFillRule(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue());
+            }
         }
     }
 
-    // endregion
+    //endregion
 }

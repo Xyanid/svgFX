@@ -23,6 +23,7 @@ import javafx.scene.shape.FillRule;
 
 /**
  * This class contains all enumerations used for processing svg data.
+ *
  * @author Xyanid on 29.10.2015.
  */
 public final class Enumerations {
@@ -31,7 +32,8 @@ public final class Enumerations {
      * Contains information which maps a given svg fill rule to the javafx fill rule.
      */
     public enum FillRuleMapping {
-        EVEN_ODD("evenodd", FillRule.EVEN_ODD), NON_ZERO("nonzero ", FillRule.NON_ZERO);
+        EVEN_ODD("evenodd", FillRule.EVEN_ODD),
+        NON_ZERO("nonzero ", FillRule.NON_ZERO);
 
         // region Fields
 
@@ -84,8 +86,6 @@ public final class Enumerations {
 
         // endregion
     }
-
-
 
 
 }

@@ -32,7 +32,8 @@ public final class SVGParserTest {
     /**
      * Parses a complex SVG file successfuly.
      */
-    @Test public void parseComplexSVGAndDoNotThrowAnException() {
+    @Test
+    public void parseComplexSVGAndDoNotThrowAnException() {
 
         SVGParser parser;
 

@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.elements.SVGClipPath;
 import de.saxsys.svgfx.core.elements.SVGShapeBase;
 import de.saxsys.svgfx.css.core.CssContentTypeBase;
 import de.saxsys.svgfx.css.core.CssStyle;
@@ -82,7 +83,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
          */
         CLIP_PATH("clip-path", SVGCssContentTypeString.class),
         /**
-         * Represents the clip rule which determines how an element inside a {@link de.saxsys.svgfx.core.elements.ClipPath} will be used.
+         * Represents the clip rule which determines how an element inside a {@link SVGClipPath} will be used.
          * It works like the {@link PresentationAttribute#FILL_RULE}.
          */
         CLIP_RULE("clip-rule", SVGCssContentTypeString.class),
@@ -206,7 +207,8 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
      *
      * @return a {@link CssContentTypeBase} or null if the name is not supported.
      */
-    @Override protected SVGCssContentTypeBase createContentType(String name) {
+    @Override
+    protected SVGCssContentTypeBase createContentType(String name) {
 
         for (PresentationAttribute attribute : PresentationAttribute.values()) {
             if (attribute.getName().equals(name)) {

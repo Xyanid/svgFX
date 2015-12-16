@@ -66,11 +66,11 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
          */
         CLASS("class"),
         /**
-         * Represents x component of a center position, this element is used for {@link SVGCircle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
+         * Represents x component of a center position, this element is used for {@link SVGCircle}s and {@link SVGEllipse}s.
          */
         CENTER_X("cx"),
         /**
-         * Represents y component of a center position, this element is used for {@link SVGCircle}s and {@link de.saxsys.svgfx.core.elements.Ellipse}s.
+         * Represents y component of a center position, this element is used for {@link SVGCircle}s and {@link SVGEllipse}s.
          */
         CENTER_Y("cy"),
         /**
@@ -476,15 +476,23 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      * Returns a node which represents the clip path to be applied to this element.
      *
      * @return the clip path to use or null if this element does not have a clip path.
+     *
+     * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #dataProvider}.
+     * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
      */
-    public final Node getClipPath() {
+    public final Node getClipPath() throws SVGException, IllegalArgumentException {
 
         SVGCssStyle style = getCssStyle();
 
         if (style != null) {
             SVGCssContentTypeString referenceIRI = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
             if (referenceIRI != null) {
-                return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), ClipPath.class).getResult();
+                // it might happen that we a clip path has a style that contains a clip path that is the SAME clip path, in this case we would get a stackoverflow here, so we prevent that
+                SVGClipPath element = SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class);
+                if (element != null && this != element) {
+
+                    return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class).getResult();
+                }
             }
         }
 
@@ -542,7 +550,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     /**
      * @inheritDoc
      */
-    @Override public final TResult getResult() throws SVGException {
+    @Override
+    public final TResult getResult() throws SVGException {
 
         if (result == null) {
             result = createResult();
@@ -554,19 +563,22 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     /**
      * @inheritDoc
      */
-    @Override public void startProcessing() throws SVGException {
+    @Override
+    public void startProcessing() throws SVGException {
     }
 
     /**
      * @inheritDoc
      */
-    @Override public void processCharacterData(final char[] ch, final int start, final int length) throws SVGException {
+    @Override
+    public void processCharacterData(final char[] ch, final int start, final int length) throws SVGException {
     }
 
     /**
      * @inheritDoc
      */
-    @Override public void endProcessing() throws SVGException {
+    @Override
+    public void endProcessing() throws SVGException {
     }
 
     // endregion

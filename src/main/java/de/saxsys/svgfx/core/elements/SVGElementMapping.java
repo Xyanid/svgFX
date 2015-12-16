@@ -26,9 +26,12 @@ import java.lang.annotation.Target;
 
 /**
  * Interface to be applied to all elements which are actual svg elements.
+ *
  * @author Xyanid on 01.11.2015.
  */
-@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE) public @interface SVGElementMapping {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface SVGElementMapping {
 
     /**
      * Returns the name of the svg element this element corresponds to.

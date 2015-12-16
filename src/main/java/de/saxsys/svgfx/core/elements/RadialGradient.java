@@ -28,9 +28,11 @@ import java.util.List;
 
 /**
  * This Class represents a radial gradient from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("radialGradient") public class RadialGradient extends SVGGradientBase<javafx.scene.paint.RadialGradient> {
+@SVGElementMapping("radialGradient")
+public class RadialGradient extends SVGGradientBase<javafx.scene.paint.RadialGradient> {
 
     //region Constructor
 
@@ -50,7 +52,8 @@ import java.util.List;
 
     //region Override RadialGradient
 
-    @Override protected final javafx.scene.paint.RadialGradient createResultInternal() {
+    @Override
+    protected final javafx.scene.paint.RadialGradient createResultInternal() {
 
         List<javafx.scene.paint.Stop> stops = getStops();
 

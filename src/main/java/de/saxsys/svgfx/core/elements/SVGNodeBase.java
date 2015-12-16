@@ -56,7 +56,8 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * {@inheritDoc}
      * Will apply the transformation to the element.
      */
-    @Override protected void initializeResult(TNode node) throws SVGException {
+    @Override
+    protected void initializeResult(TNode node) throws SVGException {
 
         Transform transform = getTransformation();
         if (transform != null) {
