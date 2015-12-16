@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core;
 
 /**
  * This exception will be thrown if an error occurs while processing an svg file.
+ *
  * @author Xyanid on 02.11.2015.
  */
 public class SVGException extends RuntimeException {

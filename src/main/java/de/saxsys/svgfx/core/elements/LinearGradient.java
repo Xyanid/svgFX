@@ -28,9 +28,11 @@ import java.util.List;
 
 /**
  * This class represents the linear gradient element from svg
+ *
  * @author Xyanid on 24.10.2015.
  */
-@SVGElementMapping("linearGradient") public class LinearGradient extends SVGGradientBase<javafx.scene.paint.LinearGradient> {
+@SVGElementMapping("linearGradient")
+public class LinearGradient extends SVGGradientBase<javafx.scene.paint.LinearGradient> {
 
 
     //region Constructor
@@ -51,7 +53,8 @@ import java.util.List;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.paint.LinearGradient createResultInternal() throws SVGException {
+    @Override
+    protected final javafx.scene.paint.LinearGradient createResultInternal() throws SVGException {
 
         List<javafx.scene.paint.Stop> stops = getStops();
 

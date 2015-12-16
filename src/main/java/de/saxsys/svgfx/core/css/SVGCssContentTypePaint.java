@@ -74,7 +74,8 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<Paint, Void> getValueAndUnit(final String cssText) {
+    @Override
+    public Pair<Paint, Void> getValueAndUnit(final String cssText) {
         isCurrentColor = CURRENT_COLOR.equals(cssText);
 
         if (isCurrentColor) {

@@ -19,17 +19,19 @@
 
 package de.saxsys.svgfx.core.elements;
 
+import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.SVGDataProvider;
 import javafx.scene.shape.SVGPath;
 import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("path") public class Path extends SVGShapeBase<SVGPath> {
+@SVGElementMapping("path")
+public class Path extends SVGShapeBase<SVGPath> {
 
     //region Constructor
 
@@ -49,7 +51,8 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final SVGPath createResultInternal() {
+    @Override
+    protected final SVGPath createResultInternal() {
         SVGPath result = new javafx.scene.shape.SVGPath();
 
         result.contentProperty().set(getAttribute(CoreAttribute.PATH_DESCRIPTION.getName()));
@@ -61,7 +64,8 @@ import org.xml.sax.Attributes;
      * {@inheritDoc}
      * Applies the file rule to the path.
      */
-    @Override protected final void initializeResult(SVGPath path) {
+    @Override
+    protected final void initializeResult(SVGPath path) {
         super.initializeResult(path);
 
         SVGCssStyle style = getCssStyle();

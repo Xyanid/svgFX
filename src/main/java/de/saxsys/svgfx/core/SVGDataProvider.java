@@ -32,6 +32,7 @@ import java.util.Set;
 
 /**
  * Holds an provides data for parsed svg elements
+ *
  * @author Xyanid on 25.10.2015.
  */
 public class SVGDataProvider implements IDataProvider {
@@ -116,7 +117,8 @@ public class SVGDataProvider implements IDataProvider {
     /**
      * Resets the data provider clearing all the stored data and styles.
      */
-    @Override public final void clear() {
+    @Override
+    public final void clear() {
         data.clear();
         styles.clear();
     }

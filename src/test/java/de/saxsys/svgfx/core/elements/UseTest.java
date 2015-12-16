@@ -36,7 +36,8 @@ public final class UseTest {
     /**
      *
      */
-    @Test public void parse() {
+    @Test
+    public void parse() {
 
         SVGParser parser;
 

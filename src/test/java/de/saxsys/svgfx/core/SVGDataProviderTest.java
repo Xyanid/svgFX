@@ -45,14 +45,16 @@ public class SVGDataProviderTest {
 
     //region Tests
 
-    @Before public void setUp() {
+    @Before
+    public void setUp() {
         Mockito.when(ATTRIBUTES.getLength()).thenReturn(0);
     }
 
     /**
      * Ensure that {@link SVGDataProvider#getUnmodifiableData()} is set correctly when adding and removing data.
      */
-    @Test public void testGetUnmodifiableData() throws Exception {
+    @Test
+    public void testGetUnmodifiableData() throws Exception {
 
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
@@ -70,7 +72,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#getStyles()} is set correctly when adding and removing data.
      */
-    @Test public void testGetStyles() throws Exception {
+    @Test
+    public void testGetStyles() throws Exception {
 
         DATA_PROVIDER.styles.add(new SVGCssStyle("test", DATA_PROVIDER));
 
@@ -84,7 +87,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#hasData(String)} works as intended.
      */
-    @Test public void testHasData() throws Exception {
+    @Test
+    public void testHasData() throws Exception {
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
         Assert.assertTrue(DATA_PROVIDER.hasData("test"));
@@ -97,7 +101,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#getData(Class, String)} works as intended.
      */
-    @Test public void testGetData() throws Exception {
+    @Test
+    public void testGetData() throws Exception {
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
         Assert.assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
@@ -112,7 +117,8 @@ public class SVGDataProviderTest {
     /**
      * Ensure that {@link SVGDataProvider#clear()} works as intended.
      */
-    @Test public void testClear() throws Exception {
+    @Test
+    public void testClear() throws Exception {
 
         DATA_PROVIDER.data.put("test", new SVGCircle("circle", ATTRIBUTES, null, DATA_PROVIDER));
 

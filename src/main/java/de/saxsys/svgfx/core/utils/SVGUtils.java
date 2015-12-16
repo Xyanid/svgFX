@@ -74,7 +74,7 @@ public final class SVGUtils {
      * @throws IllegalArgumentException if either the data is null or empty, the dataProvider is null or the clazz is null.
      */
     public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data, final SVGDataProvider dataProvider, final Class<TSVGElementBase> clazz)
-            throws SVGException {
+            throws SVGException, IllegalArgumentException {
 
         if (dataProvider == null) {
             throw new IllegalArgumentException("given dataprovider must not be null");
@@ -102,7 +102,7 @@ public final class SVGUtils {
             }
 
             if (result == null) {
-                throw new SVGException("given reference could not be resolved");
+                throw new SVGException(String.format("given reference %s could not be resolved", data));
             }
         }
 

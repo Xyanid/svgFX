@@ -26,9 +26,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("rect") public class Rectangle extends SVGShapeBase<javafx.scene.shape.Rectangle> {
+@SVGElementMapping("rect")
+public class Rectangle extends SVGShapeBase<javafx.scene.shape.Rectangle> {
 
     //region Constructor
 
@@ -48,7 +50,8 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Rectangle createResultInternal() {
+    @Override
+    protected final javafx.scene.shape.Rectangle createResultInternal() {
 
         return new javafx.scene.shape.Rectangle(Double.parseDouble(getAttribute(CoreAttribute.POSITION_X.getName())),
                                                 Double.parseDouble(getAttribute(CoreAttribute.POSITION_Y.getName())),
@@ -60,7 +63,8 @@ import org.xml.sax.Attributes;
      * {@inheritDoc}
      * Applies the corner radius if any.
      */
-    @Override protected void initializeResult(javafx.scene.shape.Rectangle rect) throws SVGException {
+    @Override
+    protected void initializeResult(javafx.scene.shape.Rectangle rect) throws SVGException {
         super.initializeResult(rect);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason

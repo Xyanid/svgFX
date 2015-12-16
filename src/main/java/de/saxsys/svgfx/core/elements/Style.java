@@ -19,9 +19,9 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
 
@@ -30,9 +30,11 @@ import java.util.Set;
 
 /**
  * This class represents the style element from svg
+ *
  * @author Xyanid on 27.10.2015.
  */
-@SVGElementMapping("style") public class Style extends SVGElementBase<Set<SVGCssStyle>> {
+@SVGElementMapping("style")
+public class Style extends SVGElementBase<Set<SVGCssStyle>> {
 
     //region Static
     /**
@@ -69,16 +71,13 @@ import java.util.Set;
 
     //region SVGElementBase
 
-    @Override protected void initializeResult(Set<SVGCssStyle> cssStyles) throws SVGException {
-
-    }
-
     /**
      * @inheritDoc
      *
      * This implementation does not use the given data
      */
-    @Override protected final Set<SVGCssStyle> createResultInternal() {
+    @Override
+    protected final Set<SVGCssStyle> createResultInternal() {
 
         Set<SVGCssStyle> result = new HashSet<>();
 
@@ -122,11 +121,17 @@ import java.util.Set;
         return result;
     }
 
+    @Override
+    protected void initializeResult(Set<SVGCssStyle> cssStyles) throws SVGException {
+
+    }
+
     /**
      * @inheritDoc
      * Saves all characters in a StringBuilder to use them later
      */
-    @Override public void processCharacterData(final char[] ch, final int start, final int length) {
+    @Override
+    public void processCharacterData(final char[] ch, final int start, final int length) {
 
         for (int i = start; i < length; i++) {
             characters.append(ch[i]);

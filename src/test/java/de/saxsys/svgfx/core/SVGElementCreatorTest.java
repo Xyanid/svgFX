@@ -47,9 +47,10 @@ import org.xml.sax.Attributes;
 public final class SVGElementCreatorTest {
 
     /**
-     *
+     * Ensures that all elements supported by the {@link SVGElementCreator} are created.
      */
-    @Test public void createElements() {
+    @Test
+    public void createAllSupportedElements() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 

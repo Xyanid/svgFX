@@ -357,7 +357,8 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      *
      * @return the HashCode of the {@link #name} of this object
      */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return name == null ? super.hashCode() : name.hashCode();
     }
 
@@ -369,7 +370,8 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      *
      * @return true if the object is the same otherwise false
      */
-    @Override public boolean equals(final Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
 
         boolean result = super.equals(obj);
 

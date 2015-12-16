@@ -51,15 +51,18 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
 
     //region Override SAXParser
 
-    @Override protected javafx.scene.Group enteringDocument() {
+    @Override
+    protected javafx.scene.Group enteringDocument() {
         return new javafx.scene.Group();
     }
 
-    @Override protected void leavingDocument(final javafx.scene.Group result) {
+    @Override
+    protected void leavingDocument(final javafx.scene.Group result) {
 
     }
 
-    @Override protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) {
+    @Override
+    protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) {
 
         //definitions will not be kept as children
         if (element instanceof Defs && element.getParent() != null) {
@@ -67,7 +70,8 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
         }
     }
 
-    @Override protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
+    @Override
+    protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
 
         if (element.getParent() instanceof Defs) {
             dataProvider.getUnmodifiableData().put(element.getAttributes().get(SVGElementBase.CoreAttribute.ID.getName()), (SVGElementBase) element);

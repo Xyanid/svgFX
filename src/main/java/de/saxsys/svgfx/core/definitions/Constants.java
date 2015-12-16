@@ -19,8 +19,6 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.ClipPath;
 import de.saxsys.svgfx.core.elements.Defs;
 import de.saxsys.svgfx.core.elements.Ellipse;
@@ -32,6 +30,8 @@ import de.saxsys.svgfx.core.elements.Polygon;
 import de.saxsys.svgfx.core.elements.Polyline;
 import de.saxsys.svgfx.core.elements.RadialGradient;
 import de.saxsys.svgfx.core.elements.Rectangle;
+import de.saxsys.svgfx.core.elements.SVGCircle;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.Stop;
 import de.saxsys.svgfx.core.elements.Style;
 import de.saxsys.svgfx.core.elements.Svg;
@@ -42,6 +42,7 @@ import java.util.List;
 
 /**
  * Contains constant values of
+ *
  * @author Xyanid on 01.11.2015.
  */
 public final class Constants {

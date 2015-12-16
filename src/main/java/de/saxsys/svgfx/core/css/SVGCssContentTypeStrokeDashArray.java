@@ -70,7 +70,8 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
      *
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeLength}
      */
-    @Override public Pair<SVGCssContentTypeLength[], Void> getValueAndUnit(final String cssText) {
+    @Override
+    public Pair<SVGCssContentTypeLength[], Void> getValueAndUnit(final String cssText) {
 
         String[] values = cssText.split(",");
 

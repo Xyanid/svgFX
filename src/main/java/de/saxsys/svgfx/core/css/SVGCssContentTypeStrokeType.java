@@ -43,7 +43,8 @@ public class SVGCssContentTypeStrokeType extends SVGCssContentTypeBase<StrokeTyp
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
+    @Override
+    public Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
         return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
     }
 

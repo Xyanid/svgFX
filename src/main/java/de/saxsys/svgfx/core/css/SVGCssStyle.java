@@ -206,7 +206,8 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
      *
      * @return a {@link CssContentTypeBase} or null if the name is not supported.
      */
-    @Override protected SVGCssContentTypeBase createContentType(String name) {
+    @Override
+    protected SVGCssContentTypeBase createContentType(String name) {
 
         for (PresentationAttribute attribute : PresentationAttribute.values()) {
             if (attribute.getName().equals(name)) {

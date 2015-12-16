@@ -19,9 +19,9 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.Node;
@@ -30,9 +30,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a use element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("use") public class Use extends SVGElementBase<Node> {
+@SVGElementMapping("use")
+public class Use extends SVGElementBase<Node> {
 
     //region Constructor
 
@@ -52,14 +54,11 @@ import org.xml.sax.Attributes;
 
     //region SVGElementBase
 
-    @Override protected void initializeResult(Node node) throws SVGException {
-
-    }
-
     /**
      * @inheritDoc Resolves the needed reference
      */
-    @Override protected Node createResultInternal() throws SVGException {
+    @Override
+    protected Node createResultInternal() throws SVGException {
         String reference = getAttributes().get(XLinkAttribute.XLINK_HREF.getName());
         if (StringUtils.isNullOrEmpty(reference)) {
             throw new IllegalArgumentException("given use element does not contain a reference");
@@ -82,6 +81,11 @@ import org.xml.sax.Attributes;
         }
 
         return result;
+    }
+
+    @Override
+    protected void initializeResult(Node node) throws SVGException {
+
     }
 
 

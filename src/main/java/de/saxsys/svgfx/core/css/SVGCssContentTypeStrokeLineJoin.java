@@ -43,7 +43,8 @@ public class SVGCssContentTypeStrokeLineJoin extends SVGCssContentTypeBase<Strok
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
+    @Override
+    public Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
         return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
     }
 

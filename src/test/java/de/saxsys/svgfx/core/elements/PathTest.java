@@ -35,7 +35,8 @@ public final class PathTest {
     /**
      *
      */
-    @Test public void parse() {
+    @Test
+    public void parse() {
 
         SVGParser parser;
 

@@ -34,7 +34,8 @@ public final class RectangleTest {
     /**
      *
      */
-    @Test public void parse() {
+    @Test
+    public void parse() {
 
         SVGParser parser;
 

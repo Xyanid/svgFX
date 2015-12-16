@@ -36,7 +36,8 @@ public final class GroupTest {
     /**
      *
      */
-    @Test public void parse() {
+    @Test
+    public void parse() {
 
         SVGParser parser;
 

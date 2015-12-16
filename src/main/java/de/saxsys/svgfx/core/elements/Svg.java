@@ -26,9 +26,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents the svg element from svg
+ *
  * @author Xyanid on 24.10.2015.
  */
-@SVGElementMapping("svg") public class Svg extends SVGElementBase<Group> {
+@SVGElementMapping("svg")
+public class Svg extends SVGElementBase<Group> {
 
     //region Constructor
 
@@ -48,12 +50,14 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected void initializeResult(Group group) throws SVGException {
-
+    @Override
+    protected Group createResultInternal() throws SVGException {
+        return null;
     }
 
-    @Override protected Group createResultInternal() throws SVGException {
-        return null;
+    @Override
+    protected void initializeResult(Group group) throws SVGException {
+
     }
 
     //endregion

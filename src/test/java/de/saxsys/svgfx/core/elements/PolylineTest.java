@@ -34,7 +34,8 @@ public final class PolylineTest {
     /**
      *
      */
-    @Test public void parse() {
+    @Test
+    public void parse() {
 
         SVGParser parser;
 

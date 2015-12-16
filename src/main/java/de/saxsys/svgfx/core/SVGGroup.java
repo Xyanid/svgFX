@@ -99,7 +99,8 @@ public class SVGGroup extends Group implements IStyleableAdditionProvider {
     /**
      * @inheritDoc
      */
-    @Override public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
         return getClassCssMetaData();
     }
 
@@ -110,7 +111,8 @@ public class SVGGroup extends Group implements IStyleableAdditionProvider {
     /**
      * @inheritDoc
      */
-    @Override public <TStyleableAddition extends StyleableAdditionBase> TStyleableAddition getSkinAddition(final Class<TStyleableAddition> clazz) {
+    @Override
+    public <TStyleableAddition extends StyleableAdditionBase> TStyleableAddition getSkinAddition(final Class<TStyleableAddition> clazz) {
         if (clazz.equals(SVGStyleableAddition.class)) {
             return clazz.cast(styleAddition);
         }

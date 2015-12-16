@@ -25,9 +25,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("line") public class Line extends SVGShapeBase<javafx.scene.shape.Line> {
+@SVGElementMapping("line")
+public class Line extends SVGShapeBase<javafx.scene.shape.Line> {
 
     //region Constructor
 
@@ -47,7 +49,8 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Line createResultInternal() throws SVGException {
+    @Override
+    protected final javafx.scene.shape.Line createResultInternal() throws SVGException {
         return new javafx.scene.shape.Line(Double.parseDouble(getAttribute(CoreAttribute.START_X.getName())),
                                            Double.parseDouble(getAttribute(CoreAttribute.START_Y.getName())),
                                            Double.parseDouble(getAttribute(CoreAttribute.END_X.getName())),

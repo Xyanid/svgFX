@@ -20,6 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
@@ -37,11 +38,14 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 /**
  * Test to ensure the base functionality of {@link SVGElementBase}. Note that this test does not use mocks for the {@link SVGElementBase} since it would be too much effort to train them.
@@ -53,7 +57,8 @@ public class SVGElementBaseTest {
     /**
      * Ensure that presentation attributes create a valid css style.
      */
-    @Test public void ensureThatPresentationAttributesCreateValidCssStyle() {
+    @Test
+    public void ensureThatPresentationAttributesCreateValidCssStyle() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -118,7 +123,8 @@ public class SVGElementBaseTest {
     /**
      * Ensures that {@link SVGCssStyle.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
-    @Test public void ensureThatPresentationStyleIsPreferredAndOwnCssStyleAttributesAreKept() {
+    @Test
+    public void ensureThatPresentationStyleIsPreferredAndOwnCssStyleAttributesAreKept() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -148,7 +154,8 @@ public class SVGElementBaseTest {
     /**
      * Ensures that {@link SVGCssStyle.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
-    @Test public void ensureThatOwnStyleIsPreferredAndReferencedCssStyleAttributesAreKept() {
+    @Test
+    public void ensureThatOwnStyleIsPreferredAndReferencedCssStyleAttributesAreKept() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -183,7 +190,8 @@ public class SVGElementBaseTest {
      * Ensures that attributes of {@link SVGCssStyle} can be inherited and that values which are not present on the {@link SVGCssStyle} of the parent will not return data but will not cause any
      * exceptions.
      */
-    @Test public void ensureThatCssStyleAttributesAreInherited() {
+    @Test
+    public void ensureThatCssStyleAttributesAreInherited() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -225,7 +233,8 @@ public class SVGElementBaseTest {
     /**
      * Ensures that {@link de.saxsys.svgfx.core.elements.SVGElementBase.CoreAttribute#TRANSFORM} attribute is correctly read.
      */
-    @Test public void ensureThatTransformAttributeIsRead() {
+    @Test
+    public void ensureThatTransformAttributeIsRead() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -243,10 +252,89 @@ public class SVGElementBaseTest {
     }
 
     /**
-     *
+     * Ensure that no {@link ClipPath} will be created if the referenced {@link ClipPath} does not exist in the {@link SVGDataProvider}.
      */
-    @Test public void ensureNoClipPathIsReturnedIfNoStyleExists() {
+    @Test
+    public void ensureSVGExceptionIsThrownIfTheReferencedClipPathIsMissing() {
 
+        Attributes attributes = Mockito.mock(Attributes.class);
 
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("url(#path)");
+
+        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
+
+        try {
+            circle.getClipPath();
+            Assert.fail();
+        } catch (SVGException e) {
+            Assert.assertTrue(e.getMessage().contains("path"));
+        }
+    }
+
+    /**
+     * Ensure that no {@link ClipPath} will be created if the referenced {@link ClipPath} does not exist in the {@link SVGDataProvider}.
+     */
+    @Test
+    public void ensureNoClipPathIsReturnedIfNoStyleExists() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("url(#path)");
+
+        SVGDataProvider dataProvider = new SVGDataProvider();
+
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("path", new ClipPath("clipPath", attributes, null, dataProvider));
+
+        SVGCircle circle = new SVGCircle("circle", attributes, null, dataProvider);
+
+        Assert.assertNull(circle.getClipPath());
+    }
+
+    /**
+     * Ensure that no {@link ClipPath} will be created if the element does not have {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#CLIP_PATH} attribute.
+     */
+    @Test
+    public void ensureNoClipPathIsReturnedIfThereIsClipPathReferenceIsMissing() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(0);
+
+        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
+
+        Assert.assertNull(circle.getClipPath());
+    }
+
+    /**
+     * Ensure that a {@link ClipPath} will be created if the element meets all the requirements.
+     */
+    @Test
+    public void ensureClipPathIsReturned() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("url(#test)");
+
+        SVGDataProvider dataProvider = new SVGDataProvider();
+
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", new ClipPath("clipPath", attributes, null, dataProvider));
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("url(#test)");
+
+        SVGCircle circle = new SVGCircle("circle", attributes, null, dataProvider);
+
+        Assert.assertNull(circle.getClipPath());
     }
 }

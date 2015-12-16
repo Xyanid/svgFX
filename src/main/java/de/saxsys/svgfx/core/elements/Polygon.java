@@ -24,9 +24,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("polygon") public class Polygon extends SVGPolyBase<javafx.scene.shape.Polygon> {
+@SVGElementMapping("polygon")
+public class Polygon extends SVGPolyBase<javafx.scene.shape.Polygon> {
 
     //region Constructor
 
@@ -46,7 +48,8 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Polygon createResultInternal() {
+    @Override
+    protected final javafx.scene.shape.Polygon createResultInternal() {
 
         return new javafx.scene.shape.Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

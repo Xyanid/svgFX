@@ -40,7 +40,8 @@ public class SVGCssContentTypeString extends SVGCssContentTypeBase<String, Void>
 
     //region Override CssContentTypeBase
 
-    @Override public Pair<String, Void> getValueAndUnit(String cssText) {
+    @Override
+    public Pair<String, Void> getValueAndUnit(String cssText) {
 
         return new Pair<>(cssText, null);
     }

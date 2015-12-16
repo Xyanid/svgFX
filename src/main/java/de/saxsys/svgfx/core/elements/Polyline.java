@@ -25,9 +25,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a polyline element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("polyline") public class Polyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
+@SVGElementMapping("polyline")
+public class Polyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
 
     //region Constructor
 
@@ -47,7 +49,8 @@ import org.xml.sax.Attributes;
 
     //region Constructor
 
-    @Override protected final javafx.scene.shape.Polyline createResultInternal() {
+    @Override
+    protected final javafx.scene.shape.Polyline createResultInternal() {
 
         return new javafx.scene.shape.Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

@@ -28,7 +28,8 @@ import org.xml.sax.SAXException;
 /**
  * This class represents a clipPath element from svg @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("clipPath") public class ClipPath extends SVGNodeBase<Node> {
+@SVGElementMapping("clipPath")
+public class ClipPath extends SVGNodeBase<Node> {
 
     // region Constructor
 
@@ -48,7 +49,8 @@ import org.xml.sax.SAXException;
 
     // region SVGElementBase
 
-    @Override protected final Node createResultInternal() throws SVGException {
+    @Override
+    protected final Node createResultInternal() throws SVGException {
 
         Node result = null;
 

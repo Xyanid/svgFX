@@ -20,16 +20,6 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeString;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.StrokeLineCap;
@@ -40,6 +30,7 @@ import org.junit.Test;
 
 /**
  * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGCssContentTypeBase}.
+ *
  * @author Xyanid on 05.10.2015.
  */
 public final class SVGCssStyleTest {
@@ -50,7 +41,8 @@ public final class SVGCssStyleTest {
     /**
      * Parses a css text to create a css style and ensures that all elements are present.
      */
-    @Test public void parseCssTextToCreateCssStyle() {
+    @Test
+    public void parseCssTextToCreateCssStyle() {
 
         SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
 
@@ -79,7 +71,8 @@ public final class SVGCssStyleTest {
     /**
      * Parses a css text to create a css style and ensures that all elements are present.
      */
-    @Test public void parseCssTextToEnsureAllAttributesAreSupported() {
+    @Test
+    public void parseCssTextToEnsureAllAttributesAreSupported() {
 
         StringBuilder cssText = new StringBuilder();
         cssText.append(".st0{");
@@ -145,7 +138,8 @@ public final class SVGCssStyleTest {
      * Parses a css text which contains comments and also characters related to css parsing.
      * This will ensure that no character inside a string will interrupt the parsing.
      */
-    @Test public void parseCssTextWithCommentAndCssCharactersToCreateCssStyle() {
+    @Test
+    public void parseCssTextWithCommentAndCssCharactersToCreateCssStyle() {
 
         SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
 
@@ -196,7 +190,8 @@ public final class SVGCssStyleTest {
      * Parses a css text which contains string indicators inside a property and also contains characters related to css parsing.
      * This will ensure that no character inside a string will interrupt the parsing.
      */
-    @Test public void parseCssTextWithStringIndicatorsAndCssCharactersToCreateCssStyle() {
+    @Test
+    public void parseCssTextWithStringIndicatorsAndCssCharactersToCreateCssStyle() {
 
         SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
 
@@ -246,7 +241,8 @@ public final class SVGCssStyleTest {
     /**
      * Combines two css styles and checks if the properties have been overwritten as expected.
      */
-    @Test public void combineCssStyles() {
+    @Test
+    public void combineCssStyles() {
 
         SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
 

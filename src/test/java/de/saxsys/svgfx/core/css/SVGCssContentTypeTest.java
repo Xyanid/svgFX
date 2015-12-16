@@ -20,16 +20,6 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeString;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -42,6 +32,7 @@ import java.util.Random;
 
 /**
  * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGCssContentTypeBase}.
+ *
  * @author Xyanid on 05.10.2015.
  */
 public final class SVGCssContentTypeTest {
@@ -51,7 +42,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeFillRule} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeFillRuleIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeFillRuleIsFullySupported() {
 
         SVGCssContentTypeFillRule contentType = new SVGCssContentTypeFillRule(new SVGDataProvider());
 
@@ -72,7 +64,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeLength} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeLengthIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeLengthIsFullySupported() {
 
         SVGCssContentTypeLength contentType = new SVGCssContentTypeLength(new SVGDataProvider());
 
@@ -96,7 +89,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypePaint} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypePaintIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypePaintIsFullySupported() {
 
         SVGCssContentTypePaint contentType = new SVGCssContentTypePaint(new SVGDataProvider());
 
@@ -122,7 +116,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeString} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeStringIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeStringIsFullySupported() {
 
         SVGCssContentTypeString contentType = new SVGCssContentTypeString(new SVGDataProvider());
 
@@ -139,7 +134,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeStrokeDashArray} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeStrokeDashArrayIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeStrokeDashArrayIsFullySupported() {
 
         SVGCssContentTypeStrokeDashArray contentType = new SVGCssContentTypeStrokeDashArray(new SVGDataProvider());
 
@@ -180,7 +176,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeStrokeLineCap} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeStrokeLineCapIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeStrokeLineCapIsFullySupported() {
 
         SVGCssContentTypeStrokeLineCap contentType = new SVGCssContentTypeStrokeLineCap(new SVGDataProvider());
 
@@ -199,7 +196,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeStrokeLineJoin} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeStrokeLineJoinIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeStrokeLineJoinIsFullySupported() {
 
         SVGCssContentTypeStrokeLineJoin contentType = new SVGCssContentTypeStrokeLineJoin(new SVGDataProvider());
 
@@ -218,7 +216,8 @@ public final class SVGCssContentTypeTest {
     /**
      * Checks if the {@link SVGCssContentTypeStrokeType} is fully supported, meaning all parsing of text produces the required results.
      */
-    @Test public void checkSVGCssContentTypeStrokeTypeIsFullySupported() {
+    @Test
+    public void checkSVGCssContentTypeStrokeTypeIsFullySupported() {
 
         SVGCssContentTypeStrokeType contentType = new SVGCssContentTypeStrokeType(new SVGDataProvider());
 

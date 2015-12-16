@@ -36,7 +36,8 @@ public final class ClipPathTest {
     /**
      *
      */
-    @Test public void parse() {
+    @Test
+    public void parse() {
 
         SVGParser parser;
 

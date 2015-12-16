@@ -33,6 +33,7 @@ import java.util.Map;
 /**
  * Creates all the needed svg elements, this class will automatically load all the constructors of classes which
  * reside in the de.saxsys.svg.elements package, are derived from {@link SVGElementBase} and have the {@link SVGElementMapping} applied
+ *
  * @author Xyanid on 25.10.2015.
  */
 public class SVGElementCreator implements IElementCreator<SVGDataProvider> {
@@ -82,7 +83,8 @@ public class SVGElementCreator implements IElementCreator<SVGDataProvider> {
 
     //region Implements IElementCreator
 
-    @Override public SVGElementBase<?> createElement(final String name, final Attributes attributes, final ElementBase parent, final SVGDataProvider dataProvider) {
+    @Override
+    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final ElementBase parent, final SVGDataProvider dataProvider) {
 
         Constructor constructor = knownClasses.get(name);
 

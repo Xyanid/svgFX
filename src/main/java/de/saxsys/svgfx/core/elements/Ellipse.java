@@ -24,9 +24,11 @@ import org.xml.sax.Attributes;
 
 /**
  * This class represents a line element from svg
+ *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("ellipse") public class Ellipse extends SVGShapeBase<javafx.scene.shape.Ellipse> {
+@SVGElementMapping("ellipse")
+public class Ellipse extends SVGShapeBase<javafx.scene.shape.Ellipse> {
 
     //region Constructor
 
@@ -46,7 +48,8 @@ import org.xml.sax.Attributes;
 
     //region Override SVGElementBase
 
-    @Override protected final javafx.scene.shape.Ellipse createResultInternal() {
+    @Override
+    protected final javafx.scene.shape.Ellipse createResultInternal() {
 
         return new javafx.scene.shape.Ellipse(Double.parseDouble(getAttribute(CoreAttribute.CENTER_X.getName())),
                                               Double.parseDouble(getAttribute(CoreAttribute.CENTER_Y.getName())),
