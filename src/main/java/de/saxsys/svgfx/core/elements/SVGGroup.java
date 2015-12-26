@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.xml.elements.ElementBase;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -32,7 +33,7 @@ import org.xml.sax.SAXException;
  * @author Xyanid on 27.10.2015.
  */
 @SVGElementMapping("g")
-public class SVGGroup extends SVGNodeBase<javafx.scene.Group> {
+public class SVGGroup extends SVGNodeBase<Group> {
 
     //region Constructor
 
@@ -53,8 +54,8 @@ public class SVGGroup extends SVGNodeBase<javafx.scene.Group> {
     //region SVGElementBase
 
     @Override
-    protected final javafx.scene.Group createResultInternal() throws SVGException {
-        javafx.scene.Group result = new javafx.scene.Group();
+    protected final Group createResult(SVGElementBase inheritanceResolver) throws SVGException {
+        Group result = new Group();
 
         result.setOpacity(1.0d);
 

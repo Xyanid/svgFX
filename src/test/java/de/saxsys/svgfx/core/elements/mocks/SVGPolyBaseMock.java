@@ -46,7 +46,7 @@ public class SVGPolyBaseMock extends SVGPolyBase<Polygon> {
     }
 
     @Override
-    protected Polygon createResultInternal() throws SVGException {
+    protected Polygon createResult(SVGElementBase inheritanceResolver) throws SVGException {
         return null;
     }
 }

@@ -37,8 +37,6 @@ import java.util.Random;
  */
 public final class SVGCssContentTypeTest {
 
-    //region Tests
-
     /**
      * Checks if the {@link SVGCssContentTypeFillRule} is fully supported, meaning all parsing of text produces the required results.
      */
@@ -84,6 +82,25 @@ public final class SVGCssContentTypeTest {
             Assert.assertEquals(contentType.getValue(), value, 0.01d);
             Assert.assertEquals(contentType.getUnit(), unit);
         }
+    }
+
+    /**
+     * Checks if the {@link SVGCssContentTypeDouble} is fully supported, meaning all parsing of text produces the required results.
+     */
+    @Test
+    public void checkSVGCssContentTypeDoubleIsFullySupported() {
+
+        SVGCssContentTypeDouble contentType = new SVGCssContentTypeDouble(new SVGDataProvider());
+
+        contentType.parseCssValue("inherit");
+        Assert.assertTrue(contentType.getIsInherited());
+
+        contentType.parseCssValue("none");
+        Assert.assertTrue(contentType.getIsNone());
+
+        contentType.parseCssValue("1.0");
+        Assert.assertEquals(1.0d, contentType.getValue(), 0.01d);
+        Assert.assertNull(contentType.getUnit());
     }
 
     /**
@@ -232,6 +249,4 @@ public final class SVGCssContentTypeTest {
             Assert.assertEquals(contentType.getValue(), type);
         }
     }
-
-    //endregion
 }

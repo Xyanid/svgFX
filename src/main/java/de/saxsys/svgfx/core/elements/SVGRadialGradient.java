@@ -21,7 +21,10 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.List;
  * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("radialGradient")
-public class RadialGradient extends SVGGradientBase<javafx.scene.paint.RadialGradient> {
+public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
     //region Constructor
 
@@ -44,28 +47,33 @@ public class RadialGradient extends SVGGradientBase<javafx.scene.paint.RadialGra
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public RadialGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGRadialGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
     //endregion
 
-    //region Override RadialGradient
+    //region Override SVGGradientBase
 
     @Override
-    protected final javafx.scene.paint.RadialGradient createResultInternal() {
+    protected final RadialGradient createResult(SVGElementBase inheritanceResolver) {
 
-        List<javafx.scene.paint.Stop> stops = getStops();
+        List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
-            throw new SVGException("given radial gradient does not have colors");
+            throw new SVGException("Given radial gradient does not have colors");
         }
 
-        double cx = Double.parseDouble(getAttribute(CoreAttribute.CENTER_X.getName()));
-        double cy = Double.parseDouble(getAttribute(CoreAttribute.CENTER_Y.getName()));
+        String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
+        String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());
+        String focusX = getAttribute(CoreAttribute.FOCUS_X.getName());
+        String focusY = getAttribute(CoreAttribute.FOCUS_Y.getName());
 
-        double fx = getAttributes().containsKey(CoreAttribute.FOCUS_X.getName()) ? Double.parseDouble(getAttribute(CoreAttribute.FOCUS_X.getName())) : cx;
-        double fy = getAttributes().containsKey(CoreAttribute.FOCUS_Y.getName()) ? Double.parseDouble(getAttribute(CoreAttribute.FOCUS_Y.getName())) : cy;
+        double cx = StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX);
+        double cy = StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY);
+
+        double fx = StringUtils.isNullOrEmpty(focusX) ? cx : Double.parseDouble(focusX);
+        double fy = StringUtils.isNullOrEmpty(focusY) ? cy : Double.parseDouble(focusY);
 
         double diffX = fx - cx;
         double diffY = fy - cy;
@@ -73,7 +81,9 @@ public class RadialGradient extends SVGGradientBase<javafx.scene.paint.RadialGra
         double distance = diffX != 0 && diffY != 0 ? Math.hypot(diffX, diffY) : 0;
         double angle = diffX != 0 && diffY != 0 ? Math.atan2(diffY, diffX) : 0;
 
-        return new javafx.scene.paint.RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
+        // TODO figure out if the focus angle is correct or not
+
+        return new RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
     }
 
     //endregion

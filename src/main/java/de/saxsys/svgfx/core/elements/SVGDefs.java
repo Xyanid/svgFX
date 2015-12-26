@@ -21,11 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
 /**
@@ -33,10 +29,10 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("stop")
-public class Stop extends SVGElementBase<javafx.scene.paint.Stop> {
+@SVGElementMapping("defs")
+public class SVGDefs extends SVGElementBase<Node> {
 
-    //region Stop
+    //region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
@@ -46,7 +42,7 @@ public class Stop extends SVGElementBase<javafx.scene.paint.Stop> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public Stop(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGDefs(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -55,29 +51,12 @@ public class Stop extends SVGElementBase<javafx.scene.paint.Stop> {
     //region SVGElementBase
 
     @Override
-    protected final javafx.scene.paint.Stop createResultInternal() throws SVGException {
-        double offset = Double.parseDouble(getAttribute(CoreAttribute.OFFSET.getName()));
-
-        SVGCssStyle style = getCssStyle();
-
-        //TODO use opacity here
-        double opacity = 0.0d;
-
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName())) {
-            opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeLength.class).getValue();
-        }
-
-        Paint paint = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName(), SVGCssContentTypePaint.class).getValue();
-
-        if (paint == null) {
-            throw new IllegalArgumentException("given color must not be null");
-        }
-
-        return new javafx.scene.paint.Stop(offset, (Color) paint);
+    protected final Node createResult(SVGElementBase inheritanceResolver) throws SVGException {
+        return null;
     }
 
     @Override
-    protected final void initializeResult(javafx.scene.paint.Stop stop) throws SVGException {
+    protected final void initializeResult(Node node, SVGElementBase inheritanceResolver) throws SVGException {
 
     }
 

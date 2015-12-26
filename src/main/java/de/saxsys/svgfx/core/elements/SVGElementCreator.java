@@ -22,7 +22,6 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.xml.core.IElementCreator;
-import de.saxsys.svgfx.xml.elements.ElementBase;
 import org.xml.sax.Attributes;
 
 import java.lang.reflect.Constructor;
@@ -36,7 +35,7 @@ import java.util.Map;
  *
  * @author Xyanid on 25.10.2015.
  */
-public class SVGElementCreator implements IElementCreator<SVGDataProvider> {
+public class SVGElementCreator implements IElementCreator<SVGDataProvider, SVGElementBase<?>> {
 
     //region Fields
 
@@ -84,13 +83,13 @@ public class SVGElementCreator implements IElementCreator<SVGDataProvider> {
     //region Implements IElementCreator
 
     @Override
-    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final ElementBase parent, final SVGDataProvider dataProvider) {
+    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
 
         Constructor constructor = knownClasses.get(name);
 
         if (constructor != null) {
             try {
-                return (SVGElementBase) constructor.newInstance(name, attributes, parent, dataProvider);
+                return (SVGElementBase<?>) constructor.newInstance(name, attributes, parent, dataProvider);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }

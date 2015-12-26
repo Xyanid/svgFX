@@ -63,7 +63,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGStyle(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGStyle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -77,7 +77,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResultInternal() {
+    protected final Set<SVGCssStyle> createResult(SVGElementBase inheritanceResolver) {
 
         Set<SVGCssStyle> result = new HashSet<>();
 
@@ -122,7 +122,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(Set<SVGCssStyle> cssStyles) throws SVGException {
+    protected void initializeResult(Set<SVGCssStyle> cssStyles, SVGElementBase inheritanceResolver) throws SVGException {
 
     }
 

@@ -134,7 +134,7 @@ public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCs
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeLength}
      */
     @Override
-    public Pair<Double, Unit> getValueAndUnit(final String cssText) {
+    protected Pair<Double, Unit> getValueAndUnit(final String cssText) {
 
         Unit usedUnit = Unit.NONE;
 

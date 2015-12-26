@@ -45,7 +45,7 @@ public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, V
     //region Override CssContentTypeBase
 
     @Override
-    public Pair<FillRule, Void> getValueAndUnit(final String cssText) {
+    protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {
 
         FillRule rule = FillRule.EVEN_ODD;
 

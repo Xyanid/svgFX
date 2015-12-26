@@ -41,7 +41,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -50,7 +50,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final javafx.scene.shape.Polyline createResultInternal() {
+    protected final javafx.scene.shape.Polyline createResult(SVGElementBase inheritanceResolver) {
 
         return new javafx.scene.shape.Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

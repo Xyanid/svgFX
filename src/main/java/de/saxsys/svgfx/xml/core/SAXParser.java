@@ -42,7 +42,9 @@ import java.io.InputStream;
  * @param <TDataProvider>   the type of the {@link IDataProvider}
  * @param <TElementCreator> the type of the {@link IElementCreator} @author Xyanid on 24.10.2015.
  */
-public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TElementCreator extends IElementCreator<TDataProvider>> extends DefaultHandler {
+public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TElementCreator extends IElementCreator<TDataProvider, TElement>, TElement extends ElementBase<TDataProvider, ?,
+        TElement>>
+        extends DefaultHandler {
 
     // region Enumeration
 
@@ -129,7 +131,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     /**
      * The currently processed element.
      */
-    private ElementBase<TDataProvider, ?, ?> currentElement;
+    private TElement currentElement;
 
     // endregion
 
@@ -261,7 +263,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      *
      * @throws SAXException when an error occurs
      */
-    protected abstract void consumeElementStart(final TResult result, final TDataProvider dataProvider, final ElementBase<TDataProvider, ?, ?> element) throws SAXException;
+    protected abstract void consumeElementStart(final TResult result, final TDataProvider dataProvider, final TElement element) throws SAXException;
 
     /**
      * This method will be called when an element has ended in the XML tree.
@@ -275,7 +277,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      *
      * @throws SAXException when an error occurs
      */
-    protected abstract void consumeElementEnd(final TResult result, final TDataProvider dataProvider, final ElementBase<TDataProvider, ?, ?> element) throws SAXException;
+    protected abstract void consumeElementEnd(final TResult result, final TDataProvider dataProvider, final TElement element) throws SAXException;
 
     /**
      * Gets the property State.
@@ -403,7 +405,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
         setState(State.PARSING_ENTERING_ELEMENT);
 
-        ElementBase<TDataProvider, ?, ?> nextElement = elementCreator.createElement(qName, attributes, currentElement, dataProvider);
+        TElement nextElement = elementCreator.createElement(qName, attributes, currentElement, dataProvider);
 
         if (nextElement != null) {
 

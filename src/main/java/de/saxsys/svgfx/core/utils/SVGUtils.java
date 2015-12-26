@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
@@ -28,9 +29,9 @@ import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.elements.LinearGradient;
-import de.saxsys.svgfx.core.elements.RadialGradient;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGLinearGradient;
+import de.saxsys.svgfx.core.elements.SVGRadialGradient;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -43,6 +44,7 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 /**
  * This class provides functionality related to svg processing
@@ -90,19 +92,26 @@ public final class SVGUtils {
 
         TSVGElementBase result = null;
 
+        // initially we assume that the IRI_IDENTIFIER was used
+        int dataLengthReduction = 1;
+        int identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length();
         int index = data.indexOf(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER);
 
+        if (index == -1) {
+            dataLengthReduction = 0;
+            identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length();
+            index = data.indexOf(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER);
+        }
+
         if (index > -1) {
-
-
             try {
-                result = dataProvider.getData(clazz, data.substring(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length(), data.length() - 1));
+                result = dataProvider.getData(clazz, data.substring(identifierLength, data.length() - dataLengthReduction));
             } catch (Exception e) {
                 throw new SVGException("An error occurred during the parsing of the reference", e);
             }
 
             if (result == null) {
-                throw new SVGException(String.format("given reference %s could not be resolved", data));
+                throw new SVGException(String.format("Given reference %s could not be resolved", data));
             }
         }
 
@@ -127,16 +136,21 @@ public final class SVGUtils {
             throw new IllegalArgumentException("given data must not be null or empty");
         }
 
-        SVGElementBase reference = resolveIRI(data, dataProvider, SVGElementBase.class);
+        // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
+        SVGElementBase reference = null;
+
+        if (!data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER)) {
+            reference = resolveIRI(data, dataProvider, SVGElementBase.class);
+        }
 
         Paint result = null;
 
         if (reference != null) {
 
-            if (reference instanceof LinearGradient) {
-                result = ((LinearGradient) reference).getResult();
-            } else if (reference instanceof RadialGradient) {
-                result = ((RadialGradient) reference).getResult();
+            if (reference instanceof SVGLinearGradient) {
+                result = ((SVGLinearGradient) reference).getResult();
+            } else if (reference instanceof SVGRadialGradient) {
+                result = ((SVGRadialGradient) reference).getResult();
             }
 
             if (result == null) {
@@ -215,6 +229,49 @@ public final class SVGUtils {
 
         if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName())) {
             shape.setStrokeWidth(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue());
+        }
+    }
+
+    /**
+     * This method will use the given style and iterate through all its properties, if any property used inheritance, the given parent will be used to resolve it.
+     * Note that inheritance chaining is not supported, the element MUST be found on the parent.
+     *
+     * @param style  the {@link SVGCssStyle} to use, must not be null.
+     * @param parent the {@link SVGElementBase} to use as a parent in order to resolve the inheritance, must not be null.
+     *
+     * @throws SVGException             if the inherited style was not found on the parent or no parent was submitted at all but was needed.
+     * @throws IllegalArgumentException if the given {@link SVGCssStyle} is null.
+     */
+    public static void resolveInheritance(SVGCssStyle style, SVGElementBase inheritanceResolver) throws IllegalArgumentException {
+        if (style == null) {
+            throw new IllegalArgumentException("Given style must no be null");
+        }
+
+        if (inheritanceResolver == null) {
+            throw new IllegalArgumentException("Given parent must no be null");
+        }
+
+        SVGCssStyle parentStyle = null;
+
+        for (Map.Entry<String, SVGCssContentTypeBase> property : style.getUnmodifiableProperties().entrySet()) {
+
+            if (property.getValue().getIsInherited()) {
+
+                if (parentStyle == null) {
+                    parentStyle = inheritanceResolver.getCssStyleAndResolveInheritance((SVGElementBase) inheritanceResolver.getParent());
+                }
+
+                if (parentStyle != null) {
+
+                    // if the parent does not provide a value we use the default one
+                    SVGCssContentTypeBase parentProperty = parentStyle.getCssContentType(property.getKey());
+                    if (parentProperty != null && parentProperty.getValue() != null) {
+                        property.getValue().setValue(parentProperty.getValue());
+                    } else {
+                        property.getValue().setValue(property.getValue().getDefaultValue());
+                    }
+                }
+            }
         }
     }
 

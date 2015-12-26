@@ -42,7 +42,7 @@ public class SVGRoot extends SVGElementBase<Group> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGRoot(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGRoot(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -51,12 +51,12 @@ public class SVGRoot extends SVGElementBase<Group> {
     //region Override SVGElementBase
 
     @Override
-    protected Group createResultInternal() throws SVGException {
+    protected Group createResult(SVGElementBase inheritanceResolver) throws SVGException {
         return null;
     }
 
     @Override
-    protected void initializeResult(Group group) throws SVGException {
+    protected void initializeResult(Group group, SVGElementBase inheritanceResolver) throws SVGException {
 
     }
 

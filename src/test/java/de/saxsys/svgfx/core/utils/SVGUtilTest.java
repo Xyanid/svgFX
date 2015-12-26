@@ -21,9 +21,14 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGGroup;
+import de.saxsys.svgfx.core.elements.SVGUse;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -32,7 +37,6 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -121,6 +125,10 @@ public final class SVGUtilTest {
         SVGCircle circle = SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
 
         Assert.assertNotNull(circle);
+
+        circle = SVGUtils.resolveIRI(Constants.IRI_FRAGMENT_IDENTIFIER + "test", dataProvider, SVGCircle.class);
+
+        Assert.assertNotNull(circle);
     }
 
     /**
@@ -139,6 +147,77 @@ public final class SVGUtilTest {
         } catch (SVGException e) {
             Assert.assertTrue(e.getMessage().contains(Constants.IRI_IDENTIFIER + "test1)"));
         }
+    }
+
+    /**
+     * Ensures that {@link SVGUtils#resolveInheritance(SVGCssStyle, SVGElementBase)} causes the expected exceptions
+     */
+    @Test
+    public void ensureResolveInheritanceCausesTheExpectedExceptions() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("stroke:#000000;");
+
+        SVGGroup group = new SVGGroup("group", attributes, null, new SVGDataProvider());
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("inherit");
+
+        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
+
+        SVGCssStyle style = circle.getCssStyle();
+
+        try {
+            SVGUtils.resolveInheritance(null, group);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertTrue(e.getMessage().contains("style"));
+        }
+
+        try {
+            SVGUtils.resolveInheritance(style, null);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            Assert.assertTrue(e.getMessage().contains("parent"));
+        }
+    }
+
+    /**
+     * Ensures that attributes of {@link SVGCssStyle} can be inherited and that the value will be retrieved from the provided element.
+     */
+    @Test
+    public void ensureResolveInheritanceUsesTheCorrectValues() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("fill:#000000;");
+
+        SVGGroup group = new SVGGroup("group", attributes, null, new SVGDataProvider());
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("fill:#111111;");
+
+        SVGUse use = new SVGUse("use", attributes, null, new SVGDataProvider());
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("inherit");
+
+        SVGCircle circle = new SVGCircle("circle", attributes, group, new SVGDataProvider());
+
+        SVGCssStyle style = circle.getCssStyle();
+
+        Assert.assertNotNull(style);
+
+        SVGUtils.resolveInheritance(style, use);
+
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#111111"));
     }
 
     /**

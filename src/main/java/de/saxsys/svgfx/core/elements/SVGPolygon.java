@@ -41,7 +41,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolygon(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGPolygon(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -50,7 +50,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
     //region Override SVGElementBase
 
     @Override
-    protected final Polygon createResultInternal() {
+    protected final Polygon createResult(SVGElementBase inheritanceResolver) {
 
         return new Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

@@ -43,7 +43,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGClipPath(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGClipPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -52,7 +52,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
     // region SVGElementBase
 
     @Override
-    protected final Group createResultInternal() throws SVGException {
+    protected final Group createResult(SVGElementBase inheritanceResolver) throws SVGException {
 
         Group result = new Group();
 

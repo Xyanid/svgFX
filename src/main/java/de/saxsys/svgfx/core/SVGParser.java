@@ -19,13 +19,12 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.elements.Defs;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGDefs;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementCreator;
 import de.saxsys.svgfx.core.elements.SVGStyle;
 import de.saxsys.svgfx.xml.core.SAXParser;
-import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Node;
 import org.xml.sax.SAXException;
 
@@ -34,7 +33,7 @@ import org.xml.sax.SAXException;
  *
  * @author Xyanid on 24.10.2015.
  */
-public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SVGElementCreator> {
+public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SVGElementCreator, SVGElementBase<?>> {
 
     //region Constructor
 
@@ -61,19 +60,19 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
     }
 
     @Override
-    protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) {
+    protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final SVGElementBase<?> element) {
 
         //definitions will not be kept as children
-        if (element instanceof Defs && element.getParent() != null) {
+        if (element instanceof SVGDefs && element.getParent() != null) {
             element.getParent().getChildren().remove(element);
         }
     }
 
     @Override
-    protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
+    protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final SVGElementBase<?> element) throws SAXException {
 
-        if (element.getParent() instanceof Defs) {
-            dataProvider.setData(element.getAttributes().get(SVGElementBase.CoreAttribute.ID.getName()), (SVGElementBase) element);
+        if (element.getParent() instanceof SVGDefs) {
+            dataProvider.setData(element.getAttribute(SVGElementBase.CoreAttribute.ID.getName()), element);
         } else if (element instanceof SVGStyle) {
             dataProvider.getStyles().addAll(((SVGStyle) element).getResult());
             //elements which are inside a group or clip SVGPath as well as clipPath elements will not be added

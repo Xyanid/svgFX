@@ -42,7 +42,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -51,7 +51,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
     //region Override SVGElementBase
 
     @Override
-    protected final Ellipse createResultInternal() {
+    protected final Ellipse createResult(SVGElementBase inheritanceResolver) {
 
         String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
         String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());

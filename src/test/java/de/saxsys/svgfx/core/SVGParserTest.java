@@ -30,7 +30,7 @@ import java.net.URL;
 public final class SVGParserTest {
 
     /**
-     * Parses a complex SVG file successfuly.
+     * Parses a complex SVG file successfully.
      */
     @Test
     public void parseComplexSVGAndDoNotThrowAnException() {

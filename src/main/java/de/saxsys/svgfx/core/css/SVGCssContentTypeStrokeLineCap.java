@@ -45,7 +45,7 @@ public class SVGCssContentTypeStrokeLineCap extends SVGCssContentTypeBase<Stroke
     //region Override CssContentTypeBase
 
     @Override
-    public Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
+    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
         return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
     }
 

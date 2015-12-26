@@ -21,7 +21,10 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.List;
  * @author Xyanid on 24.10.2015.
  */
 @SVGElementMapping("linearGradient")
-public class LinearGradient extends SVGGradientBase<javafx.scene.paint.LinearGradient> {
+public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
 
     //region Constructor
@@ -45,7 +48,7 @@ public class LinearGradient extends SVGGradientBase<javafx.scene.paint.LinearGra
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public LinearGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -54,21 +57,28 @@ public class LinearGradient extends SVGGradientBase<javafx.scene.paint.LinearGra
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.paint.LinearGradient createResultInternal() throws SVGException {
+    protected final LinearGradient createResult(SVGElementBase inheritanceResolver) throws SVGException {
 
-        List<javafx.scene.paint.Stop> stops = getStops();
+        List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
-            throw new SVGException("given linear gradient does not have colors");
+            throw new SVGException("Given linear gradient does not have colors");
         }
 
-        return new javafx.scene.paint.LinearGradient(Double.parseDouble(getAttribute(CoreAttribute.START_X.getName())),
-                                                     Double.parseDouble(getAttribute(CoreAttribute.START_Y.getName())),
-                                                     Double.parseDouble(getAttribute(CoreAttribute.END_X.getName())),
-                                                     Double.parseDouble(getAttribute(CoreAttribute.END_Y.getName())),
-                                                     false,
-                                                     CycleMethod.NO_CYCLE,
-                                                     stops);
+        String startX = getAttribute(CoreAttribute.START_X.getName());
+        String startY = getAttribute(CoreAttribute.START_Y.getName());
+        String endX = getAttribute(CoreAttribute.END_X.getName());
+        String endY = getAttribute(CoreAttribute.END_Y.getName());
+
+        // TODO figure out how to apply proportional values here
+
+        return new LinearGradient(StringUtils.isNullOrEmpty(startX) ? 0.0d : Double.parseDouble(startX),
+                                  StringUtils.isNullOrEmpty(startY) ? 0.0d : Double.parseDouble(startY),
+                                  StringUtils.isNullOrEmpty(endX) ? 1.0d : Double.parseDouble(endX),
+                                  StringUtils.isNullOrEmpty(endY) ? 1.0d : Double.parseDouble(endY),
+                                  false,
+                                  CycleMethod.NO_CYCLE,
+                                  stops);
     }
 
     //endregion

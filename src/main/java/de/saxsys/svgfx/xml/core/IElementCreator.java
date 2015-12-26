@@ -27,7 +27,7 @@ import org.xml.sax.Attributes;
  *
  * @param <TDataProvider> the type of the {@link IDataProvider} @author Xyanid on 25.10.2015.
  */
-public interface IElementCreator<TDataProvider extends IDataProvider> {
+public interface IElementCreator<TDataProvider extends IDataProvider, TElement extends ElementBase<TDataProvider, ?, ?>> {
 
     /**
      * creates a new instance of the desired {@link ElementBase} using the given value as an indicator which instance
@@ -40,5 +40,5 @@ public interface IElementCreator<TDataProvider extends IDataProvider> {
      *
      * @return a new instance of an {@link ElementBase}
      */
-    ElementBase<TDataProvider, ?, ?> createElement(String name, Attributes attributes, ElementBase<TDataProvider, ?, ?> parent, TDataProvider dataProvider);
+    TElement createElement(String name, Attributes attributes, TElement parent, TDataProvider dataProvider);
 }

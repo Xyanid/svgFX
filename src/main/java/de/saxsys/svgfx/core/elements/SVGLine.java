@@ -42,7 +42,7 @@ public class SVGLine extends SVGShapeBase<Line> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGLine(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGLine(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -51,7 +51,7 @@ public class SVGLine extends SVGShapeBase<Line> {
     //region Override SVGElementBase
 
     @Override
-    protected final Line createResultInternal() throws SVGException {
+    protected final Line createResult(SVGElementBase inheritanceResolver) throws SVGException {
         return new Line(Double.parseDouble(getAttribute(CoreAttribute.START_X.getName())),
                         Double.parseDouble(getAttribute(CoreAttribute.START_Y.getName())),
                         Double.parseDouble(getAttribute(CoreAttribute.END_X.getName())),

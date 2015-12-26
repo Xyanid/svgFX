@@ -69,11 +69,11 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
         /**
          * Determines a limit on the ratio of the miter length to the stroke-width. When the limit is exceeded, the join is converted from a miter to a bevel.
          */
-        STROKE_MITERLIMIT("stroke-miterlimit", SVGCssContentTypeLength.class),
+        STROKE_MITERLIMIT("stroke-miterlimit", SVGCssContentTypeDouble.class),
         /**
          * Determines the opacity of the outline on the current object.
          */
-        STROKE_OPACITY("stroke-opacity", SVGCssContentTypeLength.class),
+        STROKE_OPACITY("stroke-opacity", SVGCssContentTypeDouble.class),
         /**
          * Determines the width of the outline on the current object.
          */
@@ -92,6 +92,10 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
          */
         FILL("fill", SVGCssContentTypePaint.class),
         /**
+         * Represents the color of the interior of the given graphical element.
+         */
+        FILL_OPACITY("fill-opacity", SVGCssContentTypeDouble.class),
+        /**
          * Represents the algorithm which is to be used to determine what side of a path is inside the shape.
          */
         FILL_RULE("fill-rule", SVGCssContentTypeFillRule.class),
@@ -102,7 +106,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
         /**
          * Represents the transparency of a gradient, that is, the degree to which the background behind the element is overlaid.
          */
-        STOP_OPACITY("stop-opacity", SVGCssContentTypeLength.class),
+        STOP_OPACITY("stop-opacity", SVGCssContentTypeDouble.class),
         /**
          * Represents a color which cna be used for other rule such as fill, stroke or stop-color.
          */
@@ -110,7 +114,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
         /**
          * Represents the transparency of an element, that is, the degree to which the background behind the element is overlaid.
          */
-        OPACITY("opacity", SVGCssContentTypeLength.class);
+        OPACITY("opacity", SVGCssContentTypeDouble.class);
 
         // region Fields
 

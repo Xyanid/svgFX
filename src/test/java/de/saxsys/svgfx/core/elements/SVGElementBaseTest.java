@@ -140,7 +140,7 @@ public class SVGElementBaseTest {
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
 
-        SVGCssStyle style = circle.getCssStyle();
+        SVGCssStyle style = circle.getCssStyleAndResolveInheritance();
 
         Assert.assertNotNull(style);
 
@@ -175,7 +175,7 @@ public class SVGElementBaseTest {
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, dataProvider);
 
-        SVGCssStyle style = circle.getCssStyle();
+        SVGCssStyle style = circle.getCssStyleAndResolveInheritance();
 
         Assert.assertNotNull(style);
 
@@ -190,7 +190,7 @@ public class SVGElementBaseTest {
      * exceptions.
      */
     @Test
-    public void ensureThatCssStyleAttributesAreInherited() {
+    public void ensureThatCssStyleAttributesAreInheritedFromParent() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -220,7 +220,7 @@ public class SVGElementBaseTest {
 
         SVGCircle circle = new SVGCircle("circle", attributes, group, dataProvider);
 
-        SVGCssStyle style = circle.getCssStyle();
+        SVGCssStyle style = circle.getCssStyleAndResolveInheritance();
 
         Assert.assertNotNull(style);
 
@@ -228,6 +228,8 @@ public class SVGElementBaseTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#111111"));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
     }
+
+
 
     /**
      * Ensures that {@link de.saxsys.svgfx.core.elements.SVGElementBase.CoreAttribute#TRANSFORM} attribute is correctly read.

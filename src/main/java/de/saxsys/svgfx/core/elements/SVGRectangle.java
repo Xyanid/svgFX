@@ -43,7 +43,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -52,7 +52,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.Rectangle createResultInternal() {
+    protected final javafx.scene.shape.Rectangle createResult(SVGElementBase inheritanceResolver) {
 
         String positionX = getAttribute(CoreAttribute.POSITION_X.getName());
         String positionY = getAttribute(CoreAttribute.POSITION_Y.getName());
@@ -68,8 +68,8 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * Applies the corner radius if any.
      */
     @Override
-    protected void initializeResult(Rectangle rect) throws SVGException {
-        super.initializeResult(rect);
+    protected void initializeResult(Rectangle rect, SVGElementBase inheritanceResolver) throws SVGException {
+        super.initializeResult(rect, inheritanceResolver);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
 

@@ -19,23 +19,23 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.elements.Defs;
-import de.saxsys.svgfx.core.elements.LinearGradient;
-import de.saxsys.svgfx.core.elements.RadialGradient;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGDefs;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGEllipse;
 import de.saxsys.svgfx.core.elements.SVGGroup;
 import de.saxsys.svgfx.core.elements.SVGLine;
+import de.saxsys.svgfx.core.elements.SVGLinearGradient;
 import de.saxsys.svgfx.core.elements.SVGPath;
 import de.saxsys.svgfx.core.elements.SVGPolygon;
 import de.saxsys.svgfx.core.elements.SVGPolyline;
+import de.saxsys.svgfx.core.elements.SVGRadialGradient;
 import de.saxsys.svgfx.core.elements.SVGRectangle;
 import de.saxsys.svgfx.core.elements.SVGRoot;
+import de.saxsys.svgfx.core.elements.SVGStop;
 import de.saxsys.svgfx.core.elements.SVGStyle;
 import de.saxsys.svgfx.core.elements.SVGUse;
-import de.saxsys.svgfx.core.elements.Stop;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,17 +54,17 @@ public final class Constants {
      */
     public static final List<Class<? extends SVGElementBase<?>>> SVG_ELEMENT_CLASSES = Arrays.asList(SVGCircle.class,
                                                                                                      SVGClipPath.class,
-                                                                                                     Defs.class,
+                                                                                                     SVGDefs.class,
                                                                                                      SVGEllipse.class,
                                                                                                      SVGGroup.class,
                                                                                                      SVGLine.class,
-                                                                                                     LinearGradient.class,
+                                                                                                     SVGLinearGradient.class,
                                                                                                      SVGPath.class,
                                                                                                      SVGPolyline.class,
                                                                                                      SVGPolygon.class,
-                                                                                                     RadialGradient.class,
+                                                                                                     SVGRadialGradient.class,
                                                                                                      SVGRectangle.class,
-                                                                                                     Stop.class,
+                                                                                                     SVGStop.class,
                                                                                                      SVGStyle.class,
                                                                                                      SVGRoot.class,
                                                                                                      SVGUse.class);

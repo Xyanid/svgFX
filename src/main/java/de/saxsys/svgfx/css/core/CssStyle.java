@@ -320,9 +320,10 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
 
                         TContentType content = createContentType(StringUtils.stripStringIndicators(name));
 
-                        content.parseCssValue(StringUtils.stripStringIndicators(property.substring(index + 1).trim()));
-
-                        properties.put(name, content);
+                        if (content != null) {
+                            content.parseCssValue(StringUtils.stripStringIndicators(property.substring(index + 1).trim()));
+                            properties.put(name, content);
+                        }
                     }
 
                     dataBuilder.setLength(0);

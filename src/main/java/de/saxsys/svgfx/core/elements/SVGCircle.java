@@ -51,7 +51,7 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Circle createResultInternal() {
+    protected final Circle createResult(SVGElementBase inheritanceResolver) {
 
         String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
         String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());

@@ -20,21 +20,21 @@
 package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.definitions.Constants;
-import de.saxsys.svgfx.core.elements.Defs;
-import de.saxsys.svgfx.core.elements.LinearGradient;
-import de.saxsys.svgfx.core.elements.RadialGradient;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGDefs;
 import de.saxsys.svgfx.core.elements.SVGElementCreator;
 import de.saxsys.svgfx.core.elements.SVGElementMapping;
 import de.saxsys.svgfx.core.elements.SVGGroup;
 import de.saxsys.svgfx.core.elements.SVGLine;
+import de.saxsys.svgfx.core.elements.SVGLinearGradient;
 import de.saxsys.svgfx.core.elements.SVGPath;
 import de.saxsys.svgfx.core.elements.SVGPolyline;
+import de.saxsys.svgfx.core.elements.SVGRadialGradient;
 import de.saxsys.svgfx.core.elements.SVGRectangle;
 import de.saxsys.svgfx.core.elements.SVGRoot;
+import de.saxsys.svgfx.core.elements.SVGStop;
 import de.saxsys.svgfx.core.elements.SVGStyle;
 import de.saxsys.svgfx.core.elements.SVGUse;
-import de.saxsys.svgfx.core.elements.Stop;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import org.junit.Assert;
 import org.junit.Test;
@@ -74,17 +74,17 @@ public final class SVGElementCreatorTest {
         Assert.assertNotNull(element);
         Assert.assertEquals(element.getClass(), SVGStyle.class);
 
-        element = creator.createElement(Stop.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
+        element = creator.createElement(SVGStop.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
-        Assert.assertEquals(element.getClass(), Stop.class);
+        Assert.assertEquals(element.getClass(), SVGStop.class);
 
         element = creator.createElement(SVGRectangle.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
         Assert.assertEquals(element.getClass(), SVGRectangle.class);
 
-        element = creator.createElement(RadialGradient.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
+        element = creator.createElement(SVGRadialGradient.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
-        Assert.assertEquals(element.getClass(), RadialGradient.class);
+        Assert.assertEquals(element.getClass(), SVGRadialGradient.class);
 
         element = creator.createElement(SVGPath.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
@@ -94,17 +94,17 @@ public final class SVGElementCreatorTest {
         Assert.assertNotNull(element);
         Assert.assertEquals(element.getClass(), SVGPolyline.class);
 
-        element = creator.createElement(LinearGradient.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
+        element = creator.createElement(SVGLinearGradient.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
-        Assert.assertEquals(element.getClass(), LinearGradient.class);
+        Assert.assertEquals(element.getClass(), SVGLinearGradient.class);
 
         element = creator.createElement(SVGLine.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
         Assert.assertEquals(element.getClass(), SVGLine.class);
 
-        element = creator.createElement(Defs.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
+        element = creator.createElement(SVGDefs.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);
-        Assert.assertEquals(element.getClass(), Defs.class);
+        Assert.assertEquals(element.getClass(), SVGDefs.class);
 
         element = creator.createElement(de.saxsys.svgfx.core.elements.SVGGroup.class.getAnnotation(SVGElementMapping.class).value(), attributes, null, dataProvider);
         Assert.assertNotNull(element);

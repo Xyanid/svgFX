@@ -44,7 +44,7 @@ public class SVGUse extends SVGElementBase<Node> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGUse(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    public SVGUse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -58,18 +58,16 @@ public class SVGUse extends SVGElementBase<Node> {
      * @throws SVGException if the {@link de.saxsys.svgfx.core.elements.SVGElementBase.XLinkAttribute#XLINK_HREF} is empty or null.
      */
     @Override
-    protected Node createResultInternal() throws SVGException {
+    protected Node createResult(SVGElementBase inheritanceResolver) throws SVGException {
         String reference = getAttributes().get(XLinkAttribute.XLINK_HREF.getName());
         if (StringUtils.isNullOrEmpty(reference)) {
             throw new SVGException("XLink attribute is invalid.");
         }
-
-        return (Node) SVGUtils.resolveIRI(reference, getDataProvider(), SVGElementBase.class).createResult();
+        return (Node) SVGUtils.resolveIRI(reference, getDataProvider(), SVGElementBase.class).createAndInitializeResult(this);
     }
 
     @Override
-    protected void initializeResult(Node node) throws SVGException {
-
+    protected void initializeResult(Node node, SVGElementBase inheritanceResolver) throws SVGException {
     }
 
     //endregion

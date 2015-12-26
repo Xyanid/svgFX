@@ -21,7 +21,6 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
@@ -33,7 +32,6 @@ import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 import java.util.EnumSet;
-import java.util.Map;
 
 /**
  * This class represents a basic scg element, which provides some basic functionality to get the style of the class.
@@ -306,39 +304,66 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     // region Public
 
     /**
-     * This method attempts to create a {@link SVGCssStyle} by looking up all the supported {@link SVGCssStyle.PresentationAttribute}. If any attribute is present a
-     * valid
-     * cssString is returned.
+     * Encapsulate a call to {@link #getCssStyleAndResolveInheritance(SVGElementBase)} using the elements parent as the inheritanceResolver.
      *
-     * @return a {@link SVGCssStyle} containing the {@link SVGCssStyle.PresentationAttribute}s of this element if any or null if no
-     * {@link SVGCssStyle.PresentationAttribute} exists.
+     * @return the {@link SVGCssStyle} of this element or null if no style can be determined.
      */
-    public final SVGCssStyle getPresentationCssStyle() {
+    public final SVGCssStyle getCssStyleAndResolveInheritance() {
+        return getCssStyleAndResolveInheritance(getParent());
+    }
 
-        SVGCssStyle result = null;
+    /**
+     * Returns the {@link SVGCssStyle} of this element. Since an element can contain a {@link SVGCssStyle.PresentationAttribute}s, an own {@link SVGCssStyle} or a
+     * reference to an existing {@link SVGCssStyle} there need to be a rule how the {@link SVGCssStyle} is build. The rule is as follows: </br>
+     * {@link SVGCssStyle.PresentationAttribute}s are preferred if they are present and will overwrite existing attribute of an own
+     * {@link SVGCssStyle} or a referenced {@link SVGCssStyle}. The following example shows an element which has two
+     * {@link SVGCssStyle.PresentationAttribute}s and an own {@link SVGCssStyle}.
+     * <pre>
+     *     <circle fill="none" stroke="#808080" style="fill:#111111; stroke:#001122 fill-rule:odd" />
+     * </pre>
+     * this will result in fill = none, stroke = #808080 and fill-rule = odd. The same behavior is to be expected if the {@link SVGCssStyle} would be a reference e.g.
+     * <pre>
+     *     .st1{fill:#111111; stroke:#001122 fill-rule:odd}
+     *     <circle fill="none" stroke="#808080" class="st1" />
+     * </pre>
+     * An own {@link SVGCssStyle} is always preferred before a referenced {@link SVGCssStyle} and will overwrite existing attributes just as a
+     * {@link SVGCssStyle.PresentationAttribute} would. The following example shows an element which has an own
+     * {@link SVGCssStyle} and a reference to a {@link SVGCssStyle}.
+     * <pre>
+     *     .st1{fill:none; stroke:#808080 fill-rule:odd}
+     *     <circle style="fill:#111111; stroke:#001122" class="st1"/>
+     * </pre>
+     * this will result in fill = 111111, stroke = #001122 and fill-rule = odd.
+     *
+     * @return the {@link SVGCssStyle} of this element or null if no style can be determined.
+     */
+    public final SVGCssStyle getCssStyle() {
 
-        StringBuilder cssText = new StringBuilder();
+        // first we get a referenced style class if any
+        SVGCssStyle style = getReferencedStyle();
 
-        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
-
-            String data = getAttribute(attribute.getName());
-
-            if (StringUtils.isNotNullOrEmpty(data)) {
-                if (cssText.length() == 0) {
-                    cssText.append("presentationStyle" + Constants.DECLARATION_BLOCK_START);
-                }
-
-                cssText.append(String.format("%s%s%s%s", attribute.getName(), Constants.PROPERTY_SEPARATOR, data, Constants.PROPERTY_END));
+        // if an own style is present it will be used overwriting other attributes in the process
+        SVGCssStyle ownStyle = getOwnStyle();
+        if (ownStyle != null) {
+            if (style == null) {
+                style = ownStyle;
+            } else {
+                style.combineWithStyle(ownStyle);
             }
         }
 
-        if (cssText.length() > 0) {
-            cssText.append(Constants.DECLARATION_BLOCK_END);
-            result = new SVGCssStyle(getDataProvider());
-            result.parseCssText(cssText.toString());
+        // if a presentation style is present it will be used overwriting other attributes in the process
+        SVGCssStyle presentationStyle = getPresentationCssStyle();
+        if (presentationStyle != null) {
+
+            if (style == null) {
+                style = presentationStyle;
+            } else {
+                style.combineWithStyle(presentationStyle);
+            }
         }
 
-        return result;
+        return style;
     }
 
     /**
@@ -370,7 +395,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      *
      * @return the {@link SVGCssStyle} referenced by this element or null if there is none.
      */
-    public SVGCssStyle getReferencedStyle() {
+    public final SVGCssStyle getReferencedStyle() {
         if (StringUtils.isNullOrEmpty(getAttribute(CoreAttribute.CLASS.getName()))) {
             return null;
         }
@@ -381,78 +406,36 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Returns the {@link SVGCssStyle} of this element. Since an element can contain a {@link SVGCssStyle.PresentationAttribute}s, an own {@link SVGCssStyle} or a
-     * reference to an existing {@link SVGCssStyle} there need to be a rule how the {@link SVGCssStyle} is build. The rule is as follows: </br>
-     * {@link SVGCssStyle.PresentationAttribute}s are preferred if they are present and will overwrite existing attribute of an own
-     * {@link SVGCssStyle} or a referenced {@link SVGCssStyle}. The following example shows an element which has two
-     * {@link SVGCssStyle.PresentationAttribute}s and an own {@link SVGCssStyle}.
-     * <pre>
-     *     <circle fill="none" stroke="#808080" style="fill:#111111; stroke:#001122 fill-rule:odd" />
-     * </pre>
-     * this will result in fill = none, stroke = #808080 and fill-rule = odd. The same behavior is to be expected if the {@link SVGCssStyle} would be a reference e.g.
-     * <pre>
-     *     .st1{fill:#111111; stroke:#001122 fill-rule:odd}
-     *     <circle fill="none" stroke="#808080" class="st1" />
-     * </pre>
-     * An own {@link SVGCssStyle} is always preferred before a referenced {@link SVGCssStyle} and will overwrite existing attributes just as a
-     * {@link SVGCssStyle.PresentationAttribute} would. The following example shows an element which has an own
-     * {@link SVGCssStyle} and a reference to a {@link SVGCssStyle}.
-     * <pre>
-     *     .st1{fill:none; stroke:#808080 fill-rule:odd}
-     *     <circle style="fill:#111111; stroke:#001122" class="st1"/>
-     * </pre>
-     * this will result in fill = 111111, stroke = #001122 and fill-rule = odd.
+     * This method attempts to create a {@link SVGCssStyle} by looking up all the supported {@link SVGCssStyle.PresentationAttribute}. If any attribute is present a
+     * valid
+     * cssString is returned.
      *
-     * @return the {@link SVGCssStyle} of this element or first style in the {@link ElementBase#parent} tree
+     * @return a {@link SVGCssStyle} containing the {@link SVGCssStyle.PresentationAttribute}s of this element if any or null if not attributes are submitted.
+     * {@link SVGCssStyle.PresentationAttribute} exists.
      */
-    public final SVGCssStyle getCssStyle() {
+    public final SVGCssStyle getPresentationCssStyle() {
 
-        // first we get a referenced style class if any
-        SVGCssStyle result = getReferencedStyle();
+        SVGCssStyle result = null;
 
-        // if an own style is present it will be used overwriting other attributes in the process
-        SVGCssStyle ownStyle = getOwnStyle();
-        if (ownStyle != null) {
-            if (result == null) {
-                result = ownStyle;
-            } else {
-                result.combineWithStyle(ownStyle);
-            }
-        }
+        StringBuilder cssText = new StringBuilder();
 
-        // if a presentation style is present it will be used overwriting other attributes in the process
-        SVGCssStyle presentationStyle = getPresentationCssStyle();
-        if (presentationStyle != null) {
+        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
 
-            if (result == null) {
-                result = presentationStyle;
-            } else {
-                result.combineWithStyle(presentationStyle);
-            }
-        }
+            String data = getAttribute(attribute.getName());
 
-        // now we apply inheritance so we can actually get the data from another style
-        if (result != null && getParent() != null) {
-
-            SVGCssStyle parentStyle = null;
-
-            for (Map.Entry<String, SVGCssContentTypeBase> property : result.getUnmodifiableProperties().entrySet()) {
-
-                if (property.getValue().getIsInherited()) {
-
-                    if (parentStyle == null) {
-                        parentStyle = getParent().getCssStyle();
-                    }
-
-                    // if the parent does not provide a value we use the default one
-                    SVGCssContentTypeBase parentProperty = parentStyle.getCssContentType(property.getKey());
-                    if (parentProperty != null && parentProperty.getValue() != null) {
-                        property.getValue().setValue(parentProperty.getValue());
-                    } else {
-                        property.getValue().setValue(property.getValue().getDefaultValue());
-                    }
+            if (StringUtils.isNotNullOrEmpty(data)) {
+                if (cssText.length() == 0) {
+                    cssText.append("presentationStyle" + Constants.DECLARATION_BLOCK_START);
                 }
+
+                cssText.append(String.format("%s%s%s%s", attribute.getName(), Constants.PROPERTY_SEPARATOR, data, Constants.PROPERTY_END));
             }
+        }
+
+        if (cssText.length() > 0) {
+            cssText.append(Constants.DECLARATION_BLOCK_END);
+            result = new SVGCssStyle(getDataProvider());
+            result.parseCssText(cssText.toString());
         }
 
         return result;
@@ -473,7 +456,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Returns a node which represents the clip path to be applied to this element.
+     * Encapsulate a call to {@link #getClipPath(SVGElementBase)} using the {@link #parent} as the inheritanceResolver.
      *
      * @return the clip path to use or null if this element does not have a clip path.
      *
@@ -482,7 +465,67 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      */
     public final Node getClipPath() throws SVGException, IllegalArgumentException {
 
+        return getClipPath(getParent());
+    }
+
+    /**
+     * Must be overwritten in the actual implementation to create a new result for this element based on the
+     * information available.
+     *
+     * @param inheritanceResolver the element to use when data is needed.
+     *
+     * @return a new instance of the result or null of no result was created
+     *
+     * @throws SVGException will be thrown when an error during creation occurs
+     */
+    protected abstract TResult createResult(SVGElementBase inheritanceResolver) throws SVGException;
+
+    /**
+     * This method will be called in the {@link #createAndInitializeResult(SVGElementBase)} and allows to modify the result such as applying a style or transformations.
+     * The given inheritanceResolver should be used to retrieve such data, this simply is needed because some elements can actually be referenced e.g. {@link SVGUse} and their actual parent is not
+     * the one from which the inherited style attributes can be retrieved.
+     *
+     * @param result              the result which should be modified.
+     * @param inheritanceResolver the element to use when data is needed.
+     *
+     * @throws SVGException will be thrown when an error during modification
+     */
+    protected abstract void initializeResult(final TResult result, SVGElementBase inheritanceResolver) throws SVGException;
+
+    /**
+     * Encapsulate a call to {@link #getCssStyle()} and {@link SVGUtils#resolveInheritance(SVGCssStyle, SVGElementBase)}, making sure that the inheritance of the style is resolved
+     *
+     * @param inheritanceResolver the {@link SVGElementBase} which is used when inherited style attributes are to be resolved
+     *
+     * @return the {@link SVGCssStyle} of this element or null if no style can be determined.
+     */
+    public final SVGCssStyle getCssStyleAndResolveInheritance(SVGElementBase inheritanceResolver) {
         SVGCssStyle style = getCssStyle();
+
+        if (style != null && inheritanceResolver != null) {
+            SVGUtils.resolveInheritance(style, inheritanceResolver);
+        }
+
+        return style;
+    }
+
+    // endregion
+
+    //region Abstract
+
+    /**
+     * Returns a node which represents the clip path to be applied to this element.
+     *
+     * @param inheritanceResolver the {@link SVGElementBase} which is used when inherited style attributes are to be resolved
+     *
+     * @return the clip path to use or null if this element does not have a clip path.
+     *
+     * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #dataProvider}.
+     * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
+     */
+    public final Node getClipPath(SVGElementBase inheritanceResolver) throws SVGException, IllegalArgumentException {
+
+        SVGCssStyle style = getCssStyleAndResolveInheritance(inheritanceResolver);
 
         if (style != null) {
             SVGCssContentTypeString referenceIRI = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
@@ -500,27 +543,27 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Must be overwritten in the actual implementation to create a new result for this element based on the
-     * information available.
+     * Creates a result represented by this element and uses the given supplier in order to fetch data needed to initialize the result
      *
-     * @return a new instance of the result or null of no result was created
+     * @param inheritanceResolver the element to use when data is needed.
      *
-     * @throws SVGException will be thrown when an error during creation occurs
+     * @return the result produced by this element.
+     *
+     * @throws SVGException thrown when an exception during creation occurs.
      */
-    protected abstract TResult createResultInternal() throws SVGException;
+    public final TResult createAndInitializeResult(SVGElementBase inheritanceResolver) throws SVGException {
 
-    // endregion
+        TResult result;
 
-    //region Abstract
+        try {
+            result = createResult(inheritanceResolver);
+            initializeResult(result, inheritanceResolver);
+        } catch (Exception e) {
+            throw new SVGException(String.format("Creation of element %s failed", getClass().getName()), e);
+        }
 
-    /**
-     * This method will be called in the {@link #createResult()} and allows to modify the result such as applying a style or transformations.
-     *
-     * @param result the result which should be modified.
-     *
-     * @throws SVGException will be thrown when an error during modification
-     */
-    protected abstract void initializeResult(final TResult result) throws SVGException;
+        return result;
+    }
 
     /**
      * Creates a result represented by this element.
@@ -529,18 +572,9 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      *
      * @throws SVGException thrown when an exception during creation occurs.
      */
-    public final TResult createResult() throws SVGException {
+    public final TResult createAndInitializeResult() throws SVGException {
 
-        TResult result;
-
-        try {
-            result = createResultInternal();
-            initializeResult(result);
-        } catch (Exception e) {
-            throw new SVGException(String.format("Creation of element %s failed", getClass().getName()), e);
-        }
-
-        return result;
+        return createAndInitializeResult(this);
     }
 
     //endregion
@@ -554,7 +588,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     public final TResult getResult() throws SVGException {
 
         if (result == null) {
-            result = createResult();
+            result = createAndInitializeResult();
         }
 
         return result;

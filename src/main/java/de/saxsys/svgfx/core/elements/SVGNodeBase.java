@@ -57,14 +57,14 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * Will apply the transformation to the element.
      */
     @Override
-    protected void initializeResult(TNode node) throws SVGException {
+    protected void initializeResult(TNode node, SVGElementBase inheritanceResolver) throws SVGException {
 
         Transform transform = getTransformation();
         if (transform != null) {
             node.getTransforms().add(transform);
         }
 
-        Node clip = getClipPath();
+        Node clip = getClipPath(inheritanceResolver);
         if (clip != null) {
             node.setClip(clip);
         }
