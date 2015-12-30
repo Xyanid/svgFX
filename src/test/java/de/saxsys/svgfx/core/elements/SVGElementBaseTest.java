@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeDouble;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
@@ -96,6 +97,8 @@ public class SVGElementBaseTest {
             Object value = "1.0";
 
             if (attribute.getContentTypeClass().equals(SVGCssContentTypeLength.class)) {
+                value = 1.0d;
+            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeDouble.class)) {
                 value = 1.0d;
             } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeFillRule.class)) {
                 value = Enumerations.FillRuleMapping.EVEN_ODD.getRule();
@@ -229,7 +232,46 @@ public class SVGElementBaseTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
     }
 
+    /**
+     * Ensures that attributes of {@link SVGCssStyle} can be inherited from the parent tree and that missing attributes have the default value.
+     */
+    @Test
+    public void ensureThatCssStyleAttributesAreInheritedFromParentTreeAndDefaultValuesAreApplied() {
 
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("fill:#222222");
+
+        SVGGroup group = new SVGGroup("group", attributes, null, new SVGDataProvider());
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("stroke:#111111");
+
+        SVGGroup group1 = new SVGGroup("group", attributes, group, new SVGDataProvider());
+
+        Mockito.when(attributes.getLength()).thenReturn(3);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("inherit");
+        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE.getName());
+        Mockito.when(attributes.getValue(1)).thenReturn("inherit");
+        Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName());
+        Mockito.when(attributes.getValue(2)).thenReturn("inherit");
+
+        SVGCircle circle = new SVGCircle("circle", attributes, group1, new SVGDataProvider());
+
+        SVGCssStyle style = circle.getCssStyleAndResolveInheritance();
+
+        Assert.assertNotNull(style);
+
+        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
+        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+        Assert.assertEquals(SVGCssContentTypeStrokeLineCap.DEFAULT_VALUE,
+                            style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName(), SVGCssContentTypeStrokeLineCap.class).getValue());
+    }
 
     /**
      * Ensures that {@link de.saxsys.svgfx.core.elements.SVGElementBase.CoreAttribute#TRANSFORM} attribute is correctly read.

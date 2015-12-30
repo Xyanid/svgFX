@@ -45,15 +45,15 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeFillRule contentType = new SVGCssContentTypeFillRule(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
         for (Enumerations.FillRuleMapping value : Enumerations.FillRuleMapping.values()) {
 
-            contentType.parseCssValue(value.getName());
+            contentType.parseCssText(value.getName());
             Assert.assertEquals(contentType.getValue(), value.getRule());
             Assert.assertEquals(contentType.getUnit(), null);
         }
@@ -67,10 +67,10 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeLength contentType = new SVGCssContentTypeLength(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
         Random random = new Random();
@@ -78,7 +78,7 @@ public final class SVGCssContentTypeTest {
         for (SVGCssContentTypeLength.Unit unit : SVGCssContentTypeLength.Unit.values()) {
             double value = random.nextDouble();
 
-            contentType.parseCssValue(String.format("%f%s", value, unit.getName()));
+            contentType.parseCssText(String.format("%f%s", value, unit.getName()));
             Assert.assertEquals(contentType.getValue(), value, 0.01d);
             Assert.assertEquals(contentType.getUnit(), unit);
         }
@@ -92,13 +92,13 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeDouble contentType = new SVGCssContentTypeDouble(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
-        contentType.parseCssValue("1.0");
+        contentType.parseCssText("1.0");
         Assert.assertEquals(1.0d, contentType.getValue(), 0.01d);
         Assert.assertNull(contentType.getUnit());
     }
@@ -111,22 +111,22 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypePaint contentType = new SVGCssContentTypePaint(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
-        contentType.parseCssValue("currentColor");
+        contentType.parseCssText("currentColor");
         Assert.assertTrue(contentType.getIsCurrentColor());
 
-        contentType.parseCssValue("rgb(255,32,96)");
+        contentType.parseCssText("rgb(255,32,96)");
         Assert.assertEquals(contentType.getValue(), Color.web("rgb(255,32,96)"));
 
-        contentType.parseCssValue("rgb(20%,30%,10%)");
+        contentType.parseCssText("rgb(20%,30%,10%)");
         Assert.assertEquals(contentType.getValue(), Color.web("rgb(20%,30%,10%)"));
 
-        contentType.parseCssValue("red");
+        contentType.parseCssText("red");
         Assert.assertEquals(contentType.getValue(), Color.web("red"));
     }
 
@@ -138,13 +138,13 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeString contentType = new SVGCssContentTypeString(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
-        contentType.parseCssValue("random");
+        contentType.parseCssText("random");
         Assert.assertEquals(contentType.getValue(), "random");
     }
 
@@ -156,10 +156,10 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeStrokeDashArray contentType = new SVGCssContentTypeStrokeDashArray(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
         Random random = new Random();
@@ -177,7 +177,7 @@ public final class SVGCssContentTypeTest {
                 data.append(String.format("%s%s%s", data.length() == 0 ? "" : ",", String.format("%f", value).replace(",", "."), unit.getName()));
             }
 
-            contentType.parseCssValue(data.toString());
+            contentType.parseCssText(data.toString());
 
             for (SVGCssContentTypeLength length : contentType.getValue()) {
                 Assert.assertEquals(length.getValue(), value, 0.01d);
@@ -198,14 +198,14 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeStrokeLineCap contentType = new SVGCssContentTypeStrokeLineCap(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
         for (StrokeLineCap cap : StrokeLineCap.values()) {
-            contentType.parseCssValue(cap.name().toLowerCase());
+            contentType.parseCssText(cap.name().toLowerCase());
             Assert.assertEquals(contentType.getValue(), cap);
         }
     }
@@ -218,14 +218,14 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeStrokeLineJoin contentType = new SVGCssContentTypeStrokeLineJoin(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
         for (StrokeLineJoin join : StrokeLineJoin.values()) {
-            contentType.parseCssValue(join.name().toLowerCase());
+            contentType.parseCssText(join.name().toLowerCase());
             Assert.assertEquals(contentType.getValue(), join);
         }
     }
@@ -238,14 +238,14 @@ public final class SVGCssContentTypeTest {
 
         SVGCssContentTypeStrokeType contentType = new SVGCssContentTypeStrokeType(new SVGDataProvider());
 
-        contentType.parseCssValue("inherit");
+        contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
 
-        contentType.parseCssValue("none");
+        contentType.parseCssText("none");
         Assert.assertTrue(contentType.getIsNone());
 
         for (StrokeType type : StrokeType.values()) {
-            contentType.parseCssValue(type.name().toLowerCase());
+            contentType.parseCssText(type.name().toLowerCase());
             Assert.assertEquals(contentType.getValue(), type);
         }
     }

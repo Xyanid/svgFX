@@ -70,6 +70,38 @@ public final class SVGStyleTest {
     }
 
     /**
+     * Ensures that the {@link de.saxsys.svgfx.css.definitions.Constants#PROPERTY_END} can be missing and end of a style
+     */
+    @Test
+    public void ensureMissingPropertyEndStringsAreHandledCorrectly() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.TYPE.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
+
+        SVGStyle style = new SVGStyle("style", attributes, null, new SVGDataProvider());
+
+        ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px}");
+
+        Assert.assertNotNull(style.getResult());
+        Assert.assertEquals(1, style.getResult().size());
+
+        SVGCssStyle result = style.getResult().iterator().next();
+
+        Assert.assertEquals("circle", result.getName());
+        Assert.assertEquals(3, result.getUnmodifiableProperties().size());
+        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
+        Assert.assertEquals(Color.ORANGE, result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
+        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
+        Assert.assertEquals(Color.BLACK, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()));
+        Assert.assertEquals(10.0d, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 0.01d);
+    }
+
+    /**
      * Ensures that multiple css style provided by {@link SVGStyle} is correct based on the input.
      */
     @Test

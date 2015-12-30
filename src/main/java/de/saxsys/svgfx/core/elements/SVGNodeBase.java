@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
@@ -57,14 +58,14 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * Will apply the transformation to the element.
      */
     @Override
-    protected void initializeResult(TNode node, SVGElementBase inheritanceResolver) throws SVGException {
+    protected void initializeResult(final TNode node, final SVGCssStyle style) throws SVGException {
 
         Transform transform = getTransformation();
         if (transform != null) {
             node.getTransforms().add(transform);
         }
 
-        Node clip = getClipPath(inheritanceResolver);
+        Node clip = getClipPath(style);
         if (clip != null) {
             node.setClip(clip);
         }

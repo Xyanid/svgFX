@@ -71,7 +71,8 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
     /**
      * Creates new instance.
      *
-     * @param defaultValue the default value of this to use
+     * @param defaultValue the default value of this to use.
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
     public SVGCssContentTypeBase(final TValue defaultValue, final SVGDataProvider dataProvider) {
         super(defaultValue);
@@ -106,18 +107,20 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
 
     //endregion
 
-    //region Public
+    //region Abstract
 
     /**
      * This will be called if actual data is present in the css text, this is the case if the cssText is not {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
      * @param cssText cssText which is not equal to {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
+     *
+     * @return a {@link Pair} which contains the value as the key and the value as the value.
      */
     protected abstract Pair<TValue, TUnit> getValueAndUnit(String cssText);
 
     //endregion
 
-    // region Abstract
+    // region Override CssContentTypeBase
 
     /**
      * Consumes the given css text setting the values in the process.
@@ -125,7 +128,7 @@ public abstract class SVGCssContentTypeBase<TValue, TUnit> extends CssContentTyp
      * @param cssText text to consume.
      */
     @Override
-    public final void parseCssValue(final String cssText) {
+    public final void parseCssText(final String cssText) {
         isInherited = INHERIT_INDICATOR.equals(cssText);
 
         isNone = NONE_INDICATOR.equals(cssText);

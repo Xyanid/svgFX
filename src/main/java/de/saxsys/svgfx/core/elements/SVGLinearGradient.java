@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -57,7 +58,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     //region Override SVGElementBase
 
     @Override
-    protected final LinearGradient createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected final LinearGradient createResult(final SVGCssStyle style) throws SVGException {
 
         List<Stop> stops = getStops();
 

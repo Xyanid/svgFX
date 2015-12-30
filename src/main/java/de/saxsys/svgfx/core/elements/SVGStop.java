@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssContentTypeDouble;
 import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
@@ -62,19 +63,17 @@ public class SVGStop extends SVGElementBase<Stop> {
      * {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
-    protected final Stop createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected final Stop createResult(final SVGCssStyle style) throws SVGException {
 
         SVGCssContentTypeLength offset = new SVGCssContentTypeLength(getDataProvider());
 
         Color color = (Color) SVGCssContentTypePaint.DEFAULT_VALUE;
 
-        SVGCssStyle style = getCssStyleAndResolveInheritance(inheritanceResolver);
-
         if (StringUtils.isNullOrEmpty(getAttribute(CoreAttribute.OFFSET.getName()))) {
             throw new SVGException("Stop does not provide an offset value");
         }
 
-        offset.parseCssValue(getAttribute(CoreAttribute.OFFSET.getName()));
+        offset.parseCssText(getAttribute(CoreAttribute.OFFSET.getName()));
 
         if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName())) {
             color = (Color) style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName(), SVGCssContentTypePaint.class).getValue();
@@ -87,7 +86,7 @@ public class SVGStop extends SVGElementBase<Stop> {
         }
 
         if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName())) {
-            double opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeLength.class).getValue();
+            double opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeDouble.class).getValue();
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         }
 
@@ -95,7 +94,7 @@ public class SVGStop extends SVGElementBase<Stop> {
     }
 
     @Override
-    protected final void initializeResult(javafx.scene.paint.Stop stop, SVGElementBase inheritanceResolver) throws SVGException {
+    protected final void initializeResult(final javafx.scene.paint.Stop stop, final SVGCssStyle inheritanceResolver) throws SVGException {
     }
 
     //endregion

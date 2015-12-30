@@ -21,8 +21,10 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
@@ -32,7 +34,7 @@ import org.xml.sax.Attributes;
  * @author Xyanid on 25.10.2015.
  */
 @SVGElementMapping("use")
-public class SVGUse extends SVGElementBase<Node> {
+public class SVGUse extends SVGElementBase<Group> {
 
     //region Constructor
 
@@ -58,16 +60,32 @@ public class SVGUse extends SVGElementBase<Node> {
      * @throws SVGException if the {@link de.saxsys.svgfx.core.elements.SVGElementBase.XLinkAttribute#XLINK_HREF} is empty or null.
      */
     @Override
-    protected Node createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected Group createResult(final SVGCssStyle style) throws SVGException {
         String reference = getAttributes().get(XLinkAttribute.XLINK_HREF.getName());
         if (StringUtils.isNullOrEmpty(reference)) {
             throw new SVGException("XLink attribute is invalid.");
         }
-        return (Node) SVGUtils.resolveIRI(reference, getDataProvider(), SVGElementBase.class).createAndInitializeResult(this);
+
+        SVGElementBase referencedElement = SVGUtils.resolveIRI(reference, getDataProvider(), SVGElementBase.class);
+
+        String positionX = getAttribute(CoreAttribute.POSITION_X.getName());
+        String positionY = getAttribute(CoreAttribute.POSITION_Y.getName());
+
+        Group result = new Group();
+        result.setLayoutX(StringUtils.isNullOrEmpty(positionX) ? 0.0d : Double.parseDouble(positionX));
+        result.setLayoutY(StringUtils.isNullOrEmpty(positionY) ? 0.0d : Double.parseDouble(positionY));
+
+        SVGCssStyle childStyle = referencedElement.getCssStyleAndResolveInheritance();
+
+        SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
+
+        result.getChildren().add((Node) referencedElement.createAndInitializeResult(childStyle));
+
+        return result;
     }
 
     @Override
-    protected void initializeResult(Node node, SVGElementBase inheritanceResolver) throws SVGException {
+    protected void initializeResult(final Group node, final SVGCssStyle inheritanceResolver) throws SVGException {
     }
 
     //endregion

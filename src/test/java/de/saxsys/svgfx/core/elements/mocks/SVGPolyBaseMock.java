@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements.mocks;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGPolyBase;
 import javafx.scene.shape.Polygon;
@@ -46,7 +47,7 @@ public class SVGPolyBaseMock extends SVGPolyBase<Polygon> {
     }
 
     @Override
-    protected Polygon createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected Polygon createResult(final SVGCssStyle style) throws SVGException {
         return null;
     }
 }

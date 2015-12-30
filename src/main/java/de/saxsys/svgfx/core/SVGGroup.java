@@ -97,7 +97,7 @@ public class SVGGroup extends Group implements IStyleableAdditionProvider {
     // region Override SVGGroup
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
@@ -109,7 +109,7 @@ public class SVGGroup extends Group implements IStyleableAdditionProvider {
     // region Implement IStyleableAdditionProvider
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public <TStyleableAddition extends StyleableAdditionBase> TStyleableAddition getSkinAddition(final Class<TStyleableAddition> clazz) {

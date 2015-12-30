@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Group;
 import org.xml.sax.Attributes;
 
@@ -51,12 +52,12 @@ public class SVGRoot extends SVGElementBase<Group> {
     //region Override SVGElementBase
 
     @Override
-    protected Group createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected Group createResult(final SVGCssStyle style) throws SVGException {
         return null;
     }
 
     @Override
-    protected void initializeResult(Group group, SVGElementBase inheritanceResolver) throws SVGException {
+    protected void initializeResult(final Group group, final SVGCssStyle style) throws SVGException {
 
     }
 

@@ -20,6 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
 import org.xml.sax.Attributes;
 
@@ -50,7 +51,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
     //region Override SVGElementBase
 
     @Override
-    protected final Polygon createResult(SVGElementBase inheritanceResolver) {
+    protected final Polygon createResult(final SVGCssStyle style) {
 
         return new Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

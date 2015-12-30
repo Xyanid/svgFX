@@ -35,7 +35,6 @@ import org.junit.Test;
  */
 public final class SVGCssStyleTest {
 
-
     //region Tests
 
     /**
@@ -64,8 +63,42 @@ public final class SVGCssStyleTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 3.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue(), 10.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 10.0d, 0.01d);
+    }
+
+    /**
+     * Ensures that styles read with property that are not inside the {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute}s are still contained as {@link SVGCssContentTypeString}.
+     */
+    @Test
+    public void ensureUnknownPropertyArePresentAsStrings() {
+
+        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
+
+        style.parseCssText(".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:10;sumthing:else}");
+
+        Assert.assertEquals("st0", style.getName());
+        Assert.assertEquals(5, style.getUnmodifiableProperties().size());
+
+        Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
+        Assert.assertTrue(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getIsNone());
+
+        Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()).getClass(), SVGCssContentTypePaint.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#808080"));
+
+        Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()).getClass(), SVGCssContentTypeLength.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 3.0d, 0.01d);
+
+        Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 10.0d, 0.01d);
+
+        Assert.assertNotNull(style.getCssContentType("sumthing"));
+        Assert.assertEquals(SVGCssContentTypeString.class, style.getCssContentType("sumthing").getClass());
+        Assert.assertEquals("else", style.getCssContentType("sumthing", SVGCssContentTypeString.class).getValue());
     }
 
     /**
@@ -82,6 +115,8 @@ public final class SVGCssStyleTest {
             if (attribute.getContentTypeClass().equals(SVGCssContentTypePaint.class)) {
                 cssText.append(String.format("%s:#808080;", attribute.getName()));
             } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeLength.class)) {
+                cssText.append(String.format("%s:10;", attribute.getName()));
+            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeDouble.class)) {
                 cssText.append(String.format("%s:10;", attribute.getName()));
             } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeFillRule.class)) {
                 cssText.append(String.format("%s:evenodd;", attribute.getName()));
@@ -161,8 +196,8 @@ public final class SVGCssStyleTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 3.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue(), 10.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 10.0d, 0.01d);
 
         style.parseCssText(".st0{fill:none;stroke:#080808;/*{\"this is ;:a string\";:}*/stroke-width:4;stroke-miterlimit:11;}");
 
@@ -182,8 +217,8 @@ public final class SVGCssStyleTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 4.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue(), 11.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 11.0d, 0.01d);
     }
 
     /**
@@ -213,8 +248,8 @@ public final class SVGCssStyleTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 3.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue(), 10.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 10.0d, 0.01d);
 
         style.parseCssText(".st0{fill:none;clip-rule:\";{ar;asd:j}:sda;asd:\";stroke-width:4;stroke-miterlimit:12;}");
 
@@ -234,8 +269,8 @@ public final class SVGCssStyleTest {
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 4.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue(), 12.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 12.0d, 0.01d);
     }
 
     /**
@@ -266,11 +301,11 @@ public final class SVGCssStyleTest {
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 4.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 3.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeLength.class);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeLength.class).getValue(), 15.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName()).getClass(), SVGCssContentTypeDouble.class);
+        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue(), 10.0d, 0.01d);
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName()).getClass(), SVGCssContentTypeFillRule.class);

@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
@@ -51,12 +52,12 @@ public class SVGDefs extends SVGElementBase<Node> {
     //region SVGElementBase
 
     @Override
-    protected final Node createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected final Node createResult(final SVGCssStyle style) throws SVGException {
         return null;
     }
 
     @Override
-    protected final void initializeResult(Node node, SVGElementBase inheritanceResolver) throws SVGException {
+    protected final void initializeResult(final Node node, final SVGCssStyle style) throws SVGException {
 
     }
 

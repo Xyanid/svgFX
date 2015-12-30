@@ -20,6 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
@@ -51,7 +52,7 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Circle createResult(SVGElementBase inheritanceResolver) {
+    protected final Circle createResult(final SVGCssStyle style) {
 
         String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
         String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());

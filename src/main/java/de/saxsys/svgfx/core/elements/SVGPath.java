@@ -51,7 +51,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.SVGPath createResult(SVGElementBase inheritanceResolver) {
+    protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle style) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
         result.setContent(getAttribute(CoreAttribute.PATH_DESCRIPTION.getName()));
@@ -64,10 +64,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(javafx.scene.shape.SVGPath path, SVGElementBase inheritanceResolver) {
-        super.initializeResult(path, inheritanceResolver);
-
-        SVGCssStyle style = getCssStyleAndResolveInheritance(inheritanceResolver);
+    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final SVGCssStyle style) {
+        super.initializeResult(path, style);
 
         if (style != null) {
 

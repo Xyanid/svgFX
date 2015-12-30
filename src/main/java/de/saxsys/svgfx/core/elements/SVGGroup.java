@@ -21,11 +21,12 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 /**
  * This class represents the style element from svg
@@ -54,21 +55,23 @@ public class SVGGroup extends SVGNodeBase<Group> {
     //region SVGElementBase
 
     @Override
-    protected final Group createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected final Group createResult(SVGCssStyle style) throws SVGException {
         Group result = new Group();
 
         result.setOpacity(1.0d);
 
         for (ElementBase child : getChildren()) {
-            try {
 
-                Object childResult = child.getResult();
+            SVGElementBase actualChild = (SVGElementBase) child;
 
-                if (childResult instanceof Node) {
-                    result.getChildren().add((Node) childResult);
-                }
-            } catch (SAXException e) {
-                throw new SVGException(e);
+            SVGCssStyle childStyle = actualChild.getCssStyle();
+
+            SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
+
+            Object childResult = actualChild.getResult(childStyle);
+
+            if (childResult instanceof Node) {
+                result.getChildren().add((Node) childResult);
             }
         }
 

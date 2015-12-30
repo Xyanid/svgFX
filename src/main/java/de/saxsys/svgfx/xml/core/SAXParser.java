@@ -221,7 +221,9 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     }
 
     /**
-     * determines if the parser is busy doing its work, this is the case if the state is not IDLE or FINISHED.
+     * Determines if the parser is busy doing its work, this is the case if the state is not IDLE or FINISHED.
+     *
+     * @return true if the parser is busy, otherwise false.
      */
     public final boolean isBusy() {
         synchronized (this.state) {

@@ -201,7 +201,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
 
     //endregion
 
-    // region Public
+    // region Override CssStyle
 
     /**
      * This implementation will use the name and validate it against {@link PresentationAttribute}s and then create an instance of a {@link CssContentTypeBase}.
@@ -212,7 +212,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
      * @return a {@link CssContentTypeBase} or null if the name is not supported.
      */
     @Override
-    protected SVGCssContentTypeBase createContentType(String name) {
+    protected SVGCssContentTypeBase createContentType(final String name) {
 
         for (PresentationAttribute attribute : PresentationAttribute.values()) {
             if (attribute.getName().equals(name)) {
@@ -224,7 +224,7 @@ public class SVGCssStyle extends CssStyle<SVGCssContentTypeBase> {
             }
         }
 
-        return null;
+        return new SVGCssContentTypeString(provider);
     }
 
     //endregion

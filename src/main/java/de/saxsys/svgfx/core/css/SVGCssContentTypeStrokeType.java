@@ -30,13 +30,24 @@ import javafx.util.Pair;
  */
 public class SVGCssContentTypeStrokeType extends SVGCssContentTypeBase<StrokeType, Void> {
 
+    // region Static
+
+    /**
+     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
+     */
+    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
+
+    // endregion
+
     //region Constructor
 
     /**
      * Creates new instance with a default value of {@link StrokeType#CENTERED}.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeType(SVGDataProvider dataProvider) {
-        super(StrokeType.CENTERED, dataProvider);
+    public SVGCssContentTypeStrokeType(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
@@ -45,6 +56,7 @@ public class SVGCssContentTypeStrokeType extends SVGCssContentTypeBase<StrokeTyp
 
     @Override
     protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
+
         return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
     }
 

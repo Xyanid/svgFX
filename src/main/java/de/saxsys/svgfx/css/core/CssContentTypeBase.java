@@ -45,7 +45,6 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
      */
     protected TUnit unit;
 
-
     //endregion
 
     //region Constructor
@@ -72,7 +71,6 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
         return value;
     }
 
-
     /**
      * Sets the {@link #value}.
      *
@@ -96,16 +94,25 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
         return unit;
     }
 
+    /**
+     * Sets the {@link #unit}.
+     *
+     * @param unit the unit to use.
+     */
+    public void setUnit(TUnit unit) {
+        this.unit = unit;
+    }
+
     //endregion
 
-    //region Public
+    //region Abstract
 
     /**
      * Consumes the given css text setting the values in the process
      *
      * @param cssText text to consume.
      */
-    public abstract void parseCssValue(final String cssText);
+    public abstract void parseCssText(final String cssText) throws Exception;
 
     //endregion
 

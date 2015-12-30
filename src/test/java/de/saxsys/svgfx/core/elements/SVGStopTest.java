@@ -119,9 +119,7 @@ public final class SVGStopTest {
         try {
             stop.getResult();
             Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGStop.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
+        } catch (SVGException ignored) {
         }
 
         Mockito.when(attributes.getValue(0)).thenReturn("1.0");
@@ -133,9 +131,7 @@ public final class SVGStopTest {
         try {
             stop.getResult();
             Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGStop.class.getName()));
-            ;
+        } catch (SVGException ignored) {
         }
 
         Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.COLOR.getName());
@@ -146,7 +142,6 @@ public final class SVGStopTest {
             stop.getResult();
             Assert.fail();
         } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGStop.class.getName()));
         }
     }
 
@@ -168,19 +163,7 @@ public final class SVGStopTest {
         try {
             stop.getResult();
             Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGStop.class.getName()));
-        }
-
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.OFFSET.getName());
-
-        stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
-
-        try {
-            stop.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGStop.class.getName()));
+        } catch (SVGException ignored) {
         }
     }
 }

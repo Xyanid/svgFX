@@ -30,13 +30,24 @@ import javafx.util.Pair;
  */
 public class SVGCssContentTypeStrokeLineJoin extends SVGCssContentTypeBase<StrokeLineJoin, Void> {
 
+    // region Static
+
+    /**
+     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
+     */
+    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
+
+    // endregion
+
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeLineJoin#MITER}.
+     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeLineJoin(SVGDataProvider dataProvider) {
-        super(StrokeLineJoin.MITER, dataProvider);
+    public SVGCssContentTypeStrokeLineJoin(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
@@ -45,6 +56,7 @@ public class SVGCssContentTypeStrokeLineJoin extends SVGCssContentTypeBase<Strok
 
     @Override
     protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
+
         return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
     }
 

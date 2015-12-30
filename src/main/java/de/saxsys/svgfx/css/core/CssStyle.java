@@ -23,6 +23,7 @@ package de.saxsys.svgfx.css.core;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
+import javafx.util.Pair;
 import org.w3c.dom.DOMException;
 
 import java.util.Collections;
@@ -106,8 +107,7 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     /**
      * Contains all the properties provided by this style.
      */
-    private final Map<String, TContentType> properties;
-
+    protected final Map<String, TContentType> properties;
 
     //endregion
 
@@ -180,6 +180,48 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     //region Abstract
 
     /**
+     * Determines the content type from the given data.
+     *
+     * @param data data to be used.
+     *
+     * @return a new {@link Pair} containing the name of the property as the key and the content type as the value;
+     */
+    private Pair<String, TContentType> determineContentType(final String data) throws SVGException {
+        if (StringUtils.isNullOrEmpty(data)) {
+            throw new SVGException("Given data must not be null in order to create a property from it");
+        }
+
+        String trimmedData = data.trim();
+
+        int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
+
+        if (index == -1 || index >= trimmedData.length() - 1) {
+            throw new SVGException("Given data either does not provide a property separator or is to short");
+        }
+
+        String name = trimmedData.substring(0, index).trim();
+
+        TContentType content = createContentType(StringUtils.stripStringIndicators(name));
+
+        if (content != null) {
+
+            String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
+
+            try {
+                content.parseCssText(cssText);
+            } catch (Exception e) {
+                throw new SVGException(String.format("Could not parse %s for content type %s", cssText, content.getClass().getName()), e);
+            }
+        }
+
+        return new Pair<>(name, content);
+    }
+
+    //endregion
+
+    // region Private
+
+    /**
      * Creates at new {@link CssContentTypeBase} based on the given name.
      *
      * @param name name of the property
@@ -188,9 +230,9 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      */
     protected abstract TContentType createContentType(final String name);
 
-    //endregion
+    // endregion
 
-    // region Private
+    // region Public
 
     /**
      * Returns the {@link CssContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
@@ -202,10 +244,6 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     public final TContentType getCssContentType(final String name) {
         return properties.get(name);
     }
-
-    // endregion
-
-    // region Public
 
     /**
      * Determines if the given property in contain in he style.
@@ -232,9 +270,10 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     }
 
     /**
-     * Combines this {@link CssStyle} with the given {@link CssStyle}, overwriting existing properties and adding new ones.
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, new properties not present in this style will be added.
      *
-     * @param style the {@link CssStyle} which is be used, must not be null.
+     * @param <TContentTypeOther> the type of the {@link CssStyle} this style will be combined with
+     * @param style               the {@link CssStyle} which is be used, must not be null.
      *
      * @throws IllegalArgumentException if the given {@link CssStyle} is null.
      */
@@ -249,12 +288,16 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
         }
 
         for (Map.Entry<String, TContentTypeOther> entry : style.properties.entrySet()) {
-            properties.put(entry.getKey(), entry.getValue());
+            if (!properties.containsKey(entry.getKey())) {
+                properties.put(entry.getKey(), entry.getValue());
+            }
         }
     }
 
     /**
      * Consumes the given css text and set the style. the css text must follow the default rules of a css style.
+     *
+     * @param cssText the text that is to be consumed, must not be null or empty.
      */
     public final void parseCssText(final String cssText) throws DOMException {
 
@@ -310,20 +353,10 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
                     // we have found the end of a property so we consume if if possible and add it
                 } else if (character == Constants.PROPERTY_END) {
 
-                    String property = dataBuilder.toString();
+                    Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
 
-                    int index = property.indexOf(Constants.PROPERTY_SEPARATOR);
-
-                    if (index > -1 && index < property.length() - 1) {
-
-                        String name = property.substring(0, index).trim();
-
-                        TContentType content = createContentType(StringUtils.stripStringIndicators(name));
-
-                        if (content != null) {
-                            content.parseCssValue(StringUtils.stripStringIndicators(property.substring(index + 1).trim()));
-                            properties.put(name, content);
-                        }
+                    if (property.getValue() != null) {
+                        properties.put(property.getKey(), property.getValue());
                     }
 
                     dataBuilder.setLength(0);
@@ -331,6 +364,14 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
 
                     // at this point we have reached the end of the style and stop doing what ever we did
                 } else if (character == Constants.DECLARATION_BLOCK_END) {
+
+                    if (dataBuilder.toString().trim().length() > 0) {
+                        Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+
+                        if (property.getValue() != null) {
+                            properties.put(property.getKey(), property.getValue());
+                        }
+                    }
 
                     isInsideDeclarationBlock = false;
                     break;
@@ -345,7 +386,7 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
         }
 
         if (isInsideDeclarationBlock) {
-            throw new SVGException("css text not properly closed");
+            throw new SVGException("Css text not properly closed");
         }
     }
 

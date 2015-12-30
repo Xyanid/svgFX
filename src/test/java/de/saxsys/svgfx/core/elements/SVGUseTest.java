@@ -22,10 +22,10 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -44,7 +44,6 @@ public final class SVGUseTest {
      * Ensures that a attributes used by the use node are applied to the referenced result
      */
     @Test
-    @Ignore(value = "Since the use element only has x and y it might be better to implement it as a group instead of it creating the type of the referenced element")
     public void ensureAttributesAreAppliedToTheReferencedElement() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
@@ -60,7 +59,7 @@ public final class SVGUseTest {
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 
-        Mockito.when(attributes.getLength()).thenReturn(5);
+        Mockito.when(attributes.getLength()).thenReturn(3);
 
         Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.XLinkAttribute.XLINK_HREF.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#test");
@@ -68,27 +67,25 @@ public final class SVGUseTest {
         Mockito.when(attributes.getValue(1)).thenReturn("1");
         Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.POSITION_Y.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("2");
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.WIDTH.getName());
-        Mockito.when(attributes.getValue(3)).thenReturn("3");
-        Mockito.when(attributes.getQName(4)).thenReturn(SVGElementBase.CoreAttribute.HEIGHT.getName());
-        Mockito.when(attributes.getValue(4)).thenReturn("4");
 
         SVGUse use = new SVGUse("use", attributes, null, provider);
 
         Assert.assertEquals("#test", use.getAttribute(SVGElementBase.XLinkAttribute.XLINK_HREF.getName()));
         Assert.assertEquals("1", use.getAttribute(SVGElementBase.CoreAttribute.POSITION_X.getName()));
         Assert.assertEquals("2", use.getAttribute(SVGElementBase.CoreAttribute.POSITION_Y.getName()));
-        Assert.assertEquals("3", use.getAttribute(SVGElementBase.CoreAttribute.WIDTH.getName()));
-        Assert.assertEquals("4", use.getAttribute(SVGElementBase.CoreAttribute.HEIGHT.getName()));
 
         Assert.assertNotNull(use.getResult());
-        Assert.assertEquals(Circle.class, use.getResult().getClass());
+        Assert.assertEquals(Group.class, use.getResult().getClass());
+        Assert.assertEquals(1.0d, use.getResult().getLayoutX(), 0.01d);
+        Assert.assertEquals(2.0d, use.getResult().getLayoutY(), 0.01d);
 
-        Circle circle = (Circle) use.getResult();
+        Group group = use.getResult();
+
+        Circle circle = (Circle) group.getChildren().get(0);
 
         Assert.assertEquals(25.0d, circle.getRadius(), 0.01d);
-        Assert.assertEquals(1.0d, circle.getCenterX(), 0.01d);
-        Assert.assertEquals(2.0d, circle.getCenterY(), 0.01d);
+        Assert.assertEquals(0.0d, circle.getCenterX(), 0.01d);
+        Assert.assertEquals(0.0d, circle.getCenterY(), 0.01d);
     }
 
     /**
@@ -121,7 +118,7 @@ public final class SVGUseTest {
 
         SVGUse use = new SVGUse("use", attributes, null, provider);
 
-        Assert.assertEquals(Color.BLACK, ((Circle) use.getResult()).getFill());
+        Assert.assertEquals(Color.BLACK, ((Circle) use.getResult().getChildren().get(0)).getFill());
     }
 
     /**
@@ -151,10 +148,10 @@ public final class SVGUseTest {
         SVGUse use2 = new SVGUse("use", attributes, null, provider);
 
         Assert.assertNotNull(use1.getResult());
-        Assert.assertEquals(Circle.class, use1.getResult().getClass());
+        Assert.assertEquals(Circle.class, use1.getResult().getChildren().get(0).getClass());
 
         Assert.assertNotNull(use2.getResult());
-        Assert.assertEquals(Circle.class, use2.getResult().getClass());
+        Assert.assertEquals(Circle.class, use2.getResult().getChildren().get(0).getClass());
 
         Assert.assertNotEquals(use1.getResult(), use2.getResult());
     }

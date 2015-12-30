@@ -90,7 +90,7 @@ public final class SVGPolylineTest {
             Assert.fail();
         } catch (SVGException e) {
             Assert.assertTrue(e.getMessage().contains(SVGPolyline.class.getName()));
-            Assert.assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+            Assert.assertEquals(SVGException.class, e.getCause().getClass());
         }
     }
 

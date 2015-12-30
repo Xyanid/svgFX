@@ -32,6 +32,15 @@ import java.util.List;
  */
 public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGCssContentTypeLength[], Void> {
 
+    // region Static
+
+    /**
+     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
+     */
+    public static final SVGCssContentTypeLength[] DEFAULT_VALUE = new SVGCssContentTypeLength[]{};
+
+    // endregion
+
     // region Fields
 
     /**
@@ -45,9 +54,11 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
 
     /**
      * Creates new instance with a default value of an empty array.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeDashArray(SVGDataProvider dataProvider) {
-        super(new SVGCssContentTypeLength[]{}, dataProvider);
+    public SVGCssContentTypeStrokeDashArray(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
@@ -80,7 +91,7 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
 
         for (int i = 0; i < values.length; i++) {
             array[i] = new SVGCssContentTypeLength(getDataProvider());
-            array[i].parseCssValue(values[i].trim());
+            array[i].parseCssText(values[i].trim());
             dashValues.add(array[i].getValue());
         }
 

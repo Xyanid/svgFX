@@ -210,4 +210,23 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
     public abstract void endProcessing() throws SAXException;
 
     //endregion
+
+    // region Override Object
+
+    @Override
+    public String toString() {
+
+        StringBuilder data = new StringBuilder();
+
+        data.append("<").append(name);
+
+        attributes.entrySet().stream().forEach(attribute -> data.append(String.format(" %s:%s", attribute.getKey(), attribute.getValue())));
+
+        data.append(">");
+
+        return data.toString();
+    }
+
+
+    // endregion
 }

@@ -42,7 +42,7 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     /**
      * Determines the default color to use for a {@link SVGCssContentTypePaint}.
      */
-    public static final Paint DEFAULT_VALUE = Color.TRANSPARENT;
+    public static final Paint DEFAULT_VALUE = Color.BLACK;
 
     // endregion
 
@@ -58,9 +58,11 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link Color#TRANSPARENT}.
+     * Creates new instance with a default value of {@link Color#BLACK}.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypePaint(SVGDataProvider dataProvider) {
+    public SVGCssContentTypePaint(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

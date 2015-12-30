@@ -20,11 +20,14 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,12 +44,17 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     /**
      * Determines the delimiter that separated a pair of points.
      */
-    private static String POINTS_DELIMITER = " ";
+    private static char POINTS_DELIMITER = ' ';
 
     /**
      * Determines the delimiter that separated a the positions of a point.
      */
-    private static String POSITIONS_DELIMITER = ",";
+    private static char POSITION_DELIMITER = ',';
+
+    /**
+     * Determines the delimiter that separated a the positions of a point.
+     */
+    private static String POSITION_DELIMITER_STRING = String.valueOf(POSITION_DELIMITER);
 
     // endregion
 
@@ -73,9 +81,10 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      *
      * @return the list of points contained by the attributes
      *
+     * @throws SVGException             if any of the points in the corresponding attribute does not provide x and y position.
      * @throws IllegalArgumentException if any of the points in the corresponding attribute does not provide x and y position.
      */
-    public final List<Double> getPoints() throws IllegalArgumentException {
+    public final List<Double> getPoints() throws SVGException, IllegalArgumentException {
         List<Double> actualPoints = new ArrayList<>();
 
         String points = getAttribute(CoreAttribute.POINTS.getName());
@@ -84,15 +93,31 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
             return actualPoints;
         }
 
-        for (String pointsSplit : points.trim().split(POINTS_DELIMITER)) {
-            String[] pointSplit = pointsSplit.split(POSITIONS_DELIMITER);
+        List<String> values = SVGUtils.split(points, Collections.singletonList(POINTS_DELIMITER), (currentData, index) -> {
+
+            // check if the required delimiter is present and that the last character is not a delimiter so the string can be split
+            boolean containsDelimiter = currentData.contains(POSITION_DELIMITER_STRING);
+            if (containsDelimiter && currentData.charAt(currentData.length() - 1) != POSITION_DELIMITER) {
+                return true;
+            }
+            // in this special case we have two non delimiters characters separated by a split delimiter which is invalid e.G. "1,2 3 4,5"
+            else if (index == points.length() - 1 || points.charAt(index + 1) != POINTS_DELIMITER) {
+                throw new SVGException("Invalid points format");
+            }
+
+            return false;
+        });
+
+        for (String pointsSplit : values) {
+
+            String[] pointSplit = pointsSplit.split(POSITION_DELIMITER_STRING);
 
             if (pointSplit.length != 2) {
                 throw new IllegalArgumentException("At least one point does not provide x and y position");
             }
 
-            actualPoints.add(Double.parseDouble(pointSplit[0]));
-            actualPoints.add(Double.parseDouble(pointSplit[1]));
+            actualPoints.add(Double.parseDouble(pointSplit[0].trim()));
+            actualPoints.add(Double.parseDouble(pointSplit[1].trim()));
         }
 
         return actualPoints;

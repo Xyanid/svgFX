@@ -31,7 +31,7 @@ import java.util.EnumSet;
  */
 public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCssContentTypeLength.Unit> {
 
-    // region Enumerations
+    // region Static
 
     /**
      * Represents the unit which might be attached to a length value
@@ -117,13 +117,23 @@ public class SVGCssContentTypeLength extends SVGCssContentTypeBase<Double, SVGCs
 
     // endregion
 
+    // region Enumerations
+    /**
+     * Determines the default value for this {@link SVGCssContentTypeBase}.
+     */
+    public static final double DEFAULT_VALUE = 0.0d;
+
+    // endregion
+
     //region Constructor
 
     /**
      * Creates new instance.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeLength(SVGDataProvider dataProvider) {
-        super(0.0d, dataProvider);
+    public SVGCssContentTypeLength(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion

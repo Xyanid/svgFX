@@ -72,22 +72,17 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     //region SVGElementBase
 
     /**
-     * @inheritDoc
-     *
+     * {@inheritDoc}
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResult(SVGElementBase inheritanceResolver) {
+    protected final Set<SVGCssStyle> createResult(final SVGCssStyle style) {
 
         Set<SVGCssStyle> result = new HashSet<>();
 
         if (getAttribute(CoreAttribute.TYPE.getName()) == null || getAttribute(CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
 
             StringBuilder builder = new StringBuilder();
-
-            long lastDeclarationEnd = -1;
-
-            long counter = 0;
 
             for (int i = 0; i < characters.length(); i++) {
 
@@ -97,24 +92,14 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
                 if (character == Constants.DECLARATION_BLOCK_END) {
 
-                    if (lastDeclarationEnd > -1 && lastDeclarationEnd < counter) {
+                    SVGCssStyle styleDef = new SVGCssStyle(getDataProvider());
 
-                        SVGCssStyle style = new SVGCssStyle(getDataProvider());
+                    styleDef.parseCssText(builder.toString());
 
-                        style.parseCssText(builder.toString());
+                    result.add(styleDef);
 
-                        result.add(style);
-
-                        lastDeclarationEnd = -1;
-
-                        builder.setLength(0);
-                    }
-
-                } else if (character == Constants.PROPERTY_END) {
-                    lastDeclarationEnd = counter;
+                    builder.setLength(0);
                 }
-
-                counter++;
             }
         }
 
@@ -122,12 +107,12 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(Set<SVGCssStyle> cssStyles, SVGElementBase inheritanceResolver) throws SVGException {
+    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final SVGCssStyle style) throws SVGException {
 
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      * Saves all characters in a StringBuilder to use them later
      */
     @Override

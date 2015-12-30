@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -56,7 +57,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     //region Override SVGGradientBase
 
     @Override
-    protected final RadialGradient createResult(SVGElementBase inheritanceResolver) {
+    protected final RadialGradient createResult(final SVGCssStyle style) {
 
         List<Stop> stops = getStops();
 

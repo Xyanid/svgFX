@@ -31,8 +31,10 @@ public class SVGCssContentTypeString extends SVGCssContentTypeBase<String, Void>
 
     /**
      * Creates new instance.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeString(SVGDataProvider dataProvider) {
+    public SVGCssContentTypeString(final SVGDataProvider dataProvider) {
         super(null, dataProvider);
     }
 

@@ -20,6 +20,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.mocks.SVGPolyBaseMock;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,6 +59,30 @@ public final class SVGPolyBaseTest {
     }
 
     /**
+     * Ensures multiple spaces in a row will cause no problem.
+     */
+    @Test
+    public void ensureMultipleSpacesCaseNotProblems() {
+
+        Attributes attributes = Mockito.mock(Attributes.class);
+
+        Mockito.when(attributes.getLength()).thenReturn(1);
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("60,20    100,40    100,80");
+
+        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+
+        Assert.assertEquals(6, polyBase.getPoints().size());
+        Assert.assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
+        Assert.assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
+        Assert.assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
+        Assert.assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
+        Assert.assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
+        Assert.assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+    }
+
+    /**
      * Ensures there are no points if the {@link de.saxsys.svgfx.core.elements.SVGElementBase.CoreAttribute#POINTS} is missing.
      */
     @Test
@@ -75,8 +100,8 @@ public final class SVGPolyBaseTest {
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void ensureExceptionIsThrownWhenAPointDoesNotProvideXAndY() {
+    @Test
+    public void ensureSVGExceptionIsThrownWhenAPointDoesNotProvideXAndY() {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -87,7 +112,22 @@ public final class SVGPolyBaseTest {
 
         SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
 
-        polyBase.getPoints();
+        try {
+            polyBase.getPoints();
+            Assert.fail("Expected SVGException to be thrown");
+        } catch (SVGException ignore) {
+        }
+
+        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,10 100");
+
+        polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+
+        try {
+            polyBase.getPoints();
+            Assert.fail("Expected SVGException to be thrown");
+        } catch (SVGException ignore) {
+        }
     }
 
     /**

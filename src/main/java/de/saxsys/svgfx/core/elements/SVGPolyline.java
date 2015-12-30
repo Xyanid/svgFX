@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import org.xml.sax.Attributes;
 
 /**
@@ -50,7 +51,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final javafx.scene.shape.Polyline createResult(SVGElementBase inheritanceResolver) {
+    protected final javafx.scene.shape.Polyline createResult(final SVGCssStyle style) {
 
         return new javafx.scene.shape.Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

@@ -21,13 +21,16 @@ package de.saxsys.svgfx.core.elements.mocks;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
 import javafx.scene.paint.Color;
 import org.xml.sax.Attributes;
 
 /**
- * Created by Xyanid on 26.12.2015.
+ * Mock class for {@link SVGGradientBase}.
+ *
+ * @author Xyanid on 26.12.2015.
  */
 public class SVGGradientBaseMock extends SVGGradientBase<Color> {
 
@@ -46,7 +49,7 @@ public class SVGGradientBaseMock extends SVGGradientBase<Color> {
     }
 
     @Override
-    protected Color createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected Color createResult(final SVGCssStyle style) throws SVGException {
         return null;
     }
 }

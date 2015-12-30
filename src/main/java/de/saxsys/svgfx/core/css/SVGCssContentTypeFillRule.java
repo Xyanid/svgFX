@@ -31,13 +31,24 @@ import javafx.util.Pair;
  */
 public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, Void> {
 
+    // region Static
+
+    /**
+     * Determines the default value for this {@link SVGCssContentTypeBase}.
+     */
+    public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
+
+    // endregion
+
     //region Constructor
 
     /**
      * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeFillRule(SVGDataProvider dataProvider) {
-        super(FillRule.EVEN_ODD, dataProvider);
+    public SVGCssContentTypeFillRule(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
@@ -47,7 +58,7 @@ public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, V
     @Override
     protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {
 
-        FillRule rule = FillRule.EVEN_ODD;
+        FillRule rule = DEFAULT_VALUE;
 
         for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
             if (mapping.getName().equals(cssText)) {

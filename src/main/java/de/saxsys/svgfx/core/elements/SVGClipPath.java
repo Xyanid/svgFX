@@ -21,11 +21,12 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 /**
  * This class represents a clipPath element from svg @author Xyanid on 25.10.2015.
@@ -52,7 +53,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
     // region SVGElementBase
 
     @Override
-    protected final Group createResult(SVGElementBase inheritanceResolver) throws SVGException {
+    protected final Group createResult(final SVGCssStyle style) throws SVGException {
 
         Group result = new Group();
 
@@ -60,8 +61,15 @@ public class SVGClipPath extends SVGNodeBase<Group> {
 
         for (ElementBase child : getChildren()) {
             try {
-                result.getChildren().add((Node) child.getResult());
-            } catch (SAXException e) {
+
+                SVGElementBase actualChild = (SVGElementBase) child;
+
+                SVGCssStyle childStyle = actualChild.getCssStyle();
+
+                SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
+
+                result.getChildren().add((Node) actualChild.getResult(childStyle));
+            } catch (SVGException e) {
                 throw new SVGException(String.format("Could not get result from child %d", counter), e);
             }
 

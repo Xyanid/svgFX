@@ -29,25 +29,35 @@ import javafx.util.Pair;
  */
 public class SVGCssContentTypeDouble extends SVGCssContentTypeBase<Double, Void> {
 
+    // region Static
+
+    /**
+     * Determines the default value for this {@link SVGCssContentTypeBase}.
+     */
+    public static final double DEFAULT_VALUE = 0.0d;
+
+    // endregion
+
     //region Constructor
 
     /**
      * Creates new instance.
+     *
+     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeDouble(SVGDataProvider dataProvider) {
+    public SVGCssContentTypeDouble(final SVGDataProvider dataProvider) {
         super(0.0d, dataProvider);
     }
 
     //endregion
 
-    //region Override CssContentTypeBase
+    //region Override SVGCssContentTypeBase
 
     /**
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeDouble}
      */
     @Override
     protected Pair<Double, Void> getValueAndUnit(final String cssText) {
-
         return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
     }
 
