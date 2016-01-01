@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -149,8 +148,8 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      *
      * @return the {@link CssStyle#properties} as an unmodifiable list.
      */
-    public final Map<String, TContentType> getUnmodifiableProperties() {
-        return Collections.unmodifiableMap(properties);
+    public final Map<String, TContentType> getProperties() {
+        return properties;
     }
 
     /**

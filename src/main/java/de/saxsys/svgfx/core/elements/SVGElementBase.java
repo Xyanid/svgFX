@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -301,34 +301,84 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
 
     // endregion
 
-    // region Public
+    // region Private
 
-    //    /**
-    //     * Encapsulate a call to {@link #getCssStyleAndResolveInheritance(SVGElementBase)} using the elements parent as the inheritanceResolver.
-    //     *
-    //     * @return the {@link SVGCssStyle} of this element or null if no style can be determined.
-    //     */
-    //    public final SVGCssStyle getCssStyleAndResolveInheritance() {
-    //        return getCssStyleAndResolveInheritance(getParent());
-    //    }
+    /**
+     * This method should be used before a call to {@link #createAndInitializeResult(SVGCssStyle)}, {@link #createResult(SVGCssStyle)} or {@link #initializeResult(Object, SVGCssStyle)} is made.
+     * It will ensure that messy svg files, which contain elements that reference themself, will not cause StackOverflowExceptions.
+     *
+     * @param style the {@link SVGCssStyle} that should be cleaned.
+     */
+    private void cleanStyleBeforeUsing(SVGCssStyle style) {
 
-    //    /**
-    //     * Encapsulate a call to {@link #getCssStyle()} and {@link SVGUtils#resolveInheritance(SVGCssStyle, SVGElementBase)}, making sure that the inheritance of the style is resolved
-    //     *
-    //     * @param inheritanceResolver the {@link SVGElementBase} which is used when inherited style attributes are to be resolved
-    //     *
-    //     * @return the {@link SVGCssStyle} of this element.
-    //     */
+        // since the style is used here we need to ensure its not possible for an element to reference itself
+        String id = getAttribute(CoreAttribute.ID.getName());
+        if (StringUtils.isNotNullOrEmpty(id)) {
+
+            SVGCssContentTypeString clipPath = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
+            if (clipPath != null) {
+
+                String clipPathReference = SVGUtils.stripIRIIdentifiers(clipPath.getValue());
+                if (StringUtils.isNotNullOrEmpty(clipPathReference) && clipPathReference.equals(id)) {
+                    style.getProperties().remove(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+                }
+            }
+        }
+    }
+
+    // endregion
+
+    // region Abstract
+
+    /**
+     * Must be overwritten in the actual implementation to create a new result for this element based on the
+     * information available.
+     *
+     * @param style the element to use when data is needed.
+     *
+     * @return a new instance of the result or null of no result was created
+     *
+     * @throws SVGException will be thrown when an error during creation occurs
+     */
+    protected abstract TResult createResult(final SVGCssStyle style) throws SVGException;
+
+    /**
+     * This method will be called in the {@link #createAndInitializeResult(SVGCssStyle)} and allows to modify the result such as applying a style or transformations.
+     * The given inheritanceResolver should be used to retrieve such data, this simply is needed because some elements can actually be referenced e.g. {@link SVGUse} and their actual parent is not
+     * the one from which the inherited style attributes can be retrieved.
+     *
+     * @param result the result which should be modified.
+     * @param style  the {@link SVGCssStyle} to use when data is needed.
+     *
+     * @throws SVGException will be thrown when an error during modification
+     */
+    protected abstract void initializeResult(final TResult result, final SVGCssStyle style) throws SVGException;
+
+    // endregion
+
+    // region Public Related to Styling
 
     /**
      * Gets the elements own {@link SVGCssStyle} and combines it with the {@link SVGCssStyle} or the parent if there one.
+     *
+     * @return the {@link SVGCssStyle} if this element combined and resolved with the parents {@link SVGCssStyle} if a parents exits.
      */
     public final SVGCssStyle getCssStyleAndResolveInheritance() {
+        return getCssStyleAndResolveInheritance(getParent() != null ? getParent().getCssStyleAndResolveInheritance() : new SVGCssStyle(getDataProvider()));
+    }
+
+    /**
+     * Gets the elements own {@link SVGCssStyle} and combines it with the givne {@link SVGCssStyle}
+     *
+     * @param otherStyle the other {@link SVGCssStyle} the own style shall be combined with, can be null in which case {@link SVGUtils#combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)}
+     *                   is not invoked, hence it will only return its own style.
+     *
+     * @return the {@link SVGCssStyle} if this element combined and resolved with the given {@link SVGCssStyle}.
+     */
+    public final SVGCssStyle getCssStyleAndResolveInheritance(SVGCssStyle otherStyle) {
         SVGCssStyle style = getCssStyle();
 
-        if (getParent() != null) {
-            SVGUtils.combineStylesAndResolveInheritance(style, getParent().getCssStyleAndResolveInheritance());
-        }
+        SVGUtils.combineStylesAndResolveInheritance(style, otherStyle);
 
         return style;
     }
@@ -502,30 +552,6 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Must be overwritten in the actual implementation to create a new result for this element based on the
-     * information available.
-     *
-     * @param style the element to use when data is needed.
-     *
-     * @return a new instance of the result or null of no result was created
-     *
-     * @throws SVGException will be thrown when an error during creation occurs
-     */
-    protected abstract TResult createResult(final SVGCssStyle style) throws SVGException;
-
-    /**
-     * This method will be called in the {@link #createAndInitializeResult(SVGCssStyle)} and allows to modify the result such as applying a style or transformations.
-     * The given inheritanceResolver should be used to retrieve such data, this simply is needed because some elements can actually be referenced e.g. {@link SVGUse} and their actual parent is not
-     * the one from which the inherited style attributes can be retrieved.
-     *
-     * @param result the result which should be modified.
-     * @param style  the {@link SVGCssStyle} to use when data is needed.
-     *
-     * @throws SVGException will be thrown when an error during modification
-     */
-    protected abstract void initializeResult(final TResult result, final SVGCssStyle style) throws SVGException;
-
-    /**
      * Returns a node which represents the clip path to be applied to this element.
      *
      * @param style the {@link SVGCssStyle} which is used when inherited style attributes are to be resolved
@@ -539,21 +565,20 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
 
         SVGCssContentTypeString referenceIRI = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
         if (referenceIRI != null && StringUtils.isNotNullOrEmpty(referenceIRI.getValue())) {
-            // it might happen that we a clip path has a style that contains a clip path that is the SAME clip path, in this case we would get a stackoverflow here, so we prevent that
-            SVGClipPath element = SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class);
-            if (element != null && this != element) {
-
-                return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class).getResult();
-            }
+            return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class).createAndInitializeResult();
         }
 
         return null;
     }
 
+    // endregion
+
+    // region Public related to Creating Results
+
     /**
-     * Gets the result if its was not yet created using the given parentStyle to create the styling.
+     * Gets the result if its was not yet created using the given {@link SVGCssStyle} to create the styling.
      *
-     * @param style the parentStyle which will be used in order to get data for styling.
+     * @param style the {@link SVGCssStyle} which will be used in order to get data for styling.
      *
      * @return the result of this element.
      *
@@ -567,11 +592,6 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
 
         return result;
     }
-
-
-    //endregion
-
-    //region Abstract
 
     /**
      * Creates a result represented by this element.
@@ -588,19 +608,21 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     /**
      * Creates a result represented by this element and uses the given supplier in order to fetch data needed to initialize the result
      *
-     * @param parentStyle the style to use when data is needed.
+     * @param style the {@link SVGCssStyle} to use when data is needed.
      *
      * @return the result produced by this element.
      *
      * @throws SVGException thrown when an exception during creation occurs.
      */
-    public final TResult createAndInitializeResult(final SVGCssStyle parentStyle) throws SVGException {
+    public final TResult createAndInitializeResult(final SVGCssStyle style) throws SVGException {
 
         TResult result;
 
+        cleanStyleBeforeUsing(style);
+
         try {
-            result = createResult(parentStyle);
-            initializeResult(result, parentStyle);
+            result = createResult(style);
+            initializeResult(result, style);
         } catch (Exception e) {
             throw new SVGException(String.format("Creation of element %s failed.\nOriginal element is %s ", getClass().getName(), toString()), e);
         }

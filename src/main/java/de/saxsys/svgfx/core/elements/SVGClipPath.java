@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -64,11 +63,9 @@ public class SVGClipPath extends SVGNodeBase<Group> {
 
                 SVGElementBase actualChild = (SVGElementBase) child;
 
-                SVGCssStyle childStyle = actualChild.getCssStyle();
+                SVGCssStyle childStyle = actualChild.getCssStyleAndResolveInheritance(style);
 
-                SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
-
-                result.getChildren().add((Node) actualChild.getResult(childStyle));
+                result.getChildren().add((Node) actualChild.createAndInitializeResult(childStyle));
             } catch (SVGException e) {
                 throw new SVGException(String.format("Could not get result from child %d", counter), e);
             }

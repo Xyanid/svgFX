@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public final class SVGCssStyleTest {
         style.parseCssText(".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:10;}");
 
         Assert.assertEquals("st0", style.getName());
-        Assert.assertEquals(4, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(4, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
@@ -78,7 +78,7 @@ public final class SVGCssStyleTest {
         style.parseCssText(".st0{fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:10;sumthing:else}");
 
         Assert.assertEquals("st0", style.getName());
-        Assert.assertEquals(5, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(5, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
@@ -139,7 +139,7 @@ public final class SVGCssStyleTest {
 
         style.parseCssText(cssText.toString());
 
-        Assert.assertEquals(style.getUnmodifiableProperties().size(), SVGCssStyle.PresentationAttribute.values().length);
+        Assert.assertEquals(style.getProperties().size(), SVGCssStyle.PresentationAttribute.values().length);
 
         for (SVGCssStyle.PresentationAttribute attribute : SVGCssStyle.PresentationAttribute.values()) {
 
@@ -181,7 +181,7 @@ public final class SVGCssStyleTest {
         style.parseCssText(".st0{fill:none;stroke:#808080;/*this is a comment*/stroke-width:3;stroke-miterlimit:10;}");
 
         Assert.assertEquals("st0", style.getName());
-        Assert.assertEquals(4, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(4, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
@@ -202,7 +202,7 @@ public final class SVGCssStyleTest {
         style.parseCssText(".st0{fill:none;stroke:#080808;/*{\"this is ;:a string\";:}*/stroke-width:4;stroke-miterlimit:11;}");
 
         Assert.assertEquals("st0", style.getName());
-        Assert.assertEquals(4, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(4, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
@@ -233,7 +233,7 @@ public final class SVGCssStyleTest {
         style.parseCssText(".st0{fill:none;stroke:\"#808080\";stroke-width:3;stroke-miterlimit:10;}");
 
         Assert.assertEquals("st0", style.getName());
-        Assert.assertEquals(4, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(4, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
@@ -254,7 +254,7 @@ public final class SVGCssStyleTest {
         style.parseCssText(".st0{fill:none;clip-rule:\";{ar;asd:j}:sda;asd:\";stroke-width:4;stroke-miterlimit:12;}");
 
         Assert.assertEquals("st0", style.getName());
-        Assert.assertEquals(4, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(4, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);
@@ -289,7 +289,7 @@ public final class SVGCssStyleTest {
 
         style.combineWithStyle(otherStyle);
 
-        Assert.assertEquals(5, style.getUnmodifiableProperties().size());
+        Assert.assertEquals(5, style.getProperties().size());
 
         Assert.assertNotNull(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()).getClass(), SVGCssContentTypePaint.class);

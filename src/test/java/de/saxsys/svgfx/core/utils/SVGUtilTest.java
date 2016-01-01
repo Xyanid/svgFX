@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -206,6 +206,41 @@ public final class SVGUtilTest {
         Assert.assertEquals(2, result.size());
         Assert.assertEquals("1,2", result.get(0));
         Assert.assertEquals("3,4", result.get(1));
+    }
+
+    /**
+     * Ensures that {@link SVGUtils#stripIRIIdentifiers(String)} is able to resolve the url as expected.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureStripIRIExpectedExceptions() {
+
+        SVGUtils.stripIRIIdentifiers(null);
+    }
+
+    /**
+     * Ensures that {@link SVGUtils#stripIRIIdentifiers(String)} is able to strip a string from its iri identifiers.
+     */
+    @Test
+    public void ensureSplitIRIWillStripStringFromIRIIdentifiers() {
+
+        Assert.assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_IDENTIFIER + "test)"));
+
+        Assert.assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_FRAGMENT_IDENTIFIER + "test"));
+    }
+
+    /**
+     * Ensures that {@link SVGUtils#stripIRIIdentifiers(String)} is able to strip a string from its iri identifiers.
+     */
+    @Test
+    public void ensureSplitIRIWillReturnNullIfIRIIdentifiersCanNotBeStriped() {
+
+        Assert.assertNull(SVGUtils.stripIRIIdentifiers("test)"));
+
+        Assert.assertNull(SVGUtils.stripIRIIdentifiers("(#test"));
+
+        Assert.assertNull(SVGUtils.stripIRIIdentifiers("url(#"));
+
+        Assert.assertNull(SVGUtils.stripIRIIdentifiers("#"));
     }
 
     /**

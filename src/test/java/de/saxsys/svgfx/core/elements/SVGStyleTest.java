@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public final class SVGStyleTest {
         SVGCssStyle result = style.getResult().iterator().next();
 
         Assert.assertEquals("circle", result.getName());
-        Assert.assertEquals(3, result.getUnmodifiableProperties().size());
+        Assert.assertEquals(3, result.getProperties().size());
         Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(Color.ORANGE, result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
         Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
@@ -92,7 +92,7 @@ public final class SVGStyleTest {
         SVGCssStyle result = style.getResult().iterator().next();
 
         Assert.assertEquals("circle", result.getName());
-        Assert.assertEquals(3, result.getUnmodifiableProperties().size());
+        Assert.assertEquals(3, result.getProperties().size());
         Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
         Assert.assertEquals(Color.ORANGE, result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
         Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
@@ -127,7 +127,7 @@ public final class SVGStyleTest {
 
 
         for (SVGCssStyle result : style.getResult()) {
-            Assert.assertEquals(1, result.getUnmodifiableProperties().size());
+            Assert.assertEquals(1, result.getProperties().size());
 
             switch (result.getName()) {
                 case "st1":

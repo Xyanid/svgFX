@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -88,6 +88,55 @@ public final class SVGUtils {
 
     // region Constructor
 
+    private SVGUtils() {
+    }
+
+    // endregion
+
+    // region Methods misc
+
+    /**
+     * Strips the given {@link String} from the IRI identifiers if any.
+     *
+     * @param data the {@link String} to be stripped, must not be null or empty.
+     *
+     * @return the data striped of its IRI identifiers or null the string does not contain any IRI identifiers.
+     *
+     * @throws IllegalArgumentException if data is null or empty.
+     */
+    public static String stripIRIIdentifiers(final String data) throws IllegalArgumentException {
+
+        if (StringUtils.isNullOrEmpty(data)) {
+            throw new IllegalArgumentException("given data must not be null or empty");
+        }
+
+        // initially we assume that the IRI_IDENTIFIER was used
+        int dataLengthReduction = 1;
+        int identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length();
+        int index = -1;
+        if (data.length() > de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length() && data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
+            index = de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length();
+        }
+
+        if (index == -1) {
+            dataLengthReduction = 0;
+            identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length();
+            if (data.length() > de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length() && data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER)) {
+                index = de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length();
+            }
+        }
+
+        if (index > -1) {
+            return data.substring(identifierLength, data.length() - dataLengthReduction);
+        }
+
+        return null;
+    }
+
+    // endregion
+
+    // region Methods related to Styling
+
     /**
      * Returns the element which might be referenced by the given data. The data will need to start with the {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} in order to be
      * resolved as a reference.
@@ -113,41 +162,25 @@ public final class SVGUtils {
             throw new IllegalArgumentException("given clazz must not be null");
         }
 
-        if (StringUtils.isNullOrEmpty(data)) {
-            throw new IllegalArgumentException("given data must not be null or empty");
+        String reference = stripIRIIdentifiers(data);
+        if (StringUtils.isNullOrEmpty(reference)) {
+            throw new SVGException(String.format("Given data %s appears to not be a IRI reference.", data));
         }
 
-        TSVGElementBase result = null;
+        TSVGElementBase result;
 
-        // initially we assume that the IRI_IDENTIFIER was used
-        int dataLengthReduction = 1;
-        int identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length();
-        int index = data.indexOf(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER);
-
-        if (index == -1) {
-            dataLengthReduction = 0;
-            identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length();
-            index = data.indexOf(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER);
+        try {
+            result = dataProvider.getData(clazz, reference);
+        } catch (Exception e) {
+            throw new SVGException("An error occurred during the parsing of the reference", e);
         }
 
-        if (index > -1) {
-            try {
-                result = dataProvider.getData(clazz, data.substring(identifierLength, data.length() - dataLengthReduction));
-            } catch (Exception e) {
-                throw new SVGException("An error occurred during the parsing of the reference", e);
-            }
-
-            if (result == null) {
-                throw new SVGException(String.format("Given reference %s could not be resolved", data));
-            }
+        if (result == null) {
+            throw new SVGException(String.format("Given reference %s could not be resolved", data));
         }
 
         return result;
     }
-
-    // endregion
-
-    // region Methods related to Styling
 
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF)
@@ -170,7 +203,7 @@ public final class SVGUtils {
         // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
         SVGElementBase reference = null;
 
-        if (!data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER)) {
+        if (data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
             reference = resolveIRI(data, dataProvider, SVGElementBase.class);
         }
 
@@ -256,7 +289,7 @@ public final class SVGUtils {
         }
 
         if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName())) {
-            shape.setStrokeWidth(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue());
+            shape.setStrokeMiterLimit(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue());
         }
     }
 
@@ -280,7 +313,7 @@ public final class SVGUtils {
 
         style.combineWithStyle(otherStyle);
 
-        for (Map.Entry<String, SVGCssContentTypeBase> property : style.getUnmodifiableProperties().entrySet()) {
+        for (Map.Entry<String, SVGCssContentTypeBase> property : style.getProperties().entrySet()) {
             if (property.getValue().getIsInherited()) {
                 SVGCssContentTypeBase otherProperty = otherStyle.getCssContentType(property.getKey());
                 if (otherProperty != null && !otherProperty.getIsInherited()) {
@@ -539,10 +572,6 @@ public final class SVGUtils {
         }
 
         return result;
-    }
-
-    private SVGUtils() {
-
     }
 
     // endregion

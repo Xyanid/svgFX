@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -64,9 +63,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
 
             SVGElementBase actualChild = (SVGElementBase) child;
 
-            SVGCssStyle childStyle = actualChild.getCssStyle();
-
-            SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
+            SVGCssStyle childStyle = actualChild.getCssStyleAndResolveInheritance(style);
 
             Object childResult = actualChild.getResult(childStyle);
 

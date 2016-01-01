@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -111,6 +111,8 @@ public abstract class CssContentTypeBase<TValue, TUnit> {
      * Consumes the given css text setting the values in the process
      *
      * @param cssText text to consume.
+     *
+     * @throws Exception if there is any exception
      */
     public abstract void parseCssText(final String cssText) throws Exception;
 
