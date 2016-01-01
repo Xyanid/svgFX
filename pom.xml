@@ -2,7 +2,7 @@
 <!--
   ~
   ~ /*******************************************************************************
-  ~  * Copyright 2015 - 2015 Xyanid
+  ~  * Copyright 2015 - 2016 Xyanid
   ~  *
   ~  * Licensed under the Apache License, Version 2.0 (the "License");
   ~  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 
     <groupId>de.saxsys</groupId>
     <artifactId>svgfx</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.8.0</version>
 
     <name>svgfx</name>
     <description>Application Framework for svg with JavaFX.</description>
@@ -87,9 +87,13 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>svgfx</id>
+            <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
     <build>
