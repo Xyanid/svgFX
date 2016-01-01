@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * This group contains svg data provided by an SVG Parser. It allows for the svg data to be switched dynamically via
- * its styleable properties. Created by Xyanid on 09.11.2015.
+ * its styleable properties. @author Xyanid on 09.11.2015.
  */
 public class SVGGroup extends Group implements IStyleableAdditionProvider {
 
@@ -94,12 +94,13 @@ public class SVGGroup extends Group implements IStyleableAdditionProvider {
 
     // endregion
 
-    // region Override Group
+    // region Override SVGGroup
 
     /**
      * {@inheritDoc}
      */
-    @Override public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
         return getClassCssMetaData();
     }
 
@@ -110,7 +111,8 @@ public class SVGGroup extends Group implements IStyleableAdditionProvider {
     /**
      * {@inheritDoc}
      */
-    @Override public <TStyleableAddition extends StyleableAdditionBase> TStyleableAddition getSkinAddition(final Class<TStyleableAddition> clazz) {
+    @Override
+    public <TStyleableAddition extends StyleableAdditionBase> TStyleableAddition getSkinAddition(final Class<TStyleableAddition> clazz) {
         if (clazz.equals(SVGStyleableAddition.class)) {
             return clazz.cast(styleAddition);
         }

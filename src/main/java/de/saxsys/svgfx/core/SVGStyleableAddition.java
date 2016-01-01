@@ -1,3 +1,22 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.core;
 
 
@@ -60,7 +79,8 @@ class SVGStyleableAddition extends StyleableAdditionBase {
          * @param node, node which contains the property
          * @return true if he property can be set, otherwise false
          */
-        @Override public boolean isSettable(final Styleable node) {
+        @Override
+        public boolean isSettable(final Styleable node) {
             return !getStyleableAddition(node, SVGStyleableAddition.class).svgUrl.isBound();
         }
 
@@ -70,7 +90,8 @@ class SVGStyleableAddition extends StyleableAdditionBase {
          * @param node, node which contains the property
          * @return the property which is styleable
          */
-        @Override public StyleableProperty<String> getStyleableProperty(final Styleable node) {
+        @Override
+        public StyleableProperty<String> getStyleableProperty(final Styleable node) {
             return (StyleableProperty<String>) getStyleableAddition(node, SVGStyleableAddition.class).svgUrl;
         }
     };
@@ -85,7 +106,8 @@ class SVGStyleableAddition extends StyleableAdditionBase {
          * @param node, node which contains the property
          * @return true if he property can be set, otherwise false
          */
-        @Override public boolean isSettable(final Styleable node) {
+        @Override
+        public boolean isSettable(final Styleable node) {
             return !getStyleableAddition(node, SVGStyleableAddition.class).willCacheSvg.isBound();
         }
 
@@ -95,7 +117,8 @@ class SVGStyleableAddition extends StyleableAdditionBase {
          * @param node, node which contains the property
          * @return the property which is styleable
          */
-        @Override public StyleableProperty<Boolean> getStyleableProperty(final Styleable node) {
+        @Override
+        public StyleableProperty<Boolean> getStyleableProperty(final Styleable node) {
             return (StyleableProperty<Boolean>) getStyleableAddition(node, SVGStyleableAddition.class).willCacheSvgProperty();
         }
     };

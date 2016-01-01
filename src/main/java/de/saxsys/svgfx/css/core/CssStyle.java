@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -20,25 +20,93 @@
 package de.saxsys.svgfx.css.core;
 
 
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
- * Created by Xyanid on 27.10.2015.
+ *
+ * @param <TContentType> type of the properties of this style.
+ *
+ * @author Xyanid on 29.10.2015.
  */
-public class CssStyle extends CssBase implements CSSStyleRule {
+public abstract class CssStyle<TContentType extends CssContentTypeBase> {
+
+    // region Enumeration
+
+    /**
+     * Determines how a character read while parsing css text is processed.
+     */
+    private enum ParsingState {
+        /**
+         * Meaning the character will be parsed as correct data.
+         */
+        DATA,
+        /**
+         * Meaning the character will be parsed as a comment, meaning it will not be used.
+         */
+        COMMENT,
+        /**
+         * Meaning the character will be parsed as a string.
+         */
+        STRING
+    }
+
+    /**
+     * Determines what kind of selector is used in the style if any.
+     */
+    private enum Selector {
+        NONE("."),
+        CLASS("."),
+        ID("#");
+
+        // region Fields
+
+        private final String name;
+
+        // endregion
+
+        // region Constructor
+
+        Selector(final String name) {
+            this.name = name;
+        }
+
+        // endregion
+
+        // region Getter
+
+        public String getName() {
+            return name;
+        }
+
+        // endregion
+    }
+
+    // endregion
 
     //region Fields
 
-    private String selectorText;
+    /**
+     * Determines the selector of the style
+     */
+    private Selector selector;
 
-    private CssStyleDeclaration cssStyleDeclaration;
+    /**
+     * The name of the style excluding the class or id selector
+     */
+    private String name;
+
+    /**
+     * Contains all the properties provided by this style.
+     */
+    protected final Map<String, TContentType> properties;
 
     //endregion
 
@@ -49,176 +117,309 @@ public class CssStyle extends CssBase implements CSSStyleRule {
      */
     public CssStyle() {
         super();
+
+        properties = new HashMap<>();
     }
 
     /**
      * Creates a new instance.
      *
-     * @param isModifiable determins if this element is modifiable
+     * @param name the name to of this style.
      */
-    public CssStyle(final boolean isModifiable) {
-        super(isModifiable);
+    public CssStyle(final String name) {
+        this();
+
+        this.name = name;
     }
 
     //endregion
 
-    //region Public
+    //region Getter
 
     /**
-     * Returns the {@link CssStyle#cssStyleDeclaration}.
+     * @return the {@link #name}.
+     */
+    public final String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the {@link CssStyle#properties} as an unmodifiable list.
      *
-     * @return the {@link CssStyle#cssStyleDeclaration}
+     * @return the {@link CssStyle#properties} as an unmodifiable list.
      */
-    public CssStyleDeclaration getCssStyleDeclaration() {
-        return cssStyleDeclaration;
-    }
-
-    //endregion
-
-    //region Implement CSSRule
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override public short getType() {
-        return CSSRule.STYLE_RULE;
+    public final Map<String, TContentType> getProperties() {
+        return properties;
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the {@link #name} also parsing any selector the name might have.
+     *
+     * @param name the name to use which might contain the selector.
      */
-    @Override public CSSStyleSheet getParentStyleSheet() {
-        return null;
+    private void setNameAndSelector(final String name) {
+        if (StringUtils.isNotNullOrEmpty(name)) {
+            if (name.startsWith(Selector.ID.getName())) {
+                selector = Selector.ID;
+                this.name = name.replace(Selector.ID.getName(), "");
+            } else if (name.startsWith(Selector.CLASS.getName())) {
+                selector = Selector.CLASS;
+                this.name = name.replace(Selector.CLASS.getName(), "");
+            } else {
+                selector = Selector.NONE;
+                this.name = name;
+            }
+        } else {
+            this.name = name;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override public CSSRule getParentRule() {
-        return null;
-    }
+    // endregion
 
-    //endregion
-
-    //region Implement CSSStyleRule
+    //region Abstract
 
     /**
-     * {@inheritDoc}
+     * Determines the content type from the given data.
+     *
+     * @param data data to be used.
+     *
+     * @return a new {@link Pair} containing the name of the property as the key and the content type as the value;
      */
-    @Override public String getSelectorText() {
-        return selectorText;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override public void setSelectorText(final String selectorText) throws DOMException {
-        if (selectorText == null) {
-            throw new IllegalArgumentException("given selector must not ne null");
+    private Pair<String, TContentType> determineContentType(final String data) throws SVGException {
+        if (StringUtils.isNullOrEmpty(data)) {
+            throw new SVGException("Given data must not be null in order to create a property from it");
         }
 
-        this.selectorText = selectorText;
-    }
+        String trimmedData = data.trim();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override public CSSStyleDeclaration getStyle() {
-        return cssStyleDeclaration;
+        int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
+
+        if (index == -1 || index >= trimmedData.length() - 1) {
+            throw new SVGException("Given data either does not provide a property separator or is to short");
+        }
+
+        String name = trimmedData.substring(0, index).trim();
+
+        TContentType content = createContentType(StringUtils.stripStringIndicators(name));
+
+        if (content != null) {
+
+            String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
+
+            try {
+                content.parseCssText(cssText);
+            } catch (Exception e) {
+                throw new SVGException(String.format("Could not parse %s for content type %s", cssText, content.getClass().getName()), e);
+            }
+        }
+
+        return new Pair<>(name, content);
     }
 
     //endregion
 
-    //region Override CssBase
+    // region Private
 
     /**
-     * {@inheritDoc}
+     * Creates at new {@link CssContentTypeBase} based on the given name.
+     *
+     * @param name name of the property
+     *
+     * @return a new {@link CssContentTypeBase}.
      */
-    @Override public void consumeCssText(final String cssText) throws DOMException {
+    protected abstract TContentType createContentType(final String name);
 
-        StringBuilder builder = new StringBuilder();
+    // endregion
 
-        StringBuilder selector = new StringBuilder();
+    // region Public
 
-        StringBuilder cssStyleDeclaration = new StringBuilder();
+    /**
+     * Returns the {@link CssContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
+     *
+     * @param name name of the property
+     *
+     * @return the {@link CssContentTypeBase} in the given map or null.
+     */
+    public final TContentType getCssContentType(final String name) {
+        return properties.get(name);
+    }
 
-        Pair<Boolean, Boolean> result = filterCommentAndString(cssText, null, character -> {
-            builder.append(character);
+    /**
+     * Determines if the given property in contain in he style.
+     *
+     * @param name name of the property to look for.
+     *
+     * @return true if a property with the name exists otherwise false.
+     */
+    public final boolean hasCssContentType(String name) {
+        return properties.containsKey(name);
+    }
 
-            return false;
-        }, character -> {
-            if (character.equals(Constants.DECLARATION_BLOCK_START)) {
+    /**
+     * Returns the {@link CssContentTypeBase} in the {@link #properties} as the desired type using the provided key or null if no such content type exist.
+     *
+     * @param <TContent> type of the content desired.
+     * @param name       name of the property
+     * @param clazz      class of the type of the property used for casting.
+     *
+     * @return the {@link CssContentTypeBase} or null.
+     */
+    public final <TContent extends TContentType> TContent getCssContentType(final String name, final Class<TContent> clazz) {
+        return clazz.cast(properties.get(name));
+    }
 
-                selector.append(builder.toString().trim());
+    /**
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, new properties not present in this style will be added.
+     *
+     * @param <TContentTypeOther> the type of the {@link CssStyle} this style will be combined with
+     * @param style               the {@link CssStyle} which is be used, must not be null.
+     *
+     * @throws IllegalArgumentException if the given {@link CssStyle} is null.
+     */
+    public final <TContentTypeOther extends TContentType> void combineWithStyle(final CssStyle<TContentTypeOther> style) {
 
-                builder.setLength(0);
+        if (style == null) {
+            throw new IllegalArgumentException("given style must not be null");
+        }
 
-            } else if (character.equals(Constants.DECLARATION_BLOCK_END)) {
+        if (this == style) {
+            return;
+        }
 
-                builder.append(character);
+        for (Map.Entry<String, TContentTypeOther> entry : style.properties.entrySet()) {
+            if (!properties.containsKey(entry.getKey())) {
+                properties.put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 
-                cssStyleDeclaration.append(builder.toString());
+    /**
+     * Consumes the given css text and set the style. the css text must follow the default rules of a css style.
+     *
+     * @param cssText the text that is to be consumed, must not be null or empty.
+     */
+    public final void parseCssText(final String cssText) throws DOMException {
 
-                return true;
+        name = null;
+        selector = Selector.NONE;
+        properties.clear();
+
+        StringBuilder dataBuilder = new StringBuilder();
+
+        boolean isInsideDeclarationBlock = false;
+
+        ParsingState state = ParsingState.DATA;
+
+        for (int i = 0; i < cssText.length(); i++) {
+
+            char character = cssText.charAt(i);
+
+            // if we are in a comment do not need to do anything
+            if (state == ParsingState.COMMENT) {
+                // in this case we are at the end of the comment section
+                if (character == Constants.COMMENT_TAG && i > 0 && cssText.charAt(i - 1) == Constants.COMMENT_INDICATOR) {
+                    state = ParsingState.DATA;
+                }
+                continue;
             }
 
-            builder.append(character);
+            // we are reading a string indicator so we either enter the string or we are leaving it
+            if (character == Constants.STRING_INDICATOR) {
 
-            return false;
-        });
+                if (state != ParsingState.STRING) {
+                    state = ParsingState.STRING;
+                } else {
+                    state = ParsingState.DATA;
+                }
+            }
 
-        //comment was not properly closed
-        if (result.getKey()) {
-            throw new DOMException(DOMException.SYNTAX_ERR, "Given declaration block contains an unclosed comment.");
+            // if we are not within a string every character is consumed since they are part of the value
+            if (state != ParsingState.STRING) {
+
+                // in this case the comment section started
+                if (character == Constants.COMMENT_TAG && i < cssText.length() - 1 && cssText.charAt(i + 1) == Constants.COMMENT_INDICATOR) {
+                    state = ParsingState.COMMENT;
+                    continue;
+                }
+
+                // if the declaration block starts we set the current data as the name of the css style
+                if (character == Constants.DECLARATION_BLOCK_START) {
+                    setNameAndSelector(dataBuilder.toString().trim());
+                    isInsideDeclarationBlock = true;
+                    dataBuilder.setLength(0);
+                    continue;
+
+                    // we have found the end of a property so we consume if if possible and add it
+                } else if (character == Constants.PROPERTY_END) {
+
+                    Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+
+                    if (property.getValue() != null) {
+                        properties.put(property.getKey(), property.getValue());
+                    }
+
+                    dataBuilder.setLength(0);
+                    continue;
+
+                    // at this point we have reached the end of the style and stop doing what ever we did
+                } else if (character == Constants.DECLARATION_BLOCK_END) {
+
+                    if (dataBuilder.toString().trim().length() > 0) {
+                        Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+
+                        if (property.getValue() != null) {
+                            properties.put(property.getKey(), property.getValue());
+                        }
+                    }
+
+                    isInsideDeclarationBlock = false;
+                    break;
+                }
+
+                dataBuilder.append(character);
+            }
+            // we are inside a string in which case we only add data if we are inside the declaration block already
+            else if (isInsideDeclarationBlock) {
+                dataBuilder.append(character);
+            }
         }
 
-        //string was not properly closed
-        if (result.getValue()) {
-            throw new DOMException(DOMException.SYNTAX_ERR, "Given declaration block contains an unclosed string.");
+        if (isInsideDeclarationBlock) {
+            throw new SVGException("Css text not properly closed");
         }
-
-        setSelectorText(selector.toString());
-
-        if (this.cssStyleDeclaration == null) {
-            this.cssStyleDeclaration = new CssStyleDeclaration(this);
-        }
-
-        this.cssStyleDeclaration.setCssText(cssStyleDeclaration.toString());
     }
 
-    @Override public String createCssText() {
-        return String.format("%s%s", selectorText, getStyle() == null ? "" : getStyle().getCssText());
-    }
-
-    //endregion
+    // endregion
 
     //region Override Object
 
     /**
-     * Gets the HashCode this object, which is based on the selector.
+     * Gets the HashCode this object, which is based on the {@link #name}.
      *
-     * @return the HashCode of the selector of this object
+     * @return the HashCode of the {@link #name} of this object
      */
-    @Override public int hashCode() {
-        return selectorText == null ? super.hashCode() : selectorText.hashCode();
+    @Override
+    public int hashCode() {
+        return name == null ? super.hashCode() : name.hashCode();
     }
 
     /**
-     * Determines if the given object equals the provided object.
-     * This is based on the selector of object.
+     * Determines if the given object areEqualOrNull the provided object.
+     * This is based on the {@link #name} of object.
      *
      * @param obj, object to compare to
      *
      * @return true if the object is the same otherwise false
      */
-    @Override public boolean equals(final Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
 
         boolean result = super.equals(obj);
 
         if (!result && obj != null && CssStyle.class.isAssignableFrom(obj.getClass())) {
             CssStyle other = (CssStyle) obj;
 
-            result = selectorText == null ? other.getSelectorText() == null : selectorText.equals(other.getSelectorText());
+            result = name == null ? other.getName() == null : name.equals(other.getName());
         }
 
         return result;

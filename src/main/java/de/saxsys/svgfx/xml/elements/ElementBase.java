@@ -1,3 +1,22 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.xml.elements;
 
 
@@ -7,6 +26,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +37,8 @@ import java.util.Map;
  * @param <TDataProvider> the type of the {@link IDataProvider} to be used
  * @param <TResult>       the type of result provided by the element
  * @param <TParent>       the type of parent of this element
- *                        Created by Xyanid on 24.10.2015.
+ *
+ * @author Xyanid on 24.10.2015.
  */
 public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, TParent extends ElementBase<TDataProvider, ?, ?>> {
 
@@ -95,12 +116,12 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
     }
 
     /**
-     * Gets the attribute map.
+     * Gets the attribute map as an unmodifiable map.
      *
      * @return the map of the attributes
      */
     public final Map<String, String> getAttributes() {
-        return attributes;
+        return Collections.unmodifiableMap(attributes);
     }
 
     /**
@@ -189,4 +210,23 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
     public abstract void endProcessing() throws SAXException;
 
     //endregion
+
+    // region Override Object
+
+    @Override
+    public String toString() {
+
+        StringBuilder data = new StringBuilder();
+
+        data.append("<").append(name);
+
+        attributes.entrySet().stream().forEach(attribute -> data.append(String.format(" %s:%s", attribute.getKey(), attribute.getValue())));
+
+        data.append(">");
+
+        return data.toString();
+    }
+
+
+    // endregion
 }

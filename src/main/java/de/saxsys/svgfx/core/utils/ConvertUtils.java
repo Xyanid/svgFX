@@ -1,26 +1,35 @@
+/*
+ *
+ * ******************************************************************************
+ *  * Copyright 2015 - 2015 Xyanid
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *****************************************************************************
+ */
+
 package de.saxsys.svgfx.core.utils;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * This class provides convenient functions to handle converting data from one type to another using functional
- * interfaces Created by Xyanid on 29.10.2015.
+ * This class provides convenient functions to handle converting data from one type to another using functional interfaces
+ *
+ * @author by Xyanid on 29.10.2015.
  */
 public final class ConvertUtils {
 
     // region Constructor
-
-    /**
-     *
-     */
-    private ConvertUtils() {
-
-    }
-
-    // endregion
-
-    // region Methods
 
     /**
      * Tries to apply the given string as data to the consumer interfaces using the given converter to parse the data
@@ -35,6 +44,10 @@ public final class ConvertUtils {
     public static <TInput, TOutput> void applyData(final TInput data, final Consumer<TOutput> consumer, final Function<TInput, TOutput> converter) {
         applyData(data, consumer, converter, null);
     }
+
+    // endregion
+
+    // region Methods
 
     /**
      * Tries to apply the given string as data to the consumer interfaces using the given converter to parse the data
@@ -83,6 +96,13 @@ public final class ConvertUtils {
         }
 
         return converter.apply(data);
+    }
+
+    /**
+     *
+     */
+    private ConvertUtils() {
+
     }
 
     // endregion

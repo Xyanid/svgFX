@@ -19,27 +19,29 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.core.elements.ClipPath;
-import de.saxsys.svgfx.core.elements.Defs;
-import de.saxsys.svgfx.core.elements.Group;
-import de.saxsys.svgfx.core.elements.Style;
+import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGDefs;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGElementCreator;
+import de.saxsys.svgfx.core.elements.SVGGradientBase;
+import de.saxsys.svgfx.core.elements.SVGGroup;
+import de.saxsys.svgfx.core.elements.SVGStyle;
 import de.saxsys.svgfx.xml.core.SAXParser;
-import de.saxsys.svgfx.xml.elements.ElementBase;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.SAXException;
 
 /**
  * This parser is used to create SVG path data for javafx
- * Created by Xyanid on 24.10.2015.
+ *
+ * @author Xyanid on 24.10.2015.
  */
-public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SVGElementCreator> {
+public class SVGParser extends SAXParser<Group, SVGDataProvider, SVGElementCreator, SVGElementBase<?>> {
 
     //region Constructor
 
     /**
      * Creates a new instance of the parser and uses the given elementCreator.
-     *
      */
     public SVGParser() {
 
@@ -50,29 +52,38 @@ public class SVGParser extends SAXParser<javafx.scene.Group, SVGDataProvider, SV
 
     //region Override SAXParser
 
-    @Override protected javafx.scene.Group enteringDocument() {
-        return new javafx.scene.Group();
+    @Override
+    protected Group enteringDocument() {
+        return new Group();
     }
 
-    @Override protected void leavingDocument(final javafx.scene.Group result) {
+    @Override
+    protected void leavingDocument(final Group result) {
 
     }
 
-    @Override protected void consumeElementStart(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) {
+    @Override
+    protected void consumeElementStart(final Group result, final SVGDataProvider dataProvider, final SVGElementBase<?> element) {
 
         //definitions will not be kept as children
-        if (element instanceof Defs && element.getParent() != null) {
+        if (element instanceof SVGDefs && element.getParent() != null) {
             element.getParent().getChildren().remove(element);
         }
     }
 
-    @Override protected void consumeElementEnd(final javafx.scene.Group result, final SVGDataProvider dataProvider, final ElementBase<SVGDataProvider, ?, ?> element) throws SAXException {
+    @Override
+    protected void consumeElementEnd(final Group result, final SVGDataProvider dataProvider, final SVGElementBase<?> element) throws SAXException {
 
-        if (element.getParent() instanceof Defs) {
-            dataProvider.getData().put(element.getAttributes().get(Enumerations.SvgAttribute.ID.getName()), (SVGElementBase) element);
-        } else if (element instanceof Style) {
-            dataProvider.getStyles().addAll(((Style) element).getResult());
-        } else if (!((element.getParent() instanceof ClipPath) || (element.getParent() instanceof Group)) && element.getResult() instanceof Node) {
+        // all elements in def and all gradients are considered data
+        if (element.getParent() instanceof SVGDefs || element instanceof SVGGradientBase) {
+            dataProvider.setData(element.getAttribute(SVGElementBase.CoreAttribute.ID.getName()), element);
+        }
+        // styles are also added to the dataprovider
+        else if (element instanceof SVGStyle) {
+            dataProvider.getStyles().addAll(((SVGStyle) element).getResult());
+        }
+        //elements which are inside a group or clip SVGPath as well as clipPath elements will not be added
+        else if (!((element instanceof SVGClipPath) || (element.getParent() instanceof SVGClipPath) || (element.getParent() instanceof SVGGroup)) && element.getResult() instanceof Node) {
             result.getChildren().add((Node) element.getResult());
         }
     }

@@ -1,7 +1,7 @@
 /*
  *
  * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
+ *  * Copyright 2015 - 2016 Xyanid
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.css.core.CssStyle;
 import de.saxsys.svgfx.xml.core.IDataProvider;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +32,8 @@ import java.util.Set;
 
 /**
  * Holds an provides data for parsed svg elements
- * Created by Xyanid on 25.10.2015.
+ *
+ * @author Xyanid on 25.10.2015.
  */
 public class SVGDataProvider implements IDataProvider {
 
@@ -39,24 +42,24 @@ public class SVGDataProvider implements IDataProvider {
     /**
      * Contains all the data provided by this data provider.
      */
-    private final Map<String, SVGElementBase> data = new HashMap<>();
+    final Map<String, SVGElementBase> data = new HashMap<>();
 
     /**
      * Contains all the available styles.
      */
-    private final Set<CssStyle> styles = new HashSet<>();
+    final Set<SVGCssStyle> styles = new HashSet<>();
 
     //endregion
 
     //region Public
 
     /**
-     * Returns the {@link SVGDataProvider#data}.
+     * Returns the {@link SVGDataProvider#data} as an unmodifiable map.
      *
-     * @return {@link SVGDataProvider#data}
+     * @return {@link SVGDataProvider#data} as an unmodifiable map.
      */
-    public final Map<String, SVGElementBase> getData() {
-        return data;
+    public final Map<String, SVGElementBase> getUnmodifiableData() {
+        return Collections.unmodifiableMap(data);
     }
 
     /**
@@ -64,7 +67,7 @@ public class SVGDataProvider implements IDataProvider {
      *
      * @return the styles contained in the svg file
      */
-    public final Set<CssStyle> getStyles() {
+    public final Set<SVGCssStyle> getStyles() {
         return styles;
     }
 
@@ -77,6 +80,27 @@ public class SVGDataProvider implements IDataProvider {
      */
     public final boolean hasData(final String key) {
         return data.get(key) != null;
+    }
+
+    /**
+     * Sets the given data into the map.
+     *
+     * @param key  the key of the identifier of the data, must not be null or epmty.
+     * @param data the the data that should be set, must not be null.
+     *
+     * @throws IllegalArgumentException if either key is null or empty or data is null.
+     */
+    public final void setData(final String key, SVGElementBase data) {
+
+        if (StringUtils.isNullOrEmpty(key)) {
+            throw new IllegalArgumentException("given key must not be null or empty");
+        }
+
+        if (data == null) {
+            throw new IllegalArgumentException("given data must not be null");
+        }
+
+        this.data.put(key, data);
     }
 
     /**
@@ -114,7 +138,8 @@ public class SVGDataProvider implements IDataProvider {
     /**
      * Resets the data provider clearing all the stored data and styles.
      */
-    @Override public final void clear() {
+    @Override
+    public final void clear() {
         data.clear();
         styles.clear();
     }
