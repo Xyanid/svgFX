@@ -27,6 +27,6 @@ Here you get new features. This release is unstable and shouldn't be used in pro
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>svgfx</artifactId>
-		<version>0.7.0-SNAPSHOT</version>
+		<version>0.9.0-SNAPSHOT</version>
 </dependency>
 ```
