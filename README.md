@@ -15,7 +15,7 @@ This is the stable release that can be used in production.
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>svgfx</artifactId>
-		<version>0.8.0</version>
+		<version>0.9.0</version>
 </dependency>
 ```
 
