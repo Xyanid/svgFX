@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
@@ -55,13 +56,13 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     @Override
     protected final javafx.scene.shape.Rectangle createResult(final SVGCssStyle style) {
 
-        String positionX = getAttribute(CoreAttribute.POSITION_X.getName());
-        String positionY = getAttribute(CoreAttribute.POSITION_Y.getName());
+        String positionX = getAttribute(Enumerations.CoreAttribute.POSITION_X.getName());
+        String positionY = getAttribute(Enumerations.CoreAttribute.POSITION_Y.getName());
 
         return new javafx.scene.shape.Rectangle(StringUtils.isNullOrEmpty(positionX) ? 0.0d : Double.parseDouble(positionX),
                                                 StringUtils.isNullOrEmpty(positionY) ? 0.0d : Double.parseDouble(positionY),
-                                                Double.parseDouble(getAttribute(CoreAttribute.WIDTH.getName())),
-                                                Double.parseDouble(getAttribute(CoreAttribute.HEIGHT.getName())));
+                                                Double.parseDouble(getAttribute(Enumerations.CoreAttribute.WIDTH.getName())),
+                                                Double.parseDouble(getAttribute(Enumerations.CoreAttribute.HEIGHT.getName())));
     }
 
     /**
@@ -74,12 +75,12 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
 
-        if (StringUtils.isNotNullOrEmpty(getAttribute(CoreAttribute.RADIUS_X.getName()))) {
-            rect.setArcWidth(Double.parseDouble(getAttribute(CoreAttribute.RADIUS_X.getName())) * 2.0d);
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName()))) {
+            rect.setArcWidth(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_X.getName())) * 2.0d);
         }
 
-        if (StringUtils.isNotNullOrEmpty(getAttribute(CoreAttribute.RADIUS_Y.getName()))) {
-            rect.setArcHeight(Double.parseDouble(getAttribute(CoreAttribute.RADIUS_Y.getName())) * 2.0d);
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName()))) {
+            rect.setArcHeight(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS_Y.getName())) * 2.0d);
         }
     }
 

@@ -29,12 +29,12 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, Void> {
+public class SVGContentTypeFillRule extends SVGContentTypeBase<FillRule, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGCssContentTypeBase}.
+     * Determines the default value for this {@link SVGContentTypeBase}.
      */
     public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
 
@@ -47,13 +47,13 @@ public class SVGCssContentTypeFillRule extends SVGCssContentTypeBase<FillRule, V
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeFillRule(final SVGDataProvider dataProvider) {
+    public SVGContentTypeFillRule(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     @Override
     protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {

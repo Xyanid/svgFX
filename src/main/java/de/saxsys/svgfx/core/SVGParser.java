@@ -19,6 +19,7 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
 import de.saxsys.svgfx.core.elements.SVGDefs;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
@@ -76,7 +77,7 @@ public class SVGParser extends SAXParser<Group, SVGDataProvider, SVGElementCreat
 
         // all elements in def and all gradients are considered data
         if (element.getParent() instanceof SVGDefs || element instanceof SVGGradientBase) {
-            dataProvider.setData(element.getAttribute(SVGElementBase.CoreAttribute.ID.getName()), element);
+            dataProvider.setData(element.getAttribute(Enumerations.CoreAttribute.ID.getName()), element);
         }
         // styles are also added to the dataprovider
         else if (element instanceof SVGStyle) {

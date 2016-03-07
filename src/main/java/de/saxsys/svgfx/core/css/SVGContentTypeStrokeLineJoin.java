@@ -20,44 +20,44 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
+ * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeStrokeType extends SVGCssContentTypeBase<StrokeType, Void> {
+public class SVGContentTypeStrokeLineJoin extends SVGContentTypeBase<StrokeLineJoin, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
+     * Determines the default value to use for this {@link SVGContentTypeBase}.
      */
-    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
+    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
+     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeType(final SVGDataProvider dataProvider) {
+    public SVGContentTypeStrokeLineJoin(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     @Override
-    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
+    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
+        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

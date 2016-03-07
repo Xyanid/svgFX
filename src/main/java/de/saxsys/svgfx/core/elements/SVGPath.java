@@ -20,8 +20,9 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
+import de.saxsys.svgfx.core.css.SVGContentTypeFillRule;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.xml.sax.Attributes;
 
 /**
@@ -54,7 +55,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle style) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
-        result.setContent(getAttribute(CoreAttribute.PATH_DESCRIPTION.getName()));
+        result.setContent(getAttribute(Enumerations.CoreAttribute.PATH_DESCRIPTION.getName()));
 
         return result;
     }
@@ -69,8 +70,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
 
         if (style != null) {
 
-            if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName())) {
-                path.setFillRule(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue());
+            if (style.hasCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName())) {
+                path.setFillRule(style.getCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue());
             }
         }
     }

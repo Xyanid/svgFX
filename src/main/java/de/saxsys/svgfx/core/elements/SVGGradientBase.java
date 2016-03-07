@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.xml.elements.ElementBase;
@@ -76,12 +77,11 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
         }
 
         // own stops are preferred, now we check for stops that are on referenced elements
-        if (stops.isEmpty() && StringUtils.isNotNullOrEmpty(getAttribute(XLinkAttribute.XLINK_HREF.getName()))) {
+        if (stops.isEmpty() && StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.XLinkAttribute.XLINK_HREF.getName()))) {
 
-            SVGElementBase referenceElement = SVGUtils.resolveIRI(getAttribute(XLinkAttribute.XLINK_HREF.getName()), getDataProvider(), SVGElementBase.class);
+            SVGElementBase referenceElement = SVGUtils.resolveIRI(getAttribute(Enumerations.XLinkAttribute.XLINK_HREF.getName()), getDataProvider(), SVGElementBase.class);
 
             for (Object child : referenceElement.getChildren()) {
-
                 if (child instanceof SVGStop) {
                     stops.add(((SVGStop) child).getResult());
                 }

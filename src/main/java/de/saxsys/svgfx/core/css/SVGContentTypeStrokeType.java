@@ -20,44 +20,44 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
+ * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeStrokeLineCap extends SVGCssContentTypeBase<StrokeLineCap, Void> {
+public class SVGContentTypeStrokeType extends SVGContentTypeBase<StrokeType, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
+     * Determines the default value to use for this {@link SVGContentTypeBase}.
      */
-    public static final StrokeLineCap DEFAULT_VALUE = StrokeLineCap.SQUARE;
+    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeLineCap(final SVGDataProvider dataProvider) {
+    public SVGContentTypeStrokeType(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     @Override
-    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
+    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
+        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

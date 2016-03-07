@@ -21,9 +21,10 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Constants;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import javafx.scene.paint.Color;
@@ -44,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Test to ensure the {@link SVGUtils} work as expected.
  *
@@ -52,7 +55,8 @@ import java.util.Map;
 public final class SVGUtilTest {
 
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will throw the expected exceptions when arguments are missing.
+     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will throw the expected exceptions when arguments
+     * are missing.
      */
     @Test
     public void ensureSplitThrowsTheExpectedExceptionsWhenArgumentsAreInvalid() {
@@ -101,7 +105,8 @@ public final class SVGUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to split a string which contains spaces as expected.
+     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to split a string which contains spaces
+     * as expected.
      */
     @Test
     public void ensureSplitWillSplitAStringContainingSpacesCorrectly() {
@@ -111,15 +116,16 @@ public final class SVGUtilTest {
 
         List<String> result = SVGUtils.split("  This  is a  test  ", delimiters, (currentData, index) -> true);
 
-        Assert.assertEquals(4, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals("is", result.get(1));
-        Assert.assertEquals("a", result.get(2));
-        Assert.assertEquals("test", result.get(3));
+        assertEquals(4, result.size());
+        assertEquals("This", result.get(0));
+        assertEquals("is", result.get(1));
+        assertEquals("a", result.get(2));
+        assertEquals("test", result.get(3));
     }
 
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to split a string which contains multiple delimiters.
+     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to split a string which contains multiple
+     * delimiters.
      */
     @Test
     public void ensureSplitWillSplitAMoreThenOneDelimiter() {
@@ -131,15 +137,16 @@ public final class SVGUtilTest {
 
         List<String> result = SVGUtils.split(" This,is a;test", delimiters, (currentData, index) -> true);
 
-        Assert.assertEquals(4, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals("is", result.get(1));
-        Assert.assertEquals("a", result.get(2));
-        Assert.assertEquals("test", result.get(3));
+        assertEquals(4, result.size());
+        assertEquals("This", result.get(0));
+        assertEquals("is", result.get(1));
+        assertEquals("a", result.get(2));
+        assertEquals("test", result.get(3));
     }
 
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will only process {@link String}s without delimiters.
+     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will only process {@link String}s without
+     * delimiters.
      */
     @Test
     public void ensureSplitWillNeverContainDelimiters() {
@@ -154,16 +161,17 @@ public final class SVGUtilTest {
             return true;
         });
 
-        Assert.assertEquals(5, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals(",", result.get(1));
-        Assert.assertEquals("is", result.get(2));
-        Assert.assertEquals("a", result.get(3));
-        Assert.assertEquals("test", result.get(4));
+        assertEquals(5, result.size());
+        assertEquals("This", result.get(0));
+        assertEquals(",", result.get(1));
+        assertEquals("is", result.get(2));
+        assertEquals("a", result.get(3));
+        assertEquals("test", result.get(4));
     }
 
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will only process {@link String}s that are not empty.
+     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will only process {@link String}s that are not
+     * empty.
      */
     @Test
     public void ensureSplitWillNeverContainEmptyStrings() {
@@ -178,16 +186,17 @@ public final class SVGUtilTest {
             return true;
         });
 
-        Assert.assertEquals(5, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals(",", result.get(1));
-        Assert.assertEquals("is", result.get(2));
-        Assert.assertEquals("a", result.get(3));
-        Assert.assertEquals("test", result.get(4));
+        assertEquals(5, result.size());
+        assertEquals("This", result.get(0));
+        assertEquals(",", result.get(1));
+        assertEquals("is", result.get(2));
+        assertEquals("a", result.get(3));
+        assertEquals("test", result.get(4));
     }
 
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to combine strings if the dataConsumer returns false.
+     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to combine strings if the dataConsumer
+     * returns false.
      * In this test we will use the {@link String} "1 , 2 3 , 4" and the result should be "1,2" and "3,4".
      */
     @Test
@@ -203,9 +212,9 @@ public final class SVGUtilTest {
             return currentData.charAt(currentData.length() - 1) != ',' && currentData.contains(",");
         });
 
-        Assert.assertEquals(2, result.size());
-        Assert.assertEquals("1,2", result.get(0));
-        Assert.assertEquals("3,4", result.get(1));
+        assertEquals(2, result.size());
+        assertEquals("1,2", result.get(0));
+        assertEquals("3,4", result.get(1));
     }
 
     /**
@@ -223,9 +232,9 @@ public final class SVGUtilTest {
     @Test
     public void ensureSplitIRIWillStripStringFromIRIIdentifiers() {
 
-        Assert.assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_IDENTIFIER + "test)"));
+        assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_IDENTIFIER + "test)"));
 
-        Assert.assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_FRAGMENT_IDENTIFIER + "test"));
+        assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_FRAGMENT_IDENTIFIER + "test"));
     }
 
     /**
@@ -368,8 +377,9 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+        assertEquals(Color.web("#111111"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#222222"),
+                     style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
     }
 
     /**
@@ -388,8 +398,9 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+        assertEquals(Color.web("#111111"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#222222"),
+                     style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
     }
 
     /**
@@ -408,11 +419,12 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        Assert.assertEquals(Color.web("#333333"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
+        assertEquals(Color.web("#333333"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
     }
 
     /**
-     * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}}.
+     * This test will create ensure that all types of matrix are supported by
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}}.
      */
     @Test
     public void ensureMatrixIsCreatedCorrectly() {
@@ -428,12 +440,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Affine.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 5.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 3.0d, 0.01d);
+        assertEquals(transform.getTx(), 5.0d, 0.01d);
+        assertEquals(transform.getMyx(), 2.0d, 0.01d);
+        assertEquals(transform.getMyy(), 4.0d, 0.01d);
+        assertEquals(transform.getTy(), 6.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("matrix(1 2 3 4 5 6)");
@@ -444,12 +456,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Affine.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 5.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 3.0d, 0.01d);
+        assertEquals(transform.getTx(), 5.0d, 0.01d);
+        assertEquals(transform.getMyx(), 2.0d, 0.01d);
+        assertEquals(transform.getMyy(), 4.0d, 0.01d);
+        assertEquals(transform.getTy(), 6.0d, 0.01d);
     }
 
     /**
@@ -498,7 +510,8 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of translate are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
+     * This test will create ensure that all types of translate are supported by
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
     public void parseTranslateMatrix() {
@@ -514,12 +527,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Translate.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 1.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 1.0d, 0.01d);
+        assertEquals(transform.getTy(), 2.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("translate(1 2)");
@@ -530,12 +543,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Translate.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 1.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 1.0d, 0.01d);
+        assertEquals(transform.getTy(), 2.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("translate(1)");
@@ -546,12 +559,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Translate.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 1.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 1.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 1.0d, 0.01d);
+        assertEquals(transform.getTy(), 1.0d, 0.01d);
     }
 
     /**
@@ -593,7 +606,8 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
+     * This test will create ensure that all types of scale are supported by
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
     public void parseScaleMatrix() {
@@ -609,12 +623,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Scale.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 2.0d, 0.01d);
+        assertEquals(transform.getTy(), 0.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("scale(1 2)");
@@ -625,12 +639,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Scale.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 2.0d, 0.01d);
+        assertEquals(transform.getTy(), 0.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("scale(1)");
@@ -641,12 +655,12 @@ public final class SVGUtilTest {
         Assert.assertNotNull(transform);
         Assert.assertThat(transform, new IsInstanceOf(Scale.class));
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 1.0d, 0.01d);
+        assertEquals(transform.getTy(), 0.0d, 0.01d);
     }
 
     /**
@@ -688,7 +702,8 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
+     * This test will create ensure that all types of scale are supported by
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
     public void parseRotateMatrix() {
@@ -706,9 +721,9 @@ public final class SVGUtilTest {
 
         Rotate rotate = (Rotate) transform;
 
-        Assert.assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
+        assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
+        assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("rotate(1 2 3)");
@@ -721,9 +736,9 @@ public final class SVGUtilTest {
 
         rotate = (Rotate) transform;
 
-        Assert.assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
+        assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
+        assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("rotate(1)");
@@ -736,9 +751,9 @@ public final class SVGUtilTest {
 
         rotate = (Rotate) transform;
 
-        Assert.assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotX(), 0.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotY(), 0.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
+        assertEquals(rotate.getPivotX(), 0.0d, 0.01d);
+        assertEquals(rotate.getPivotY(), 0.0d, 0.01d);
     }
 
     /**
@@ -787,7 +802,8 @@ public final class SVGUtilTest {
     }
 
     /**
-     * This test will create ensure that all types of skewX are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
+     * This test will create ensure that all types of skewX are supported by
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
     public void parseSkewMatrix() {
@@ -805,7 +821,7 @@ public final class SVGUtilTest {
 
         Shear shear = (Shear) transform;
 
-        Assert.assertEquals(shear.getX(), 1.0d, 0.01d);
+        assertEquals(shear.getX(), 1.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("skewY(1)");
@@ -818,7 +834,7 @@ public final class SVGUtilTest {
 
         shear = (Shear) transform;
 
-        Assert.assertEquals(shear.getY(), 1.0d, 0.01d);
+        assertEquals(shear.getY(), 1.0d, 0.01d);
     }
 
     /**
@@ -883,7 +899,7 @@ public final class SVGUtilTest {
 
     /**
      * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
-     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
+     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
     public void parseCombinedMatrices() {
@@ -898,12 +914,12 @@ public final class SVGUtilTest {
 
         Assert.assertNotNull(transform);
 
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 4.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 1.0d, 0.01d);
+        assertEquals(transform.getTy(), 6.0d, 0.01d);
 
         try {
             transform = SVGUtils.getTransform("translate(1,2) scale(3, 4)");
@@ -913,11 +929,24 @@ public final class SVGUtilTest {
 
         Assert.assertNotNull(transform);
 
-        Assert.assertEquals(transform.getMxx(), 3.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 3.0d, 0.01d);
+        assertEquals(transform.getMxy(), 0.0d, 0.01d);
+        assertEquals(transform.getTx(), 1.0d, 0.01d);
+        assertEquals(transform.getMyx(), 0.0d, 0.01d);
+        assertEquals(transform.getMyy(), 4.0d, 0.01d);
+        assertEquals(transform.getTy(), 2.0d, 0.01d);
+    }
+
+    /**
+     * Test that the opacity is altered as expected.
+     */
+    @Test
+    public void applyOpacityToColorCorrectly() {
+
+        Color red = Color.RED;
+
+        SVGUtils.applyOpacity(red, 0.25d);
+
+        assertEquals(0.25d, SVGUtils.applyOpacity(red, 0.25d).getOpacity(), 0.01d);
     }
 }

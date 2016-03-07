@@ -30,14 +30,14 @@ import java.util.List;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGCssContentTypeLength[], Void> {
+public class SVGContentTypeStrokeDashArray extends SVGContentTypeBase<SVGContentTypeLength[], Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
+     * Determines the default value to use for this {@link SVGContentTypeBase}.
      */
-    public static final SVGCssContentTypeLength[] DEFAULT_VALUE = new SVGCssContentTypeLength[]{};
+    public static final SVGContentTypeLength[] DEFAULT_VALUE = new SVGContentTypeLength[]{};
 
     // endregion
 
@@ -57,7 +57,7 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeDashArray(final SVGDataProvider dataProvider) {
+    public SVGContentTypeStrokeDashArray(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -74,23 +74,23 @@ public class SVGCssContentTypeStrokeDashArray extends SVGCssContentTypeBase<SVGC
 
     // endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     /**
      * {@inheritDoc} This implementation will parse the given data as a coma separated list of dashValues.
      *
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeLength}
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypeLength}
      */
     @Override
-    protected Pair<SVGCssContentTypeLength[], Void> getValueAndUnit(final String cssText) {
+    protected Pair<SVGContentTypeLength[], Void> getValueAndUnit(final String cssText) {
 
         String[] values = cssText.split(",");
 
-        SVGCssContentTypeLength[] array = new SVGCssContentTypeLength[values.length];
+        SVGContentTypeLength[] array = new SVGContentTypeLength[values.length];
         dashValues.clear();
 
         for (int i = 0; i < values.length; i++) {
-            array[i] = new SVGCssContentTypeLength(getDataProvider());
+            array[i] = new SVGContentTypeLength(getDataProvider());
             array[i].parseCssText(values[i].trim());
             dashValues.add(array[i].getValue());
         }

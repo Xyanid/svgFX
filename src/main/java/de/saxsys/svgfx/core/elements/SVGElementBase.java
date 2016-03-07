@@ -21,8 +21,9 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeString;
+import de.saxsys.svgfx.core.css.SVGContentTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
@@ -41,236 +42,6 @@ import java.util.EnumSet;
 public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvider, TResult, SVGElementBase<?>> {
 
     // region Enumerations
-
-    /**
-     * Contains the core attributes each svg element may have.
-     */
-    public enum CoreAttribute {
-
-        /**
-         * The id for an element, needed in case an element is referenced by another element.
-         */
-        ID("id"),
-        /**
-         * Represents the transformation to be applied to an element.
-         */
-        TRANSFORM("transform"),
-        /**
-         * Represents the style of an element, the style need to follow the css text restrictions to be used.
-         */
-        STYLE("style"),
-        /**
-         * Represents a class link to an existing style, in this case the element will use this link to style itself.
-         */
-        CLASS("class"),
-        /**
-         * Represents x component of a center position, this element is used for {@link SVGCircle}s and {@link SVGEllipse}s.
-         */
-        CENTER_X("cx"),
-        /**
-         * Represents y component of a center position, this element is used for {@link SVGCircle}s and {@link SVGEllipse}s.
-         */
-        CENTER_Y("cy"),
-        /**
-         * Represents a radius.
-         */
-        RADIUS("r"),
-        /**
-         * Represents a radius which is used in the x direction.
-         */
-        RADIUS_X("rx"),
-        /**
-         * Represents a radius which is used in the y direction.
-         */
-        RADIUS_Y("ry"),
-        /**
-         * Represents the focus in x direction, this attribute is used by a radial gradient.
-         */
-        FOCUS_X("fx"),
-        /**
-         * Represents the focus in y direction, this attribute is used by a radial gradient.
-         */
-        FOCUS_Y("fy"),
-        /**
-         * Represents a comma separated list of points.
-         */
-        POINTS("points"),
-        /**
-         * Represents the start x component of a line.
-         */
-        START_X("x1"),
-        /**
-         * Represents the start y component of a line.
-         */
-        START_Y("y1"),
-        /**
-         * Represents the end x component of a line.
-         */
-        END_X("x2"),
-        /**
-         * Represents the end y component of a line.
-         */
-        END_Y("y2"),
-        /**
-         * Represents a series of path descriptions.
-         */
-        PATH_DESCRIPTION("d"),
-        /**
-         * Represents the x component of a position, how this is used depends on the element it is used in.
-         */
-        POSITION_X("x"),
-        /**
-         * Represents the y component of a position, how this is used depends on the element it is used in.
-         */
-        POSITION_Y("y"),
-        /**
-         * Represents the width of an element.
-         */
-        WIDTH("width"),
-        /**
-         * Represents the height of an element.
-         */
-        HEIGHT("height"),
-        /**
-         * Represents the offset from a start position.
-         */
-        OFFSET("offset"),
-        /**
-         * Represents the type of the element.
-         */
-        TYPE("type");
-
-        // region Fields
-
-        /**
-         * The name of the attribute within the svg element.
-         */
-        private final String name;
-
-        // endregion
-
-        // region Constructor
-
-        /**
-         * Creates a new instance.
-         *
-         * @param name the name of the attribute within the svg element
-         */
-        CoreAttribute(final String name) {
-            this.name = name;
-        }
-
-        // endregion
-
-        // region Getter
-
-        /**
-         * Returns the {@link CoreAttribute#name}.
-         *
-         * @return the {@link CoreAttribute#name}
-         */
-        public final String getName() {
-            return name;
-        }
-
-        // endregion
-    }
-
-    /**
-     * Contains the xlink attributes each svg element may have.
-     */
-    public enum XLinkAttribute {
-
-        /**
-         * Meaning this element has a reference to an existing element.
-         */
-        XLINK_HREF("xlink:href");
-
-        // region Fields
-
-        /**
-         * The name of the attribute within the svg element.
-         */
-        private final String name;
-
-        // endregion
-
-        // region Constructor
-
-        /**
-         * Creates a new instance.
-         *
-         * @param name the name of the attribute within the svg element
-         */
-        XLinkAttribute(final String name) {
-            this.name = name;
-        }
-
-        // endregion
-
-        // region Getter
-
-        /**
-         * Returns the {@link CoreAttribute#name}.
-         *
-         * @return the {@link CoreAttribute#name}
-         */
-        public final String getName() {
-            return name;
-        }
-
-        // endregion
-    }
-
-    /**
-     * Determines which keyword in a transform attribute of a matrix map to their corresponding javafx classes.
-     */
-    public enum Matrix {
-
-        NONE(""),
-        MATRIX("matrix"),
-        TRANSLATE("translate"),
-        SCALE("scale"),
-        ROTATE("rotate"),
-        SKEW_X("skewX"),
-        SKEW_Y("skewY");
-
-        // region Fields
-
-        /**
-         * The of the transformation within svg.
-         */
-        private final String name;
-
-
-        // endregion
-
-        // region Constructor
-
-        /**
-         * Creates a new instance.
-         *
-         * @param name the name of the attribute within the svg element.
-         */
-        Matrix(final String name) {
-            this.name = name;
-        }
-
-        // endregion
-
-        // region Getter
-
-        /**
-         * Returns the {@link Matrix#name}.
-         *
-         * @return the {@link Matrix#name}
-         */
-        public final String getName() {
-            return name;
-        }
-
-        // endregion
-    }
 
     // endregion
 
@@ -312,15 +83,15 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     private void cleanStyleBeforeUsing(SVGCssStyle style) {
 
         // since the style is used here we need to ensure its not possible for an element to reference itself
-        String id = getAttribute(CoreAttribute.ID.getName());
+        String id = getAttribute(Enumerations.CoreAttribute.ID.getName());
         if (StringUtils.isNotNullOrEmpty(id)) {
 
-            SVGCssContentTypeString clipPath = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
+            SVGContentTypeString clipPath = style.getCssContentType(Enumerations.PresentationAttribute.CLIP_PATH.getName(), SVGContentTypeString.class);
             if (clipPath != null) {
 
                 String clipPathReference = SVGUtils.stripIRIIdentifiers(clipPath.getValue());
                 if (StringUtils.isNotNullOrEmpty(clipPathReference) && clipPathReference.equals(id)) {
-                    style.getProperties().remove(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+                    style.getProperties().remove(Enumerations.PresentationAttribute.CLIP_PATH.getName());
                 }
             }
         }
@@ -384,11 +155,11 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Returns the {@link SVGCssStyle} of this element. Since an element can contain a {@link SVGCssStyle.PresentationAttribute}s, an own {@link SVGCssStyle} or a
+     * Returns the {@link SVGCssStyle} of this element. Since an element can contain a {@link Enumerations.PresentationAttribute}s, an own {@link SVGCssStyle} or a
      * reference to an existing {@link SVGCssStyle} there need to be a rule how the {@link SVGCssStyle} is build. The rule is as follows:
-     * {@link SVGCssStyle.PresentationAttribute}s are preferred if they are present and will overwrite existing attribute of an own
+     * {@link Enumerations.PresentationAttribute}s are preferred if they are present and will overwrite existing attribute of an own
      * {@link SVGCssStyle} or a referenced {@link SVGCssStyle}. The following example shows an element which has two
-     * {@link SVGCssStyle.PresentationAttribute}s and an own {@link SVGCssStyle}.
+     * {@link Enumerations.PresentationAttribute}s and an own {@link SVGCssStyle}.
      * <pre>
      *     e.G.
      *     circle fill="none" stroke="#808080" style="fill:#111111; stroke:#001122 fill-rule:odd"
@@ -400,7 +171,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      *     circle fill="none" stroke="#808080" class="st1"
      * </pre>
      * An own {@link SVGCssStyle} is always preferred before a referenced {@link SVGCssStyle} and will overwrite existing attributes just as a
-     * {@link SVGCssStyle.PresentationAttribute} would. The following example shows an element which has an own
+     * {@link Enumerations.PresentationAttribute} would. The following example shows an element which has an own
      * {@link SVGCssStyle} and a reference to a {@link SVGCssStyle}.
      * <pre>
      *     e.G.
@@ -445,17 +216,17 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Gets the elements own {@link SVGCssStyle}, which will only be available if the element has the {@link CoreAttribute#STYLE}.
+     * Gets the elements own {@link SVGCssStyle}, which will only be available if the element has the {@link Enumerations.CoreAttribute#STYLE}.
      *
      * @return the {@link SVGCssStyle} of this element or null if there is none.
      */
     public final SVGCssStyle getOwnStyle() {
 
-        if (StringUtils.isNullOrEmpty(getAttribute(CoreAttribute.STYLE.getName()))) {
+        if (StringUtils.isNullOrEmpty(getAttribute(Enumerations.CoreAttribute.STYLE.getName()))) {
             return null;
         }
 
-        String attribute = getAttribute(CoreAttribute.STYLE.getName());
+        String attribute = getAttribute(Enumerations.CoreAttribute.STYLE.getName());
 
         SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
 
@@ -469,18 +240,18 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * Gets the elements referenced {@link SVGCssStyle}, which will only be available if the element has the {@link CoreAttribute#CLASS}.
+     * Gets the elements referenced {@link SVGCssStyle}, which will only be available if the element has the {@link Enumerations.CoreAttribute#CLASS}.
      *
      * @return the {@link SVGCssStyle} referenced by this element or null if there is none.
      *
      * @throws SVGException if the element uses a style reference but the style was not found in the {@link #dataProvider}.
      */
     public final SVGCssStyle getReferencedStyle() throws SVGException {
-        if (StringUtils.isNullOrEmpty(getAttribute(CoreAttribute.CLASS.getName()))) {
+        if (StringUtils.isNullOrEmpty(getAttribute(Enumerations.CoreAttribute.CLASS.getName()))) {
             return null;
         }
 
-        String reference = getAttribute(CoreAttribute.CLASS.getName());
+        String reference = getAttribute(Enumerations.CoreAttribute.CLASS.getName());
 
         try {
             return getDataProvider().getStyles().stream().filter(data -> data.getName().endsWith(reference)).findFirst().get();
@@ -490,12 +261,12 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * This method attempts to create a {@link SVGCssStyle} by looking up all the supported {@link SVGCssStyle.PresentationAttribute}. If any attribute is present a
+     * This method attempts to create a {@link SVGCssStyle} by looking up all the supported {@link Enumerations.PresentationAttribute}. If any attribute is present a
      * valid
      * cssString is returned.
      *
-     * @return a {@link SVGCssStyle} containing the {@link SVGCssStyle.PresentationAttribute}s of this element if any or null if not attributes are submitted.
-     * {@link SVGCssStyle.PresentationAttribute} exists.
+     * @return a {@link SVGCssStyle} containing the {@link Enumerations.PresentationAttribute}s of this element if any or null if not attributes are submitted.
+     * {@link Enumerations.PresentationAttribute} exists.
      */
     public final SVGCssStyle getPresentationCssStyle() {
 
@@ -503,7 +274,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
 
         StringBuilder cssText = new StringBuilder();
 
-        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
+        for (Enumerations.PresentationAttribute attribute : EnumSet.allOf(Enumerations.PresentationAttribute.class)) {
 
             String data = getAttribute(attribute.getName());
 
@@ -526,14 +297,14 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
     }
 
     /**
-     * @return the transformation to be applied to this element if the {@link CoreAttribute#TRANSFORM} is present.
+     * @return the transformation to be applied to this element if the {@link Enumerations.CoreAttribute#TRANSFORM} is present.
      * otherwise null.
      *
      * @throws SVGException if there is a transformation which has invalid data for its matrix.
      */
     public final Transform getTransformation() throws SVGException {
-        if (StringUtils.isNotNullOrEmpty(getAttribute(CoreAttribute.TRANSFORM.getName()))) {
-            return SVGUtils.getTransform(getAttribute(CoreAttribute.TRANSFORM.getName()));
+        if (StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()))) {
+            return SVGUtils.getTransform(getAttribute(Enumerations.CoreAttribute.TRANSFORM.getName()));
         }
 
         return null;
@@ -563,7 +334,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGDataProvide
      */
     public final Node getClipPath(final SVGCssStyle style) throws SVGException {
 
-        SVGCssContentTypeString referenceIRI = style.getCssContentType(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName(), SVGCssContentTypeString.class);
+        SVGContentTypeString referenceIRI = style.getCssContentType(Enumerations.PresentationAttribute.CLIP_PATH.getName(), SVGContentTypeString.class);
         if (referenceIRI != null && StringUtils.isNotNullOrEmpty(referenceIRI.getValue())) {
             return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class).createAndInitializeResult();
         }

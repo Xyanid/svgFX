@@ -31,19 +31,19 @@ import org.junit.Test;
 import java.util.Random;
 
 /**
- * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGCssContentTypeBase}.
+ * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGContentTypeBase}.
  *
  * @author Xyanid on 05.10.2015.
  */
 public final class SVGCssContentTypeTest {
 
     /**
-     * Checks if the {@link SVGCssContentTypeFillRule} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeFillRule} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeFillRuleIsFullySupported() {
 
-        SVGCssContentTypeFillRule contentType = new SVGCssContentTypeFillRule(new SVGDataProvider());
+        SVGContentTypeFillRule contentType = new SVGContentTypeFillRule(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -60,12 +60,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeLength} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeLength} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeLengthIsFullySupported() {
 
-        SVGCssContentTypeLength contentType = new SVGCssContentTypeLength(new SVGDataProvider());
+        SVGContentTypeLength contentType = new SVGContentTypeLength(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -75,7 +75,7 @@ public final class SVGCssContentTypeTest {
 
         Random random = new Random();
 
-        for (SVGCssContentTypeLength.Unit unit : SVGCssContentTypeLength.Unit.values()) {
+        for (SVGContentTypeLength.Unit unit : SVGContentTypeLength.Unit.values()) {
             double value = random.nextDouble();
 
             contentType.parseCssText(String.format("%f%s", value, unit.getName()));
@@ -85,12 +85,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeDouble} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeDouble} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeDoubleIsFullySupported() {
 
-        SVGCssContentTypeDouble contentType = new SVGCssContentTypeDouble(new SVGDataProvider());
+        SVGContentTypeDouble contentType = new SVGContentTypeDouble(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -104,12 +104,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypePaint} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypePaint} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypePaintIsFullySupported() {
 
-        SVGCssContentTypePaint contentType = new SVGCssContentTypePaint(new SVGDataProvider());
+        SVGContentTypePaint contentType = new SVGContentTypePaint(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -131,12 +131,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeString} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeString} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStringIsFullySupported() {
 
-        SVGCssContentTypeString contentType = new SVGCssContentTypeString(new SVGDataProvider());
+        SVGContentTypeString contentType = new SVGContentTypeString(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -149,12 +149,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeStrokeDashArray} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeStrokeDashArray} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeDashArrayIsFullySupported() {
 
-        SVGCssContentTypeStrokeDashArray contentType = new SVGCssContentTypeStrokeDashArray(new SVGDataProvider());
+        SVGContentTypeStrokeDashArray contentType = new SVGContentTypeStrokeDashArray(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -166,7 +166,7 @@ public final class SVGCssContentTypeTest {
 
         StringBuilder data = new StringBuilder();
 
-        for (SVGCssContentTypeLength.Unit unit : SVGCssContentTypeLength.Unit.values()) {
+        for (SVGContentTypeLength.Unit unit : SVGContentTypeLength.Unit.values()) {
             double value = random.nextDouble();
 
             int counter = random.nextInt(10) + 1;
@@ -179,7 +179,7 @@ public final class SVGCssContentTypeTest {
 
             contentType.parseCssText(data.toString());
 
-            for (SVGCssContentTypeLength length : contentType.getValue()) {
+            for (SVGContentTypeLength length : contentType.getValue()) {
                 Assert.assertEquals(length.getValue(), value, 0.01d);
                 Assert.assertEquals(length.getUnit(), unit);
             }
@@ -191,12 +191,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeStrokeLineCap} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeStrokeLineCap} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeLineCapIsFullySupported() {
 
-        SVGCssContentTypeStrokeLineCap contentType = new SVGCssContentTypeStrokeLineCap(new SVGDataProvider());
+        SVGContentTypeStrokeLineCap contentType = new SVGContentTypeStrokeLineCap(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -211,12 +211,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeStrokeLineJoin} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeStrokeLineJoin} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeLineJoinIsFullySupported() {
 
-        SVGCssContentTypeStrokeLineJoin contentType = new SVGCssContentTypeStrokeLineJoin(new SVGDataProvider());
+        SVGContentTypeStrokeLineJoin contentType = new SVGContentTypeStrokeLineJoin(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -231,12 +231,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGCssContentTypeStrokeType} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGContentTypeStrokeType} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeTypeIsFullySupported() {
 
-        SVGCssContentTypeStrokeType contentType = new SVGCssContentTypeStrokeType(new SVGDataProvider());
+        SVGContentTypeStrokeType contentType = new SVGContentTypeStrokeType(new SVGDataProvider());
 
         contentType.parseCssText("inherit");
         Assert.assertTrue(contentType.getIsInherited());

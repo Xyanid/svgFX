@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -43,13 +44,13 @@ public final class SVGLineTest {
 
         Mockito.when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.START_X.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_X.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.START_Y.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.START_Y.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.END_X.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_X.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("25");
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.END_Y.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.END_Y.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("35");
 
         SVGLine line = new SVGLine("line", attributes, null, new SVGDataProvider());
@@ -70,10 +71,10 @@ public final class SVGLineTest {
 
         Mockito.when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.START_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.END_X.getName());
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.END_Y.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_X.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.START_Y.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_X.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.END_Y.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("A");
         Mockito.when(attributes.getValue(1)).thenReturn("75");
@@ -149,9 +150,9 @@ public final class SVGLineTest {
         Mockito.when(attributes.getValue(1)).thenReturn("50");
         Mockito.when(attributes.getValue(2)).thenReturn("25");
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.START_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.END_X.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_X.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.START_Y.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_X.getName());
 
         SVGLine line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
@@ -163,9 +164,9 @@ public final class SVGLineTest {
             Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
         }
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.START_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.END_Y.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_X.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.START_Y.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_Y.getName());
 
         line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
@@ -177,9 +178,9 @@ public final class SVGLineTest {
             Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
         }
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.END_X.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.END_Y.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_X.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.END_X.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_Y.getName());
 
         line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
@@ -191,9 +192,9 @@ public final class SVGLineTest {
             Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
         }
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.START_Y.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.END_X.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.END_Y.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_Y.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.END_X.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_Y.getName());
 
         line = new SVGLine("line", attributes, null, new SVGDataProvider());
 

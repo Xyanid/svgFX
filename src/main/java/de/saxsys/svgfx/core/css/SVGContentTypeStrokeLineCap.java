@@ -20,32 +20,44 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
 
 /**
+ * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
+ *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeString extends SVGCssContentTypeBase<String, Void> {
+public class SVGContentTypeStrokeLineCap extends SVGContentTypeBase<StrokeLineCap, Void> {
+
+    // region Static
+
+    /**
+     * Determines the default value to use for this {@link SVGContentTypeBase}.
+     */
+    public static final StrokeLineCap DEFAULT_VALUE = StrokeLineCap.SQUARE;
+
+    // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance.
+     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeString(final SVGDataProvider dataProvider) {
-        super(null, dataProvider);
+    public SVGContentTypeStrokeLineCap(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     @Override
-    protected Pair<String, Void> getValueAndUnit(String cssText) {
+    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(cssText, null);
+        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

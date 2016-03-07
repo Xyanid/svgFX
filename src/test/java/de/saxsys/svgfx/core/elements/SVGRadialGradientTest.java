@@ -21,7 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,23 +44,23 @@ public final class SVGRadialGradientTest {
 
         Mockito.when(attributes.getLength()).thenReturn(5);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.CENTER_X.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.CENTER_X.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.CENTER_Y.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.CENTER_Y.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("0.15");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.FOCUS_X.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.FOCUS_X.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("0.9");
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.FOCUS_Y.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.FOCUS_Y.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("0.95");
-        Mockito.when(attributes.getQName(4)).thenReturn(SVGElementBase.CoreAttribute.RADIUS.getName());
+        Mockito.when(attributes.getQName(4)).thenReturn(Enumerations.CoreAttribute.RADIUS.getName());
         Mockito.when(attributes.getValue(4)).thenReturn("0.5");
 
         SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDataProvider());
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.COLOR.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getValue(1)).thenReturn("red");
@@ -103,8 +103,8 @@ public final class SVGRadialGradientTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.COLOR.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getValue(1)).thenReturn("red");

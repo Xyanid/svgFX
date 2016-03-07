@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
@@ -54,12 +55,12 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     @Override
     protected final Circle createResult(final SVGCssStyle style) {
 
-        String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
-        String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());
+        String centerX = getAttribute(Enumerations.CoreAttribute.CENTER_X.getName());
+        String centerY = getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName());
 
         return new Circle(StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX),
                           StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY),
-                          Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())));
+                          Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS.getName())));
     }
 
     //endregion

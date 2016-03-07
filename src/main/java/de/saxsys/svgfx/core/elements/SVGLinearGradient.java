@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -66,12 +67,13 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
             throw new SVGException("Given linear gradient does not have colors");
         }
 
-        String startX = getAttribute(CoreAttribute.START_X.getName());
-        String startY = getAttribute(CoreAttribute.START_Y.getName());
-        String endX = getAttribute(CoreAttribute.END_X.getName());
-        String endY = getAttribute(CoreAttribute.END_Y.getName());
+        String startX = getAttribute(Enumerations.CoreAttribute.START_X.getName());
+        String startY = getAttribute(Enumerations.CoreAttribute.START_Y.getName());
+        String endX = getAttribute(Enumerations.CoreAttribute.END_X.getName());
+        String endY = getAttribute(Enumerations.CoreAttribute.END_Y.getName());
 
         // TODO figure out how to apply proportional values here
+        // TODO convert the coordinates into the correct space, first convert then apply transform
 
         return new LinearGradient(StringUtils.isNullOrEmpty(startX) ? 0.0d : Double.parseDouble(startX),
                                   StringUtils.isNullOrEmpty(startY) ? 0.0d : Double.parseDouble(startY),

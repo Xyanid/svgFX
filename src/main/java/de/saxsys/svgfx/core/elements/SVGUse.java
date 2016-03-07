@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.Group;
@@ -57,19 +58,19 @@ public class SVGUse extends SVGElementBase<Group> {
     /**
      * {@inheritDoc} Resolves the needed reference.
      *
-     * @throws SVGException if the {@link de.saxsys.svgfx.core.elements.SVGElementBase.XLinkAttribute#XLINK_HREF} is empty or null.
+     * @throws SVGException if the {@link Enumerations.XLinkAttribute#XLINK_HREF} is empty or null.
      */
     @Override
     protected Group createResult(final SVGCssStyle style) throws SVGException {
-        String reference = getAttributes().get(XLinkAttribute.XLINK_HREF.getName());
+        String reference = getAttributes().get(Enumerations.XLinkAttribute.XLINK_HREF.getName());
         if (StringUtils.isNullOrEmpty(reference)) {
             throw new SVGException("XLink attribute is invalid.");
         }
 
         SVGElementBase referencedElement = SVGUtils.resolveIRI(reference, getDataProvider(), SVGElementBase.class);
 
-        String positionX = getAttribute(CoreAttribute.POSITION_X.getName());
-        String positionY = getAttribute(CoreAttribute.POSITION_Y.getName());
+        String positionX = getAttribute(Enumerations.CoreAttribute.POSITION_X.getName());
+        String positionY = getAttribute(Enumerations.CoreAttribute.POSITION_Y.getName());
 
         Group result = new Group();
         result.setLayoutX(StringUtils.isNullOrEmpty(positionX) ? 0.0d : Double.parseDouble(positionX));

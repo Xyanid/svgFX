@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.shape.Line;
 import org.xml.sax.Attributes;
 
@@ -53,10 +54,10 @@ public class SVGLine extends SVGShapeBase<Line> {
 
     @Override
     protected final Line createResult(final SVGCssStyle style) throws SVGException {
-        return new Line(Double.parseDouble(getAttribute(CoreAttribute.START_X.getName())),
-                        Double.parseDouble(getAttribute(CoreAttribute.START_Y.getName())),
-                        Double.parseDouble(getAttribute(CoreAttribute.END_X.getName())),
-                        Double.parseDouble(getAttribute(CoreAttribute.END_Y.getName())));
+        return new Line(Double.parseDouble(getAttribute(Enumerations.CoreAttribute.START_X.getName())),
+                        Double.parseDouble(getAttribute(Enumerations.CoreAttribute.START_Y.getName())),
+                        Double.parseDouble(getAttribute(Enumerations.CoreAttribute.END_X.getName())),
+                        Double.parseDouble(getAttribute(Enumerations.CoreAttribute.END_Y.getName())));
     }
 
     //endregion

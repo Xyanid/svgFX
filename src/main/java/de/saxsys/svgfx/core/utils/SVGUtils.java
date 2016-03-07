@@ -21,15 +21,16 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeBase;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeDouble;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
+import de.saxsys.svgfx.core.css.SVGContentTypeBase;
+import de.saxsys.svgfx.core.css.SVGContentTypeDouble;
+import de.saxsys.svgfx.core.css.SVGContentTypeLength;
+import de.saxsys.svgfx.core.css.SVGContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeDashArray;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeLineCap;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeType;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGLinearGradient;
 import de.saxsys.svgfx.core.elements.SVGRadialGradient;
@@ -61,7 +62,8 @@ public final class SVGUtils {
     // region Classes
 
     /**
-     * This interface allows that {@link #split(String, List, SplitConsumer)} to consume data an indicate whether to further add new characters or consume the currentData.
+     * This interface allows that {@link #split(String, List, SplitConsumer)} to consume data an indicate whether to further add new characters or consume
+     * the currentData.
      */
     @FunctionalInterface
     public interface SplitConsumer {
@@ -114,14 +116,16 @@ public final class SVGUtils {
         int dataLengthReduction = 1;
         int identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length();
         int index = -1;
-        if (data.length() > de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length() && data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
+        if (data.length() > de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length() &&
+            data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
             index = de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER.length();
         }
 
         if (index == -1) {
             dataLengthReduction = 0;
             identifierLength = de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length();
-            if (data.length() > de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length() && data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER)) {
+            if (data.length() > de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length() &&
+                data.startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER)) {
                 index = de.saxsys.svgfx.core.definitions.Constants.IRI_FRAGMENT_IDENTIFIER.length();
             }
         }
@@ -138,7 +142,8 @@ public final class SVGUtils {
     // region Methods related to Styling
 
     /**
-     * Returns the element which might be referenced by the given data. The data will need to start with the {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} in order to be
+     * Returns the element which might be referenced by the given data. The data will need to start with the
+     * {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} in order to be
      * resolved as a reference.
      *
      * @param data              the string which contains the reference to resolve.
@@ -151,7 +156,9 @@ public final class SVGUtils {
      * @throws SVGException             if the data references a resource which is not contained in the {@link SVGDataProvider}.
      * @throws IllegalArgumentException if either the data is null or empty, the dataProvider is null or the clazz is null.
      */
-    public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data, final SVGDataProvider dataProvider, final Class<TSVGElementBase> clazz)
+    public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data,
+                                                                                         final SVGDataProvider dataProvider,
+                                                                                         final Class<TSVGElementBase> clazz)
             throws SVGException, IllegalArgumentException {
 
         if (dataProvider == null) {
@@ -239,7 +246,8 @@ public final class SVGUtils {
      *
      * @throws IllegalArgumentException if either shape or style is null
      */
-    public static <TShape extends Shape> void applyStyle(final TShape shape, final SVGCssStyle style, final SVGDataProvider dataProvider) throws IllegalArgumentException {
+    public static <TShape extends Shape> void applyStyle(final TShape shape, final SVGCssStyle style, final SVGDataProvider dataProvider)
+            throws IllegalArgumentException {
 
         if (dataProvider == null) {
             throw new IllegalArgumentException("Given dataProvider must not be null");
@@ -253,43 +261,48 @@ public final class SVGUtils {
             throw new IllegalArgumentException("Given style must not be null");
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName())) {
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.FILL.getName())) {
             //TODO apply fill opacity here
-            shape.setFill(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
+            shape.setFill(style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName())) {
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE.getName())) {
             //TODO apply stroke opacity here
-            shape.setStroke(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+            shape.setStroke(style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_TYPE.getName())) {
-            shape.setStrokeType(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_TYPE.getName(), SVGCssContentTypeStrokeType.class).getValue());
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_TYPE.getName())) {
+            shape.setStrokeType(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_TYPE.getName(), SVGContentTypeStrokeType.class).getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName())) {
-            shape.setStrokeWidth(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue());
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName())) {
+            shape.setStrokeWidth(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHARRAY.getName())) {
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_DASHARRAY.getName())) {
             shape.getStrokeDashArray().clear();
-            shape.getStrokeDashArray().addAll(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHARRAY.getName(), SVGCssContentTypeStrokeDashArray.class).getDashValues());
+            shape.getStrokeDashArray().addAll(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_DASHARRAY.getName(),
+                                                                      SVGContentTypeStrokeDashArray.class).getDashValues());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHOFFSET.getName())) {
-            shape.setStrokeDashOffset(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_DASHOFFSET.getName(), SVGCssContentTypeLength.class).getValue());
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_DASHOFFSET.getName())) {
+            shape.setStrokeDashOffset(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_DASHOFFSET.getName(), SVGContentTypeLength.class)
+                                           .getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINEJOIN.getName())) {
-            shape.setStrokeLineJoin(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINEJOIN.getName(), SVGCssContentTypeStrokeLineJoin.class).getValue());
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_LINEJOIN.getName())) {
+            shape.setStrokeLineJoin(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_LINEJOIN.getName(), SVGContentTypeStrokeLineJoin.class)
+                                         .getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName())) {
-            shape.setStrokeLineCap(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName(), SVGCssContentTypeStrokeLineCap.class).getValue());
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_LINECAP.getName())) {
+            shape.setStrokeLineCap(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_LINECAP.getName(), SVGContentTypeStrokeLineCap.class)
+                                        .getValue());
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName())) {
-            shape.setStrokeMiterLimit(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGCssContentTypeDouble.class).getValue());
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_MITERLIMIT.getName())) {
+            shape.setStrokeMiterLimit(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class)
+                                           .getValue());
         }
     }
 
@@ -313,12 +326,12 @@ public final class SVGUtils {
 
         style.combineWithStyle(otherStyle);
 
-        for (Map.Entry<String, SVGCssContentTypeBase> property : style.getProperties().entrySet()) {
+        for (Map.Entry<String, SVGContentTypeBase> property : style.getProperties().entrySet()) {
             if (property.getValue().getIsInherited()) {
-                SVGCssContentTypeBase otherProperty = otherStyle.getCssContentType(property.getKey());
+                SVGContentTypeBase otherProperty = otherStyle.getCssContentType(property.getKey());
                 if (otherProperty != null && !otherProperty.getIsInherited()) {
                     if (otherProperty.getIsNone()) {
-                        property.getValue().parseCssText(SVGCssContentTypeBase.NONE_INDICATOR);
+                        property.getValue().parseCssText(SVGContentTypeBase.NONE_INDICATOR);
                     } else {
                         property.getValue().setValue(otherProperty.getValue());
                         property.getValue().setUnit(otherProperty.getUnit());
@@ -333,7 +346,7 @@ public final class SVGUtils {
 
     /**
      * Returns the combined transformations available in the given string. The string must be contain data
-     * corresponding to the SVGRoot specification for the transform attribute.
+     * corresponding to the SVGRoot specification for the transform attributes.
      *
      * @param data the string which contains the transformation data.
      *
@@ -348,12 +361,12 @@ public final class SVGUtils {
 
         Transform result = null;
 
-        EnumSet<SVGElementBase.Matrix> allMatrices = EnumSet.allOf(SVGElementBase.Matrix.class);
-        allMatrices.remove(SVGElementBase.Matrix.NONE);
+        EnumSet<Enumerations.Matrix> allMatrices = EnumSet.allOf(Enumerations.Matrix.class);
+        allMatrices.remove(Enumerations.Matrix.NONE);
 
         for (int i = 0; i < data.length(); i++) {
 
-            for (SVGElementBase.Matrix matrix : allMatrices) {
+            for (Enumerations.Matrix matrix : allMatrices) {
                 if (data.startsWith(matrix.getName(), i)) {
 
                     // getting the start and end of the new substring, which contains the data in the braces
@@ -376,31 +389,41 @@ public final class SVGUtils {
         return result;
     }
 
+    /**
+     * Applies the given opacity to the given color, overwriting the old opacity in the process.
+     * @param color the {@link Color} to use.
+     * @param opacity the opacity to apply.
+     * @return a new
+     */
+    public static Color applyOpacity(final Color color, final double opacity) {
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    }
+
     // endregion
 
     // region Methods related to Transformation
 
     /**
      * Gets the {@link Transform} that is represented by the given data. The data must meet the following requirements.
-     * Data can start with the name of the provide {@link SVGElementBase.Matrix}, in which case checkIfStartWithMatrix must be true,
+     * Data can start with the name of the provide {@link Enumerations.Matrix}, in which case checkIfStartWithMatrix must be true,
      * otherwise an exception will occur when the actual data is processed.
      * Data must contain the values separated with a coma (e.g. 1,2,3). Optionally the values can be embraces with ().
      *
      * @param matrix                 the matrix to use
-     * @param data                   the data to be used, must not be null or empty or {@link SVGElementBase.Matrix#NONE}.
-     * @param checkIfStartWithMatrix determines if the given data is to be checked if it starts with the {@link SVGElementBase.Matrix#name}
+     * @param data                   the data to be used, must not be null or empty or {@link Enumerations.Matrix#NONE}.
+     * @param checkIfStartWithMatrix determines if the given data is to be checked if it starts with the {@link Enumerations.Matrix#name}
      *
      * @return a new {@link Transform} which contains the transformation represented by the data.
      *
-     * @throws IllegalArgumentException if the given data is empty or matrix is {@link SVGElementBase.Matrix#NONE}.
+     * @throws IllegalArgumentException if the given data is empty or matrix is {@link Enumerations.Matrix#NONE}.
      * @throws SVGException             if there is an error in the transformation data of the given string.
      */
-    public static Transform getTransform(final SVGElementBase.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
+    public static Transform getTransform(final Enumerations.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
         if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("Given data must not be null or empty");
         }
 
-        if (matrix == SVGElementBase.Matrix.NONE) {
+        if (matrix == Enumerations.Matrix.NONE) {
             throw new IllegalArgumentException("Given matrix must not be NONE");
         }
 
@@ -431,7 +454,9 @@ public final class SVGUtils {
             // a matrix will create an affine matrix and has 6 values
             case MATRIX:
                 if (values.size() != 6) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 6 values but got %d", matrix.getName(), values.size()));
+                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 6 values but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 try {
@@ -451,7 +476,9 @@ public final class SVGUtils {
             case TRANSLATE:
             case SCALE:
                 if (values.size() != 1 && values.size() != 2) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 or 2 values but got %d", matrix.getName(), values.size()));
+                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 or 2 values but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 try {
@@ -459,7 +486,7 @@ public final class SVGUtils {
                     double x = Double.parseDouble(values.get(0).trim());
                     double y = values.size() == 2 ? Double.parseDouble(values.get(1).trim()) : x;
 
-                    if (matrix == SVGElementBase.Matrix.TRANSLATE) {
+                    if (matrix == Enumerations.Matrix.TRANSLATE) {
                         result = new Translate(x, y);
                     } else {
                         result = new Scale(x, y);
@@ -472,7 +499,9 @@ public final class SVGUtils {
             // a rotate will create a rotate matrix and has either 1 or 3 values
             case ROTATE:
                 if (values.size() != 1 && values.size() != 3) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 or 3 values but got %d", matrix.getName(), values.size()));
+                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 or 3 values but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 // if more then one value is present then the rotation also contains a translation
@@ -492,7 +521,9 @@ public final class SVGUtils {
             case SKEW_Y:
             default:
                 if (values.size() != 1) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 value but got %d", matrix.getName(), values.size()));
+                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 value but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 double shearing;
@@ -503,7 +534,7 @@ public final class SVGUtils {
                     throw new SVGException(e);
                 }
 
-                if (matrix == SVGElementBase.Matrix.SKEW_X) {
+                if (matrix == Enumerations.Matrix.SKEW_X) {
                     result = new Shear(shearing, 0.0d);
                 } else {
                     result = new Shear(0.0d, shearing);
@@ -515,8 +546,10 @@ public final class SVGUtils {
     }
 
     /**
-     * This method will iterate through the given toSplit and call the dataConsumer {@link Function} when the current character in toSplit is contained in the delimiters.
-     * The {@link String} passed to the dataConsumer will contain all the characters read in the String that are NOT considered delimiters. When the dataConsumer returns true, the passed
+     * This method will iterate through the given toSplit and call the dataConsumer {@link Function} when the current character in toSplit is contained in
+     * the delimiters.
+     * The {@link String} passed to the dataConsumer will contain all the characters read in the String that are NOT considered delimiters. When the
+     * dataConsumer returns true, the passed
      * {@link String} will be added to the list of results. A new call to the dataConsumer will then contain a new {@link String}.
      *
      * @param toSplit      the {@link String} which is to be parsed, must not be null or empty.

@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -43,7 +44,7 @@ public final class SVGPolygonTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
         SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
@@ -67,7 +68,7 @@ public final class SVGPolygonTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
         SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
@@ -80,7 +81,7 @@ public final class SVGPolygonTest {
             Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
         }
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
         polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());

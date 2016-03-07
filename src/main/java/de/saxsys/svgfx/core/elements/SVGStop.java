@@ -21,10 +21,11 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeDouble;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGContentTypeDouble;
+import de.saxsys.svgfx.core.css.SVGContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
@@ -58,35 +59,35 @@ public class SVGStop extends SVGElementBase<Stop> {
 
     /**
      * {@inheritDoc}.
-     * This stop used both the {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_COLOR} and {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#COLOR}, however
-     * the {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_COLOR} is preferred if both are present. Furthermore if an
-     * {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
+     * This stop used both the {@link Enumerations.PresentationAttribute#STOP_COLOR} and {@link Enumerations.PresentationAttribute#COLOR}, however
+     * the {@link Enumerations.PresentationAttribute#STOP_COLOR} is preferred if both are present. Furthermore if an
+     * {@link Enumerations.PresentationAttribute#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
     protected final Stop createResult(final SVGCssStyle style) throws SVGException {
 
-        SVGCssContentTypeLength offset = new SVGCssContentTypeLength(getDataProvider());
+        SVGContentTypeLength offset = new SVGContentTypeLength(getDataProvider());
 
-        Color color = (Color) SVGCssContentTypePaint.DEFAULT_VALUE;
+        Color color = (Color) SVGContentTypePaint.DEFAULT_VALUE;
 
-        if (StringUtils.isNullOrEmpty(getAttribute(CoreAttribute.OFFSET.getName()))) {
+        if (StringUtils.isNullOrEmpty(getAttribute(Enumerations.CoreAttribute.OFFSET.getName()))) {
             throw new SVGException("Stop does not provide an offset value");
         }
 
-        offset.parseCssText(getAttribute(CoreAttribute.OFFSET.getName()));
+        offset.parseCssText(getAttribute(Enumerations.CoreAttribute.OFFSET.getName()));
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName())) {
-            color = (Color) style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName(), SVGCssContentTypePaint.class).getValue();
-        } else if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.COLOR.getName())) {
-            color = (Color) style.getCssContentType(SVGCssStyle.PresentationAttribute.COLOR.getName(), SVGCssContentTypePaint.class).getValue();
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STOP_COLOR.getName())) {
+            color = (Color) style.getCssContentType(Enumerations.PresentationAttribute.STOP_COLOR.getName(), SVGContentTypePaint.class).getValue();
+        } else if (style.hasCssContentType(Enumerations.PresentationAttribute.COLOR.getName())) {
+            color = (Color) style.getCssContentType(Enumerations.PresentationAttribute.COLOR.getName(), SVGContentTypePaint.class).getValue();
         }
 
         if (color == null) {
             throw new SVGException("Given color must not be null");
         }
 
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName())) {
-            double opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeDouble.class).getValue();
+        if (style.hasCssContentType(Enumerations.PresentationAttribute.STOP_OPACITY.getName())) {
+            double opacity = style.getCssContentType(Enumerations.PresentationAttribute.STOP_OPACITY.getName(), SVGContentTypeDouble.class).getValue();
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         }
 

@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.shape.Shape;
@@ -87,7 +88,7 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     public final List<Double> getPoints() throws SVGException, IllegalArgumentException {
         List<Double> actualPoints = new ArrayList<>();
 
-        String points = getAttribute(CoreAttribute.POINTS.getName());
+        String points = getAttribute(Enumerations.CoreAttribute.POINTS.getName());
 
         if (StringUtils.isNullOrEmpty(points)) {
             return actualPoints;

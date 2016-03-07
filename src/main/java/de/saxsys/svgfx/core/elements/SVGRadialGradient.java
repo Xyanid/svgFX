@@ -22,6 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -65,10 +66,10 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
             throw new SVGException("Given radial gradient does not have colors");
         }
 
-        String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
-        String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());
-        String focusX = getAttribute(CoreAttribute.FOCUS_X.getName());
-        String focusY = getAttribute(CoreAttribute.FOCUS_Y.getName());
+        String centerX = getAttribute(Enumerations.CoreAttribute.CENTER_X.getName());
+        String centerY = getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName());
+        String focusX = getAttribute(Enumerations.CoreAttribute.FOCUS_X.getName());
+        String focusY = getAttribute(Enumerations.CoreAttribute.FOCUS_Y.getName());
 
         double cx = StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX);
         double cy = StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY);
@@ -84,7 +85,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
         // TODO figure out if the focus angle is correct or not
 
-        return new RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
+        return new RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
     }
 
     //endregion

@@ -26,7 +26,7 @@
 
     <groupId>de.saxsys</groupId>
     <artifactId>svgfx</artifactId>
-    <version>0.9.0</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>svgFX</name>
     <description>Application Framework for svg with JavaFX.</description>

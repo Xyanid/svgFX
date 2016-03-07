@@ -20,9 +20,10 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGContentTypeLength;
+import de.saxsys.svgfx.core.css.SVGContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.Color;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public final class SVGStyleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.TYPE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.TYPE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
         SVGStyle style = new SVGStyle("style", attributes, null, new SVGDataProvider());
@@ -61,12 +62,12 @@ public final class SVGStyleTest {
 
         Assert.assertEquals("circle", result.getName());
         Assert.assertEquals(3, result.getProperties().size());
-        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
-        Assert.assertEquals(Color.ORANGE, result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
-        Assert.assertEquals(Color.BLACK, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()));
-        Assert.assertEquals(10.0d, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 0.01d);
+        Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.FILL.getName()));
+        Assert.assertEquals(Color.ORANGE, result.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName()));
+        Assert.assertEquals(Color.BLACK, result.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName()));
+        Assert.assertEquals(10.0d, result.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 0.01d);
     }
 
     /**
@@ -79,7 +80,7 @@ public final class SVGStyleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.TYPE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.TYPE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
         SVGStyle style = new SVGStyle("style", attributes, null, new SVGDataProvider());
@@ -93,12 +94,12 @@ public final class SVGStyleTest {
 
         Assert.assertEquals("circle", result.getName());
         Assert.assertEquals(3, result.getProperties().size());
-        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
-        Assert.assertEquals(Color.ORANGE, result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
-        Assert.assertEquals(Color.BLACK, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()));
-        Assert.assertEquals(10.0d, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 0.01d);
+        Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.FILL.getName()));
+        Assert.assertEquals(Color.ORANGE, result.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName()));
+        Assert.assertEquals(Color.BLACK, result.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName()));
+        Assert.assertEquals(10.0d, result.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 0.01d);
     }
 
     /**
@@ -111,7 +112,7 @@ public final class SVGStyleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.TYPE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.TYPE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
         SVGStyle style = new SVGStyle("style", attributes, null, new SVGDataProvider());
@@ -131,17 +132,17 @@ public final class SVGStyleTest {
 
             switch (result.getName()) {
                 case "st1":
-                    Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName()));
-                    Assert.assertEquals(Color.ORANGE, result.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
+                    Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.FILL.getName()));
+                    Assert.assertEquals(Color.ORANGE, result.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
                     break;
                 case "st2":
-                    Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName()));
-                    Assert.assertEquals(Color.BLACK, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
+                    Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName()));
+                    Assert.assertEquals(Color.BLACK, result.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
                     break;
                 case "st3":
 
-                    Assert.assertNotNull(result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName()));
-                    Assert.assertEquals(10.0d, result.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 0.01d);
+                    Assert.assertNotNull(result.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName()));
+                    Assert.assertEquals(10.0d, result.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 0.01d);
                     break;
                 default:
                     Assert.fail();

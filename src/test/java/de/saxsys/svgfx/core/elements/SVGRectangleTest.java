@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -43,17 +44,17 @@ public final class SVGRectangleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(6);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POSITION_X.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POSITION_X.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.POSITION_Y.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.POSITION_Y.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.WIDTH.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.WIDTH.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("25");
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.HEIGHT.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.HEIGHT.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("35");
-        Mockito.when(attributes.getQName(4)).thenReturn(SVGElementBase.CoreAttribute.RADIUS_X.getName());
+        Mockito.when(attributes.getQName(4)).thenReturn(Enumerations.CoreAttribute.RADIUS_X.getName());
         Mockito.when(attributes.getValue(4)).thenReturn("5");
-        Mockito.when(attributes.getQName(5)).thenReturn(SVGElementBase.CoreAttribute.RADIUS_Y.getName());
+        Mockito.when(attributes.getQName(5)).thenReturn(Enumerations.CoreAttribute.RADIUS_Y.getName());
         Mockito.when(attributes.getValue(5)).thenReturn("10");
 
         SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
@@ -76,12 +77,12 @@ public final class SVGRectangleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(6);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POSITION_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.POSITION_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.WIDTH.getName());
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.HEIGHT.getName());
-        Mockito.when(attributes.getQName(4)).thenReturn(SVGElementBase.CoreAttribute.RADIUS_X.getName());
-        Mockito.when(attributes.getQName(5)).thenReturn(SVGElementBase.CoreAttribute.RADIUS_Y.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POSITION_X.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.POSITION_Y.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.WIDTH.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.HEIGHT.getName());
+        Mockito.when(attributes.getQName(4)).thenReturn(Enumerations.CoreAttribute.RADIUS_X.getName());
+        Mockito.when(attributes.getQName(5)).thenReturn(Enumerations.CoreAttribute.RADIUS_Y.getName());
 
 
         Mockito.when(attributes.getValue(0)).thenReturn("A");
@@ -199,7 +200,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getLength()).thenReturn(1);
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.WIDTH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.WIDTH.getName());
 
         SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
@@ -211,7 +212,7 @@ public final class SVGRectangleTest {
             Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
         }
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.HEIGHT.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.HEIGHT.getName());
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 

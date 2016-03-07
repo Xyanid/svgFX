@@ -21,6 +21,7 @@ package de.saxsys.svgfx.css.core;
 
 
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.ContentTypeBase;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.util.Pair;
@@ -36,7 +37,7 @@ import java.util.Map;
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyle<TContentType extends CssContentTypeBase> {
+public abstract class CssStyle<TContentType extends ContentTypeBase> {
 
     // region Enumeration
 
@@ -221,11 +222,11 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     // region Private
 
     /**
-     * Creates at new {@link CssContentTypeBase} based on the given name.
+     * Creates at new {@link ContentTypeBase} based on the given name.
      *
      * @param name name of the property
      *
-     * @return a new {@link CssContentTypeBase}.
+     * @return a new {@link ContentTypeBase}.
      */
     protected abstract TContentType createContentType(final String name);
 
@@ -234,11 +235,11 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     // region Public
 
     /**
-     * Returns the {@link CssContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
+     * Returns the {@link ContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
      *
      * @param name name of the property
      *
-     * @return the {@link CssContentTypeBase} in the given map or null.
+     * @return the {@link ContentTypeBase} in the given map or null.
      */
     public final TContentType getCssContentType(final String name) {
         return properties.get(name);
@@ -256,13 +257,13 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     }
 
     /**
-     * Returns the {@link CssContentTypeBase} in the {@link #properties} as the desired type using the provided key or null if no such content type exist.
+     * Returns the {@link ContentTypeBase} in the {@link #properties} as the desired type using the provided key or null if no such content type exist.
      *
      * @param <TContent> type of the content desired.
      * @param name       name of the property
      * @param clazz      class of the type of the property used for casting.
      *
-     * @return the {@link CssContentTypeBase} or null.
+     * @return the {@link ContentTypeBase} or null.
      */
     public final <TContent extends TContentType> TContent getCssContentType(final String name, final Class<TContent> clazz) {
         return clazz.cast(properties.get(name));

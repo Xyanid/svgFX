@@ -27,12 +27,12 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeDouble extends SVGCssContentTypeBase<Double, Void> {
+public class SVGContentTypeDouble extends SVGContentTypeBase<Double, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGCssContentTypeBase}.
+     * Determines the default value for this {@link SVGContentTypeBase}.
      */
     public static final double DEFAULT_VALUE = 0.0d;
 
@@ -45,16 +45,16 @@ public class SVGCssContentTypeDouble extends SVGCssContentTypeBase<Double, Void>
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeDouble(final SVGDataProvider dataProvider) {
+    public SVGContentTypeDouble(final SVGDataProvider dataProvider) {
         super(0.0d, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGCssContentTypeBase
+    //region Override SVGContentTypeBase
 
     /**
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGCssContentTypeDouble}
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypeDouble}
      */
     @Override
     protected Pair<Double, Void> getValueAndUnit(final String cssText) {

@@ -20,44 +20,32 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
- *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypeStrokeLineJoin extends SVGCssContentTypeBase<StrokeLineJoin, Void> {
-
-    // region Static
-
-    /**
-     * Determines the default value to use for this {@link SVGCssContentTypeBase}.
-     */
-    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
-
-    // endregion
+public class SVGContentTypeString extends SVGContentTypeBase<String, Void> {
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypeStrokeLineJoin(final SVGDataProvider dataProvider) {
-        super(DEFAULT_VALUE, dataProvider);
+    public SVGContentTypeString(final SVGDataProvider dataProvider) {
+        super(null, dataProvider);
     }
 
     //endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     @Override
-    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
+    protected Pair<String, Void> getValueAndUnit(String cssText) {
 
-        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
+        return new Pair<>(cssText, null);
     }
 
     //endregion

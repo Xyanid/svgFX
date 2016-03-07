@@ -30,7 +30,7 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
+public class SVGContentTypePaint extends SVGContentTypeBase<Paint, Void> {
 
     // region Static
 
@@ -40,7 +40,7 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
     private static final String CURRENT_COLOR = "currentColor";
 
     /**
-     * Determines the default color to use for a {@link SVGCssContentTypePaint}.
+     * Determines the default color to use for a {@link SVGContentTypePaint}.
      */
     public static final Paint DEFAULT_VALUE = Color.BLACK;
 
@@ -62,7 +62,7 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGCssContentTypePaint(final SVGDataProvider dataProvider) {
+    public SVGContentTypePaint(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -79,7 +79,7 @@ public class SVGCssContentTypePaint extends SVGCssContentTypeBase<Paint, Void> {
 
     // endregion
 
-    //region Override CssContentTypeBase
+    //region Override ContentTypeBase
 
     @Override
     protected Pair<Paint, Void> getValueAndUnit(final String cssText) {

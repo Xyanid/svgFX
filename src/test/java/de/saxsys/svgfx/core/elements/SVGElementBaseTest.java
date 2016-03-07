@@ -21,14 +21,14 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeDouble;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeFillRule;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeStrokeType;
+import de.saxsys.svgfx.core.css.SVGContentTypeLength;
+import de.saxsys.svgfx.core.css.SVGContentTypePaint;
+import de.saxsys.svgfx.core.css.SVGContentTypeDouble;
+import de.saxsys.svgfx.core.css.SVGContentTypeFillRule;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeDashArray;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeLineCap;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.css.SVGContentTypeStrokeType;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.Node;
@@ -63,25 +63,25 @@ public class SVGElementBaseTest {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(SVGCssStyle.PresentationAttribute.values().length);
+        Mockito.when(attributes.getLength()).thenReturn(Enumerations.PresentationAttribute.values().length);
 
         int counter = 0;
 
-        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
+        for (Enumerations.PresentationAttribute attribute : EnumSet.allOf(Enumerations.PresentationAttribute.class)) {
 
             String value = "1.0";
 
-            if (attribute.getContentTypeClass().equals(SVGCssContentTypeFillRule.class)) {
+            if (attribute.getContentTypeClass().equals(SVGContentTypeFillRule.class)) {
                 value = Enumerations.FillRuleMapping.EVEN_ODD.getName();
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypePaint.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypePaint.class)) {
                 value = "#808080";
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeDashArray.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeDashArray.class)) {
                 value = "10,5";
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeLineCap.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeLineCap.class)) {
                 value = StrokeLineCap.BUTT.name().toLowerCase();
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeLineJoin.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeLineJoin.class)) {
                 value = StrokeLineJoin.BEVEL.name().toLowerCase();
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeType.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeType.class)) {
                 value = StrokeType.OUTSIDE.name().toLowerCase();
             }
 
@@ -93,29 +93,29 @@ public class SVGElementBaseTest {
 
         Assert.assertNotNull(style);
 
-        for (SVGCssStyle.PresentationAttribute attribute : EnumSet.allOf(SVGCssStyle.PresentationAttribute.class)) {
+        for (Enumerations.PresentationAttribute attribute : EnumSet.allOf(Enumerations.PresentationAttribute.class)) {
 
             Object value = "1.0";
 
-            if (attribute.getContentTypeClass().equals(SVGCssContentTypeLength.class)) {
+            if (attribute.getContentTypeClass().equals(SVGContentTypeLength.class)) {
                 value = 1.0d;
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeDouble.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeDouble.class)) {
                 value = 1.0d;
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeFillRule.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeFillRule.class)) {
                 value = Enumerations.FillRuleMapping.EVEN_ODD.getRule();
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypePaint.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypePaint.class)) {
                 value = Color.web("#808080");
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeDashArray.class)) {
-                SVGCssContentTypeLength[] result = (SVGCssContentTypeLength[]) style.getCssContentType(attribute.getName()).getValue();
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeDashArray.class)) {
+                SVGContentTypeLength[] result = (SVGContentTypeLength[]) style.getCssContentType(attribute.getName()).getValue();
                 Assert.assertEquals(2, result.length);
                 Assert.assertEquals(10.0d, result[0].getValue(), 0.01d);
                 Assert.assertEquals(5.0d, result[1].getValue(), 0.01d);
                 continue;
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeLineCap.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeLineCap.class)) {
                 value = StrokeLineCap.BUTT;
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeLineJoin.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeLineJoin.class)) {
                 value = StrokeLineJoin.BEVEL;
-            } else if (attribute.getContentTypeClass().equals(SVGCssContentTypeStrokeType.class)) {
+            } else if (attribute.getContentTypeClass().equals(SVGContentTypeStrokeType.class)) {
                 value = StrokeType.OUTSIDE;
             }
 
@@ -124,7 +124,7 @@ public class SVGElementBaseTest {
     }
 
     /**
-     * Ensures that {@link SVGCssStyle.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
+     * Ensures that {@link Enumerations.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
     @Test
     public void ensureThatPresentationStyleIsPreferredAndOwnCssStyleAttributesAreKept() {
@@ -133,13 +133,13 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("none");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.STROKE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("#808080");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.FILL_RULE.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.FILL_RULE.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("evenodd");
-        Mockito.when(attributes.getQName(3)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("fill:#101010;stroke:#080808;stroke-width:50;");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
@@ -148,14 +148,14 @@ public class SVGElementBaseTest {
 
         Assert.assertNotNull(style);
 
-        Assert.assertTrue(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getIsNone());
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#808080"));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 50.0d, 0.01d);
+        Assert.assertTrue(style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 50.0d, 0.01d);
     }
 
     /**
-     * Ensures that {@link SVGCssStyle.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
+     * Ensures that {@link Enumerations.PresentationAttribute}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
     @Test
     public void ensureThatOwnStyleIsPreferredAndReferencedCssStyleAttributesAreKept() {
@@ -164,9 +164,9 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("fill:#101010;stroke:#080808;stroke-width:50;");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.CLASS.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.CLASS.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("st1");
 
         SVGCssStyle referencedStyle = new SVGCssStyle(new SVGDataProvider());
@@ -183,10 +183,10 @@ public class SVGElementBaseTest {
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#101010"));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#080808"));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_WIDTH.getName(), SVGCssContentTypeLength.class).getValue(), 50.0d, 0.01d);
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue(), Color.web("#101010"));
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#080808"));
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 50.0d, 0.01d);
     }
 
     /**
@@ -200,7 +200,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("fill:#000000;stroke:#111111;fill-rule:evenodd;");
 
         SVGDataProvider dataProvider = new SVGDataProvider();
@@ -215,11 +215,11 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("inherit");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("stroke:inherit;");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGElementBase.CoreAttribute.CLASS.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.CLASS.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("st1");
 
         SVGCircle circle = new SVGCircle("circle", attributes, group, dataProvider);
@@ -228,9 +228,9 @@ public class SVGElementBaseTest {
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#000000"));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(), Color.web("#111111"));
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL_RULE.getName(), SVGCssContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue(), Color.web("#000000"));
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#111111"));
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
     }
 
     /**
@@ -243,23 +243,23 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("fill:#222222");
 
         SVGGroup group = new SVGGroup("group", attributes, null, new SVGDataProvider());
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.STYLE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.STYLE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("stroke:#111111");
 
         SVGGroup group1 = new SVGGroup("group", attributes, group, new SVGDataProvider());
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("inherit");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.STROKE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("inherit");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.STROKE_LINECAP.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("inherit");
 
         SVGCircle circle = new SVGCircle("circle", attributes, group1, new SVGDataProvider());
@@ -268,10 +268,10 @@ public class SVGElementBaseTest {
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(SVGCssContentTypeStrokeLineCap.DEFAULT_VALUE,
-                            style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE_LINECAP.getName(), SVGCssContentTypeStrokeLineCap.class).getValue());
+        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertEquals(SVGContentTypeStrokeLineCap.DEFAULT_VALUE,
+                            style.getCssContentType(Enumerations.PresentationAttribute.STROKE_LINECAP.getName(), SVGContentTypeStrokeLineCap.class).getValue());
     }
 
     /**
@@ -298,11 +298,11 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#000000");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.STROKE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("#111111");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.OPACITY.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.OPACITY.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("0.5");
 
         circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
@@ -322,11 +322,11 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#000000");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGCssStyle.PresentationAttribute.STROKE.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.STROKE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("#111111");
-        Mockito.when(attributes.getQName(2)).thenReturn(SVGCssStyle.PresentationAttribute.OPACITY.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.OPACITY.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("0.5");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
@@ -335,9 +335,9 @@ public class SVGElementBaseTest {
 
         Assert.assertNotNull(style);
 
-        Assert.assertEquals(Color.web("#000000"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(0.5d, style.getCssContentType(SVGCssStyle.PresentationAttribute.OPACITY.getName(), SVGCssContentTypeDouble.class).getValue(), 0.01d);
+        Assert.assertEquals(Color.web("#000000"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertEquals(0.5d, style.getCssContentType(Enumerations.PresentationAttribute.OPACITY.getName(), SVGContentTypeDouble.class).getValue(), 0.01d);
 
         SVGCssStyle style1 = circle.getCssStyleAndResolveInheritance();
 
@@ -345,19 +345,19 @@ public class SVGElementBaseTest {
 
         Assert.assertTrue(style != style1);
 
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue(),
-                            style1.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue(),
-                            style1.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(style.getCssContentType(SVGCssStyle.PresentationAttribute.OPACITY.getName(), SVGCssContentTypeDouble.class).getValue(),
-                            style1.getCssContentType(SVGCssStyle.PresentationAttribute.OPACITY.getName(), SVGCssContentTypeDouble.class).getValue(),
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue(),
+                            style1.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue(),
+                            style1.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        Assert.assertEquals(style.getCssContentType(Enumerations.PresentationAttribute.OPACITY.getName(), SVGContentTypeDouble.class).getValue(),
+                            style1.getCssContentType(Enumerations.PresentationAttribute.OPACITY.getName(), SVGContentTypeDouble.class).getValue(),
                             0.01d);
 
 
     }
 
     /**
-     * Ensures that {@link de.saxsys.svgfx.core.elements.SVGElementBase.CoreAttribute#TRANSFORM} attribute is correctly read.
+     * Ensures that {@link Enumerations.CoreAttribute#TRANSFORM} attribute is correctly read.
      */
     @Test
     public void ensureThatTransformAttributeIsRead() {
@@ -366,7 +366,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.TRANSFORM.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.TRANSFORM.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("translate(30)");
 
         Transform transform = new SVGCircle("circle", attributes, null, new SVGDataProvider()).getTransformation();
@@ -387,7 +387,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.CLIP_PATH.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("url(#path)");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
@@ -401,7 +401,7 @@ public class SVGElementBaseTest {
     }
 
     /**
-     * Ensure that no {@link SVGClipPath} will be created if the element does not have {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#CLIP_PATH} attribute.
+     * Ensure that no {@link SVGClipPath} will be created if the element does not have {@link Enumerations.PresentationAttribute#CLIP_PATH} attribute.
      */
     @Test
     public void ensureNoClipPathIsReturnedIfTheElementDoesNotHaveAClipPathAttribute() {
@@ -425,7 +425,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.CLIP_PATH.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("url(#path)");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
@@ -449,7 +449,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.CLIP_PATH.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("url(#test)");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, dataProvider);
@@ -467,7 +467,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.ID.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.ID.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("test");
 
         SVGDataProvider dataProvider = new SVGDataProvider();
@@ -476,7 +476,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.CLIP_PATH.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("url(#test)");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, dataProvider);
@@ -502,9 +502,9 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.CLIP_PATH.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("url(#test)");
-        Mockito.when(attributes.getQName(1)).thenReturn(SVGElementBase.CoreAttribute.ID.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.ID.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("test");
 
         SVGDataProvider dataProvider = new SVGDataProvider();
@@ -513,7 +513,7 @@ public class SVGElementBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.CLIP_PATH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.CLIP_PATH.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("url(#test)");
 
         SVGCircle circle = new SVGCircle("circle", attributes, null, dataProvider);
