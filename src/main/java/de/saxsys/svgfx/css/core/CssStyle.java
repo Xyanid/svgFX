@@ -20,24 +20,24 @@
 package de.saxsys.svgfx.css.core;
 
 
+import de.saxsys.svgfx.content.ContentTypeBase;
+import de.saxsys.svgfx.content.ContentTypeHolder;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.attributes.ContentTypeBase;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
- * @param <TContentType> type of the properties of this style.
+ * @param <TContentType> type of the contentMap of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyle<TContentType extends ContentTypeBase> {
+public abstract class CssStyle<TContentType extends ContentTypeBase> extends ContentTypeHolder<TContentType> {
 
     // region Enumeration
 
@@ -98,16 +98,10 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
      * Determines the selector of the style
      */
     private Selector selector;
-
     /**
      * The name of the style excluding the class or id selector
      */
     private String name;
-
-    /**
-     * Contains all the properties provided by this style.
-     */
-    protected final Map<String, TContentType> properties;
 
     //endregion
 
@@ -117,9 +111,6 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
      * Creates a new instance.
      */
     public CssStyle() {
-        super();
-
-        properties = new HashMap<>();
     }
 
     /**
@@ -128,8 +119,6 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
      * @param name the name to of this style.
      */
     public CssStyle(final String name) {
-        this();
-
         this.name = name;
     }
 
@@ -145,12 +134,12 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
     }
 
     /**
-     * Returns the {@link CssStyle#properties} as an unmodifiable list.
+     * Returns the {@link #contentMap}.
      *
-     * @return the {@link CssStyle#properties} as an unmodifiable list.
+     * @return the {@link #contentMap}.
      */
     public final Map<String, TContentType> getProperties() {
-        return properties;
+        return contentMap;
     }
 
     /**
@@ -177,18 +166,18 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
 
     // endregion
 
-    //region Abstract
+    // region Private
 
     /**
-     * Determines the content type from the given data.
+     * Determines the {@link TContentType} from the given data.
      *
      * @param data data to be used.
      *
-     * @return a new {@link Pair} containing the name of the property as the key and the content type as the value;
+     * @return a new {@link Pair} containing the name of the {@link TContentType} as the key and the {@link TContentType} as the value;
      */
     private Pair<String, TContentType> determineContentType(final String data) throws SVGException {
         if (StringUtils.isNullOrEmpty(data)) {
-            throw new SVGException("Given data must not be null in order to create a property from it");
+            throw new SVGException("Given data must not be null in order to create a content type from it");
         }
 
         String trimmedData = data.trim();
@@ -196,7 +185,7 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
         int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
 
         if (index == -1 || index >= trimmedData.length() - 1) {
-            throw new SVGException("Given data either does not provide a property separator or is to short");
+            throw new SVGException("Given data either does not provide a content type separator separator or is to short");
         }
 
         String name = trimmedData.substring(0, index).trim();
@@ -204,11 +193,10 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
         TContentType content = createContentType(StringUtils.stripStringIndicators(name));
 
         if (content != null) {
-
             String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
 
             try {
-                content.parseCssText(cssText);
+                content.consumeText(cssText);
             } catch (Exception e) {
                 throw new SVGException(String.format("Could not parse %s for content type %s", cssText, content.getClass().getName()), e);
             }
@@ -217,60 +205,12 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
         return new Pair<>(name, content);
     }
 
-    //endregion
-
-    // region Private
-
-    /**
-     * Creates at new {@link ContentTypeBase} based on the given name.
-     *
-     * @param name name of the property
-     *
-     * @return a new {@link ContentTypeBase}.
-     */
-    protected abstract TContentType createContentType(final String name);
-
     // endregion
 
     // region Public
 
     /**
-     * Returns the {@link ContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
-     *
-     * @param name name of the property
-     *
-     * @return the {@link ContentTypeBase} in the given map or null.
-     */
-    public final TContentType getCssContentType(final String name) {
-        return properties.get(name);
-    }
-
-    /**
-     * Determines if the given property in contain in he style.
-     *
-     * @param name name of the property to look for.
-     *
-     * @return true if a property with the name exists otherwise false.
-     */
-    public final boolean hasCssContentType(String name) {
-        return properties.containsKey(name);
-    }
-
-    /**
-     * Returns the {@link ContentTypeBase} in the {@link #properties} as the desired type using the provided key or null if no such content type exist.
-     *
-     * @param <TContent> type of the content desired.
-     * @param name       name of the property
-     * @param clazz      class of the type of the property used for casting.
-     *
-     * @return the {@link ContentTypeBase} or null.
-     */
-    public final <TContent extends TContentType> TContent getCssContentType(final String name, final Class<TContent> clazz) {
-        return clazz.cast(properties.get(name));
-    }
-
-    /**
-     * Combines this {@link CssStyle} with the given {@link CssStyle}, new properties not present in this style will be added.
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, new contentMap not present in this style will be added.
      *
      * @param <TContentTypeOther> the type of the {@link CssStyle} this style will be combined with
      * @param style               the {@link CssStyle} which is be used, must not be null.
@@ -287,9 +227,9 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
             return;
         }
 
-        for (Map.Entry<String, TContentTypeOther> entry : style.properties.entrySet()) {
-            if (!properties.containsKey(entry.getKey())) {
-                properties.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, TContentTypeOther> entry : style.contentMap.entrySet()) {
+            if (!contentMap.containsKey(entry.getKey())) {
+                contentMap.put(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -303,7 +243,7 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
 
         name = null;
         selector = Selector.NONE;
-        properties.clear();
+        contentMap.clear();
 
         StringBuilder dataBuilder = new StringBuilder();
 
@@ -356,7 +296,7 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
                     Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
 
                     if (property.getValue() != null) {
-                        properties.put(property.getKey(), property.getValue());
+                        contentMap.put(property.getKey(), property.getValue());
                     }
 
                     dataBuilder.setLength(0);
@@ -369,7 +309,7 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> {
                         Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
 
                         if (property.getValue() != null) {
-                            properties.put(property.getKey(), property.getValue());
+                            contentMap.put(property.getKey(), property.getValue());
                         }
                     }
 

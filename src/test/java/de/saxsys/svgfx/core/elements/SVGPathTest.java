@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.shape.FillRule;
 import org.junit.Assert;
@@ -65,7 +66,7 @@ public final class SVGPathTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.PATH_DESCRIPTION.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.FILL_RULE.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("evenodd");
 
         SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());

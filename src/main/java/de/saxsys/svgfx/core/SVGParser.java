@@ -19,7 +19,8 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeString;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
 import de.saxsys.svgfx.core.elements.SVGDefs;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
@@ -77,14 +78,15 @@ public class SVGParser extends SAXParser<Group, SVGDataProvider, SVGElementCreat
 
         // all elements in def and all gradients are considered data
         if (element.getParent() instanceof SVGDefs || element instanceof SVGGradientBase) {
-            dataProvider.setData(element.getAttribute(Enumerations.CoreAttribute.ID.getName()), element);
+            dataProvider.setData(element.getContentType(CoreAttributeMapper.ID.getName(), SVGContentTypeString.class).getValue(), element);
         }
         // styles are also added to the dataprovider
         else if (element instanceof SVGStyle) {
             dataProvider.getStyles().addAll(((SVGStyle) element).getResult());
         }
         //elements which are inside a group or clip SVGPath as well as clipPath elements will not be added
-        else if (!((element instanceof SVGClipPath) || (element.getParent() instanceof SVGClipPath) || (element.getParent() instanceof SVGGroup)) && element.getResult() instanceof Node) {
+        else if (!((element instanceof SVGClipPath) || (element.getParent() instanceof SVGClipPath) || (element.getParent() instanceof SVGGroup)) &&
+                 element.getResult() instanceof Node) {
             result.getChildren().add((Node) element.getResult());
         }
     }

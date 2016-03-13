@@ -21,7 +21,8 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGContentTypePaint;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.core.definitions.Enumerations;
@@ -377,9 +378,8 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        assertEquals(Color.web("#111111"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
-        assertEquals(Color.web("#222222"),
-                     style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#111111"), style.getCssContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#222222"), style.getCssContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue());
     }
 
     /**
@@ -398,9 +398,8 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        assertEquals(Color.web("#111111"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
-        assertEquals(Color.web("#222222"),
-                     style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#111111"), style.getCssContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#222222"), style.getCssContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue());
     }
 
     /**
@@ -419,7 +418,7 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        assertEquals(Color.web("#333333"), style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#333333"), style.getCssContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue());
     }
 
     /**
@@ -947,6 +946,6 @@ public final class SVGUtilTest {
 
         SVGUtils.applyOpacity(red, 0.25d);
 
-        assertEquals(0.25d, SVGUtils.applyOpacity(red, 0.25d).getOpacity(), 0.01d);
+        assertEquals(0.25d, ((Color) SVGUtils.applyOpacity(red, 0.25d)).getOpacity(), 0.01d);
     }
 }

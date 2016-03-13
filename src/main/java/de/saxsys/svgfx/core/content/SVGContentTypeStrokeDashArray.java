@@ -17,7 +17,7 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.css;
+package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import javafx.util.Pair;
@@ -91,7 +91,7 @@ public class SVGContentTypeStrokeDashArray extends SVGContentTypeBase<SVGContent
 
         for (int i = 0; i < values.length; i++) {
             array[i] = new SVGContentTypeLength(getDataProvider());
-            array[i].parseCssText(values[i].trim());
+            array[i].consumeText(values[i].trim());
             dashValues.add(array[i].getValue());
         }
 

@@ -71,6 +71,9 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         String focusX = getAttribute(Enumerations.CoreAttribute.FOCUS_X.getName());
         String focusY = getAttribute(Enumerations.CoreAttribute.FOCUS_Y.getName());
 
+        // TODO figure out how to apply proportional values here
+        // TODO convert the coordinates into the correct space, first convert then apply transform
+
         double cx = StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX);
         double cy = StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY);
 

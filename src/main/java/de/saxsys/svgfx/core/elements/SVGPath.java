@@ -20,7 +20,8 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGContentTypeFillRule;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeFillRule;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.xml.sax.Attributes;
@@ -70,8 +71,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
 
         if (style != null) {
 
-            if (style.hasCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName())) {
-                path.setFillRule(style.getCssContentType(Enumerations.PresentationAttribute.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue());
+            if (style.hasCssContentType(PresentationAttributeMapper.FILL_RULE.getName())) {
+                path.setFillRule(style.getCssContentType(PresentationAttributeMapper.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue());
             }
         }
     }

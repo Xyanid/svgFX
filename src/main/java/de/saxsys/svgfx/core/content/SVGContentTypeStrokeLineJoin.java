@@ -17,25 +17,25 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.css;
+package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
+ * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStrokeLineCap extends SVGContentTypeBase<StrokeLineCap, Void> {
+public class SVGContentTypeStrokeLineJoin extends SVGContentTypeBase<StrokeLineJoin, Void> {
 
     // region Static
 
     /**
      * Determines the default value to use for this {@link SVGContentTypeBase}.
      */
-    public static final StrokeLineCap DEFAULT_VALUE = StrokeLineCap.SQUARE;
+    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
 
     // endregion
 
@@ -46,7 +46,7 @@ public class SVGContentTypeStrokeLineCap extends SVGContentTypeBase<StrokeLineCa
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStrokeLineCap(final SVGDataProvider dataProvider) {
+    public SVGContentTypeStrokeLineJoin(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -55,9 +55,9 @@ public class SVGContentTypeStrokeLineCap extends SVGContentTypeBase<StrokeLineCa
     //region Override ContentTypeBase
 
     @Override
-    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
+    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
+        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

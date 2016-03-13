@@ -20,13 +20,12 @@
 package de.saxsys.svgfx.core.css;
 
 
+import de.saxsys.svgfx.content.ContentTypeBase;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.attributes.ContentTypeBase;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeBase;
+import de.saxsys.svgfx.core.content.SVGContentTypeString;
 import de.saxsys.svgfx.css.core.CssStyle;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
@@ -34,10 +33,6 @@ import java.lang.reflect.InvocationTargetException;
  * @author Xyanid on 29.10.2015.
  */
 public class SVGCssStyle extends CssStyle<SVGContentTypeBase> {
-
-    // region Enumeration
-
-    // endregion
 
     // region Fields
 
@@ -62,7 +57,7 @@ public class SVGCssStyle extends CssStyle<SVGContentTypeBase> {
      * Creates a new instance.
      *
      * @param name     the name to of this style.
-     * @param provider the data provider to use
+     * @param provider the data provider to use.
      */
     public SVGCssStyle(final String name, final SVGDataProvider provider) {
         super(name);
@@ -75,23 +70,19 @@ public class SVGCssStyle extends CssStyle<SVGContentTypeBase> {
     // region Override CssStyle
 
     /**
-     * This implementation will use the name and validate it against {@link Enumerations.PresentationAttribute}s and then create an instance of a {@link ContentTypeBase}.
-     * If the given name does not correspond with any {@link Enumerations.PresentationAttribute}, no {@link ContentTypeBase} will be created and null will be returned.
+     * This implementation will use the name and validate it against{@link PresentationAttributeMapper}s and then create an instance of a
+     * {@link ContentTypeBase}. If the given name does not correspond with any {@link PresentationAttributeMapper}, no {@link ContentTypeBase} will be
+     * created and null will be returned.
      *
      * @param name then name of the property
      *
      * @return a {@link ContentTypeBase} or null if the name is not supported.
      */
     @Override
-    protected SVGContentTypeBase createContentType(final String name) {
-
-        for (Enumerations.PresentationAttribute attribute : Enumerations.PresentationAttribute.values()) {
+    public SVGContentTypeBase createContentType(final String name) {
+        for (PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
             if (attribute.getName().equals(name)) {
-                try {
-                    return attribute.getContentTypeClass().getConstructor(SVGDataProvider.class).newInstance(provider);
-                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                    throw new SVGException("could not create an element for Content type class", e);
-                }
+                return attribute.getContentTypeCreator().apply(provider);
             }
         }
 

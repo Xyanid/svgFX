@@ -21,6 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -61,7 +63,7 @@ public final class SVGUseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.XLinkAttribute.XLINK_HREF.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#test");
         Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.POSITION_X.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("1");
@@ -70,7 +72,7 @@ public final class SVGUseTest {
 
         SVGUse use = new SVGUse("use", attributes, null, provider);
 
-        Assert.assertEquals("#test", use.getAttribute(Enumerations.XLinkAttribute.XLINK_HREF.getName()));
+        Assert.assertEquals("#test", use.getAttribute(XLinkAttributeMapper.XLINK_HREF.getName()));
         Assert.assertEquals("1", use.getAttribute(Enumerations.CoreAttribute.POSITION_X.getName()));
         Assert.assertEquals("2", use.getAttribute(Enumerations.CoreAttribute.POSITION_Y.getName()));
 
@@ -102,7 +104,7 @@ public final class SVGUseTest {
         Mockito.when(attributes.getValue(0)).thenReturn("test");
         Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.RADIUS.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("25");
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.FILL.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("inherit");
 
         SVGDataProvider provider = new SVGDataProvider();
@@ -111,9 +113,9 @@ public final class SVGUseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.XLinkAttribute.XLINK_HREF.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#test");
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.FILL.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("black");
 
         SVGUse use = new SVGUse("use", attributes, null, provider);
@@ -140,7 +142,7 @@ public final class SVGUseTest {
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.XLinkAttribute.XLINK_HREF.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#test");
 
         SVGUse use1 = new SVGUse("use", attributes, null, provider);
@@ -176,7 +178,7 @@ public final class SVGUseTest {
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.XLinkAttribute.XLINK_HREF.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("#something");
 
         SVGUse use1 = new SVGUse("use", attributes, null, provider);

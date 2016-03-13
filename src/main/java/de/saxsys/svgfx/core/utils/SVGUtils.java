@@ -21,14 +21,15 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGContentTypeBase;
-import de.saxsys.svgfx.core.css.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.css.SVGContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.css.SVGContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.css.SVGContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.css.SVGContentTypeStrokeType;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeBase;
+import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
+import de.saxsys.svgfx.core.content.SVGContentTypeLength;
+import de.saxsys.svgfx.core.content.SVGContentTypePaint;
+import de.saxsys.svgfx.core.content.SVGContentTypeStrokeDashArray;
+import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineCap;
+import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.content.SVGContentTypeStrokeType;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
@@ -261,56 +262,64 @@ public final class SVGUtils {
             throw new IllegalArgumentException("Given style must not be null");
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.FILL.getName())) {
-            //TODO apply fill opacity here
-            shape.setFill(style.getCssContentType(Enumerations.PresentationAttribute.FILL.getName(), SVGContentTypePaint.class).getValue());
+        if (style.hasContentType(PresentationAttributeMapper.FILL.getName())) {
+
+            Paint paint = style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue();
+
+            if (style.hasContentType(PresentationAttributeMapper.OPACITY.getName())) {
+                SVGUtils.applyOpacity(paint, style.getContentType(PresentationAttributeMapper.OPACITY.getName(), SVGContentTypeDouble.class).getValue());
+            }
+
+            shape.setFill(paint);
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE.getName())) {
-            //TODO apply stroke opacity here
-            shape.setStroke(style.getCssContentType(Enumerations.PresentationAttribute.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE.getName())) {
+
+            Paint paint = style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue();
+
+            if (style.hasContentType(PresentationAttributeMapper.OPACITY.getName())) {
+                SVGUtils.applyOpacity(paint, style.getContentType(PresentationAttributeMapper.OPACITY.getName(), SVGContentTypeDouble.class).getValue());
+            }
+
+            shape.setStroke(paint);
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_TYPE.getName())) {
-            shape.setStrokeType(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_TYPE.getName(), SVGContentTypeStrokeType.class).getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_TYPE.getName())) {
+            shape.setStrokeType(style.getContentType(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGContentTypeStrokeType.class).getValue());
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName())) {
-            shape.setStrokeWidth(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_WIDTH.getName())) {
+            shape.setStrokeWidth(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue());
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_DASHARRAY.getName())) {
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_DASHARRAY.getName())) {
             shape.getStrokeDashArray().clear();
-            shape.getStrokeDashArray().addAll(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_DASHARRAY.getName(),
-                                                                      SVGContentTypeStrokeDashArray.class).getDashValues());
+            shape.getStrokeDashArray().addAll(style.getContentType(PresentationAttributeMapper.STROKE_DASHARRAY.getName(), SVGContentTypeStrokeDashArray.class)
+                                                   .getDashValues());
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_DASHOFFSET.getName())) {
-            shape.setStrokeDashOffset(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_DASHOFFSET.getName(), SVGContentTypeLength.class)
-                                           .getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_DASHOFFSET.getName())) {
+            shape.setStrokeDashOffset(style.getContentType(PresentationAttributeMapper.STROKE_DASHOFFSET.getName(), SVGContentTypeLength.class).getValue());
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_LINEJOIN.getName())) {
-            shape.setStrokeLineJoin(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_LINEJOIN.getName(), SVGContentTypeStrokeLineJoin.class)
-                                         .getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_LINEJOIN.getName())) {
+            shape.setStrokeLineJoin(style.getContentType(PresentationAttributeMapper.STROKE_LINEJOIN.getName(), SVGContentTypeStrokeLineJoin.class).getValue());
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_LINECAP.getName())) {
-            shape.setStrokeLineCap(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_LINECAP.getName(), SVGContentTypeStrokeLineCap.class)
-                                        .getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_LINECAP.getName())) {
+            shape.setStrokeLineCap(style.getContentType(PresentationAttributeMapper.STROKE_LINECAP.getName(), SVGContentTypeStrokeLineCap.class).getValue());
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STROKE_MITERLIMIT.getName())) {
-            shape.setStrokeMiterLimit(style.getCssContentType(Enumerations.PresentationAttribute.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class)
-                                           .getValue());
+        if (style.hasContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName())) {
+            shape.setStrokeMiterLimit(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue());
         }
     }
 
     /**
-     * This method will use the properties of the given style, if any property uses inheritance, the given otherStyle will be used to resolve it.
+     * This method will use the contentMap of the given style, if any property uses inheritance, the given otherStyle will be used to resolve it.
      * If the otherStyle does not contain a value for the inherited property, then the default value will be used.
      *
-     * @param style      {@link SVGCssStyle} which contains the properties which are to be set, must not be null.
+     * @param style      {@link SVGCssStyle} which contains the contentMap which are to be set, must not be null.
      * @param otherStyle the {@link SVGCssStyle} to use as a parent in order to resolve the inheritance, must not be null.
      *
      * @throws IllegalArgumentException if either style or inheritanceResolver are null.
@@ -328,10 +337,10 @@ public final class SVGUtils {
 
         for (Map.Entry<String, SVGContentTypeBase> property : style.getProperties().entrySet()) {
             if (property.getValue().getIsInherited()) {
-                SVGContentTypeBase otherProperty = otherStyle.getCssContentType(property.getKey());
+                SVGContentTypeBase otherProperty = otherStyle.getContentType(property.getKey());
                 if (otherProperty != null && !otherProperty.getIsInherited()) {
                     if (otherProperty.getIsNone()) {
-                        property.getValue().parseCssText(SVGContentTypeBase.NONE_INDICATOR);
+                        property.getValue().consumeText(SVGContentTypeBase.NONE_INDICATOR);
                     } else {
                         property.getValue().setValue(otherProperty.getValue());
                         property.getValue().setUnit(otherProperty.getUnit());
@@ -390,13 +399,19 @@ public final class SVGUtils {
     }
 
     /**
-     * Applies the given opacity to the given color, overwriting the old opacity in the process.
-     * @param color the {@link Color} to use.
+     * Applies the given opacity to the given {@link Paint}, overwriting the old opacity in the process.
+     *
+     * @param paint   the {@link Paint} to use.
      * @param opacity the opacity to apply.
+     *
      * @return a new
      */
-    public static Color applyOpacity(final Color color, final double opacity) {
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    public static Paint applyOpacity(final Paint paint, final double opacity) {
+        if (paint instanceof Color) {
+            Color color = (Color) paint;
+            return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+        }
+        return paint;
     }
 
     // endregion

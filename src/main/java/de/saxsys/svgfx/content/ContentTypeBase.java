@@ -17,12 +17,17 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.attributes;
+package de.saxsys.svgfx.content;
 
 import de.saxsys.svgfx.core.utils.CompareUtils;
 
 /**
- * This class contains the css value of a property
+ * This class contains is used for parsing data which comes from a text. Usually when parsing text into data, there might be more then just normal atomic
+ * values as a result of the parsing. This class allows for a default value to be specified and also allows for the value to contain a unit. The most common
+ * scenario where you want to use this, is if you are parsing length data e.g. 10cm or 10mm.
+ *
+ * @param <TValue> the type of the value contained in the content.
+ * @param <TUnit>  the type of unit contained in the content.
  *
  * @author Xyanid on 29.10.2015.
  */
@@ -31,17 +36,17 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     //region Fields
 
     /**
-     * The string representation of the value of this CSSValue.
+     * The actual value contained within the parsed text.
      */
     protected TValue value;
 
     /**
-     * Contains the default value of this
+     * Contains the default value of this.
      */
     protected final TValue defaultValue;
 
     /**
-     * The unit which is placed at the en
+     * The unit which is contained, if any.
      */
     protected TUnit unit;
 
@@ -81,6 +86,8 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     }
 
     /**
+     * Returns the {@link #defaultValue}.
+     *
      * @return The {@link #defaultValue}.
      */
     public TValue getDefaultValue() {
@@ -88,6 +95,8 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     }
 
     /**
+     * Returns the {@link #unit}.
+     *
      * @return The {@link #unit}.
      */
     public TUnit getUnit() {
@@ -108,13 +117,14 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     //region Abstract
 
     /**
-     * Consumes the given css text setting the values in the process
+     * Consumes the given text, this should in turn set the {@link #value} and {@link #unit}.
      *
-     * @param cssText text to consume.
+     * @param text text to consume.
+     *
      *
      * @throws Exception if there is any exception
      */
-    public abstract void parseCssText(final String cssText) throws Exception;
+    public abstract void consumeText(final String text) throws Exception;
 
     //endregion
 

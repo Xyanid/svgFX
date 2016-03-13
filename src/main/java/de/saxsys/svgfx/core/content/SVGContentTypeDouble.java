@@ -17,47 +17,48 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.css;
+package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeType;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
+ * This class represents a svg length content type
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStrokeType extends SVGContentTypeBase<StrokeType, Void> {
+public class SVGContentTypeDouble extends SVGContentTypeBase<Double, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGContentTypeBase}.
      */
-    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
+    public static final double DEFAULT_VALUE = 0.0d;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStrokeType(final SVGDataProvider dataProvider) {
-        super(DEFAULT_VALUE, dataProvider);
+    public SVGContentTypeDouble(final SVGDataProvider dataProvider) {
+        super(0.0d, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override SVGContentTypeBase
 
+    /**
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypeDouble}
+     */
     @Override
-    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
-
-        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
+    protected Pair<Double, Void> getValueAndUnit(final String cssText) {
+        return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
     }
 
     //endregion

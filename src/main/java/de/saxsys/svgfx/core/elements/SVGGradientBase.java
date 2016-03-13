@@ -21,8 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.xml.elements.ElementBase;
@@ -54,7 +54,8 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
      */
-    public SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) throws IllegalArgumentException {
+    public SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider)
+            throws IllegalArgumentException {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -77,9 +78,11 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
         }
 
         // own stops are preferred, now we check for stops that are on referenced elements
-        if (stops.isEmpty() && StringUtils.isNotNullOrEmpty(getAttribute(Enumerations.XLinkAttribute.XLINK_HREF.getName()))) {
+        if (stops.isEmpty() && StringUtils.isNotNullOrEmpty(getAttribute(XLinkAttributeMapper.XLINK_HREF.getName()))) {
 
-            SVGElementBase referenceElement = SVGUtils.resolveIRI(getAttribute(Enumerations.XLinkAttribute.XLINK_HREF.getName()), getDataProvider(), SVGElementBase.class);
+            SVGElementBase referenceElement = SVGUtils.resolveIRI(getAttribute(XLinkAttributeMapper.XLINK_HREF.getName()),
+                                                                  getDataProvider(),
+                                                                  SVGElementBase.class);
 
             for (Object child : referenceElement.getChildren()) {
                 if (child instanceof SVGStop) {
@@ -97,8 +100,6 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     @Override
     protected final void initializeResult(final TPaint paint, final SVGCssStyle style) throws SVGException {
-
-        // TODO figure out how to apply transformation to a paint if that is possible
     }
 
     // endregion

@@ -21,12 +21,13 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.css.SVGContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGContentTypeLength;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
+import de.saxsys.svgfx.core.content.SVGContentTypeLength;
+import de.saxsys.svgfx.core.content.SVGContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
@@ -59,39 +60,35 @@ public class SVGStop extends SVGElementBase<Stop> {
 
     /**
      * {@inheritDoc}.
-     * This stop used both the {@link Enumerations.PresentationAttribute#STOP_COLOR} and {@link Enumerations.PresentationAttribute#COLOR}, however
-     * the {@link Enumerations.PresentationAttribute#STOP_COLOR} is preferred if both are present. Furthermore if an
-     * {@link Enumerations.PresentationAttribute#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
+     * This stop used both the {@link PresentationAttributeMapper#STOP_COLOR} and {@link PresentationAttributeMapper#COLOR}, however
+     * the {@link PresentationAttributeMapper#STOP_COLOR} is preferred if both are present. Furthermore if an
+     * {@link PresentationAttributeMapper#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
     protected final Stop createResult(final SVGCssStyle style) throws SVGException {
 
-        SVGContentTypeLength offset = new SVGContentTypeLength(getDataProvider());
-
         Color color = (Color) SVGContentTypePaint.DEFAULT_VALUE;
 
-        if (StringUtils.isNullOrEmpty(getAttribute(Enumerations.CoreAttribute.OFFSET.getName()))) {
+        if (!hasContentType(CoreAttributeMapper.OFFSET.getName())) {
             throw new SVGException("Stop does not provide an offset value");
         }
 
-        offset.parseCssText(getAttribute(Enumerations.CoreAttribute.OFFSET.getName()));
-
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STOP_COLOR.getName())) {
-            color = (Color) style.getCssContentType(Enumerations.PresentationAttribute.STOP_COLOR.getName(), SVGContentTypePaint.class).getValue();
-        } else if (style.hasCssContentType(Enumerations.PresentationAttribute.COLOR.getName())) {
-            color = (Color) style.getCssContentType(Enumerations.PresentationAttribute.COLOR.getName(), SVGContentTypePaint.class).getValue();
+        if (style.hasContentType(PresentationAttributeMapper.STOP_COLOR.getName())) {
+            color = (Color) style.getContentType(PresentationAttributeMapper.STOP_COLOR.getName(), SVGContentTypePaint.class).getValue();
+        } else if (style.hasContentType(PresentationAttributeMapper.COLOR.getName())) {
+            color = (Color) style.getContentType(PresentationAttributeMapper.COLOR.getName(), SVGContentTypePaint.class).getValue();
         }
 
         if (color == null) {
             throw new SVGException("Given color must not be null");
         }
 
-        if (style.hasCssContentType(Enumerations.PresentationAttribute.STOP_OPACITY.getName())) {
-            double opacity = style.getCssContentType(Enumerations.PresentationAttribute.STOP_OPACITY.getName(), SVGContentTypeDouble.class).getValue();
+        if (style.hasContentType(PresentationAttributeMapper.STOP_OPACITY.getName())) {
+            double opacity = style.getContentType(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGContentTypeDouble.class).getValue();
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         }
 
-        return new Stop(offset.getValue(), color);
+        return new Stop(getContentType(Enumerations.CoreAttribute.OFFSET.getName(), SVGContentTypeLength.class).getValue(), color);
     }
 
     @Override

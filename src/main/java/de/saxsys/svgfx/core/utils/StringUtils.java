@@ -91,7 +91,7 @@ public final class StringUtils {
     }
 
     /**
-     * * Strips the " characters at the start and end of the given string if present.
+     * Strips the " characters at the start and end of the given string if present.
      *
      * @param data data to be used, must not be null or empty
      *

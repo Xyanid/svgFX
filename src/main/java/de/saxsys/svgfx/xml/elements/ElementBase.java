@@ -20,6 +20,8 @@
 package de.saxsys.svgfx.xml.elements;
 
 
+import de.saxsys.svgfx.content.ContentTypeBase;
+import de.saxsys.svgfx.content.ContentTypeHolder;
 import de.saxsys.svgfx.xml.core.IDataProvider;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import org.xml.sax.Attributes;
@@ -27,7 +29,6 @@ import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,9 @@ import java.util.Map;
  *
  * @author Xyanid on 24.10.2015.
  */
-public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, TParent extends ElementBase<TDataProvider, ?, ?>> {
+public abstract class ElementBase<TContentType extends ContentTypeBase, TDataProvider extends IDataProvider, TResult, TParent extends ElementBase<?,
+        TDataProvider, ?, ?>>
+        extends ContentTypeHolder<TContentType> {
 
     //region Fields
 
@@ -50,12 +53,7 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
     private final String name;
 
     /**
-     * Determines the attributes of the element.
-     */
-    private final Map<String, String> attributes = new HashMap<>();
-
-    /**
-     * The parent elemnent of this element if any.
+     * The parent element of this element if any.
      */
     private final TParent parent;
 
@@ -97,7 +95,12 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
 
         if (attributes != null) {
             for (int i = 0; i < attributes.getLength(); i++) {
-                this.attributes.put(attributes.getQName(i), attributes.getValue(i));
+
+                String attributeName = attributes.getQName(i);
+                TContentType contentType = createContentType(attributeName);
+                if (contentType != null) {
+                    this.contentMap.put(attributeName, contentType);
+                }
             }
         }
 
@@ -120,8 +123,8 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
      *
      * @return the map of the attributes
      */
-    public final Map<String, String> getAttributes() {
-        return Collections.unmodifiableMap(attributes);
+    public final Map<String, TContentType> getAttributes() {
+        return Collections.unmodifiableMap(contentMap);
     }
 
     /**
@@ -175,7 +178,7 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
      *
      * @return the value of the attribute with the given key or null if it does not exist
      */
-    public String getAttribute(final String key) {
+    public TContentType getAttribute(final String key) {
         return getAttributes().get(key);
     }
 
@@ -220,13 +223,12 @@ public abstract class ElementBase<TDataProvider extends IDataProvider, TResult, 
 
         data.append("<").append(name);
 
-        attributes.entrySet().stream().forEach(attribute -> data.append(String.format(" %s:%s", attribute.getKey(), attribute.getValue())));
+        contentMap.entrySet().stream().forEach(attribute -> data.append(String.format(" %s:%s", attribute.getKey(), attribute.getValue())));
 
         data.append(">");
 
         return data.toString();
     }
-
 
     // endregion
 }

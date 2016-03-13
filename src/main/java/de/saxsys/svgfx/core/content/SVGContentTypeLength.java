@@ -17,7 +17,7 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.css;
+package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import javafx.util.Pair;

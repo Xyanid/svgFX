@@ -17,17 +17,17 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.css;
+package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.attributes.ContentTypeBase;
+import de.saxsys.svgfx.content.ContentTypeBase;
 import javafx.util.Pair;
 
 /**
- * /**
- * This class contains the css value of a property
+ * This class is the base class for svg content used either in css oder by attributes of an {@link de.saxsys.svgfx.core.elements.SVGElementBase}.
  *
  * @param <TValue> type of the value.
+ * @param <TUnit>  the type of the unit if any.
  *
  * @author Xyanid on 29.10.2015.
  */
@@ -110,7 +110,8 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
     //region Abstract
 
     /**
-     * This will be called if actual data is present in the css text, this is the case if the cssText is not {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
+     * This will be called if actual data is present in the css text, this is the case if the cssText is not
+     * {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
      * @param cssText cssText which is not equal to {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
@@ -122,19 +123,14 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
 
     // region Override ContentTypeBase
 
-    /**
-     * Consumes the given css text setting the values in the process.
-     *
-     * @param cssText text to consume.
-     */
     @Override
-    public final void parseCssText(final String cssText) {
-        isInherited = INHERIT_INDICATOR.equals(cssText);
+    public final void consumeText(final String text) {
+        isInherited = INHERIT_INDICATOR.equals(text);
 
-        isNone = NONE_INDICATOR.equals(cssText);
+        isNone = NONE_INDICATOR.equals(text);
 
         if (!isInherited && !isNone) {
-            Pair<TValue, TUnit> data = getValueAndUnit(cssText);
+            Pair<TValue, TUnit> data = getValueAndUnit(text);
 
             if (data != null) {
                 value = data.getKey();

@@ -17,57 +17,51 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.core.css;
+package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import javafx.scene.shape.FillRule;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
+ * This class represents a svg transform content type. This means it will contains matrix transformation.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeFillRule extends SVGContentTypeBase<FillRule, Void> {
+public class SVGContentTypeStyle extends SVGContentTypeBase<SVGCssStyle, Void> {
 
     // region Static
 
     /**
      * Determines the default value for this {@link SVGContentTypeBase}.
      */
-    public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
+    public static final SVGCssStyle DEFAULT_VALUE = null;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeFillRule(final SVGDataProvider dataProvider) {
+    public SVGContentTypeStyle(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override SVGContentTypeBase
 
+    /**
+     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGContentTypeStyle}
+     */
     @Override
-    protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {
-
-        FillRule rule = DEFAULT_VALUE;
-
-        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
-            if (mapping.getName().equals(cssText)) {
-                rule = mapping.getRule();
-                break;
-            }
-        }
-
-        return new Pair<>(rule, null);
+    protected Pair<SVGCssStyle, Void> getValueAndUnit(final String text) {
+        SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
+        ownStyle.parseCssText(text);
+        return new Pair<>(ownStyle, null);
     }
 
     //endregion

@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
@@ -58,11 +59,11 @@ public class SVGUse extends SVGElementBase<Group> {
     /**
      * {@inheritDoc} Resolves the needed reference.
      *
-     * @throws SVGException if the {@link Enumerations.XLinkAttribute#XLINK_HREF} is empty or null.
+     * @throws SVGException if the {@link XLinkAttributeMapper#XLINK_HREF} is empty or null.
      */
     @Override
     protected Group createResult(final SVGCssStyle style) throws SVGException {
-        String reference = getAttributes().get(Enumerations.XLinkAttribute.XLINK_HREF.getName());
+        String reference = getAttributes().get(XLinkAttributeMapper.XLINK_HREF.getName());
         if (StringUtils.isNullOrEmpty(reference)) {
             throw new SVGException("XLink attribute is invalid.");
         }

@@ -21,6 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.Color;
 import org.junit.Assert;
@@ -47,9 +48,9 @@ public final class SVGStopTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.COLOR.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("red");
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.STOP_OPACITY.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_OPACITY.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("0.5");
 
         SVGStop stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
@@ -60,7 +61,7 @@ public final class SVGStopTest {
     }
 
     /**
-     * Ensures that the {@link Enumerations.PresentationAttribute#STOP_COLOR} is preferred.
+     * Ensures that the {@link PresentationAttributeMapper#STOP_COLOR} is preferred.
      */
     @Test
     public void ensureThatStopColorIsPreferred() {
@@ -71,9 +72,9 @@ public final class SVGStopTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.COLOR.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("red");
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.STOP_COLOR.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("blue");
 
         SVGStop stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
@@ -93,8 +94,8 @@ public final class SVGStopTest {
         Mockito.when(attributes.getLength()).thenReturn(6);
 
         Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.PresentationAttribute.STOP_OPACITY.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.STOP_COLOR.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.STOP_OPACITY.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("A");
         Mockito.when(attributes.getValue(1)).thenReturn("1.0");
@@ -134,7 +135,7 @@ public final class SVGStopTest {
         } catch (SVGException ignored) {
         }
 
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.PresentationAttribute.COLOR.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
         stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
 
@@ -156,7 +157,7 @@ public final class SVGStopTest {
         Mockito.when(attributes.getLength()).thenReturn(1);
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.PresentationAttribute.STOP_COLOR.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
 
         SVGStop stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
 
