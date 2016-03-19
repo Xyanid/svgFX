@@ -148,7 +148,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
      * Gets the elements own {@link SVGCssStyle} and combines it with the givne {@link SVGCssStyle}
      *
      * @param otherStyle the other
-     *                   {@link SVGCssStyle} the own style shall be combined with, can be null in which case {@link SVGUtils#combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)}
+     *                   {@link SVGCssStyle} the own style shall be combined with, can be null in which case
+     *                   {@link SVGUtils#combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)}
      *                   is not invoked, hence it will only return its own style.
      *
      * @return the {@link SVGCssStyle} if this element combined and resolved with the given {@link SVGCssStyle}.
@@ -270,8 +271,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
 
     /**
      * This method attempts to create a {@link SVGCssStyle} by looking up all the supported {@link PresentationAttributeMapper}. If any attribute is present a
-     * valid
-     * cssString is returned.
+     * valid cssString is returned.
      *
      * @return a {@link SVGCssStyle} containing the {@link PresentationAttributeMapper}s of this element if any or null if not attributes are submitted.
      * {@link PresentationAttributeMapper} exists.
@@ -286,7 +286,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
 
             if (hasContentType(attribute.getName())) {
                 SVGContentTypeBase contentType = getContentType(attribute.getName());
-                String data = String.format("%s%s", contentType.getValue().toString(), contentType.getUnit() != null ? contentType.getUnit().toString() : "");
+
+                String data = contentType.getLastConsumedText();
 
                 if (StringUtils.isNotNullOrEmpty(data)) {
                     if (cssText.length() == 0) {

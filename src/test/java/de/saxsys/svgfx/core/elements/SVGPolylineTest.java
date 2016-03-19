@@ -72,16 +72,12 @@ public final class SVGPolylineTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        SVGPolyline polyline = new SVGPolyline("polyline", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(polyline, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGPolyline::new, "polyline", attributes, null, new SVGDataProvider(), SVGPolyline.class, NumberFormatException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        polyline = new SVGPolyline("polyline", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(polyline, SVGException.class);
+        TestUtils.assertCreationFails(SVGPolyline::new, "polyline", attributes, null, new SVGDataProvider(), SVGPolyline.class, SVGException.class);
     }
 
     /**

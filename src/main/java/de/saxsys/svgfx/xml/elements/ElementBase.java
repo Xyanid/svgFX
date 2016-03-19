@@ -84,11 +84,11 @@ public abstract class ElementBase<TContentType extends ContentTypeBase, TDataPro
     public ElementBase(final String name, final Attributes attributes, final TParent parent, final TDataProvider dataProvider) throws IllegalArgumentException {
 
         if (name == null) {
-            throw new IllegalArgumentException("given value must not be null");
+            throw new IllegalArgumentException(String.format("Creation of element %s failed. Given name must not be null", getClass().getName()));
         }
 
         if (dataProvider == null) {
-            throw new IllegalArgumentException("given data provider must not be null");
+            throw new IllegalArgumentException(String.format("Creation of element %s failed. given data provider must not be null", getClass().getName()));
         }
 
         this.name = name;
@@ -98,7 +98,16 @@ public abstract class ElementBase<TContentType extends ContentTypeBase, TDataPro
 
                 String attributeName = attributes.getQName(i);
                 TContentType contentType = createContentType(attributeName);
+                String attributeValue = attributes.getValue(i);
                 if (contentType != null) {
+                    try {
+                        contentType.consumeText(attributeValue);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException(String.format("Creation of element %s failed. The attribute %s is not valid, value is %s",
+                                                                         getClass().getName(),
+                                                                         attributeName,
+                                                                         attributeValue), e);
+                    }
                     this.contentMap.put(attributeName, contentType);
                 }
             }
@@ -169,32 +178,13 @@ public abstract class ElementBase<TContentType extends ContentTypeBase, TDataPro
 
     //endregion
 
-    //region Public
-
-    /**
-     * returns the attributes with the given key.
-     *
-     * @param key key of the attribute
-     *
-     * @return the value of the attribute with the given key or null if it does not exist
-     *
-     * @deprecated use {@link #getContentType(String)} instead.
-     */
-    @Deprecated
-//    public TContentType getAttribute(final String key) {
-//        return getAttributes().get(key);
-//    }
-
-    //endregion
-
     //region Abstract
 
     /**
      * Will be called when an element is started that represents this element.
      *
      * @throws SAXException will be thrown when an error occurs during processing
-     */
-    public abstract void startProcessing() throws SAXException;
+     */ public abstract void startProcessing() throws SAXException;
 
     /**
      * Will be called when character data (CDATA) is read for an element.

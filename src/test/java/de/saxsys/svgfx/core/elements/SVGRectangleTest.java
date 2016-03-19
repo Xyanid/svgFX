@@ -93,10 +93,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-
-        SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50");
         Mockito.when(attributes.getValue(1)).thenReturn("A");
@@ -105,9 +102,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -116,9 +111,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -127,9 +120,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -138,9 +129,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("A");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -149,9 +138,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("A");
 
-        rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
     }
 
     /**
@@ -169,12 +156,12 @@ public final class SVGRectangleTest {
 
         SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NullPointerException.class);
+        TestUtils.assertResultFails(rectangle, NullPointerException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.HEIGHT.getName());
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        TestUtils.assertExceptionContainsSVGElementName(rectangle, NullPointerException.class);
+        TestUtils.assertResultFails(rectangle, NullPointerException.class);
     }
 }

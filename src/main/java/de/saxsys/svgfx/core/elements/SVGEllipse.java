@@ -59,8 +59,8 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
                          ? getContentType(CoreAttributeMapper.CENTER_X.getName(),
                                           SVGContentTypeLength.class).getValue()
                          : SVGContentTypeLength.DEFAULT_VALUE;
-        Double centerY = hasContentType(CoreAttributeMapper.CENTER_X.getName())
-                         ? getContentType(CoreAttributeMapper.CENTER_X.getName(),
+        Double centerY = hasContentType(CoreAttributeMapper.CENTER_Y.getName())
+                         ? getContentType(CoreAttributeMapper.CENTER_Y.getName(),
                                           SVGContentTypeLength.class).getValue()
                          : SVGContentTypeLength.DEFAULT_VALUE;
 

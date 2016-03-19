@@ -72,16 +72,12 @@ public final class SVGPolygonTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(polygon, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDataProvider(), SVGPolygon.class, NumberFormatException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(polygon, SVGException.class);
+        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDataProvider(), SVGPolygon.class, SVGException.class);
     }
 
     /**

@@ -19,8 +19,8 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.content.ContentTypeBase;
+import de.saxsys.svgfx.core.SVGDataProvider;
 import javafx.util.Pair;
 
 /**
@@ -48,6 +48,11 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
     // endregion
 
     //region Fields
+
+    /**
+     * Contains the text that was last passed to the {@link #consumeText(String)}.
+     */
+    private String lastConsumedText;
 
     /**
      * Determines whether the value will be retrieved from its parent.
@@ -85,6 +90,15 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
     //region Getter
 
     /**
+     * Returns the {@link #lastConsumedText}.
+     *
+     * @return the {@link #lastConsumedText}.
+     */
+    public String getLastConsumedText() {
+        return lastConsumedText;
+    }
+
+    /**
      * @return The {@link #isInherited}.
      */
     public boolean getIsInherited() {
@@ -117,7 +131,7 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
      *
      * @return a {@link Pair} which contains the value as the key and the value as the value.
      */
-    protected abstract Pair<TValue, TUnit> getValueAndUnit(String cssText);
+    protected abstract Pair<TValue, TUnit> getValueAndUnit(final String cssText);
 
     //endregion
 
@@ -125,9 +139,10 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
 
     @Override
     public final void consumeText(final String text) {
-        isInherited = INHERIT_INDICATOR.equals(text);
 
+        isInherited = INHERIT_INDICATOR.equals(text);
         isNone = NONE_INDICATOR.equals(text);
+        lastConsumedText = text;
 
         if (!isInherited && !isNone) {
             Pair<TValue, TUnit> data = getValueAndUnit(text);

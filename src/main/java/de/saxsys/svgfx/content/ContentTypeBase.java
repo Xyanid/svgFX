@@ -120,11 +120,8 @@ public abstract class ContentTypeBase<TValue, TUnit> {
      * Consumes the given text, this should in turn set the {@link #value} and {@link #unit}.
      *
      * @param text text to consume.
-     *
-     *
-     * @throws Exception if there is any exception
      */
-    public abstract void consumeText(final String text) throws Exception;
+    public abstract void consumeText(final String text);
 
     //endregion
 

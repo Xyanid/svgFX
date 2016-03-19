@@ -66,8 +66,8 @@ public final class SVGPathTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
-        Mockito.when(attributes.getQName(0)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("evenodd");
+        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
+        Mockito.when(attributes.getValue(1)).thenReturn("evenodd");
 
         SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
 
@@ -108,10 +108,6 @@ public final class SVGPathTest {
 
         SVGPath path = new SVGPath("path", attributes, null, new SVGDataProvider());
 
-        try {
-            path.getResult();
-        } catch (SVGException e) {
-            Assert.fail();
-        }
+        path.getResult();
     }
 }

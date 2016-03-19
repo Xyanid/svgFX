@@ -82,36 +82,28 @@ public final class SVGLineTest {
         Mockito.when(attributes.getValue(2)).thenReturn("50");
         Mockito.when(attributes.getValue(3)).thenReturn("25");
 
-        SVGLine circle = new SVGLine("line", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(circle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDataProvider(), SVGLine.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("100");
         Mockito.when(attributes.getValue(1)).thenReturn("A");
         Mockito.when(attributes.getValue(2)).thenReturn("50");
         Mockito.when(attributes.getValue(3)).thenReturn("25");
 
-        circle = new SVGLine("line", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(circle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDataProvider(), SVGLine.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("100");
         Mockito.when(attributes.getValue(1)).thenReturn("75");
         Mockito.when(attributes.getValue(2)).thenReturn("A");
         Mockito.when(attributes.getValue(3)).thenReturn("25");
 
-        circle = new SVGLine("line", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(circle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDataProvider(), SVGLine.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("100");
         Mockito.when(attributes.getValue(1)).thenReturn("75");
         Mockito.when(attributes.getValue(2)).thenReturn("50");
         Mockito.when(attributes.getValue(3)).thenReturn("A");
 
-        circle = new SVGLine("line", attributes, null, new SVGDataProvider());
-
-        TestUtils.assertExceptionContainsSVGElementName(circle, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDataProvider(), SVGLine.class, NumberFormatException.class);
     }
 
     /**
@@ -133,13 +125,7 @@ public final class SVGLineTest {
 
         SVGLine line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
-        try {
-            line.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGLine.class.getName()));
-            Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
-        }
+        TestUtils.assertResultFails(line, NullPointerException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
@@ -147,13 +133,7 @@ public final class SVGLineTest {
 
         line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
-        try {
-            line.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGLine.class.getName()));
-            Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
-        }
+        TestUtils.assertResultFails(line, NullPointerException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
@@ -161,13 +141,7 @@ public final class SVGLineTest {
 
         line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
-        try {
-            line.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGLine.class.getName()));
-            Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
-        }
+        TestUtils.assertResultFails(line, NullPointerException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_Y.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
@@ -175,12 +149,6 @@ public final class SVGLineTest {
 
         line = new SVGLine("line", attributes, null, new SVGDataProvider());
 
-        try {
-            line.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGLine.class.getName()));
-            Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
-        }
+        TestUtils.assertResultFails(line, NullPointerException.class);
     }
 }

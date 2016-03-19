@@ -23,6 +23,7 @@ import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.elements.mocks.SVGPolyBaseMock;
+import de.saxsys.svgfx.core.elements.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -111,30 +112,30 @@ public final class SVGPolyBaseTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
-
-        try {
-            polyBase.getPoints();
-            Assert.fail("Expected SVGException to be thrown");
-        } catch (SVGException ignore) {
-        }
+        TestUtils.assertCreationFails(SVGPolyBaseMock::new,
+                                      "polygon",
+                                      attributes,
+                                      null,
+                                      new SVGDataProvider(),
+                                      SVGPolyBaseMock.class,
+                                      SVGException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,10 100");
 
-        polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
-
-        try {
-            polyBase.getPoints();
-            Assert.fail("Expected SVGException to be thrown");
-        } catch (SVGException ignore) {
-        }
+        TestUtils.assertCreationFails(SVGPolyBaseMock::new,
+                                      "polygon",
+                                      attributes,
+                                      null,
+                                      new SVGDataProvider(),
+                                      SVGPolyBaseMock.class,
+                                      SVGException.class);
     }
 
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void ensureExceptionIsThrownWhenAPointContainsInvalidData() {
 
         Attributes attributes = Mockito.mock(Attributes.class);

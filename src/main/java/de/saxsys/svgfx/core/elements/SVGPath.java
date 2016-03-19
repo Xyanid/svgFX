@@ -57,7 +57,9 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle style) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
-        result.setContent(getContentType(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGContentTypeString.class).getValue());
+        if (hasContentType(CoreAttributeMapper.PATH_DESCRIPTION.getName())) {
+            result.setContent(getContentType(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGContentTypeString.class).getValue());
+        }
 
         return result;
     }

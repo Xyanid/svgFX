@@ -67,12 +67,12 @@ public final class SVGGradientBaseTest {
 
         List<SVGElementBase> stops = new ArrayList<>();
 
-        stops.add(new SVGStop("stop", attributes, elementBase, dataProvider));
+        stops.add(new SVGStop("stop", attributes, null, dataProvider));
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.2");
         Mockito.when(attributes.getValue(1)).thenReturn("blue");
 
-        stops.add(new SVGStop("stop", attributes, elementBase, dataProvider));
+        stops.add(new SVGStop("stop", attributes, null, dataProvider));
 
         Mockito.when(elementBase.getChildren()).thenReturn(stops);
 

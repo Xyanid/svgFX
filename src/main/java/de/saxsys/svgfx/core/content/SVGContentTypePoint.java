@@ -128,7 +128,7 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
 
         SVGPoint point = new SVGPoint(getDataProvider());
         point.getX().consumeText(pointSplit[0].trim());
-        point.getX().consumeText(pointSplit[1].trim());
+        point.getY().consumeText(pointSplit[1].trim());
 
         return new Pair<>(point, null);
     }
