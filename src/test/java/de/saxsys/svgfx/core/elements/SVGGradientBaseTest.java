@@ -20,9 +20,9 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.mocks.SVGGradientBaseMock;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
@@ -53,7 +53,7 @@ public final class SVGGradientBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
@@ -111,7 +111,7 @@ public final class SVGGradientBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
@@ -135,7 +135,7 @@ public final class SVGGradientBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.3");
@@ -178,7 +178,7 @@ public final class SVGGradientBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");

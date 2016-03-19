@@ -21,7 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.elements.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,7 +45,7 @@ public final class SVGPolygonTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
         SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
@@ -68,31 +69,19 @@ public final class SVGPolygonTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
         SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
 
-        try {
-            polygon.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGPolygon.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(polygon, NumberFormatException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
         polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
 
-        try {
-            polygon.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGPolygon.class.getName()));
-            Assert.assertEquals(SVGException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(polygon, SVGException.class);
     }
 
     /**

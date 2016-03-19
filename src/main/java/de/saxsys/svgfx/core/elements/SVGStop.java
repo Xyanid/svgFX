@@ -27,7 +27,6 @@ import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
 import de.saxsys.svgfx.core.content.SVGContentTypeLength;
 import de.saxsys.svgfx.core.content.SVGContentTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
@@ -88,7 +87,7 @@ public class SVGStop extends SVGElementBase<Stop> {
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         }
 
-        return new Stop(getContentType(Enumerations.CoreAttribute.OFFSET.getName(), SVGContentTypeLength.class).getValue(), color);
+        return new Stop(getContentType(CoreAttributeMapper.OFFSET.getName(), SVGContentTypeLength.class).getValue(), color);
     }
 
     @Override

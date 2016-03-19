@@ -21,8 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,20 +45,20 @@ public final class SVGLinearGradientTest {
 
         Mockito.when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.START_X.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.START_Y.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("0.15");
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.END_X.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("0.9");
-        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.END_Y.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("0.95");
 
         SVGLinearGradient gradient = new SVGLinearGradient("stop", attributes, null, new SVGDataProvider());
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");

@@ -21,8 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.Color;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public final class SVGStopTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("red");
@@ -70,7 +70,7 @@ public final class SVGStopTest {
 
         Mockito.when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("red");
@@ -93,7 +93,7 @@ public final class SVGStopTest {
 
         Mockito.when(attributes.getLength()).thenReturn(6);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.OFFSET.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.STOP_OPACITY.getName());
         Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
 

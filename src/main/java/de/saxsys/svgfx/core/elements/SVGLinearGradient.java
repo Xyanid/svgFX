@@ -21,9 +21,9 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -67,21 +67,27 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
             throw new SVGException("Given linear gradient does not have colors");
         }
 
-        String startX = getAttribute(Enumerations.CoreAttribute.START_X.getName());
-        String startY = getAttribute(Enumerations.CoreAttribute.START_Y.getName());
-        String endX = getAttribute(Enumerations.CoreAttribute.END_X.getName());
-        String endY = getAttribute(Enumerations.CoreAttribute.END_Y.getName());
+        Double startX = hasContentType(CoreAttributeMapper.START_X.getName())
+                        ? getContentType(CoreAttributeMapper.START_X.getName(),
+                                         SVGContentTypeLength.class).getValue()
+                        : SVGContentTypeLength.DEFAULT_VALUE;
+        Double startY = hasContentType(CoreAttributeMapper.START_Y.getName())
+                        ? getContentType(CoreAttributeMapper.START_Y.getName(),
+                                         SVGContentTypeLength.class).getValue()
+                        : SVGContentTypeLength.DEFAULT_VALUE;
+        Double endX = hasContentType(CoreAttributeMapper.END_X.getName())
+                      ? getContentType(CoreAttributeMapper.END_X.getName(),
+                                       SVGContentTypeLength.class).getValue()
+                      : SVGContentTypeLength.DEFAULT_VALUE;
+        Double endY = hasContentType(CoreAttributeMapper.END_Y.getName())
+                      ? getContentType(CoreAttributeMapper.END_Y.getName(),
+                                       SVGContentTypeLength.class).getValue()
+                      : SVGContentTypeLength.DEFAULT_VALUE;
 
         // TODO figure out how to apply proportional values here
         // TODO convert the coordinates into the correct space, first convert then apply transform
 
-        return new LinearGradient(StringUtils.isNullOrEmpty(startX) ? 0.0d : Double.parseDouble(startX),
-                                  StringUtils.isNullOrEmpty(startY) ? 0.0d : Double.parseDouble(startY),
-                                  StringUtils.isNullOrEmpty(endX) ? 1.0d : Double.parseDouble(endX),
-                                  StringUtils.isNullOrEmpty(endY) ? 1.0d : Double.parseDouble(endY),
-                                  false,
-                                  CycleMethod.NO_CYCLE,
-                                  stops);
+        return new LinearGradient(startX, startY, endX, endY, false, CycleMethod.NO_CYCLE, stops);
     }
 
     //endregion

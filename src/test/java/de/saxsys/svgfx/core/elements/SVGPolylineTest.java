@@ -21,7 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.elements.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,7 +45,7 @@ public final class SVGPolylineTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
         SVGPolyline polyline = new SVGPolyline("polyline", attributes, null, new SVGDataProvider());
@@ -68,31 +69,19 @@ public final class SVGPolylineTest {
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
         SVGPolyline polyline = new SVGPolyline("polyline", attributes, null, new SVGDataProvider());
 
-        try {
-            polyline.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGPolyline.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(polyline, NumberFormatException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POINTS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
         polyline = new SVGPolyline("polyline", attributes, null, new SVGDataProvider());
 
-        try {
-            polyline.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGPolyline.class.getName()));
-            Assert.assertEquals(SVGException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(polyline, SVGException.class);
     }
 
     /**

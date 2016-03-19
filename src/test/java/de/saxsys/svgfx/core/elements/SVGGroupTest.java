@@ -20,7 +20,8 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,24 +45,24 @@ public final class SVGGroupTest {
 
         Mockito.when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.ID.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("test");
 
         SVGDataProvider provider = new SVGDataProvider();
 
         SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, null, provider);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.RADIUS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("50");
 
         clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.RADIUS.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("25");
 
         clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
 
-        Assert.assertEquals("test", clipPath.getAttribute(Enumerations.CoreAttribute.ID.getName()));
+        Assert.assertEquals("test", clipPath.getContentType(CoreAttributeMapper.ID.getName(), SVGContentTypeString.class).getValue());
         Assert.assertNotNull(clipPath.getResult());
 
         Assert.assertEquals(2, clipPath.getResult().getChildren().size());

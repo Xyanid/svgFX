@@ -21,9 +21,9 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.core.utils.StringUtils;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
@@ -66,29 +66,42 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
             throw new SVGException("Given radial gradient does not have colors");
         }
 
-        String centerX = getAttribute(Enumerations.CoreAttribute.CENTER_X.getName());
-        String centerY = getAttribute(Enumerations.CoreAttribute.CENTER_Y.getName());
-        String focusX = getAttribute(Enumerations.CoreAttribute.FOCUS_X.getName());
-        String focusY = getAttribute(Enumerations.CoreAttribute.FOCUS_Y.getName());
+        Double centerX = hasContentType(CoreAttributeMapper.CENTER_X.getName())
+                         ? getContentType(CoreAttributeMapper.CENTER_X.getName(),
+                                          SVGContentTypeLength.class).getValue()
+                         : SVGContentTypeLength.DEFAULT_VALUE;
+        Double centerY = hasContentType(CoreAttributeMapper.CENTER_Y.getName())
+                         ? getContentType(CoreAttributeMapper.CENTER_Y.getName(),
+                                          SVGContentTypeLength.class).getValue()
+                         : SVGContentTypeLength.DEFAULT_VALUE;
+        Double focusX = hasContentType(CoreAttributeMapper.FOCUS_X.getName())
+                        ? getContentType(CoreAttributeMapper.FOCUS_X.getName(),
+                                         SVGContentTypeLength.class).getValue()
+                        : SVGContentTypeLength.DEFAULT_VALUE;
+        Double focusY = hasContentType(CoreAttributeMapper.FOCUS_Y.getName())
+                        ? getContentType(CoreAttributeMapper.FOCUS_Y.getName(),
+                                         SVGContentTypeLength.class).getValue()
+                        : SVGContentTypeLength.DEFAULT_VALUE;
 
         // TODO figure out how to apply proportional values here
         // TODO convert the coordinates into the correct space, first convert then apply transform
 
-        double cx = StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX);
-        double cy = StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY);
-
-        double fx = StringUtils.isNullOrEmpty(focusX) ? cx : Double.parseDouble(focusX);
-        double fy = StringUtils.isNullOrEmpty(focusY) ? cy : Double.parseDouble(focusY);
-
-        double diffX = fx - cx;
-        double diffY = fy - cy;
+        double diffX = focusX - centerX;
+        double diffY = focusY - centerY;
 
         double distance = diffX != 0 && diffY != 0 ? Math.hypot(diffX, diffY) : 0;
         double angle = diffX != 0 && diffY != 0 ? Math.atan2(diffY, diffX) : 0;
 
         // TODO figure out if the focus angle is correct or not
 
-        return new RadialGradient(angle, distance, cx, cy, Double.parseDouble(getAttribute(Enumerations.CoreAttribute.RADIUS.getName())), false, CycleMethod.NO_CYCLE, stops);
+        return new RadialGradient(angle,
+                                  distance,
+                                  centerX,
+                                  centerY,
+                                  getContentType(CoreAttributeMapper.RADIUS.getName(), SVGContentTypeLength.class).getValue(),
+                                  false,
+                                  CycleMethod.NO_CYCLE,
+                                  stops);
     }
 
     //endregion

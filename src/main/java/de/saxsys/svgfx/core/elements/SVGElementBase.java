@@ -28,7 +28,6 @@ import de.saxsys.svgfx.core.content.SVGContentTypeBase;
 import de.saxsys.svgfx.core.content.SVGContentTypeString;
 import de.saxsys.svgfx.core.content.SVGContentTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
@@ -225,7 +224,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
     }
 
     /**
-     * Gets the elements own {@link SVGCssStyle}, which will only be available if the element has the {@link Enumerations.CoreAttribute#STYLE}.
+     * Gets the elements own {@link SVGCssStyle}, which will only be available if the element has the {@link CoreAttributeMapper#STYLE}.
      *
      * @return the {@link SVGCssStyle} of this element or null if there is none.
      */
@@ -249,7 +248,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
     }
 
     /**
-     * Gets the elements referenced {@link SVGCssStyle}, which will only be available if the element has the {@link Enumerations.CoreAttribute#CLASS}.
+     * Gets the elements referenced {@link SVGCssStyle}, which will only be available if the element has the {@link CoreAttributeMapper#CLASS}.
      *
      * @return the {@link SVGCssStyle} referenced by this element or null if there is none.
      *
@@ -309,7 +308,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
     }
 
     /**
-     * @return the transformation to be applied to this element if the {@link Enumerations.CoreAttribute#TRANSFORM} is present.
+     * @return the transformation to be applied to this element if the {@link CoreAttributeMapper#TRANSFORM} is present.
      * otherwise null.
      *
      * @throws SVGException if there is a transformation which has invalid data for its matrix.

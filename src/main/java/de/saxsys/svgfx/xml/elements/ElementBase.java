@@ -177,10 +177,13 @@ public abstract class ElementBase<TContentType extends ContentTypeBase, TDataPro
      * @param key key of the attribute
      *
      * @return the value of the attribute with the given key or null if it does not exist
+     *
+     * @deprecated use {@link #getContentType(String)} instead.
      */
-    public TContentType getAttribute(final String key) {
-        return getAttributes().get(key);
-    }
+    @Deprecated
+//    public TContentType getAttribute(final String key) {
+//        return getAttributes().get(key);
+//    }
 
     //endregion
 

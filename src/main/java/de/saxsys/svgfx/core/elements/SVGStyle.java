@@ -21,8 +21,9 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGContentTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
 
@@ -81,7 +82,8 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
         Set<SVGCssStyle> result = new HashSet<>();
 
-        if (getAttribute(Enumerations.CoreAttribute.TYPE.getName()) == null || getAttribute(Enumerations.CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
+        if (!hasContentType(CoreAttributeMapper.TYPE.getName()) || getContentType(CoreAttributeMapper.TYPE.getName(), SVGContentTypeString.class).getValue()
+                                                                                                                                                 .equals(CSS_TYPE)) {
 
             StringBuilder builder = new StringBuilder();
 

@@ -19,20 +19,7 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.content.SVGContentTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypePaint;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeType;
-import de.saxsys.svgfx.core.elements.SVGCircle;
-import de.saxsys.svgfx.core.elements.SVGClipPath;
-import de.saxsys.svgfx.core.elements.SVGEllipse;
-import de.saxsys.svgfx.core.elements.SVGShapeBase;
+import de.saxsys.svgfx.core.content.SVGContentTypeGradientUnits;
 import javafx.scene.shape.FillRule;
 
 /**
@@ -152,9 +139,9 @@ public final class Enumerations {
     }
 
     /**
-     * Contains the possible values for {@link de.saxsys.svgfx.core.attributes.GeneralAttributeMapper}
+     * Contains the possible values for {@link SVGContentTypeGradientUnits}.
      */
-    public enum GradientUnits{
+    public enum GradientUnits {
         NONE(""),
         USER_SPACE_ON_USE("userSpaceOnUse"),
         OBJECT_BOUNDING_BOX("objectBoundingBox");
@@ -188,141 +175,6 @@ public final class Enumerations {
          * Returns the {@link Matrix#name}.
          *
          * @return the {@link Matrix#name}
-         */
-        public final String getName() {
-            return name;
-        }
-
-        // endregion
-    }
-
-
-    /**
-     * Contains the core attributes each svg element may have.
-     */
-    public enum CoreAttribute {
-
-        /**
-         * The id for an element, needed in case an element is referenced by another element.
-         */
-        ID("id"),
-        /**
-         * Represents the transformation to be applied to an element.
-         */
-        TRANSFORM("transform"),
-        /**
-         * Represents the style of an element, the style need to follow the css text restrictions to be used.
-         */
-        STYLE("style"),
-        /**
-         * Represents a class link to an existing style, in this case the element will use this link to style itself.
-         */
-        CLASS("class"),
-        /**
-         * Represents x component of a center position, this element is used for {@link SVGCircle}s and {@link SVGEllipse}s.
-         */
-        CENTER_X("cx"),
-        /**
-         * Represents y component of a center position, this element is used for {@link SVGCircle}s and {@link SVGEllipse}s.
-         */
-        CENTER_Y("cy"),
-        /**
-         * Represents a radius.
-         */
-        RADIUS("r"),
-        /**
-         * Represents a radius which is used in the x direction.
-         */
-        RADIUS_X("rx"),
-        /**
-         * Represents a radius which is used in the y direction.
-         */
-        RADIUS_Y("ry"),
-        /**
-         * Represents the focus in x direction, this attribute is used by a radial gradient.
-         */
-        FOCUS_X("fx"),
-        /**
-         * Represents the focus in y direction, this attribute is used by a radial gradient.
-         */
-        FOCUS_Y("fy"),
-        /**
-         * Represents a comma separated list of points.
-         */
-        POINTS("points"),
-        /**
-         * Represents the start x component of a line.
-         */
-        START_X("x1"),
-        /**
-         * Represents the start y component of a line.
-         */
-        START_Y("y1"),
-        /**
-         * Represents the end x component of a line.
-         */
-        END_X("x2"),
-        /**
-         * Represents the end y component of a line.
-         */
-        END_Y("y2"),
-        /**
-         * Represents a series of path descriptions.
-         */
-        PATH_DESCRIPTION("d"),
-        /**
-         * Represents the x component of a position, how this is used depends on the element it is used in.
-         */
-        POSITION_X("x"),
-        /**
-         * Represents the y component of a position, how this is used depends on the element it is used in.
-         */
-        POSITION_Y("y"),
-        /**
-         * Represents the width of an element.
-         */
-        WIDTH("width"),
-        /**
-         * Represents the height of an element.
-         */
-        HEIGHT("height"),
-        /**
-         * Represents the offset from a start position.
-         */
-        OFFSET("offset"),
-        /**
-         * Represents the type of the element.
-         */
-        TYPE("type");
-
-        // region Fields
-
-        /**
-         * The name of the attribute within the svg element.
-         */
-        private final String name;
-
-        // endregion
-
-        // region Constructor
-
-        /**
-         * Creates a new instance.
-         *
-         * @param name the name of the attribute within the svg element
-         */
-        CoreAttribute(final String name) {
-            this.name = name;
-        }
-
-        // endregion
-
-        // region Getter
-
-        /**
-         * Returns the {@link CoreAttribute#name}.
-         *
-         * @return the {@link CoreAttribute#name}
          */
         public final String getName() {
             return name;

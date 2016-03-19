@@ -21,7 +21,8 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.elements.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,17 +45,17 @@ public final class SVGRectangleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(6);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POSITION_X.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POSITION_X.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.POSITION_Y.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.POSITION_Y.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.WIDTH.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.WIDTH.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("25");
-        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.HEIGHT.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.HEIGHT.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("35");
-        Mockito.when(attributes.getQName(4)).thenReturn(Enumerations.CoreAttribute.RADIUS_X.getName());
+        Mockito.when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
         Mockito.when(attributes.getValue(4)).thenReturn("5");
-        Mockito.when(attributes.getQName(5)).thenReturn(Enumerations.CoreAttribute.RADIUS_Y.getName());
+        Mockito.when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         Mockito.when(attributes.getValue(5)).thenReturn("10");
 
         SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
@@ -77,12 +78,12 @@ public final class SVGRectangleTest {
 
         Mockito.when(attributes.getLength()).thenReturn(6);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.POSITION_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(Enumerations.CoreAttribute.POSITION_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(Enumerations.CoreAttribute.WIDTH.getName());
-        Mockito.when(attributes.getQName(3)).thenReturn(Enumerations.CoreAttribute.HEIGHT.getName());
-        Mockito.when(attributes.getQName(4)).thenReturn(Enumerations.CoreAttribute.RADIUS_X.getName());
-        Mockito.when(attributes.getQName(5)).thenReturn(Enumerations.CoreAttribute.RADIUS_Y.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POSITION_X.getName());
+        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.POSITION_Y.getName());
+        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.WIDTH.getName());
+        Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.HEIGHT.getName());
+        Mockito.when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
+        Mockito.when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
 
 
         Mockito.when(attributes.getValue(0)).thenReturn("A");
@@ -95,13 +96,7 @@ public final class SVGRectangleTest {
 
         SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50");
         Mockito.when(attributes.getValue(1)).thenReturn("A");
@@ -112,13 +107,7 @@ public final class SVGRectangleTest {
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -129,13 +118,7 @@ public final class SVGRectangleTest {
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -146,13 +129,7 @@ public final class SVGRectangleTest {
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -163,13 +140,7 @@ public final class SVGRectangleTest {
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -180,13 +151,7 @@ public final class SVGRectangleTest {
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NumberFormatException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NumberFormatException.class);
     }
 
     /**
@@ -200,28 +165,16 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getLength()).thenReturn(1);
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.WIDTH.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.WIDTH.getName());
 
         SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NullPointerException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(Enumerations.CoreAttribute.HEIGHT.getName());
+        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.HEIGHT.getName());
 
         rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
 
-        try {
-            rectangle.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(SVGRectangle.class.getName()));
-            Assert.assertEquals(NullPointerException.class, e.getCause().getClass());
-        }
+        TestUtils.assertExceptionContainsSVGElementName(rectangle, NullPointerException.class);
     }
 }

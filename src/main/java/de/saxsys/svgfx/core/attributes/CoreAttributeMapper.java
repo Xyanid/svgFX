@@ -6,7 +6,6 @@ import de.saxsys.svgfx.core.content.SVGContentTypeGradientUnits;
 import de.saxsys.svgfx.core.content.SVGContentTypeLength;
 import de.saxsys.svgfx.core.content.SVGContentTypePoints;
 import de.saxsys.svgfx.core.content.SVGContentTypeString;
-import de.saxsys.svgfx.core.content.SVGContentTypeStyle;
 import de.saxsys.svgfx.core.content.SVGContentTypeTransform;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGEllipse;
@@ -123,7 +122,7 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
     /**
      * Represents the type of the element.
      */
-    public static final CoreAttributeMapper TYPE = new CoreAttributeMapper("type", SVGContentTypeLength::new);
+    public static final CoreAttributeMapper TYPE = new CoreAttributeMapper("type", SVGContentTypeString::new);
 
     /**
      * Contains all the values that are available for this attribute class.
