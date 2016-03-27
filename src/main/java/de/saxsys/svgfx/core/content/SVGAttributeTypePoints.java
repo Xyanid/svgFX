@@ -35,14 +35,14 @@ import java.util.List;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypePoints extends SVGContentTypeBase<List<SVGContentTypePoint>, Void> {
+public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTypePoint>, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final List<SVGContentTypePoint> DEFAULT_VALUE = new ArrayList<>();
+    public static final List<SVGAttributeTypePoint> DEFAULT_VALUE = new ArrayList<>();
 
     // endregion
 
@@ -53,20 +53,20 @@ public class SVGContentTypePoints extends SVGContentTypeBase<List<SVGContentType
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypePoints(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypePoints(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGContentTypeBase
+    //region Override SVGAttributeType
 
     /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGContentTypePoint}.
+     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypePoint}.
      */
     @Override
-    protected Pair<List<SVGContentTypePoint>, Void> getValueAndUnit(final String text) {
-        List<SVGContentTypePoint> actualPoints = new ArrayList<>();
+    protected Pair<List<SVGAttributeTypePoint>, Void> getValueAndUnit(final String text) {
+        List<SVGAttributeTypePoint> actualPoints = new ArrayList<>();
 
         if (StringUtils.isNotNullOrEmpty(text)) {
             List<String> values = SVGUtils.split(text, Collections.singletonList(Constants.POINTS_DELIMITER), (currentData, index) -> {
@@ -85,7 +85,7 @@ public class SVGContentTypePoints extends SVGContentTypeBase<List<SVGContentType
             });
 
             for (String pointsSplit : values) {
-                SVGContentTypePoint actualPoint = new SVGContentTypePoint(getDataProvider());
+                SVGAttributeTypePoint actualPoint = new SVGAttributeTypePoint(getDataProvider());
                 actualPoint.consumeText(pointsSplit);
                 actualPoints.add(actualPoint);
             }

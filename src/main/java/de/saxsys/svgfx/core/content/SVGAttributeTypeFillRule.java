@@ -20,44 +20,54 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeLineJoin;
+import de.saxsys.svgfx.core.definitions.Enumerations;
+import javafx.scene.shape.FillRule;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
+ * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStrokeLineJoin extends SVGContentTypeBase<StrokeLineJoin, Void> {
+public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
+    public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStrokeLineJoin(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeFillRule(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override AttributeType
 
     @Override
-    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
+    protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
+        FillRule rule = DEFAULT_VALUE;
+
+        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
+            if (mapping.getName().equals(cssText)) {
+                rule = mapping.getRule();
+                break;
+            }
+        }
+
+        return new Pair<>(rule, null);
     }
 
     //endregion

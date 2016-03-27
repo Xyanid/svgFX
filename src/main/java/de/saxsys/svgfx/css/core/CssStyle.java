@@ -20,11 +20,11 @@
 package de.saxsys.svgfx.css.core;
 
 
-import de.saxsys.svgfx.content.ContentTypeBase;
-import de.saxsys.svgfx.content.ContentTypeHolder;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
+import de.saxsys.svgfx.xml.attribute.AttributeHolder;
+import de.saxsys.svgfx.xml.attribute.AttributeType;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
 
@@ -33,11 +33,12 @@ import java.util.Map;
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
- * @param <TContentType> type of the contentMap of this style.
+ * @param <TAttributeTypeHolder> type of the {@link AttributeHolder} of this style.
+ * @param <TAttributeType>       type of the {@link AttributeType} of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyle<TContentType extends ContentTypeBase> extends ContentTypeHolder<TContentType> {
+public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeTypeHolder extends AttributeHolder<TAttributeType>> {
 
     // region Enumeration
 
@@ -102,6 +103,10 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
      * The name of the style excluding the class or id selector
      */
     private String name;
+    /**
+     * Contains all the attributes of this {@link CssStyle}.
+     */
+    private final TAttributeTypeHolder attributeTypeHolder;
 
     //endregion
 
@@ -110,7 +115,8 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
     /**
      * Creates a new instance.
      */
-    public CssStyle() {
+    public CssStyle(final TAttributeTypeHolder attributeTypeHolder) {
+        this.attributeTypeHolder = attributeTypeHolder;
     }
 
     /**
@@ -118,8 +124,9 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
      *
      * @param name the name to of this style.
      */
-    public CssStyle(final String name) {
+    public CssStyle(final String name, final TAttributeTypeHolder attributeTypeHolder) {
         this.name = name;
+        this.attributeTypeHolder = attributeTypeHolder;
     }
 
     //endregion
@@ -134,12 +141,21 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
     }
 
     /**
-     * Returns the {@link #contentMap}.
+     * Return the {@link #attributeTypeHolder}.
      *
-     * @return the {@link #contentMap}.
+     * @return the {@link #attributeTypeHolder}.
      */
-    public final Map<String, TContentType> getProperties() {
-        return contentMap;
+    public final TAttributeTypeHolder getAttributeTypeHolder() {
+        return attributeTypeHolder;
+    }
+
+    /**
+     * Returns the {@link #attributeTypeHolder}s {@link AttributeHolder#getAttributes()}.
+     *
+     * @return the {@link #attributeTypeHolder}s {@link AttributeHolder#getAttributes()}.
+     */
+    public final Map<String, TAttributeType> getProperties() {
+        return attributeTypeHolder.getAttributes();
     }
 
     /**
@@ -169,15 +185,15 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
     // region Private
 
     /**
-     * Determines the {@link TContentType} from the given data.
+     * Determines the {@link TAttributeType} from the given data.
      *
      * @param data data to be used.
      *
-     * @return a new {@link Pair} containing the name of the {@link TContentType} as the key and the {@link TContentType} as the value;
+     * @return a new {@link Pair} containing the name of the {@link TAttributeType} as the key and the {@link TAttributeType} as the value;
      */
-    private Pair<String, TContentType> determineContentType(final String data) throws SVGException {
+    private Pair<String, TAttributeType> determineAttributeType(final String data) throws SVGException {
         if (StringUtils.isNullOrEmpty(data)) {
-            throw new SVGException("Given data must not be null in order to create a content type from it");
+            throw new SVGException("Given data must not be null in order to create a attribute type from it");
         }
 
         String trimmedData = data.trim();
@@ -185,24 +201,24 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
         int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
 
         if (index == -1 || index >= trimmedData.length() - 1) {
-            throw new SVGException("Given data either does not provide a content type separator separator or is to short");
+            throw new SVGException("Given data either does not provide a attribute type separator separator or is to short");
         }
 
         String name = trimmedData.substring(0, index).trim();
 
-        TContentType content = createContentType(StringUtils.stripStringIndicators(name));
+        TAttributeType attribute = attributeTypeHolder.createAttributeType(StringUtils.stripStringIndicators(name));
 
-        if (content != null) {
+        if (attribute != null) {
             String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
 
             try {
-                content.consumeText(cssText);
+                attribute.consumeText(cssText);
             } catch (Exception e) {
-                throw new SVGException(String.format("Could not parse %s for content type %s", cssText, content.getClass().getName()), e);
+                throw new SVGException(String.format("Could not parse %s for attribute type %s", cssText, attribute.getClass().getName()), e);
             }
         }
 
-        return new Pair<>(name, content);
+        return new Pair<>(name, attribute);
     }
 
     // endregion
@@ -210,14 +226,13 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
     // region Public
 
     /**
-     * Combines this {@link CssStyle} with the given {@link CssStyle}, new contentMap not present in this style will be added.
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, new {@link AttributeType}s not present in this style will be added.
      *
-     * @param <TContentTypeOther> the type of the {@link CssStyle} this style will be combined with
-     * @param style               the {@link CssStyle} which is be used, must not be null.
+     * @param style the {@link CssStyle} which is be used, must not be null.
      *
      * @throws IllegalArgumentException if the given {@link CssStyle} is null.
      */
-    public final <TContentTypeOther extends TContentType> void combineWithStyle(final CssStyle<TContentTypeOther> style) {
+    public final void combineWithStyle(final CssStyle<TAttributeType, TAttributeTypeHolder> style) {
 
         if (style == null) {
             throw new IllegalArgumentException("given style must not be null");
@@ -227,9 +242,9 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
             return;
         }
 
-        for (Map.Entry<String, TContentTypeOther> entry : style.contentMap.entrySet()) {
-            if (!contentMap.containsKey(entry.getKey())) {
-                contentMap.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, TAttributeType> entry : style.attributeTypeHolder.getAttributes().entrySet()) {
+            if (!attributeTypeHolder.getAttributes().containsKey(entry.getKey())) {
+                attributeTypeHolder.getAttributes().put(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -243,7 +258,7 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
 
         name = null;
         selector = Selector.NONE;
-        contentMap.clear();
+        attributeTypeHolder.getAttributes().clear();
 
         StringBuilder dataBuilder = new StringBuilder();
 
@@ -293,10 +308,10 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
                     // we have found the end of a property so we consume if if possible and add it
                 } else if (character == Constants.PROPERTY_END) {
 
-                    Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+                    Pair<String, TAttributeType> property = determineAttributeType(dataBuilder.toString());
 
                     if (property.getValue() != null) {
-                        contentMap.put(property.getKey(), property.getValue());
+                        attributeTypeHolder.getAttributes().put(property.getKey(), property.getValue());
                     }
 
                     dataBuilder.setLength(0);
@@ -306,10 +321,10 @@ public abstract class CssStyle<TContentType extends ContentTypeBase> extends Con
                 } else if (character == Constants.DECLARATION_BLOCK_END) {
 
                     if (dataBuilder.toString().trim().length() > 0) {
-                        Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+                        Pair<String, TAttributeType> property = determineAttributeType(dataBuilder.toString());
 
                         if (property.getValue() != null) {
-                            contentMap.put(property.getKey(), property.getValue());
+                            attributeTypeHolder.getAttributes().put(property.getKey(), property.getValue());
                         }
                     }
 

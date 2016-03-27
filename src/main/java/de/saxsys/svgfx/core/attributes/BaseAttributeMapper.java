@@ -1,7 +1,7 @@
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.content.ContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.xml.attribute.AttributeType;
 import de.saxsys.svgfx.xml.core.IDataProvider;
 
 import java.util.function.Function;
@@ -21,9 +21,9 @@ public abstract class BaseAttributeMapper<TDataProvider extends IDataProvider> {
     private final String name;
 
     /**
-     * This function is used to create a new instance of the underlying {@link ContentTypeBase} of the attribute using the given {@link TDataProvider}.
+     * This function is used to create a new instance of the underlying {@link AttributeType} of the attribute using the given {@link TDataProvider}.
      */
-    private final Function<TDataProvider, ? extends SVGContentTypeBase> contentTypeCreator;
+    private final Function<TDataProvider, ? extends SVGAttributeType> contentTypeCreator;
 
     // endregion
 
@@ -33,9 +33,9 @@ public abstract class BaseAttributeMapper<TDataProvider extends IDataProvider> {
      * Creates a new instance.
      *
      * @param name               the name of the attribute within the svg element
-     * @param contentTypeCreator the {@link Function} to use when a {@link ContentTypeBase} is needed.
+     * @param contentTypeCreator the {@link Function} to use when a {@link AttributeType} is needed.
      */
-    public BaseAttributeMapper(final String name, final Function<TDataProvider, ? extends SVGContentTypeBase> contentTypeCreator) {
+    BaseAttributeMapper(final String name, final Function<TDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
         this.name = name;
         this.contentTypeCreator = contentTypeCreator;
     }
@@ -58,7 +58,7 @@ public abstract class BaseAttributeMapper<TDataProvider extends IDataProvider> {
      *
      * @return the {@link #contentTypeCreator}.
      */
-    public final Function<TDataProvider, ? extends SVGContentTypeBase> getContentTypeCreator() {
+    public final Function<TDataProvider, ? extends SVGAttributeType> getContentTypeCreator() {
         return contentTypeCreator;
     }
 

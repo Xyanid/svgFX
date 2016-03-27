@@ -19,8 +19,8 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.content.ContentTypeBase;
 import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.xml.attribute.AttributeType;
 import javafx.util.Pair;
 
 /**
@@ -31,17 +31,17 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<TValue, TUnit> {
+public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TValue, TUnit> {
 
     // region Enumerations
 
     /**
-     * Contains a {@link String} which indicates that the {@link SVGContentTypeBase} of a property is inherited.
+     * Contains a {@link String} which indicates that the {@link SVGAttributeType} of a property is inherited.
      */
     public static String INHERIT_INDICATOR = "inherit";
 
     /**
-     * Contains a {@link String} which indicates that the {@link SVGContentTypeBase} of a property is none, meaning its not used.
+     * Contains a {@link String} which indicates that the {@link SVGAttributeType} of a property is none, meaning its not used.
      */
     public static String NONE_INDICATOR = "none";
 
@@ -79,7 +79,7 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
      * @param defaultValue the default value of this to use.
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeBase(final TValue defaultValue, final SVGDataProvider dataProvider) {
+    public SVGAttributeType(final TValue defaultValue, final SVGDataProvider dataProvider) {
         super(defaultValue);
 
         this.dataProvider = dataProvider;
@@ -135,7 +135,7 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
 
     //endregion
 
-    // region Override ContentTypeBase
+    // region Override AttributeType
 
     @Override
     public final void consumeText(final String text) {
@@ -167,7 +167,7 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
     }
 
     /**
-     * Checks whether the object is reference equal or if its also a {@link SVGContentTypeBase} and its {@link #isNone} and {@link #isInherited} are the same.
+     * Checks whether the object is reference equal or if its also a {@link SVGAttributeType} and its {@link #isNone} and {@link #isInherited} are the same.
      *
      * @param obj object to check.
      *
@@ -179,8 +179,8 @@ public abstract class SVGContentTypeBase<TValue, TUnit> extends ContentTypeBase<
         boolean result = super.equals(obj);
 
         // in this case the object might be the same be we also need to check if inherit and none are the same
-        if (result && obj instanceof SVGContentTypeBase) {
-            SVGContentTypeBase base = (SVGContentTypeBase) obj;
+        if (result && obj instanceof SVGAttributeType) {
+            SVGAttributeType base = (SVGAttributeType) obj;
             result = isNone == base.isNone && isInherited == base.isInherited;
         }
 

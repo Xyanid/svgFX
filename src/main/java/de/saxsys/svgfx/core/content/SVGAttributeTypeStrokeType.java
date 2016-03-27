@@ -20,45 +20,44 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Pair;
 
 /**
- * This class represents a svg length content type
+ * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeDouble extends SVGContentTypeBase<Double, Void> {
+public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
+     * Determines the default value to use for this {@link SVGAttributeType}.
      */
-    public static final double DEFAULT_VALUE = 0.0d;
+    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance.
+     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeDouble(final SVGDataProvider dataProvider) {
-        super(0.0d, dataProvider);
+    public SVGAttributeTypeStrokeType(final SVGDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGContentTypeBase
+    //region Override AttributeType
 
-    /**
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypeDouble}
-     */
     @Override
-    protected Pair<Double, Void> getValueAndUnit(final String cssText) {
-        return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
+    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
+
+        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

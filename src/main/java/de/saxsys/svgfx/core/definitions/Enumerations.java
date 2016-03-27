@@ -19,7 +19,7 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.content.SVGContentTypeGradientUnits;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeGradientUnits;
 import javafx.scene.shape.FillRule;
 
 /**
@@ -139,7 +139,7 @@ public final class Enumerations {
     }
 
     /**
-     * Contains the possible values for {@link SVGContentTypeGradientUnits}.
+     * Contains the possible values for {@link SVGAttributeTypeGradientUnits}.
      */
     public enum GradientUnits {
         NONE(""),

@@ -20,44 +20,48 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeType;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
+ * This class represents a svg transform content type. This means it will contains matrix transformation.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStrokeType extends SVGContentTypeBase<StrokeType, Void> {
+public class SVGAttributeTypeStyle extends SVGAttributeType<SVGCssStyle, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
+    public static final SVGCssStyle DEFAULT_VALUE = null;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStrokeType(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeStyle(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override SVGAttributeType
 
+    /**
+     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypeStyle}
+     */
     @Override
-    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
-
-        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
+    protected Pair<SVGCssStyle, Void> getValueAndUnit(final String text) {
+        SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
+        ownStyle.parseCssText(text);
+        return new Pair<>(ownStyle, null);
     }
 
     //endregion

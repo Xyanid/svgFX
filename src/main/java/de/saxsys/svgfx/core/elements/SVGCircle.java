@@ -21,7 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
@@ -55,16 +55,14 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     @Override
     protected final Circle createResult(final SVGCssStyle style) {
 
-        Double centerX = hasContentType(CoreAttributeMapper.CENTER_X.getName())
-                         ? getContentType(CoreAttributeMapper.CENTER_X.getName(),
-                                          SVGContentTypeLength.class).getValue()
-                         : SVGContentTypeLength.DEFAULT_VALUE;
-        Double centerY = hasContentType(CoreAttributeMapper.CENTER_Y.getName())
-                         ? getContentType(CoreAttributeMapper.CENTER_Y.getName(),
-                                          SVGContentTypeLength.class).getValue()
-                         : SVGContentTypeLength.DEFAULT_VALUE;
+        Double centerX = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_X.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.CENTER_X.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
+        Double centerY = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_Y.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.CENTER_Y.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
 
-        return new Circle(centerX, centerY, getContentType(CoreAttributeMapper.RADIUS.getName(), SVGContentTypeLength.class).getValue());
+        return new Circle(centerX, centerY, getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS.getName(), SVGAttributeTypeLength.class).getValue());
     }
 
     //endregion

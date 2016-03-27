@@ -30,14 +30,14 @@ import java.util.List;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStrokeDashArray extends SVGContentTypeBase<SVGContentTypeLength[], Void> {
+public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttributeTypeLength[], Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGContentTypeBase}.
+     * Determines the default value to use for this {@link SVGAttributeType}.
      */
-    public static final SVGContentTypeLength[] DEFAULT_VALUE = new SVGContentTypeLength[]{};
+    public static final SVGAttributeTypeLength[] DEFAULT_VALUE = new SVGAttributeTypeLength[]{};
 
     // endregion
 
@@ -57,7 +57,7 @@ public class SVGContentTypeStrokeDashArray extends SVGContentTypeBase<SVGContent
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStrokeDashArray(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeStrokeDashArray(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -74,23 +74,23 @@ public class SVGContentTypeStrokeDashArray extends SVGContentTypeBase<SVGContent
 
     // endregion
 
-    //region Override ContentTypeBase
+    //region Override AttributeType
 
     /**
      * {@inheritDoc} This implementation will parse the given data as a coma separated list of dashValues.
      *
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypeLength}
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeLength}
      */
     @Override
-    protected Pair<SVGContentTypeLength[], Void> getValueAndUnit(final String cssText) {
+    protected Pair<SVGAttributeTypeLength[], Void> getValueAndUnit(final String cssText) {
 
         String[] values = cssText.split(",");
 
-        SVGContentTypeLength[] array = new SVGContentTypeLength[values.length];
+        SVGAttributeTypeLength[] array = new SVGAttributeTypeLength[values.length];
         dashValues.clear();
 
         for (int i = 0; i < values.length; i++) {
-            array[i] = new SVGContentTypeLength(getDataProvider());
+            array[i] = new SVGAttributeTypeLength(getDataProvider());
             array[i].consumeText(values[i].trim());
             dashValues.add(array[i].getValue());
         }

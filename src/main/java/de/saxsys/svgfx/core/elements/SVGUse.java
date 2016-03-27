@@ -23,8 +23,8 @@ import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.Group;
@@ -65,23 +65,22 @@ public class SVGUse extends SVGElementBase<Group> {
     @Override
     protected Group createResult(final SVGCssStyle style) throws SVGException {
 
-        if (!hasContentType(XLinkAttributeMapper.XLINK_HREF.getName())) {
+        if (!getAttributeHolder().hasAttribute(XLinkAttributeMapper.XLINK_HREF.getName())) {
             throw new SVGException("XLink attribute is invalid.");
         }
 
-        SVGElementBase referencedElement = SVGUtils.resolveIRI(getContentType(XLinkAttributeMapper.XLINK_HREF.getName(), SVGContentTypeString.class).getValue(),
+        SVGElementBase referencedElement = SVGUtils.resolveIRI(getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(),
+                                                                                                 SVGAttributeTypeString.class).getValue(),
                                                                getDataProvider(),
                                                                SVGElementBase.class);
 
-        Double positionX = hasContentType(CoreAttributeMapper.POSITION_X.getName())
-                           ? getContentType(CoreAttributeMapper.POSITION_X.getName(),
-                                            SVGContentTypeLength.class).getValue()
-                           : SVGContentTypeLength.DEFAULT_VALUE;
+        Double positionX = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_X.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.POSITION_X.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
 
-        Double positionY = hasContentType(CoreAttributeMapper.POSITION_Y.getName())
-                           ? getContentType(CoreAttributeMapper.POSITION_Y.getName(),
-                                            SVGContentTypeLength.class).getValue()
-                           : SVGContentTypeLength.DEFAULT_VALUE;
+        Double positionY = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_Y.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.POSITION_Y.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
 
         Group result = new Group();
         result.setLayoutX(positionX);

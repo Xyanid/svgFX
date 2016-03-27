@@ -21,16 +21,16 @@ package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.content.SVGContentTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypePaint;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeType;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeDashArray;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineCap;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.StrokeLineCap;
@@ -40,7 +40,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGContentTypeBase}.
+ * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGAttributeType}.
  *
  * @author Xyanid on 05.10.2015.
  */
@@ -61,27 +61,32 @@ public final class SVGCssStyleTest {
         Assert.assertEquals("st0", style.getName());
         Assert.assertEquals(4, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue(),
+                            Color.web("#808080"));
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 3.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 3.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            10.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 10.0d, 0.01d);
     }
 
     /**
-     * Ensures that styles read with property that are not inside the {@link PresentationAttributeMapper}s are still contained as {@link SVGContentTypeString}.
+     * Ensures that styles read with property that are not inside the {@link PresentationAttributeMapper}s are still contained as {@link SVGAttributeTypeString}.
      */
     @Test
     public void ensureUnknownPropertyArePresentAsStrings() {
@@ -93,27 +98,32 @@ public final class SVGCssStyleTest {
         Assert.assertEquals("st0", style.getName());
         Assert.assertEquals(5, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue(),
+                            Color.web("#808080"));
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 3.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 3.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            10.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 10.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType("sumthing"));
-        Assert.assertEquals(SVGContentTypeString.class, style.getContentType("sumthing").getClass());
-        Assert.assertEquals("else", style.getContentType("sumthing", SVGContentTypeString.class).getValue());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute("sumthing"));
+        Assert.assertEquals(SVGAttributeTypeString.class, style.getAttributeTypeHolder().getAttribute("sumthing").getClass());
+        Assert.assertEquals("else", style.getAttributeTypeHolder().getAttribute("sumthing", SVGAttributeTypeString.class).getValue());
     }
 
     /**
@@ -159,39 +169,46 @@ public final class SVGCssStyleTest {
 
         for (PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
 
-            Assert.assertNotNull(style.getContentType(attribute.getName()));
+            Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(attribute.getName()));
 
             if (attribute == PresentationAttributeMapper.FILL_RULE) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypeFillRule.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeFillRule.class).getValue(), FillRule.EVEN_ODD);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypeFillRule.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeFillRule.class).getValue(),
+                                    FillRule.EVEN_ODD);
             } else if (attribute == PresentationAttributeMapper.FILL ||
                        attribute == PresentationAttributeMapper.STROKE ||
                        attribute == PresentationAttributeMapper.STOP_COLOR ||
                        attribute == PresentationAttributeMapper.COLOR) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypePaint.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypePaint.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypePaint.class).getValue(),
+                                    Color.web("#808080"));
             } else if (attribute == PresentationAttributeMapper.STROKE_DASHARRAY) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypeStrokeDashArray.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeStrokeDashArray.class).getValue().length, 4);
-                for (SVGContentTypeLength length : style.getContentType(attribute.getName(), SVGContentTypeStrokeDashArray.class).getValue()) {
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypeStrokeDashArray.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeStrokeDashArray.class).getValue().length, 4);
+                for (SVGAttributeTypeLength length : style.getAttributeTypeHolder()
+                                                          .getAttribute(attribute.getName(), SVGAttributeTypeStrokeDashArray.class)
+                                                          .getValue()) {
                     Assert.assertEquals(length.getValue(), 10.0d, 0.01d);
                 }
             } else if (attribute == PresentationAttributeMapper.STROKE_LINECAP) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypeStrokeLineCap.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeStrokeLineCap.class).getValue(), StrokeLineCap.ROUND);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypeStrokeLineCap.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeStrokeLineCap.class).getValue(),
+                                    StrokeLineCap.ROUND);
             } else if (attribute == PresentationAttributeMapper.STROKE_LINEJOIN) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypeStrokeLineJoin.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeStrokeLineJoin.class).getValue(), StrokeLineJoin.BEVEL);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypeStrokeLineJoin.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeStrokeLineJoin.class).getValue(),
+                                    StrokeLineJoin.BEVEL);
             } else if (attribute == PresentationAttributeMapper.STROKE_TYPE) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypeStrokeType.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeStrokeType.class).getValue(), StrokeType.OUTSIDE);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypeStrokeType.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeStrokeType.class).getValue(),
+                                    StrokeType.OUTSIDE);
             } else if (attribute == PresentationAttributeMapper.CLIP_PATH || attribute == PresentationAttributeMapper.CLIP_RULE) {
-                Assert.assertEquals(style.getContentType(attribute.getName()).getClass(), SVGContentTypeString.class);
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeString.class).getValue(), "random");
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName()).getClass(), SVGAttributeTypeString.class);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeString.class).getValue(), "random");
             } else if (attribute == PresentationAttributeMapper.STROKE_DASHOFFSET || attribute == PresentationAttributeMapper.STROKE_WIDTH) {
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeLength.class).getValue(), 10.0d, 0.01d);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeLength.class).getValue(), 10.0d, 0.01d);
             } else {
-                Assert.assertEquals(style.getContentType(attribute.getName(), SVGContentTypeDouble.class).getValue(), 10.0d, 0.01d);
+                Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(attribute.getName(), SVGAttributeTypeDouble.class).getValue(), 10.0d, 0.01d);
             }
         }
     }
@@ -210,46 +227,56 @@ public final class SVGCssStyleTest {
         Assert.assertEquals("st0", style.getName());
         Assert.assertEquals(4, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue(),
+                            Color.web("#808080"));
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 3.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 3.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            10.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 10.0d, 0.01d);
 
         style.parseCssText(".st0{fill:none;stroke:#080808;/*{\"this is ;:a string\";:}*/stroke-width:4;stroke-miterlimit:11;}");
 
         Assert.assertEquals("st0", style.getName());
         Assert.assertEquals(4, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#080808"));
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue(),
+                            Color.web("#080808"));
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 4.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 4.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            11.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 11.0d, 0.01d);
     }
 
     /**
@@ -266,47 +293,57 @@ public final class SVGCssStyleTest {
         Assert.assertEquals("st0", style.getName());
         Assert.assertEquals(4, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue(),
+                            Color.web("#808080"));
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 3.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 3.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            10.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 10.0d, 0.01d);
 
         style.parseCssText(".st0{fill:none;clip-rule:\";{ar;asd:j}:sda;asd:\";stroke-width:4;stroke-miterlimit:12;}");
 
         Assert.assertEquals("st0", style.getName());
         Assert.assertEquals(4, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.CLIP_RULE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.CLIP_RULE.getName()).getClass(), SVGContentTypeString.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.CLIP_RULE.getName(), SVGContentTypeString.class).getValue(),
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.CLIP_RULE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.CLIP_RULE.getName()).getClass(),
+                            SVGAttributeTypeString.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.CLIP_RULE.getName(), SVGAttributeTypeString.class).getValue(),
                             ";{ar;asd:j}:sda;asd:");
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 4.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 4.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            12.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 12.0d, 0.01d);
     }
 
     /**
@@ -327,28 +364,35 @@ public final class SVGCssStyleTest {
 
         Assert.assertEquals(5, style.getProperties().size());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertTrue(style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getIsNone());
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertTrue(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getIsNone());
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGContentTypePaint.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue(), Color.web("#808080"));
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName()).getClass(), SVGAttributeTypePaint.class);
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue(),
+                            Color.web("#808080"));
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(), SVGContentTypeLength.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue(), 3.0d, 0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName()).getClass(),
+                            SVGAttributeTypeLength.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                 .getValue(), 3.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(), SVGContentTypeDouble.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue(),
-                            10.0d,
-                            0.01d);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).getClass(),
+                            SVGAttributeTypeDouble.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                 .getValue(), 10.0d, 0.01d);
 
-        Assert.assertNotNull(style.getContentType(PresentationAttributeMapper.FILL_RULE.getName()));
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL_RULE.getName()).getClass(), SVGContentTypeFillRule.class);
-        Assert.assertEquals(style.getContentType(PresentationAttributeMapper.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue(),
-                            FillRule.EVEN_ODD);
+        Assert.assertNotNull(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName()));
+        Assert.assertEquals(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName()).getClass(),
+                            SVGAttributeTypeFillRule.class);
+        Assert.assertEquals(style.getAttributeTypeHolder()
+                                 .getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class)
+                                 .getValue(), FillRule.EVEN_ODD);
     }
 
     //endregion

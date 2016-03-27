@@ -28,12 +28,12 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.SVGPoint, Void> {
+public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoint.SVGPoint, Void> {
 
     // region Classes
 
     /**
-     * This class represents a point in svg, it differs from a normal point in the sense that each x and y coordinates are {@link SVGContentTypeLength}
+     * This class represents a point in svg, it differs from a normal point in the sense that each x and y coordinates are {@link SVGAttributeTypeLength}
      * instead of normal double or ints.
      */
     public class SVGPoint {
@@ -47,11 +47,11 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
         /**
          * Determines the x coordinate of the point.
          */
-        private final SVGContentTypeLength x;
+        private final SVGAttributeTypeLength x;
         /**
          * Determines the y coordinate of the point.
          */
-        private final SVGContentTypeLength y;
+        private final SVGAttributeTypeLength y;
 
         //endregion
 
@@ -59,8 +59,8 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
 
         public SVGPoint(final SVGDataProvider dataProvider) {
             this.dataProvider = dataProvider;
-            x = new SVGContentTypeLength(this.dataProvider);
-            y = new SVGContentTypeLength(this.dataProvider);
+            x = new SVGAttributeTypeLength(this.dataProvider);
+            y = new SVGAttributeTypeLength(this.dataProvider);
         }
 
         //endregion
@@ -72,7 +72,7 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
          *
          * @return {@link #x}.
          */
-        public final SVGContentTypeLength getX() {
+        public final SVGAttributeTypeLength getX() {
             return x;
         }
 
@@ -81,7 +81,7 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
          *
          * @return {@link #y}.
          */
-        public final SVGContentTypeLength getY() {
+        public final SVGAttributeTypeLength getY() {
             return y;
         }
 
@@ -93,7 +93,7 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
     public static final SVGPoint DEFAULT_VALUE = null;
 
@@ -106,16 +106,16 @@ public class SVGContentTypePoint extends SVGContentTypeBase<SVGContentTypePoint.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypePoint(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypePoint(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override AttributeType
 
     /**
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypePoint}
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypePoint}
      */
     @Override
     protected Pair<SVGPoint, Void> getValueAndUnit(final String text) {

@@ -20,11 +20,9 @@
 package de.saxsys.svgfx.core.css;
 
 
-import de.saxsys.svgfx.content.ContentTypeBase;
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeHolder;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.css.core.CssStyle;
 
 /**
@@ -32,7 +30,7 @@ import de.saxsys.svgfx.css.core.CssStyle;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGCssStyle extends CssStyle<SVGContentTypeBase> {
+public class SVGCssStyle extends CssStyle<SVGAttributeType, SVGAttributeHolder> {
 
     // region Fields
 
@@ -48,7 +46,7 @@ public class SVGCssStyle extends CssStyle<SVGContentTypeBase> {
      * @param provider the data provider to use
      */
     public SVGCssStyle(final SVGDataProvider provider) {
-        super();
+        super(new SVGAttributeHolder(provider));
 
         this.provider = provider;
     }
@@ -60,33 +58,9 @@ public class SVGCssStyle extends CssStyle<SVGContentTypeBase> {
      * @param provider the data provider to use.
      */
     public SVGCssStyle(final String name, final SVGDataProvider provider) {
-        super(name);
+        super(name, new SVGAttributeHolder(provider));
 
         this.provider = provider;
-    }
-
-    //endregion
-
-    // region Override CssStyle
-
-    /**
-     * This implementation will use the name and validate it against{@link PresentationAttributeMapper}s and then create an instance of a
-     * {@link ContentTypeBase}. If the given name does not correspond with any {@link PresentationAttributeMapper}, no {@link ContentTypeBase} will be
-     * created and null will be returned.
-     *
-     * @param name then name of the property
-     *
-     * @return a {@link ContentTypeBase} or null if the name is not supported.
-     */
-    @Override
-    public SVGContentTypeBase createContentType(final String name) {
-        for (PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
-            if (attribute.getName().equals(name)) {
-                return attribute.getContentTypeCreator().apply(provider);
-            }
-        }
-
-        return new SVGContentTypeString(provider);
     }
 
     //endregion

@@ -22,7 +22,7 @@ package de.saxsys.svgfx.core.utils;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypePaint;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.core.definitions.Enumerations;
@@ -378,8 +378,10 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        assertEquals(Color.web("#111111"), style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue());
-        assertEquals(Color.web("#222222"), style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#111111"),
+                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
+        assertEquals(Color.web("#222222"),
+                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue());
     }
 
     /**
@@ -398,8 +400,10 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        assertEquals(Color.web("#111111"), style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue());
-        assertEquals(Color.web("#222222"), style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#111111"),
+                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
+        assertEquals(Color.web("#222222"),
+                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue());
     }
 
     /**
@@ -418,7 +422,8 @@ public final class SVGUtilTest {
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
-        assertEquals(Color.web("#333333"), style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue());
+        assertEquals(Color.web("#333333"),
+                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
     }
 
     /**

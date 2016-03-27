@@ -21,15 +21,16 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypePaint;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeType;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeDashArray;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineCap;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeType;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
@@ -46,6 +47,7 @@ import javafx.scene.transform.Shear;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -262,56 +264,75 @@ public final class SVGUtils {
             throw new IllegalArgumentException("Given style must not be null");
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.FILL.getName())) {
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.FILL.getName())) {
 
-            Paint paint = style.getContentType(PresentationAttributeMapper.FILL.getName(), SVGContentTypePaint.class).getValue();
+            Paint paint = style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue();
 
-            if (style.hasContentType(PresentationAttributeMapper.OPACITY.getName())) {
-                SVGUtils.applyOpacity(paint, style.getContentType(PresentationAttributeMapper.OPACITY.getName(), SVGContentTypeDouble.class).getValue());
+            if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.OPACITY.getName())) {
+                SVGUtils.applyOpacity(paint,
+                                      style.getAttributeTypeHolder()
+                                           .getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class)
+                                           .getValue());
             }
 
             shape.setFill(paint);
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE.getName())) {
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE.getName())) {
 
-            Paint paint = style.getContentType(PresentationAttributeMapper.STROKE.getName(), SVGContentTypePaint.class).getValue();
+            Paint paint = style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue();
 
-            if (style.hasContentType(PresentationAttributeMapper.OPACITY.getName())) {
-                SVGUtils.applyOpacity(paint, style.getContentType(PresentationAttributeMapper.OPACITY.getName(), SVGContentTypeDouble.class).getValue());
+            if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.OPACITY.getName())) {
+                SVGUtils.applyOpacity(paint,
+                                      style.getAttributeTypeHolder()
+                                           .getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class)
+                                           .getValue());
             }
 
             shape.setStroke(paint);
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_TYPE.getName())) {
-            shape.setStrokeType(style.getContentType(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGContentTypeStrokeType.class).getValue());
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_TYPE.getName())) {
+            shape.setStrokeType(style.getAttributeTypeHolder()
+                                     .getAttribute(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGAttributeTypeStrokeType.class)
+                                     .getValue());
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_WIDTH.getName())) {
-            shape.setStrokeWidth(style.getContentType(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGContentTypeLength.class).getValue());
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName())) {
+            shape.setStrokeWidth(style.getAttributeTypeHolder()
+                                      .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+                                      .getValue());
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_DASHARRAY.getName())) {
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_DASHARRAY.getName())) {
             shape.getStrokeDashArray().clear();
-            shape.getStrokeDashArray().addAll(style.getContentType(PresentationAttributeMapper.STROKE_DASHARRAY.getName(), SVGContentTypeStrokeDashArray.class)
+            shape.getStrokeDashArray().addAll(style.getAttributeTypeHolder()
+                                                   .getAttribute(PresentationAttributeMapper.STROKE_DASHARRAY.getName(), SVGAttributeTypeStrokeDashArray.class)
                                                    .getDashValues());
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_DASHOFFSET.getName())) {
-            shape.setStrokeDashOffset(style.getContentType(PresentationAttributeMapper.STROKE_DASHOFFSET.getName(), SVGContentTypeLength.class).getValue());
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_DASHOFFSET.getName())) {
+            shape.setStrokeDashOffset(style.getAttributeTypeHolder()
+                                           .getAttribute(PresentationAttributeMapper.STROKE_DASHOFFSET.getName(), SVGAttributeTypeLength.class)
+                                           .getValue());
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_LINEJOIN.getName())) {
-            shape.setStrokeLineJoin(style.getContentType(PresentationAttributeMapper.STROKE_LINEJOIN.getName(), SVGContentTypeStrokeLineJoin.class).getValue());
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_LINEJOIN.getName())) {
+            shape.setStrokeLineJoin(style.getAttributeTypeHolder()
+                                         .getAttribute(PresentationAttributeMapper.STROKE_LINEJOIN.getName(), SVGAttributeTypeStrokeLineJoin.class)
+                                         .getValue());
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_LINECAP.getName())) {
-            shape.setStrokeLineCap(style.getContentType(PresentationAttributeMapper.STROKE_LINECAP.getName(), SVGContentTypeStrokeLineCap.class).getValue());
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_LINECAP.getName())) {
+            shape.setStrokeLineCap(style.getAttributeTypeHolder()
+                                        .getAttribute(PresentationAttributeMapper.STROKE_LINECAP.getName(), SVGAttributeTypeStrokeLineCap.class)
+                                        .getValue());
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName())) {
-            shape.setStrokeMiterLimit(style.getContentType(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGContentTypeDouble.class).getValue());
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName())) {
+            shape.setStrokeMiterLimit(style.getAttributeTypeHolder()
+                                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+                                           .getValue());
         }
     }
 
@@ -335,12 +356,12 @@ public final class SVGUtils {
 
         style.combineWithStyle(otherStyle);
 
-        for (Map.Entry<String, SVGContentTypeBase> property : style.getProperties().entrySet()) {
+        for (Map.Entry<String, SVGAttributeType> property : style.getProperties().entrySet()) {
             if (property.getValue().getIsInherited()) {
-                SVGContentTypeBase otherProperty = otherStyle.getContentType(property.getKey());
+                SVGAttributeType otherProperty = otherStyle.getAttributeTypeHolder().getAttribute(property.getKey());
                 if (otherProperty != null && !otherProperty.getIsInherited()) {
                     if (otherProperty.getIsNone()) {
-                        property.getValue().consumeText(SVGContentTypeBase.NONE_INDICATOR);
+                        property.getValue().consumeText(SVGAttributeType.NONE_INDICATOR);
                     } else {
                         property.getValue().setValue(otherProperty.getValue());
                         property.getValue().setUnit(otherProperty.getUnit());
@@ -620,6 +641,19 @@ public final class SVGUtils {
         }
 
         return result;
+    }
+
+    // endregion
+
+    // region Misc
+
+    public static Point getRelativePosition(final Point position, final SVGElementBase parent) {
+        SVGAttributeTypeLength parentX = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName()));
+        SVGAttributeTypeLength parentY = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName()));
+        SVGAttributeTypeLength width = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.WIDTH.getName()));
+        SVGAttributeTypeLength height = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.HEIGHT.getName()));
+
+        return null;
     }
 
     // endregion

@@ -29,7 +29,7 @@ import java.util.EnumSet;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeLength extends SVGContentTypeBase<Double, SVGContentTypeLength.Unit> {
+public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttributeTypeLength.Unit> {
 
     // region Static
 
@@ -119,7 +119,7 @@ public class SVGContentTypeLength extends SVGContentTypeBase<Double, SVGContentT
 
     // region Enumerations
     /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
     public static final double DEFAULT_VALUE = 0.0d;
 
@@ -132,16 +132,16 @@ public class SVGContentTypeLength extends SVGContentTypeBase<Double, SVGContentT
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeLength(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeLength(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override AttributeType
 
     /**
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGContentTypeLength}
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeLength}
      */
     @Override
     protected Pair<Double, Unit> getValueAndUnit(final String cssText) {

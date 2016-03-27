@@ -23,9 +23,9 @@ import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypePaint;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
@@ -66,28 +66,30 @@ public class SVGStop extends SVGElementBase<Stop> {
     @Override
     protected final Stop createResult(final SVGCssStyle style) throws SVGException {
 
-        Color color = (Color) SVGContentTypePaint.DEFAULT_VALUE;
+        Color color = (Color) SVGAttributeTypePaint.DEFAULT_VALUE;
 
-        if (!hasContentType(CoreAttributeMapper.OFFSET.getName())) {
+        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.OFFSET.getName())) {
             throw new SVGException("Stop does not provide an offset value");
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STOP_COLOR.getName())) {
-            color = (Color) style.getContentType(PresentationAttributeMapper.STOP_COLOR.getName(), SVGContentTypePaint.class).getValue();
-        } else if (style.hasContentType(PresentationAttributeMapper.COLOR.getName())) {
-            color = (Color) style.getContentType(PresentationAttributeMapper.COLOR.getName(), SVGContentTypePaint.class).getValue();
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STOP_COLOR.getName())) {
+            color = (Color) style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STOP_COLOR.getName(), SVGAttributeTypePaint.class).getValue();
+        } else if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.COLOR.getName())) {
+            color = (Color) style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.COLOR.getName(), SVGAttributeTypePaint.class).getValue();
         }
 
         if (color == null) {
             throw new SVGException("Given color must not be null");
         }
 
-        if (style.hasContentType(PresentationAttributeMapper.STOP_OPACITY.getName())) {
-            double opacity = style.getContentType(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGContentTypeDouble.class).getValue();
+        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STOP_OPACITY.getName())) {
+            double opacity = style.getAttributeTypeHolder()
+                                  .getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class)
+                                  .getValue();
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         }
 
-        return new Stop(getContentType(CoreAttributeMapper.OFFSET.getName(), SVGContentTypeLength.class).getValue(), color);
+        return new Stop(getAttributeHolder().getAttribute(CoreAttributeMapper.OFFSET.getName(), SVGAttributeTypeLength.class).getValue(), color);
     }
 
     @Override

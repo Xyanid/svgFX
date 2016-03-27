@@ -43,7 +43,7 @@ import java.io.InputStream;
  * @param <TElementCreator> the type of the {@link IElementCreator} @author Xyanid on 24.10.2015.
  */
 public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TElementCreator extends IElementCreator<TDataProvider, TElement>, TElement
-        extends ElementBase<?, TDataProvider, ?, TElement>>
+        extends ElementBase<?, ?, TDataProvider, ?, TElement>>
         extends DefaultHandler {
 
     // region Enumeration

@@ -22,7 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
@@ -56,19 +56,17 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     @Override
     protected final Rectangle createResult(final SVGCssStyle style) {
 
-        Double positionX = hasContentType(CoreAttributeMapper.POSITION_X.getName())
-                           ? getContentType(CoreAttributeMapper.POSITION_X.getName(),
-                                            SVGContentTypeLength.class).getValue()
-                           : SVGContentTypeLength.DEFAULT_VALUE;
-        Double positionY = hasContentType(CoreAttributeMapper.POSITION_Y.getName())
-                           ? getContentType(CoreAttributeMapper.POSITION_Y.getName(),
-                                            SVGContentTypeLength.class).getValue()
-                           : SVGContentTypeLength.DEFAULT_VALUE;
+        Double positionX = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_X.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.POSITION_X.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
+        Double positionY = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_Y.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.POSITION_Y.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
 
         return new Rectangle(positionX,
                              positionY,
-                             getContentType(CoreAttributeMapper.WIDTH.getName(), SVGContentTypeLength.class).getValue(),
-                             getContentType(CoreAttributeMapper.HEIGHT.getName(), SVGContentTypeLength.class).getValue());
+                             getAttributeHolder().getAttribute(CoreAttributeMapper.WIDTH.getName(), SVGAttributeTypeLength.class).getValue(),
+                             getAttributeHolder().getAttribute(CoreAttributeMapper.HEIGHT.getName(), SVGAttributeTypeLength.class).getValue());
     }
 
     /**
@@ -81,12 +79,12 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
 
-        if (hasContentType(CoreAttributeMapper.RADIUS_X.getName())) {
-            rect.setArcWidth(getContentType(CoreAttributeMapper.RADIUS_X.getName(), SVGContentTypeLength.class).getValue() * 2.0d);
+        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.RADIUS_X.getName())) {
+            rect.setArcWidth(getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).getValue() * 2.0d);
         }
 
-        if (hasContentType(CoreAttributeMapper.RADIUS_Y.getName())) {
-            rect.setArcHeight(getContentType(CoreAttributeMapper.RADIUS_Y.getName(), SVGContentTypeLength.class).getValue() * 2.0d);
+        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.RADIUS_Y.getName())) {
+            rect.setArcHeight(getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).getValue() * 2.0d);
         }
     }
 

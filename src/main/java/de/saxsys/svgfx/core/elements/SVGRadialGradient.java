@@ -22,7 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -66,22 +66,26 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
             throw new SVGException("Given radial gradient does not have colors");
         }
 
-        Double centerX = hasContentType(CoreAttributeMapper.CENTER_X.getName())
-                         ? getContentType(CoreAttributeMapper.CENTER_X.getName(),
-                                          SVGContentTypeLength.class).getValue()
-                         : SVGContentTypeLength.DEFAULT_VALUE;
-        Double centerY = hasContentType(CoreAttributeMapper.CENTER_Y.getName())
-                         ? getContentType(CoreAttributeMapper.CENTER_Y.getName(),
-                                          SVGContentTypeLength.class).getValue()
-                         : SVGContentTypeLength.DEFAULT_VALUE;
-        Double focusX = hasContentType(CoreAttributeMapper.FOCUS_X.getName())
-                        ? getContentType(CoreAttributeMapper.FOCUS_X.getName(),
-                                         SVGContentTypeLength.class).getValue()
-                        : SVGContentTypeLength.DEFAULT_VALUE;
-        Double focusY = hasContentType(CoreAttributeMapper.FOCUS_Y.getName())
-                        ? getContentType(CoreAttributeMapper.FOCUS_Y.getName(),
-                                         SVGContentTypeLength.class).getValue()
-                        : SVGContentTypeLength.DEFAULT_VALUE;
+        Double centerX = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_X.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.CENTER_X.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
+        Double centerY = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_Y.getName()) ? getAttributeHolder().getAttribute(
+                CoreAttributeMapper.CENTER_Y.getName(),
+                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
+        Double
+                focusX =
+                getAttributeHolder().hasAttribute(CoreAttributeMapper.FOCUS_X.getName())
+                ? getAttributeHolder().getAttribute(CoreAttributeMapper.FOCUS_X.getName(),
+                                                    SVGAttributeTypeLength.class)
+                                      .getValue()
+                : SVGAttributeTypeLength.DEFAULT_VALUE;
+        Double
+                focusY =
+                getAttributeHolder().hasAttribute(CoreAttributeMapper.FOCUS_Y.getName())
+                ? getAttributeHolder().getAttribute(CoreAttributeMapper.FOCUS_Y.getName(),
+                                                    SVGAttributeTypeLength.class)
+                                      .getValue()
+                : SVGAttributeTypeLength.DEFAULT_VALUE;
 
         // TODO figure out how to apply proportional values here
         // TODO convert the coordinates into the correct space, first convert then apply transform
@@ -98,7 +102,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                   distance,
                                   centerX,
                                   centerY,
-                                  getContentType(CoreAttributeMapper.RADIUS.getName(), SVGContentTypeLength.class).getValue(),
+                                  getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS.getName(), SVGAttributeTypeLength.class).getValue(),
                                   false,
                                   CycleMethod.NO_CYCLE,
                                   stops);

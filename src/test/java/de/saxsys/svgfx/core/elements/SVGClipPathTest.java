@@ -21,7 +21,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public final class SVGClipPathTest {
 
         clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
 
-        Assert.assertEquals("test", clipPath.getContentType(CoreAttributeMapper.ID.getName(), SVGContentTypeString.class).getValue());
+        Assert.assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).getValue());
         Assert.assertNotNull(clipPath.getResult());
 
         Assert.assertEquals(2, clipPath.getResult().getChildren().size());

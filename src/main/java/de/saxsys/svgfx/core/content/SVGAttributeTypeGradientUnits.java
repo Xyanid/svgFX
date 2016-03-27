@@ -20,44 +20,56 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import javafx.scene.shape.StrokeLineCap;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
+ * This class represents a svg transform content type. This means it will contains matrix transformation.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStrokeLineCap extends SVGContentTypeBase<StrokeLineCap, Void> {
+public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations.GradientUnits, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final StrokeLineCap DEFAULT_VALUE = StrokeLineCap.SQUARE;
+    public static final Enumerations.GradientUnits DEFAULT_VALUE = Enumerations.GradientUnits.OBJECT_BOUNDING_BOX;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStrokeLineCap(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeGradientUnits(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override ContentTypeBase
+    //region Override SVGAttributeType
 
+    /**
+     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypeGradientUnits}
+     */
     @Override
-    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
+    protected Pair<Enumerations.GradientUnits, Void> getValueAndUnit(final String cssText) {
 
-        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
+        Enumerations.GradientUnits gradientUnits = Enumerations.GradientUnits.NONE;
+
+        for (Enumerations.GradientUnits units : Enumerations.GradientUnits.values()) {
+            if (units.getName().equals(cssText)) {
+                gradientUnits = units;
+                break;
+            }
+        }
+
+        return new Pair<>(gradientUnits, null);
     }
 
     //endregion

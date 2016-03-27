@@ -22,8 +22,8 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import org.xml.sax.Attributes;
 
@@ -57,8 +57,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle style) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
-        if (hasContentType(CoreAttributeMapper.PATH_DESCRIPTION.getName())) {
-            result.setContent(getContentType(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGContentTypeString.class).getValue());
+        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName())) {
+            result.setContent(getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class).getValue());
         }
 
         return result;
@@ -74,8 +74,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
 
         if (style != null) {
 
-            if (style.hasContentType(PresentationAttributeMapper.FILL_RULE.getName())) {
-                path.setFillRule(style.getContentType(PresentationAttributeMapper.FILL_RULE.getName(), SVGContentTypeFillRule.class).getValue());
+            if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.FILL_RULE.getName())) {
+                path.setFillRule(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class).getValue());
             }
         }
     }

@@ -1,11 +1,11 @@
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.content.ContentTypeBase;
+import de.saxsys.svgfx.xml.attribute.AttributeType;
 
 /**
  * @author Xyanid on 16.03.2016.
  */
-public abstract class AttributeBase<TSVGContentType extends ContentTypeBase> {
+public abstract class AttributeBase<TSVGContentType extends AttributeType> {
 
     // region Fields
 

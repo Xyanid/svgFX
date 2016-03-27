@@ -17,7 +17,7 @@
  *  *****************************************************************************
  */
 
-package de.saxsys.svgfx.content;
+package de.saxsys.svgfx.xml.attribute;
 
 import de.saxsys.svgfx.core.utils.CompareUtils;
 
@@ -31,7 +31,7 @@ import de.saxsys.svgfx.core.utils.CompareUtils;
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class ContentTypeBase<TValue, TUnit> {
+public abstract class AttributeType<TValue, TUnit> {
 
     //region Fields
 
@@ -59,7 +59,7 @@ public abstract class ContentTypeBase<TValue, TUnit> {
      *
      * @param defaultValue the default value of this to use
      */
-    public ContentTypeBase(final TValue defaultValue) {
+    public AttributeType(final TValue defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -68,9 +68,9 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     //region Getter/Setter
 
     /**
-     * Returns the {@link ContentTypeBase#value}.
+     * Returns the {@link AttributeType#value}.
      *
-     * @return {@link ContentTypeBase#value}.
+     * @return {@link AttributeType#value}.
      */
     public TValue getValue() {
         return value;
@@ -136,7 +136,7 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     }
 
     /**
-     * Checks whether the object is reference equal or if its also a {@link ContentTypeBase} and its {@link #value} and {@link #unit} are the same.
+     * Checks whether the object is reference equal or if its also a {@link AttributeType} and its {@link #value} and {@link #unit} are the same.
      *
      * @param obj object to check.
      *
@@ -146,8 +146,8 @@ public abstract class ContentTypeBase<TValue, TUnit> {
     public boolean equals(Object obj) {
         boolean result = this == obj;
 
-        if (!result && obj instanceof ContentTypeBase) {
-            ContentTypeBase base = (ContentTypeBase) obj;
+        if (!result && obj instanceof AttributeType) {
+            AttributeType base = (AttributeType) obj;
             result = CompareUtils.areEqualOrNull(value, base.value) && CompareUtils.areEqualOrNull(unit, base.unit);
         }
 

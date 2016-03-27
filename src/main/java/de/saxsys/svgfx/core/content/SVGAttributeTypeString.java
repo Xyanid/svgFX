@@ -20,25 +20,12 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import javafx.scene.transform.Transform;
 import javafx.util.Pair;
 
 /**
- * This class represents a svg transform content type. This means it will contains matrix transformation.
- *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeTransform extends SVGContentTypeBase<Transform, Void> {
-
-    // region Static
-
-    /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
-     */
-    public static final Transform DEFAULT_VALUE = null;
-
-    // endregion
+public class SVGAttributeTypeString extends SVGAttributeType<String, Void> {
 
     //region Constructor
 
@@ -47,20 +34,18 @@ public class SVGContentTypeTransform extends SVGContentTypeBase<Transform, Void>
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeTransform(final SVGDataProvider dataProvider) {
-        super(DEFAULT_VALUE, dataProvider);
+    public SVGAttributeTypeString(final SVGDataProvider dataProvider) {
+        super(null, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGContentTypeBase
+    //region Override AttributeType
 
-    /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGContentTypeTransform}
-     */
     @Override
-    protected Pair<Transform, Void> getValueAndUnit(final String text) {
-        return new Pair<>(SVGUtils.getTransform(text), null);
+    protected Pair<String, Void> getValueAndUnit(String cssText) {
+
+        return new Pair<>(cssText, null);
     }
 
     //endregion

@@ -20,7 +20,8 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.utils.SVGUtils;
+import javafx.scene.transform.Transform;
 import javafx.util.Pair;
 
 /**
@@ -28,14 +29,14 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeGradientUnits extends SVGContentTypeBase<Enumerations.GradientUnits, Void> {
+public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final Enumerations.GradientUnits DEFAULT_VALUE = Enumerations.GradientUnits.OBJECT_BOUNDING_BOX;
+    public static final Transform DEFAULT_VALUE = null;
 
     // endregion
 
@@ -46,30 +47,20 @@ public class SVGContentTypeGradientUnits extends SVGContentTypeBase<Enumerations
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeGradientUnits(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeTransform(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGContentTypeBase
+    //region Override SVGAttributeType
 
     /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGContentTypeGradientUnits}
+     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypeTransform}
      */
     @Override
-    protected Pair<Enumerations.GradientUnits, Void> getValueAndUnit(final String cssText) {
-
-        Enumerations.GradientUnits gradientUnits = Enumerations.GradientUnits.NONE;
-
-        for (Enumerations.GradientUnits units : Enumerations.GradientUnits.values()) {
-            if (units.getName().equals(cssText)) {
-                gradientUnits = units;
-                break;
-            }
-        }
-
-        return new Pair<>(gradientUnits, null);
+    protected Pair<Transform, Void> getValueAndUnit(final String text) {
+        return new Pair<>(SVGUtils.getTransform(text), null);
     }
 
     //endregion

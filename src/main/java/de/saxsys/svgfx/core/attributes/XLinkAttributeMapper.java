@@ -1,16 +1,15 @@
 package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.Function;
 
 /**
- * This class determines which svg xlink attributes are mapped to the desired {@link SVGContentTypeBase}.
+ * This class determines which svg xlink attributes are mapped to the desired {@link SVGAttributeType}.
  *
  * @author Xyanid on 09.03.2016.
  */
@@ -21,7 +20,7 @@ public class XLinkAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
     /**
      * Determines the color of a stroke, this is either a name or a hexadezimal value representing the color.
      */
-    public static final XLinkAttributeMapper XLINK_HREF = new XLinkAttributeMapper("xlink:href", SVGContentTypeString::new);
+    public static final XLinkAttributeMapper XLINK_HREF = new XLinkAttributeMapper("xlink:href", SVGAttributeTypeString::new);
 
     /**
      * Contains all the values that are available for this attribute class.
@@ -35,7 +34,7 @@ public class XLinkAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
     /**
      * {@inheritDoc}
      */
-    public XLinkAttributeMapper(final String name, final Function<SVGDataProvider, ? extends SVGContentTypeBase> contentTypeCreator) {
+    private XLinkAttributeMapper(final String name, final Function<SVGDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
         super(name, contentTypeCreator);
     }
 

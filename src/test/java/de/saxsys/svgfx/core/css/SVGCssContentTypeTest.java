@@ -20,16 +20,16 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeDouble;
-import de.saxsys.svgfx.core.content.SVGContentTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypePaint;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeDashArray;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineCap;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.content.SVGContentTypeStrokeType;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeDashArray;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineCap;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeType;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -41,19 +41,19 @@ import org.junit.Test;
 import java.util.Random;
 
 /**
- * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGContentTypeBase}.
+ * Tests the behavior of {@link SVGCssStyle} and hence also {@link SVGAttributeType}.
  *
  * @author Xyanid on 05.10.2015.
  */
 public final class SVGCssContentTypeTest {
 
     /**
-     * Checks if the {@link SVGContentTypeFillRule} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeFillRule} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeFillRuleIsFullySupported() {
 
-        SVGContentTypeFillRule contentType = new SVGContentTypeFillRule(new SVGDataProvider());
+        SVGAttributeTypeFillRule contentType = new SVGAttributeTypeFillRule(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -70,12 +70,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeLength} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeLength} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeLengthIsFullySupported() {
 
-        SVGContentTypeLength contentType = new SVGContentTypeLength(new SVGDataProvider());
+        SVGAttributeTypeLength contentType = new SVGAttributeTypeLength(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -85,7 +85,7 @@ public final class SVGCssContentTypeTest {
 
         Random random = new Random();
 
-        for (SVGContentTypeLength.Unit unit : SVGContentTypeLength.Unit.values()) {
+        for (SVGAttributeTypeLength.Unit unit : SVGAttributeTypeLength.Unit.values()) {
             double value = random.nextDouble();
 
             contentType.consumeText(String.format("%f%s", value, unit.getName()));
@@ -95,12 +95,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeDouble} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeDouble} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeDoubleIsFullySupported() {
 
-        SVGContentTypeDouble contentType = new SVGContentTypeDouble(new SVGDataProvider());
+        SVGAttributeTypeDouble contentType = new SVGAttributeTypeDouble(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -114,12 +114,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypePaint} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypePaint} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypePaintIsFullySupported() {
 
-        SVGContentTypePaint contentType = new SVGContentTypePaint(new SVGDataProvider());
+        SVGAttributeTypePaint contentType = new SVGAttributeTypePaint(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -141,12 +141,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeString} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeString} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStringIsFullySupported() {
 
-        SVGContentTypeString contentType = new SVGContentTypeString(new SVGDataProvider());
+        SVGAttributeTypeString contentType = new SVGAttributeTypeString(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -159,12 +159,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeStrokeDashArray} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeStrokeDashArray} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeDashArrayIsFullySupported() {
 
-        SVGContentTypeStrokeDashArray contentType = new SVGContentTypeStrokeDashArray(new SVGDataProvider());
+        SVGAttributeTypeStrokeDashArray contentType = new SVGAttributeTypeStrokeDashArray(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -176,7 +176,7 @@ public final class SVGCssContentTypeTest {
 
         StringBuilder data = new StringBuilder();
 
-        for (SVGContentTypeLength.Unit unit : SVGContentTypeLength.Unit.values()) {
+        for (SVGAttributeTypeLength.Unit unit : SVGAttributeTypeLength.Unit.values()) {
             double value = random.nextDouble();
 
             int counter = random.nextInt(10) + 1;
@@ -189,7 +189,7 @@ public final class SVGCssContentTypeTest {
 
             contentType.consumeText(data.toString());
 
-            for (SVGContentTypeLength length : contentType.getValue()) {
+            for (SVGAttributeTypeLength length : contentType.getValue()) {
                 Assert.assertEquals(length.getValue(), value, 0.01d);
                 Assert.assertEquals(length.getUnit(), unit);
             }
@@ -201,12 +201,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeStrokeLineCap} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeStrokeLineCap} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeLineCapIsFullySupported() {
 
-        SVGContentTypeStrokeLineCap contentType = new SVGContentTypeStrokeLineCap(new SVGDataProvider());
+        SVGAttributeTypeStrokeLineCap contentType = new SVGAttributeTypeStrokeLineCap(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -221,12 +221,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeStrokeLineJoin} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeStrokeLineJoin} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeLineJoinIsFullySupported() {
 
-        SVGContentTypeStrokeLineJoin contentType = new SVGContentTypeStrokeLineJoin(new SVGDataProvider());
+        SVGAttributeTypeStrokeLineJoin contentType = new SVGAttributeTypeStrokeLineJoin(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -241,12 +241,12 @@ public final class SVGCssContentTypeTest {
     }
 
     /**
-     * Checks if the {@link SVGContentTypeStrokeType} is fully supported, meaning all parsing of text produces the required results.
+     * Checks if the {@link SVGAttributeTypeStrokeType} is fully supported, meaning all parsing of text produces the required results.
      */
     @Test
     public void checkSVGCssContentTypeStrokeTypeIsFullySupported() {
 
-        SVGContentTypeStrokeType contentType = new SVGContentTypeStrokeType(new SVGDataProvider());
+        SVGAttributeTypeStrokeType contentType = new SVGAttributeTypeStrokeType(new SVGDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());

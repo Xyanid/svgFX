@@ -19,14 +19,14 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.content.ContentTypeBase;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeBase;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
-import de.saxsys.svgfx.core.content.SVGContentTypeTransform;
+import de.saxsys.svgfx.core.content.SVGAttributeHolder;
+import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
@@ -41,11 +41,7 @@ import org.xml.sax.Attributes;
  *
  * @param <TResult> The type of the result this element will provide @author Xyanid on 28.10.2015.
  */
-public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentTypeBase, SVGDataProvider, TResult, SVGElementBase<?>> {
-
-    // region Enumerations
-
-    // endregion
+public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeType, SVGAttributeHolder, SVGDataProvider, TResult, SVGElementBase<?>> {
 
     // region Fields
 
@@ -70,7 +66,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
      */
     public SVGElementBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider)
             throws IllegalArgumentException {
-        super(name, attributes, parent, dataProvider);
+        super(name, attributes, parent, dataProvider, new SVGAttributeHolder(dataProvider));
     }
 
     // endregion
@@ -87,10 +83,11 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
     private void cleanStyleBeforeUsing(SVGCssStyle style) {
 
         // since the style is used here we need to ensure its not possible for an element to reference itself
-        if (hasContentType(CoreAttributeMapper.ID.getName())) {
+        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.ID.getName())) {
 
-            String id = getContentType(CoreAttributeMapper.ID.getName(), SVGContentTypeString.class).getValue();
-            SVGContentTypeString clipPath = style.getContentType(PresentationAttributeMapper.CLIP_PATH.getName(), SVGContentTypeString.class);
+            String id = getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).getValue();
+            SVGAttributeTypeString clipPath = style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(),
+                                                                                          SVGAttributeTypeString.class);
             if (clipPath != null) {
 
                 String clipPathReference = SVGUtils.stripIRIIdentifiers(clipPath.getValue());
@@ -231,11 +228,11 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
      */
     public final SVGCssStyle getOwnStyle() {
 
-        if (!hasContentType(CoreAttributeMapper.STYLE.getName())) {
+        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.STYLE.getName())) {
             return null;
         }
 
-        String attribute = getContentType(CoreAttributeMapper.STYLE.getName(), SVGContentTypeString.class).getValue();
+        String attribute = getAttributeHolder().getAttribute(CoreAttributeMapper.STYLE.getName(), SVGAttributeTypeString.class).getValue();
 
         SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
 
@@ -256,11 +253,11 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
      * @throws SVGException if the element uses a style reference but the style was not found in the {@link #dataProvider}.
      */
     public final SVGCssStyle getReferencedStyle() throws SVGException {
-        if (!hasContentType(CoreAttributeMapper.CLASS.getName())) {
+        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.CLASS.getName())) {
             return null;
         }
 
-        String reference = getContentType(CoreAttributeMapper.CLASS.getName(), SVGContentTypeString.class).getValue();
+        String reference = getAttributeHolder().getAttribute(CoreAttributeMapper.CLASS.getName(), SVGAttributeTypeString.class).getValue();
 
         try {
             return getDataProvider().getStyles().stream().filter(data -> data.getName().endsWith(reference)).findFirst().get();
@@ -284,8 +281,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
 
         for (PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
 
-            if (hasContentType(attribute.getName())) {
-                SVGContentTypeBase contentType = getContentType(attribute.getName());
+            if (getAttributeHolder().hasAttribute(attribute.getName())) {
+                SVGAttributeType contentType = getAttributeHolder().getAttribute(attribute.getName());
 
                 String data = contentType.getLastConsumedText();
 
@@ -315,8 +312,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
      * @throws SVGException if there is a transformation which has invalid data for its matrix.
      */
     public final Transform getTransformation() throws SVGException {
-        if (hasContentType(CoreAttributeMapper.TRANSFORM.getName())) {
-            return getContentType(CoreAttributeMapper.TRANSFORM.getName(), SVGContentTypeTransform.class).getValue();
+        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.TRANSFORM.getName())) {
+            return getAttributeHolder().getAttribute(CoreAttributeMapper.TRANSFORM.getName(), SVGAttributeTypeTransform.class).getValue();
         }
 
         return null;
@@ -344,7 +341,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
      * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
      */
     public final Node getClipPath(final SVGCssStyle style) throws SVGException {
-        SVGContentTypeString referenceIRI = style.getContentType(PresentationAttributeMapper.CLIP_PATH.getName(), SVGContentTypeString.class);
+        SVGAttributeTypeString referenceIRI = style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
         if (referenceIRI != null && StringUtils.isNotNullOrEmpty(referenceIRI.getValue())) {
             return SVGUtils.resolveIRI(referenceIRI.getValue(), getDataProvider(), SVGClipPath.class).createAndInitializeResult();
         }
@@ -450,34 +447,4 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGContentType
     }
 
     // endregion
-
-    // region Override CssStyle
-
-    /**
-     * This implementation will use the name and validate it against{@link PresentationAttributeMapper}s and then create an instance of a
-     * {@link ContentTypeBase}. If the given name does not correspond with any {@link PresentationAttributeMapper}, no {@link ContentTypeBase} will be
-     * created and null will be returned.
-     *
-     * @param name then name of the property
-     *
-     * @return a {@link ContentTypeBase} or null if the name is not supported.
-     */
-    @Override
-    public SVGContentTypeBase createContentType(final String name) {
-        for (PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
-            if (attribute.getName().equals(name)) {
-                return attribute.getContentTypeCreator().apply(getDataProvider());
-            }
-        }
-
-        for (CoreAttributeMapper attribute : CoreAttributeMapper.VALUES) {
-            if (attribute.getName().equals(name)) {
-                return attribute.getContentTypeCreator().apply(getDataProvider());
-            }
-        }
-
-        return new SVGContentTypeString(getDataProvider());
-    }
-
-    //endregion
 }

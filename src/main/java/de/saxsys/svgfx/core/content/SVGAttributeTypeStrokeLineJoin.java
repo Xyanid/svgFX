@@ -20,48 +20,44 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
 
 /**
- * This class represents a svg transform content type. This means it will contains matrix transformation.
+ * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGContentTypeStyle extends SVGContentTypeBase<SVGCssStyle, Void> {
+public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJoin, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGContentTypeBase}.
+     * Determines the default value to use for this {@link SVGAttributeType}.
      */
-    public static final SVGCssStyle DEFAULT_VALUE = null;
+    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance.
+     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
      *
      * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
      */
-    public SVGContentTypeStyle(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeStrokeLineJoin(final SVGDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGContentTypeBase
+    //region Override AttributeType
 
-    /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGContentTypeStyle}
-     */
     @Override
-    protected Pair<SVGCssStyle, Void> getValueAndUnit(final String text) {
-        SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
-        ownStyle.parseCssText(text);
-        return new Pair<>(ownStyle, null);
+    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
+
+        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

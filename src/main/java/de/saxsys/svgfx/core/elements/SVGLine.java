@@ -22,7 +22,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Line;
 import org.xml.sax.Attributes;
@@ -55,10 +55,10 @@ public class SVGLine extends SVGShapeBase<Line> {
 
     @Override
     protected final Line createResult(final SVGCssStyle style) throws SVGException {
-        return new Line(getContentType(CoreAttributeMapper.START_X.getName(), SVGContentTypeLength.class).getValue(),
-                        getContentType(CoreAttributeMapper.START_Y.getName(), SVGContentTypeLength.class).getValue(),
-                        getContentType(CoreAttributeMapper.END_X.getName(), SVGContentTypeLength.class).getValue(),
-                        getContentType(CoreAttributeMapper.END_Y.getName(), SVGContentTypeLength.class).getValue());
+        return new Line(getAttributeHolder().getAttribute(CoreAttributeMapper.START_X.getName(), SVGAttributeTypeLength.class).getValue(),
+                        getAttributeHolder().getAttribute(CoreAttributeMapper.START_Y.getName(), SVGAttributeTypeLength.class).getValue(),
+                        getAttributeHolder().getAttribute(CoreAttributeMapper.END_X.getName(), SVGAttributeTypeLength.class).getValue(),
+                        getAttributeHolder().getAttribute(CoreAttributeMapper.END_Y.getName(), SVGAttributeTypeLength.class).getValue());
     }
 
     //endregion

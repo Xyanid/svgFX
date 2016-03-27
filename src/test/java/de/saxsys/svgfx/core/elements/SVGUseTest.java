@@ -24,8 +24,8 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypeLength;
-import de.saxsys.svgfx.core.content.SVGContentTypeString;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -74,9 +74,14 @@ public final class SVGUseTest {
 
         SVGUse use = new SVGUse("use", attributes, null, provider);
 
-        Assert.assertEquals("#test", use.getContentType(XLinkAttributeMapper.XLINK_HREF.getName(), SVGContentTypeString.class).getValue());
-        Assert.assertEquals(1.0d, use.getContentType(CoreAttributeMapper.POSITION_X.getName(), SVGContentTypeLength.class).getValue(), 0.01d);
-        Assert.assertEquals(2.0d, use.getContentType(CoreAttributeMapper.POSITION_Y.getName(), SVGContentTypeLength.class).getValue(), 0.01d);
+        Assert.assertEquals("#test",
+                            use.getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class).getValue());
+        Assert.assertEquals(1.0d,
+                            use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class).getValue(),
+                            0.01d);
+        Assert.assertEquals(2.0d,
+                            use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class).getValue(),
+                            0.01d);
 
         Assert.assertNotNull(use.getResult());
         Assert.assertEquals(Group.class, use.getResult().getClass());

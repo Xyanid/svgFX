@@ -22,8 +22,8 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGContentTypePoint;
-import de.saxsys.svgfx.core.content.SVGContentTypePoints;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePoint;
+import de.saxsys.svgfx.core.content.SVGAttributeTypePoints;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
@@ -87,13 +87,13 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     public final List<Double> getPoints() throws SVGException, IllegalArgumentException {
         List<Double> actualPoints = new ArrayList<>();
 
-        if (!hasContentType(CoreAttributeMapper.POINTS.getName())) {
+        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.POINTS.getName())) {
             return actualPoints;
         }
 
-        List<SVGContentTypePoint> points = getContentType(CoreAttributeMapper.POINTS.getName(), SVGContentTypePoints.class).getValue();
+        List<SVGAttributeTypePoint> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class).getValue();
 
-        for (SVGContentTypePoint point : points) {
+        for (SVGAttributeTypePoint point : points) {
             actualPoints.add(point.getValue().getX().getValue());
             actualPoints.add(point.getValue().getY().getValue());
         }
