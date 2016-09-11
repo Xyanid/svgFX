@@ -15,6 +15,7 @@ package de.saxsys.svgfx.xml.attribute;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * This class simply hold a {@link java.util.Map} of {@link String} and {@link AttributeType}. Its main purpose is to handle the splitting and storage of
@@ -64,21 +65,10 @@ public abstract class AttributeHolder<TContentType extends AttributeType> {
      *
      * @param name name of the content.
      *
-     * @return the {@link TContentType} in the given map or null.
+     * @return a new {@link Optional} containing the attribute or {@link Optional#EMPTY} if the desired attribute does not exist.
      */
-    public final TContentType getAttribute(final String name) {
-        return attributes.get(name);
-    }
-
-    /**
-     * Determines if the given {@link TContentType} is contained in the {@link #attributes}.
-     *
-     * @param name name of the {@link TContentType} to look for.
-     *
-     * @return true if a {@link TContentType} with the name exists otherwise false.
-     */
-    public final boolean hasAttribute(String name) {
-        return attributes.containsKey(name);
+    public final Optional<TContentType> getAttribute(final String name) {
+        return Optional.ofNullable(attributes.get(name));
     }
 
     /**
@@ -88,10 +78,46 @@ public abstract class AttributeHolder<TContentType extends AttributeType> {
      * @param name       name of the property
      * @param clazz      class of the type of the property used for casting.
      *
-     * @return the {@link TContentType} or null.
+     * @return a new {@link Optional} containing the attribute or {@link Optional#EMPTY} if the desired attribute does not exist.
      */
-    public final <TContent extends TContentType> TContent getAttribute(final String name, final Class<TContent> clazz) {
-        return clazz.cast(attributes.get(name));
+    public final <TContent extends TContentType> Optional<TContent> getAttribute(final String name, final Class<TContent> clazz) {
+        return Optional.ofNullable(clazz.cast(attributes.get(name)));
+    }
+
+    /**
+     * Returns the {@link TContentType} in the {@link #attributes} as the desired type using the provided key or throws an {@link IllegalArgumentException} of the attribute does not exit.
+     *
+     * @param <TContent> type of the content desired.
+     * @param name       name of the property
+     * @param clazz      class of the type of the property used for casting.
+     *
+     * @return the desired attribute as the {@link TContentType}.
+     *
+     * @throws IllegalArgumentException if the desired attribute does not exist.
+     */
+    public final <TContent extends TContentType> TContent getAttributeOrFail(final String name, final Class<TContent> clazz) {
+        final TContent attribute = clazz.cast(attributes.get(name));
+
+        if (attribute == null) { throw new IllegalArgumentException(String.format("Could not find attribute %s", name)); }
+
+        return attribute;
+    }
+
+    /**
+     * Returns the value of the desired attribute as the desired type using the provided key or the given default value should the attribute not exist.
+     *
+     * @param <TValue> type of the value of the attribute desired.
+     * @param name     name of the property
+     * @param clazz    class of the type of the property used for casting.
+     *
+     * @return the value of the desired attribute as the {@link TValue} or the default value should the attribute not exist.
+     */
+    public final <TValue> TValue getAttributeValue(final String name, final Class<TValue> clazz, final TValue defaultValue) {
+        final TContentType attribute = attributes.get(name);
+
+        if (attribute == null) { return defaultValue; }
+
+        return clazz.cast(attribute.getValue());
     }
 
     //endregion

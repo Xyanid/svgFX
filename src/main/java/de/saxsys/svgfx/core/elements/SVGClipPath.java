@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.xml.elements.ElementBase;
@@ -24,8 +24,16 @@ import org.xml.sax.Attributes;
 /**
  * This class represents a clipPath element from svg @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("clipPath")
 public class SVGClipPath extends SVGNodeBase<Group> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "clipPath";
+
+    // endregion
 
     // region Constructor
 
@@ -37,7 +45,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGClipPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGClipPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

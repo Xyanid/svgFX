@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -48,7 +48,7 @@ public final class SVGStopTest {
         Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_OPACITY.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("0.5");
 
-        SVGStop stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
+        SVGStop stop = new SVGStop("stop", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
         Assert.assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5d), stop.getResult().getColor());
@@ -72,7 +72,7 @@ public final class SVGStopTest {
         Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("blue");
 
-        SVGStop stop = new SVGStop("stop", attributes, null, new SVGDataProvider());
+        SVGStop stop = new SVGStop("stop", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
         Assert.assertEquals(Color.BLUE, stop.getResult().getColor());
@@ -96,23 +96,23 @@ public final class SVGStopTest {
         Mockito.when(attributes.getValue(1)).thenReturn("1.0");
         Mockito.when(attributes.getValue(2)).thenReturn("#000000");
 
-        TestUtils.assertCreationFails(SVGStop::new,"stop", attributes, null, new SVGDataProvider(),SVGStop.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGStop::new, "stop", attributes, null, new SVGDocumentDataProvider(), SVGStop.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("1.0");
         Mockito.when(attributes.getValue(1)).thenReturn("A");
         Mockito.when(attributes.getValue(2)).thenReturn("#000000");
 
-        TestUtils.assertCreationFails(SVGStop::new,"stop", attributes, null, new SVGDataProvider(),SVGStop.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGStop::new, "stop", attributes, null, new SVGDocumentDataProvider(), SVGStop.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("1.0");
         Mockito.when(attributes.getValue(1)).thenReturn("1.0");
         Mockito.when(attributes.getValue(2)).thenReturn("asdsagfa");
 
-        TestUtils.assertCreationFails(SVGStop::new,"stop", attributes, null, new SVGDataProvider(),SVGStop.class, IllegalArgumentException.class);
+        TestUtils.assertCreationFails(SVGStop::new, "stop", attributes, null, new SVGDocumentDataProvider(), SVGStop.class, IllegalArgumentException.class);
 
         Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        TestUtils.assertCreationFails(SVGStop::new,"stop", attributes, null, new SVGDataProvider(),SVGStop.class, IllegalArgumentException.class);
+        TestUtils.assertCreationFails(SVGStop::new, "stop", attributes, null, new SVGDocumentDataProvider(), SVGStop.class, IllegalArgumentException.class);
     }
 
     /**
@@ -128,6 +128,6 @@ public final class SVGStopTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
 
-        TestUtils.assertCreationFails(SVGStop::new, "stop", attributes, null, new SVGDataProvider(), SVGStop.class, IllegalArgumentException.class);
+        TestUtils.assertCreationFails(SVGStop::new, "stop", attributes, null, new SVGDocumentDataProvider(), SVGStop.class, IllegalArgumentException.class);
     }
 }

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
@@ -24,8 +24,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("defs")
-public class SVGDefs extends SVGElementBase<Node> {
+public class SVGDefinitions extends SVGElementBase<Node> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "defs";
+
+    // endregion
 
     //region Constructor
 
@@ -37,7 +45,7 @@ public class SVGDefs extends SVGElementBase<Node> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGDefs(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGDefinitions(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

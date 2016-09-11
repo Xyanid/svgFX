@@ -16,7 +16,7 @@ package de.saxsys.svgfx.core;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.xml.core.IDataProvider;
+import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import java.util.Set;
  *
  * @author Xyanid on 25.10.2015.
  */
-public class SVGDataProvider implements IDataProvider {
+public class SVGDocumentDataProvider implements IDocumentDataProvider {
 
     //region Fields
 
@@ -48,9 +48,9 @@ public class SVGDataProvider implements IDataProvider {
     //region Public
 
     /**
-     * Returns the {@link SVGDataProvider#data} as an unmodifiable map.
+     * Returns the {@link SVGDocumentDataProvider#data} as an unmodifiable map.
      *
-     * @return {@link SVGDataProvider#data} as an unmodifiable map.
+     * @return {@link SVGDocumentDataProvider#data} as an unmodifiable map.
      */
     public final Map<String, SVGElementBase> getUnmodifiableData() {
         return Collections.unmodifiableMap(data);
@@ -66,7 +66,7 @@ public class SVGDataProvider implements IDataProvider {
     }
 
     /**
-     * Determines whether the given key exists in the {@link SVGDataProvider#data}.
+     * Determines whether the given key exists in the {@link SVGDocumentDataProvider#data}.
      *
      * @param key key to check
      *
@@ -127,7 +127,7 @@ public class SVGDataProvider implements IDataProvider {
 
     //endregion
 
-    //region Implement IDataProvider
+    //region Implement IDocumentDataProvider
 
     /**
      * Resets the data provider clearing all the stored data and styles.

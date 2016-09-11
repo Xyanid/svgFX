@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
@@ -30,9 +30,16 @@ import java.util.List;
  *
  * @author Xyanid on 24.10.2015.
  */
-@SVGElementMapping("linearGradient")
 public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "linearGradient";
+
+    // endregion
 
     //region Constructor
 
@@ -44,7 +51,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -55,43 +62,23 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     @Override
     protected final LinearGradient createResult(final SVGCssStyle style) throws SVGException {
 
-        List<Stop> stops = getStops();
-
+        final List<Stop> stops = getStops();
         if (stops.isEmpty()) {
             throw new SVGException("Given linear gradient does not have colors");
         }
-
-        Double
-                startX =
-                getAttributeHolder().hasAttribute(CoreAttributeMapper.START_X.getName())
-                ? getAttributeHolder().getAttribute(CoreAttributeMapper.START_X.getName(),
-                                                    SVGAttributeTypeLength.class)
-                                      .getValue()
-                : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double
-                startY =
-                getAttributeHolder().hasAttribute(CoreAttributeMapper.START_Y.getName())
-                ? getAttributeHolder().getAttribute(CoreAttributeMapper.START_Y.getName(),
-                                                    SVGAttributeTypeLength.class)
-                                      .getValue()
-                : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double
-                endX =
-                getAttributeHolder().hasAttribute(CoreAttributeMapper.END_X.getName())
-                ? getAttributeHolder().getAttribute(CoreAttributeMapper.END_X.getName(), SVGAttributeTypeLength.class).getValue()
-                : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double
-                endY =
-                getAttributeHolder().hasAttribute(CoreAttributeMapper.END_Y.getName())
-                ? getAttributeHolder().getAttribute(CoreAttributeMapper.END_Y.getName(), SVGAttributeTypeLength.class).getValue()
-                : SVGAttributeTypeLength.DEFAULT_VALUE;
 
         // TODO figure out how to apply proportional values here
 
 
         // TODO convert the coordinates into the correct space, first convert then apply transform
 
-        return new LinearGradient(startX, startY, endX, endY, false, CycleMethod.NO_CYCLE, stops);
+        return new LinearGradient(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                                  getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                                  getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                                  getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                                  false,
+                                  CycleMethod.NO_CYCLE,
+                                  stops);
     }
 
     //endregion

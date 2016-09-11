@@ -16,7 +16,7 @@ package de.saxsys.svgfx.xml.elements;
 
 import de.saxsys.svgfx.xml.attribute.AttributeHolder;
 import de.saxsys.svgfx.xml.attribute.AttributeType;
-import de.saxsys.svgfx.xml.core.IDataProvider;
+import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -31,14 +31,14 @@ import java.util.Map;
  *
  * @param <TAttributeType>       the type of the {@link AttributeType} to be used
  * @param <TAttributeTypeHolder> the type of the {@link AttributeHolder} to be used
- * @param <TDataProvider>        the type of the {@link IDataProvider} to be used
+ * @param <TDocumentDataProvider>        the type of the {@link IDocumentDataProvider} to be used
  * @param <TResult>              the type of result provided by the element
  * @param <TParent>              the type of parent of this element
  *
  * @author Xyanid on 24.10.2015.
  */
-public abstract class ElementBase<TAttributeType extends AttributeType, TAttributeTypeHolder extends AttributeHolder<TAttributeType>, TDataProvider extends
-        IDataProvider, TResult, TParent extends ElementBase<?, ?, TDataProvider, ?, ?>> {
+public abstract class ElementBase<TAttributeType extends AttributeType, TAttributeTypeHolder extends AttributeHolder<TAttributeType>, TDocumentDataProvider extends IDocumentDataProvider, TResult,
+        TParent extends ElementBase<?, ?, TDocumentDataProvider, ?, ?>> {
 
     //region Fields
 
@@ -58,9 +58,9 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
     private final List<ElementBase> children;
 
     /**
-     * Method to be called when data is needed by this element.
+     * Method to be called when data contained in the document is needed by this element.
      */
-    private final TDataProvider dataProvider;
+    private final TDocumentDataProvider documentDataProvider;
 
     /**
      * This contains the actual attributes of the element.
@@ -72,26 +72,26 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
     //region Constructor
 
     /**
-     * Creates a new instance of he element using the given attributes, parent and dataProvider.
+     * Creates a new instance of he element using the given attributes, parent and documentDataProvider.
      *
      * @param name         value of the element, must not be null
      * @param attributes   attributes to be used
      * @param parent       parent of the element
-     * @param dataProvider dataProvider to be used, must not be null
+     * @param documentDataProvider documentDataProvider to be used, must not be null
      *
-     * @throws IllegalArgumentException if either value or dataProvider are null
+     * @throws IllegalArgumentException if either value or documentDataProvider are null
      */
     public ElementBase(final String name,
                        final Attributes attributes,
                        final TParent parent,
-                       final TDataProvider dataProvider,
+                       final TDocumentDataProvider documentDataProvider,
                        final TAttributeTypeHolder attributeHolder) throws IllegalArgumentException {
 
         if (name == null) {
             throw new IllegalArgumentException(String.format("Creation of element %s failed. Given name must not be null", getClass().getName()));
         }
 
-        if (dataProvider == null) {
+        if (documentDataProvider == null) {
             throw new IllegalArgumentException(String.format("Creation of element %s failed. given data provider must not be null", getClass().getName()));
         }
 
@@ -124,7 +124,7 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
 
         this.parent = parent;
         this.children = new ArrayList<>();
-        this.dataProvider = dataProvider;
+        this.documentDataProvider = documentDataProvider;
     }
 
     //endregion
@@ -168,12 +168,12 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
     }
 
     /**
-     * Gets the {@link #dataProvider}.
+     * Gets the {@link #documentDataProvider}.
      *
-     * @return the {@link #dataProvider}
+     * @return the {@link #documentDataProvider}
      */
-    public TDataProvider getDataProvider() {
-        return dataProvider;
+    public TDocumentDataProvider getDocumentDataProvider() {
+        return documentDataProvider;
     }
 
     /**
@@ -206,7 +206,7 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
      *
      * @throws SAXException will be thrown when an error occurs during processing the characters
      */
-    public abstract void processCharacterData(char[] ch, int start, int length) throws SAXException;
+    public abstract void processCharacterData(final char[] ch, final int start, final int length) throws SAXException;
 
     /**
      * Will be called when the end of the element was been reached and thus the processing is finished.
@@ -231,13 +231,11 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
     @Override
     public String toString() {
 
-        StringBuilder data = new StringBuilder();
+        final StringBuilder data = new StringBuilder();
 
         data.append("<").append(name);
 
-        this.attributeHolder.getAttributes().entrySet().stream().forEach(attribute -> data.append(String.format(" %s:%s",
-                                                                                                                attribute.getKey(),
-                                                                                                                attribute.getValue())));
+        this.attributeHolder.getAttributes().entrySet().forEach(attribute -> data.append(String.format(" %s:%s", attribute.getKey(), attribute.getValue())));
 
         data.append(">");
 

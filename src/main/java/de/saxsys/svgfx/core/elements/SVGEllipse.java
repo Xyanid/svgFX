@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
@@ -25,8 +25,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("ellipse")
 public class SVGEllipse extends SVGShapeBase<Ellipse> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "ellipse";
+
+    // endregion
 
     //region Constructor
 
@@ -38,7 +46,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -49,17 +57,10 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
     @Override
     protected final Ellipse createResult(final SVGCssStyle style) {
 
-        Double centerX = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_X.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.CENTER_X.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double centerY = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_Y.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.CENTER_Y.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-
-        return new Ellipse(centerX,
-                           centerY,
-                           getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).getValue(),
-                           getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).getValue());
+        return new Ellipse(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                           getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                           getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).getValue(),
+                           getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).getValue());
     }
 
     //endregion

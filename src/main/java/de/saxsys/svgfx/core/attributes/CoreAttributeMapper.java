@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeGradientUnits;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
@@ -32,7 +32,7 @@ import java.util.function.Function;
  *
  * @author Xyanid on 09.03.2016.
  */
-public class CoreAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
+public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProvider> {
 
     // region Constants
 
@@ -173,7 +173,7 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
     /**
      * {@inheritDoc}
      */
-    private CoreAttributeMapper(final String name, final Function<SVGDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
+    private CoreAttributeMapper(final String name, final Function<SVGDocumentDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
         super(name, contentTypeCreator);
     }
 

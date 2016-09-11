@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.elements.mocks.SVGPolyBaseMock;
@@ -43,7 +43,7 @@ public final class SVGPolyBaseTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(6, polyBase.getPoints().size());
         Assert.assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
@@ -67,7 +67,7 @@ public final class SVGPolyBaseTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20    100,40    100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(6, polyBase.getPoints().size());
         Assert.assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
@@ -88,7 +88,7 @@ public final class SVGPolyBaseTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(0, polyBase.getPoints().size());
     }
@@ -110,7 +110,7 @@ public final class SVGPolyBaseTest {
                                       "polygon",
                                       attributes,
                                       null,
-                                      new SVGDataProvider(),
+                                      new SVGDocumentDataProvider(),
                                       SVGPolyBaseMock.class,
                                       SVGException.class);
 
@@ -121,7 +121,7 @@ public final class SVGPolyBaseTest {
                                       "polygon",
                                       attributes,
                                       null,
-                                      new SVGDataProvider(),
+                                      new SVGDocumentDataProvider(),
                                       SVGPolyBaseMock.class,
                                       SVGException.class);
     }
@@ -139,7 +139,7 @@ public final class SVGPolyBaseTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDocumentDataProvider());
 
         polyBase.getPoints();
     }

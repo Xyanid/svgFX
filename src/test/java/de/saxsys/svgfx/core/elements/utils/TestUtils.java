@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements.utils;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import org.junit.Assert;
@@ -31,7 +31,7 @@ public class TestUtils {
                                                                              final String name,
                                                                              final Attributes attributes,
                                                                              final SVGElementBase parent,
-                                                                             final SVGDataProvider dataProvider,
+                                                                             final SVGDocumentDataProvider dataProvider,
                                                                              final Class<TElement> elementClass,
                                                                              final Class<? extends Exception> exception) {
         try {

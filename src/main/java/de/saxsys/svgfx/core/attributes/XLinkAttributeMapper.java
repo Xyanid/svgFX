@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 
@@ -26,7 +26,7 @@ import java.util.function.Function;
  *
  * @author Xyanid on 09.03.2016.
  */
-public class XLinkAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
+public class XLinkAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProvider> {
 
     // region Constants
 
@@ -47,7 +47,7 @@ public class XLinkAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
     /**
      * {@inheritDoc}
      */
-    private XLinkAttributeMapper(final String name, final Function<SVGDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
+    private XLinkAttributeMapper(final String name, final Function<SVGDocumentDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
         super(name, contentTypeCreator);
     }
 

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -36,7 +36,7 @@ public final class SVGRootTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGRoot root = new SVGRoot("svg", attributes, null, new SVGDataProvider());
+        SVGRoot root = new SVGRoot("svg", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertNull(root.getResult());
     }

@@ -11,26 +11,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.elements;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package de.saxsys.svgfx.xml.core;
 
 /**
- * Interface to be applied to all elements which are actual svg elements.
+ * This interface will be used to enable xml element to load data of the parsed xml file.
+ * It is also possible for element to add data to the data provider.
  *
- * @author Xyanid on 01.11.2015.
+ * @author Xyanid on 03.11.2015.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface SVGElementMapping {
+public interface IDocumentDataProvider {
 
     /**
-     * Returns the name of the svg element this element corresponds to.
-     *
-     * @return the name of the svg element this element corresponds to
+     * Reset the dataprovider and clears out all allocated resources.
      */
-    String value();
+    void clear();
 }

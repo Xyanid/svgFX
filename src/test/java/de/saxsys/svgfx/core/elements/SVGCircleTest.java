@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.elements.utils.TestUtils;
 import org.junit.Assert;
@@ -45,7 +45,7 @@ public final class SVGCircleTest {
         Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("25");
 
-        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
+        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(50.0d, circle.getResult().getCenterX(), 0.01d);
         Assert.assertEquals(100.0d, circle.getResult().getCenterY(), 0.01d);
@@ -70,19 +70,19 @@ public final class SVGCircleTest {
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
         Mockito.when(attributes.getValue(2)).thenReturn("25");
 
-        TestUtils.assertCreationFails(SVGCircle::new, "circle", attributes, null, new SVGDataProvider(), SVGCircle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGCircle::new, "circle", attributes, null, new SVGDocumentDataProvider(), SVGCircle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("10.0");
         Mockito.when(attributes.getValue(1)).thenReturn("B");
         Mockito.when(attributes.getValue(2)).thenReturn("25");
 
-        TestUtils.assertCreationFails(SVGCircle::new, "circle", attributes, null, new SVGDataProvider(), SVGCircle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGCircle::new, "circle", attributes, null, new SVGDocumentDataProvider(), SVGCircle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("10.0");
         Mockito.when(attributes.getValue(1)).thenReturn("10.0");
         Mockito.when(attributes.getValue(2)).thenReturn("A");
 
-        TestUtils.assertCreationFails(SVGCircle::new, "circle", attributes, null, new SVGDataProvider(), SVGCircle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGCircle::new, "circle", attributes, null, new SVGDocumentDataProvider(), SVGCircle.class, NumberFormatException.class);
     }
 
     /**
@@ -93,7 +93,7 @@ public final class SVGCircleTest {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
-        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDataProvider());
+        SVGCircle circle = new SVGCircle("circle", attributes, null, new SVGDocumentDataProvider());
 
         TestUtils.assertResultFails(circle, NullPointerException.class);
     }

@@ -14,7 +14,7 @@
 package de.saxsys.svgfx.core.css;
 
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.content.SVGAttributeHolder;
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.css.core.CssStyle;
@@ -28,7 +28,7 @@ public class SVGCssStyle extends CssStyle<SVGAttributeType, SVGAttributeHolder> 
 
     // region Fields
 
-    private final SVGDataProvider provider;
+    private final SVGDocumentDataProvider provider;
 
     // endregion
 
@@ -39,7 +39,7 @@ public class SVGCssStyle extends CssStyle<SVGAttributeType, SVGAttributeHolder> 
      *
      * @param provider the data provider to use
      */
-    public SVGCssStyle(final SVGDataProvider provider) {
+    public SVGCssStyle(final SVGDocumentDataProvider provider) {
         super(new SVGAttributeHolder(provider));
 
         this.provider = provider;
@@ -51,7 +51,7 @@ public class SVGCssStyle extends CssStyle<SVGAttributeType, SVGAttributeHolder> 
      * @param name     the name to of this style.
      * @param provider the data provider to use.
      */
-    public SVGCssStyle(final String name, final SVGDataProvider provider) {
+    public SVGCssStyle(final String name, final SVGDocumentDataProvider provider) {
         super(name, new SVGAttributeHolder(provider));
 
         this.provider = provider;

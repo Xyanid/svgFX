@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.util.Pair;
 
@@ -38,9 +38,9 @@ public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations
     /**
      * Creates new instance.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeGradientUnits(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeGradientUnits(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

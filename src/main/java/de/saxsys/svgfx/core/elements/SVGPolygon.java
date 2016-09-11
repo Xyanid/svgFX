@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
 import org.xml.sax.Attributes;
@@ -23,8 +23,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("polygon")
 public class SVGPolygon extends SVGPolyBase<Polygon> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "polygon";
+
+    // endregion
 
     //region Constructor
 
@@ -36,7 +44,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolygon(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGPolygon(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

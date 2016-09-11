@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
@@ -34,13 +34,13 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
     /**
      * Creates a new instance of he element using the given attributes and the parent.
      *
-     * @param name         value of the element
-     * @param attributes   attributes of the element
-     * @param parent       parent of the element
-     * @param dataProvider dataprovider to be used
+     * @param name                 the name of the element
+     * @param attributes           attributes of the element
+     * @param parent               parent of the element
+     * @param documentDataProvider dataprovider to be used
      */
-    public SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    protected SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider documentDataProvider) {
+        super(name, attributes, parent, documentDataProvider);
     }
 
     //endregion
@@ -54,12 +54,12 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
     @Override
     protected void initializeResult(final TNode node, final SVGCssStyle style) throws SVGException {
 
-        Transform transform = getTransformation();
+        final Transform transform = getTransformation();
         if (transform != null) {
             node.getTransforms().add(transform);
         }
 
-        Node clip = getClipPath(style);
+        final Node clip = getClipPath(style);
         if (clip != null) {
             node.setClip(clip);
         }

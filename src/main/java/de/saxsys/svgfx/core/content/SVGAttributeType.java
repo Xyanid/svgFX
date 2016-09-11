@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.xml.attribute.AttributeType;
 import javafx.util.Pair;
 
@@ -61,7 +61,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TVal
     /**
      * Determines the data provider to use when additional data is needed.
      */
-    private final SVGDataProvider dataProvider;
+    private final SVGDocumentDataProvider dataProvider;
 
     //endregion
 
@@ -71,9 +71,9 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TVal
      * Creates new instance.
      *
      * @param defaultValue the default value of this to use.
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeType(final TValue defaultValue, final SVGDataProvider dataProvider) {
+    public SVGAttributeType(final TValue defaultValue, final SVGDocumentDataProvider dataProvider) {
         super(defaultValue);
 
         this.dataProvider = dataProvider;
@@ -109,7 +109,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TVal
     /**
      * @return The {@link #dataProvider}.
      */
-    public SVGDataProvider getDataProvider() {
+    public SVGDocumentDataProvider getDataProvider() {
         return dataProvider;
     }
 

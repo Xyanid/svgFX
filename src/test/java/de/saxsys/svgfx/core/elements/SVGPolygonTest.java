@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.elements.utils.TestUtils;
@@ -42,7 +42,7 @@ public final class SVGPolygonTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
+        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(6, polygon.getResult().getPoints().size());
         Assert.assertEquals(60.0d, polygon.getResult().getPoints().get(0), 0.01d);
@@ -66,12 +66,12 @@ public final class SVGPolygonTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDataProvider(), SVGPolygon.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, NumberFormatException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDataProvider(), SVGPolygon.class, SVGException.class);
+        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, SVGException.class);
     }
 
     /**
@@ -84,7 +84,7 @@ public final class SVGPolygonTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDataProvider());
+        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDocumentDataProvider());
 
         try {
             Assert.assertEquals(0, polygon.getResult().getPoints().size());

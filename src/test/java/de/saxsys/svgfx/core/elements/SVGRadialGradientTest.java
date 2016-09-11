@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -50,7 +50,7 @@ public final class SVGRadialGradientTest {
         Mockito.when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(4)).thenReturn("0.5");
 
-        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDataProvider());
+        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDocumentDataProvider());
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
@@ -60,8 +60,8 @@ public final class SVGRadialGradientTest {
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDataProvider()));
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDataProvider()));
+        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
 
         Assert.assertEquals(0.1d, gradient.getResult().getCenterX(), 0.01d);
         Assert.assertEquals(0.15d, gradient.getResult().getCenterY(), 0.01d);
@@ -79,7 +79,7 @@ public final class SVGRadialGradientTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDataProvider());
+        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDocumentDataProvider());
 
         gradient.getResult();
     }
@@ -94,7 +94,7 @@ public final class SVGRadialGradientTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDataProvider());
+        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDocumentDataProvider());
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
@@ -104,8 +104,8 @@ public final class SVGRadialGradientTest {
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDataProvider()));
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDataProvider()));
+        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
 
         gradient.getResult();
     }

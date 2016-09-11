@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
@@ -39,7 +39,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    protected SVGShapeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -55,7 +55,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
     protected void initializeResult(final TShape shape, final SVGCssStyle style) throws SVGException {
         super.initializeResult(shape, style);
 
-        SVGUtils.applyStyle(shape, style, getDataProvider());
+        SVGUtils.applyStyle(shape, style, getDocumentDataProvider());
     }
 
     // endregion

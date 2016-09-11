@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements.mocks;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
@@ -36,7 +36,7 @@ public class SVGPolyBaseMock extends SVGPolyBase<Polygon> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolyBaseMock(String name, Attributes attributes, SVGElementBase<SVGDataProvider> parent, SVGDataProvider dataProvider) {
+    public SVGPolyBaseMock(String name, Attributes attributes, SVGElementBase<SVGDocumentDataProvider> parent, SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import javafx.util.Pair;
 
 /**
@@ -26,9 +26,9 @@ public class SVGAttributeTypeString extends SVGAttributeType<String, Void> {
     /**
      * Creates new instance.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeString(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeString(final SVGDocumentDataProvider dataProvider) {
         super(null, dataProvider);
     }
 

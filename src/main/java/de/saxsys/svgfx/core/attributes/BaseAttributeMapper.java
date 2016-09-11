@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.xml.attribute.AttributeType;
-import de.saxsys.svgfx.xml.core.IDataProvider;
+import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
 
 import java.util.function.Function;
 
@@ -24,7 +24,7 @@ import java.util.function.Function;
  *
  * @author Xyanid on 09.03.2016.
  */
-public abstract class BaseAttributeMapper<TDataProvider extends IDataProvider> {
+public abstract class BaseAttributeMapper<TDataProvider extends IDocumentDataProvider> {
 
     // region Fields
 

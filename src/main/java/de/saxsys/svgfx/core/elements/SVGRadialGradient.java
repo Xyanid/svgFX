@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
@@ -30,8 +30,16 @@ import java.util.List;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("radialGradient")
 public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "radialGradient";
+
+    // endregion
 
     //region Constructor
 
@@ -43,7 +51,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGRadialGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDataProvider> parent, final SVGDataProvider dataProvider) {
+    SVGRadialGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDocumentDataProvider> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -60,26 +68,10 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
             throw new SVGException("Given radial gradient does not have colors");
         }
 
-        Double centerX = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_X.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.CENTER_X.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double centerY = getAttributeHolder().hasAttribute(CoreAttributeMapper.CENTER_Y.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.CENTER_Y.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double
-                focusX =
-                getAttributeHolder().hasAttribute(CoreAttributeMapper.FOCUS_X.getName())
-                ? getAttributeHolder().getAttribute(CoreAttributeMapper.FOCUS_X.getName(),
-                                                    SVGAttributeTypeLength.class)
-                                      .getValue()
-                : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double
-                focusY =
-                getAttributeHolder().hasAttribute(CoreAttributeMapper.FOCUS_Y.getName())
-                ? getAttributeHolder().getAttribute(CoreAttributeMapper.FOCUS_Y.getName(),
-                                                    SVGAttributeTypeLength.class)
-                                      .getValue()
-                : SVGAttributeTypeLength.DEFAULT_VALUE;
+        final Double centerX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
+        final Double centerY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
+        final Double focusX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
+        final Double focusY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
 
         // TODO figure out how to apply proportional values here
         // TODO convert the coordinates into the correct space, first convert then apply transform
@@ -96,7 +88,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                   distance,
                                   centerX,
                                   centerY,
-                                  getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS.getName(), SVGAttributeTypeLength.class).getValue(),
+                                  getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS.getName(), SVGAttributeTypeLength.class).getValue(),
                                   false,
                                   CycleMethod.NO_CYCLE,
                                   stops);

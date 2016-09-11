@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.definitions.Constants;
 import javafx.util.Pair;
 
@@ -35,9 +35,9 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
         //region Fields
 
         /**
-         * The {@link SVGDataProvider} to be used.
+         * The {@link SVGDocumentDataProvider} to be used.
          */
-        private final SVGDataProvider dataProvider;
+        private final SVGDocumentDataProvider dataProvider;
         /**
          * Determines the x coordinate of the point.
          */
@@ -51,7 +51,7 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
 
         //region Constructor
 
-        public SVGPoint(final SVGDataProvider dataProvider) {
+        public SVGPoint(final SVGDocumentDataProvider dataProvider) {
             this.dataProvider = dataProvider;
             x = new SVGAttributeTypeLength(this.dataProvider);
             y = new SVGAttributeTypeLength(this.dataProvider);
@@ -98,9 +98,9 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
     /**
      * Creates new instance.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypePoint(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypePoint(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

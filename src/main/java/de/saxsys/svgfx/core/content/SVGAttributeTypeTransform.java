@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.transform.Transform;
 import javafx.util.Pair;
@@ -39,9 +39,9 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
     /**
      * Creates new instance.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeTransform(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeTransform(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

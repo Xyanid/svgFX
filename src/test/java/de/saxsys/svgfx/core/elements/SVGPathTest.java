@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -43,7 +43,7 @@ public final class SVGPathTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
+        SVGPath line = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals("M 100 100 L 300 100 L 200 300 z", line.getResult().getContent());
     }
@@ -63,7 +63,7 @@ public final class SVGPathTest {
         Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("evenodd");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
+        SVGPath line = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(FillRule.EVEN_ODD, line.getResult().getFillRule());
     }
@@ -81,7 +81,7 @@ public final class SVGPathTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("M =& 100 L 300 ?) 300 z");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
+        SVGPath line = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
 
         try {
             line.getResult();
@@ -100,7 +100,7 @@ public final class SVGPathTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGPath path = new SVGPath("path", attributes, null, new SVGDataProvider());
+        SVGPath path = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
 
         path.getResult();
     }

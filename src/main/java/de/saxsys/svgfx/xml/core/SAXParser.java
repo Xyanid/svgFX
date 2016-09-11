@@ -30,14 +30,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Basic XML parser which uses a given elementCreator to process the data provided while parsing.
+ * Basic XML parser which uses a given elementFactory to process the data provided while parsing.
  *
  * @param <TResult>         the type of the result provided by this parser
- * @param <TDataProvider>   the type of the {@link IDataProvider}
- * @param <TElementCreator> the type of the {@link IElementCreator} @author Xyanid on 24.10.2015.
+ * @param <TDocumentDataProvider>   the type of the {@link IDocumentDataProvider}
+ * @param <TElementFactory> the type of the {@link IElementFactory} @author Xyanid on 24.10.2015.
  */
-public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TElementCreator extends IElementCreator<TDataProvider, TElement>, TElement
-        extends ElementBase<?, ?, TDataProvider, ?, TElement>>
+public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocumentDataProvider, TElementFactory extends IElementFactory<TDocumentDataProvider, TElement>, TElement
+        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement>>
         extends DefaultHandler {
 
     // region Enumeration
@@ -95,12 +95,12 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     /**
      * Determines the data provider to be used to supply elements with data.
      */
-    private final TElementCreator elementCreator;
+    private final TElementFactory elementFactory;
 
     /**
      * Determines the dataprovider to be used for this parser.
      */
-    private final TDataProvider dataProvider;
+    private final TDocumentDataProvider documentDataProvider;
 
     /**
      * Determines the State.
@@ -134,23 +134,23 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     /**
      * Creates a new instance of the parser using the provided interfaces.
      *
-     * @param elementCreator element creator to be used
-     * @param dataProvider   data provider to be used
+     * @param elementFactory element creator to be used
+     * @param documentDataProvider   data provider to be used
      *
-     * @throws IllegalArgumentException if either elementCreator or dataProvider are null
+     * @throws IllegalArgumentException if either elementFactory or documentDataProvider are null
      */
-    public SAXParser(final TElementCreator elementCreator, final TDataProvider dataProvider) throws IllegalArgumentException {
+    public SAXParser(final TElementFactory elementFactory, final TDocumentDataProvider documentDataProvider) throws IllegalArgumentException {
 
-        if (elementCreator == null) {
+        if (elementFactory == null) {
             throw new IllegalArgumentException("given elementcreator must not be null");
         }
 
-        if (dataProvider == null) {
-            throw new IllegalArgumentException("given dataProvider must not be null");
+        if (documentDataProvider == null) {
+            throw new IllegalArgumentException("given documentDataProvider must not be null");
         }
 
-        this.elementCreator = elementCreator;
-        this.dataProvider = dataProvider;
+        this.elementFactory = elementFactory;
+        this.documentDataProvider = documentDataProvider;
         this.result = null;
     }
 
@@ -254,12 +254,12 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      * If possible the data of the element can be processed here already for the {@link #result}.
      *
      * @param result       the current {@link #result}, which was initialized during {@link #enteringDocument()}.
-     * @param dataProvider the {@link #dataProvider} that as provided during initialization
+     * @param dataProvider the {@link #documentDataProvider} that as provided during initialization
      * @param element      element to be consumed
      *
      * @throws SAXException when an error occurs
      */
-    protected abstract void consumeElementStart(final TResult result, final TDataProvider dataProvider, final TElement element) throws SAXException;
+    protected abstract void consumeElementStart(final TResult result, final TDocumentDataProvider dataProvider, final TElement element) throws SAXException;
 
     /**
      * This method will be called when an element has ended in the XML tree.
@@ -268,12 +268,12 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
      * ends, since element B will be available as child of A.
      *
      * @param result       the current {@link #result}, which was initialized during {@link #enteringDocument()}.
-     * @param dataProvider the {@link #dataProvider} that as provided during initialization.
+     * @param dataProvider the {@link #documentDataProvider} that as provided during initialization.
      * @param element      element to be consumed.
      *
      * @throws SAXException when an error occurs
      */
-    protected abstract void consumeElementEnd(final TResult result, final TDataProvider dataProvider, final TElement element) throws SAXException;
+    protected abstract void consumeElementEnd(final TResult result, final TDocumentDataProvider dataProvider, final TElement element) throws SAXException;
 
     /**
      * Gets the property State.
@@ -289,11 +289,11 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
     // region Public
 
     /**
-     * This method will clear the current {@link #result} as well as calling {@link IDataProvider#clear()}.
+     * This method will clear the current {@link #result} as well as calling {@link IDocumentDataProvider#clear()}.
      */
     public final void clear() {
         result = null;
-        dataProvider.clear();
+        documentDataProvider.clear();
     }
 
     /**
@@ -354,11 +354,11 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
         try {
             setState(State.PREPARING);
 
-            dataProvider.clear();
+            documentDataProvider.clear();
 
             attemptedParses++;
 
-            XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+            final XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 
             reader.setContentHandler(this);
 
@@ -401,7 +401,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
         setState(State.PARSING_ENTERING_ELEMENT);
 
-        TElement nextElement = elementCreator.createElement(qName, attributes, currentElement, dataProvider);
+        final TElement nextElement = elementFactory.createElement(qName, attributes, currentElement, documentDataProvider);
 
         if (nextElement != null) {
 
@@ -413,7 +413,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
             currentElement.startProcessing();
 
-            consumeElementStart(result, dataProvider, currentElement);
+            consumeElementStart(result, documentDataProvider, currentElement);
         }
 
         setState(State.PARSING_ENTERING_ELEMENT_FINISHED);
@@ -428,7 +428,7 @@ public abstract class SAXParser<TResult, TDataProvider extends IDataProvider, TE
 
             currentElement.endProcessing();
 
-            consumeElementEnd(result, dataProvider, currentElement);
+            consumeElementEnd(result, documentDataProvider, currentElement);
 
             // clear the previous element that was processed before the current one, so we can also end its processing if need be
             currentElement = currentElement.getParent();

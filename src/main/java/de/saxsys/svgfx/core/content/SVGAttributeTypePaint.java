@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -54,9 +54,9 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
     /**
      * Creates new instance with a default value of {@link Color#BLACK}.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypePaint(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypePaint(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

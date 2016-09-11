@@ -16,9 +16,9 @@ package de.saxsys.svgfx.core;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
-import de.saxsys.svgfx.core.elements.SVGDefs;
+import de.saxsys.svgfx.core.elements.SVGDefinitions;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.elements.SVGElementCreator;
+import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
 import de.saxsys.svgfx.core.elements.SVGGroup;
 import de.saxsys.svgfx.core.elements.SVGStyle;
@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  *
  * @author Xyanid on 24.10.2015.
  */
-public class SVGParser extends SAXParser<Group, SVGDataProvider, SVGElementCreator, SVGElementBase<?>> {
+public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElementFactory, SVGElementBase<?>> {
 
     //region Constructor
 
@@ -41,7 +41,7 @@ public class SVGParser extends SAXParser<Group, SVGDataProvider, SVGElementCreat
      */
     public SVGParser() {
 
-        super(new SVGElementCreator(), new SVGDataProvider());
+        super(new SVGElementFactory(), new SVGDocumentDataProvider());
     }
 
     //endregion
@@ -59,24 +59,26 @@ public class SVGParser extends SAXParser<Group, SVGDataProvider, SVGElementCreat
     }
 
     @Override
-    protected void consumeElementStart(final Group result, final SVGDataProvider dataProvider, final SVGElementBase<?> element) {
+    protected void consumeElementStart(final Group result, final SVGDocumentDataProvider dataProvider, final SVGElementBase<?> element) {
 
         //definitions will not be kept as children
-        if (element instanceof SVGDefs && element.getParent() != null) {
+        if (element instanceof SVGDefinitions && element.getParent() != null) {
             element.getParent().getChildren().remove(element);
         }
     }
 
     @Override
-    protected void consumeElementEnd(final Group result, final SVGDataProvider dataProvider, final SVGElementBase<?> element) throws SAXException {
+    protected void consumeElementEnd(final Group result, final SVGDocumentDataProvider documentDataProvider, final SVGElementBase<?> element) throws SAXException {
 
         // all elements in def and all gradients are considered data
-        if (element.getParent() instanceof SVGDefs || element instanceof SVGGradientBase) {
-            dataProvider.setData(element.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).getValue(), element);
+        if (element.getParent() instanceof SVGDefinitions || element instanceof SVGGradientBase) {
+            element.getAttributeHolder()
+                   .getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
+                   .ifPresent(id -> documentDataProvider.setData(id.getValue(), element));
         }
         // styles are also added to the dataprovider
         else if (element instanceof SVGStyle) {
-            dataProvider.getStyles().addAll(((SVGStyle) element).getResult());
+            documentDataProvider.getStyles().addAll(((SVGStyle) element).getResult());
         }
         //elements which are inside a group or clip SVGPath as well as clipPath elements will not be added
         else if (!((element instanceof SVGClipPath) || (element.getParent() instanceof SVGClipPath) || (element.getParent() instanceof SVGGroup)) &&

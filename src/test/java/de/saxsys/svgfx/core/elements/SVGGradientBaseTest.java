@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
@@ -53,7 +53,7 @@ public final class SVGGradientBaseTest {
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getValue(1)).thenReturn("red");
 
-        SVGDataProvider dataProvider = new SVGDataProvider();
+        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
         SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
 
@@ -95,7 +95,7 @@ public final class SVGGradientBaseTest {
 
         Attributes attributes = Mockito.mock(Attributes.class);
 
-        SVGDataProvider dataProvider = new SVGDataProvider();
+        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
         SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
 
@@ -159,7 +159,7 @@ public final class SVGGradientBaseTest {
     @Test
     public void ensureStopElementsAreRetrievedFromSelf() {
 
-        SVGDataProvider dataProvider = new SVGDataProvider();
+        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
         Attributes attributes = Mockito.mock(Attributes.class);
 

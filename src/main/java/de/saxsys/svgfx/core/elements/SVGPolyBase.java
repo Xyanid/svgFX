@@ -13,10 +13,9 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePoint;
 import de.saxsys.svgfx.core.content.SVGAttributeTypePoints;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
@@ -62,7 +61,7 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolyBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    protected SVGPolyBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -79,18 +78,14 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      * @throws IllegalArgumentException if any of the points in the corresponding attribute does not provide x and y position.
      */
     public final List<Double> getPoints() throws SVGException, IllegalArgumentException {
-        List<Double> actualPoints = new ArrayList<>();
+        final List<Double> actualPoints = new ArrayList<>();
 
-        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.POINTS.getName())) {
-            return actualPoints;
-        }
-
-        List<SVGAttributeTypePoint> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class).getValue();
-
-        for (SVGAttributeTypePoint point : points) {
-            actualPoints.add(point.getValue().getX().getValue());
-            actualPoints.add(point.getValue().getY().getValue());
-        }
+        getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class)
+                            .ifPresent(points -> points.getValue()
+                                                       .forEach(point -> {
+                                                           actualPoints.add(point.getValue().getX().getValue());
+                                                           actualPoints.add(point.getValue().getY().getValue());
+                                                       }));
 
         return actualPoints;
     }

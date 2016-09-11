@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.utils;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -144,17 +145,17 @@ public final class SVGUtils {
      * resolved as a reference.
      *
      * @param data              the string which contains the reference to resolve.
-     * @param dataProvider      the {@link SVGDataProvider} which contains the data which is referenced.
+     * @param dataProvider      the {@link SVGDocumentDataProvider} which contains the data which is referenced.
      * @param clazz             the class of the element that is expected.
      * @param <TSVGElementBase> the type of element which is expected.
      *
      * @return the {@link SVGElementBase} which is referenced by the data or null if the data does not reference an element.
      *
-     * @throws SVGException             if the data references a resource which is not contained in the {@link SVGDataProvider}.
+     * @throws SVGException             if the data references a resource which is not contained in the {@link SVGDocumentDataProvider}.
      * @throws IllegalArgumentException if either the data is null or empty, the dataProvider is null or the clazz is null.
      */
     public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data,
-                                                                                         final SVGDataProvider dataProvider,
+                                                                                         final SVGDocumentDataProvider dataProvider,
                                                                                          final Class<TSVGElementBase> clazz)
             throws SVGException, IllegalArgumentException {
 
@@ -191,14 +192,14 @@ public final class SVGUtils {
      * or a reference which can be resolved by the given data dataProvider.
      *
      * @param data         data to be resolved
-     * @param dataProvider the {@link SVGDataProvider} to be used, must not be null
+     * @param dataProvider the {@link SVGDocumentDataProvider} to be used, must not be null
      *
      * @return {@link Paint} which represents the color
      *
      * @throws SVGException             if the data references another element which is not found in the given data dataProvider.
      * @throws IllegalArgumentException if the the data is empty, the dataProvider is null.
      */
-    public static Paint parseColor(final String data, final SVGDataProvider dataProvider) throws SVGException, IllegalArgumentException {
+    public static Paint parseColor(final String data, final SVGDocumentDataProvider dataProvider) throws SVGException, IllegalArgumentException {
 
         if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("given data must not be null or empty");
@@ -238,12 +239,12 @@ public final class SVGUtils {
      *
      * @param shape        {@link Shape} to which the the styles should be applied, must not be null
      * @param style        {@link SVGCssStyle} to use, must not be null
-     * @param dataProvider the {@link SVGDataProvider} to be used
+     * @param dataProvider the {@link SVGDocumentDataProvider} to be used
      * @param <TShape>     type of the shape to be used
      *
      * @throws IllegalArgumentException if either shape or style is null
      */
-    public static <TShape extends Shape> void applyStyle(final TShape shape, final SVGCssStyle style, final SVGDataProvider dataProvider)
+    public static <TShape extends Shape> void applyStyle(final TShape shape, final SVGCssStyle style, final SVGDocumentDataProvider dataProvider)
             throws IllegalArgumentException {
 
         if (dataProvider == null) {
@@ -258,76 +259,54 @@ public final class SVGUtils {
             throw new IllegalArgumentException("Given style must not be null");
         }
 
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.FILL.getName())) {
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class)
+             .ifPresent(fill -> {
+                 style.getAttributeHolder()
+                      .getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class)
+                      .ifPresent(opacity -> SVGUtils.applyOpacity(fill.getValue(), opacity.getValue()));
+                 shape.setFill(fill.getValue());
+             });
 
-            Paint paint = style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue();
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class)
+             .ifPresent(stroke -> {
+                 style.getAttributeHolder()
+                      .getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class)
+                      .ifPresent(opacity -> SVGUtils.applyOpacity(stroke.getValue(), opacity.getValue()));
+                 shape.setFill(stroke.getValue());
+             });
 
-            if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.OPACITY.getName())) {
-                SVGUtils.applyOpacity(paint,
-                                      style.getAttributeTypeHolder()
-                                           .getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class)
-                                           .getValue());
-            }
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGAttributeTypeStrokeType.class)
+             .ifPresent(strokeType -> shape.setStrokeType(strokeType.getValue()));
 
-            shape.setFill(paint);
-        }
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
+             .ifPresent(strokeWidth -> shape.setStrokeWidth(strokeWidth.getValue()));
 
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE.getName())) {
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_DASHARRAY.getName(), SVGAttributeTypeStrokeDashArray.class)
+             .ifPresent(strokeDash -> {
+                 shape.getStrokeDashArray().clear();
+                 shape.getStrokeDashArray().addAll(strokeDash.getDashValues());
+             });
 
-            Paint paint = style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue();
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_DASHOFFSET.getName(), SVGAttributeTypeLength.class)
+             .ifPresent(strokeDashOffset -> shape.setStrokeDashOffset(strokeDashOffset.getValue()));
 
-            if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.OPACITY.getName())) {
-                SVGUtils.applyOpacity(paint,
-                                      style.getAttributeTypeHolder()
-                                           .getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class)
-                                           .getValue());
-            }
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_LINEJOIN.getName(), SVGAttributeTypeStrokeLineJoin.class)
+             .ifPresent(strokeLineJoin -> shape.setStrokeLineJoin(strokeLineJoin.getValue()));
 
-            shape.setStroke(paint);
-        }
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_LINECAP.getName(), SVGAttributeTypeStrokeLineCap.class)
+             .ifPresent(strokeLineCap -> shape.setStrokeLineCap(strokeLineCap.getValue()));
 
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_TYPE.getName())) {
-            shape.setStrokeType(style.getAttributeTypeHolder()
-                                     .getAttribute(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGAttributeTypeStrokeType.class)
-                                     .getValue());
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName())) {
-            shape.setStrokeWidth(style.getAttributeTypeHolder()
-                                      .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
-                                      .getValue());
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_DASHARRAY.getName())) {
-            shape.getStrokeDashArray().clear();
-            shape.getStrokeDashArray().addAll(style.getAttributeTypeHolder()
-                                                   .getAttribute(PresentationAttributeMapper.STROKE_DASHARRAY.getName(), SVGAttributeTypeStrokeDashArray.class)
-                                                   .getDashValues());
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_DASHOFFSET.getName())) {
-            shape.setStrokeDashOffset(style.getAttributeTypeHolder()
-                                           .getAttribute(PresentationAttributeMapper.STROKE_DASHOFFSET.getName(), SVGAttributeTypeLength.class)
-                                           .getValue());
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_LINEJOIN.getName())) {
-            shape.setStrokeLineJoin(style.getAttributeTypeHolder()
-                                         .getAttribute(PresentationAttributeMapper.STROKE_LINEJOIN.getName(), SVGAttributeTypeStrokeLineJoin.class)
-                                         .getValue());
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_LINECAP.getName())) {
-            shape.setStrokeLineCap(style.getAttributeTypeHolder()
-                                        .getAttribute(PresentationAttributeMapper.STROKE_LINECAP.getName(), SVGAttributeTypeStrokeLineCap.class)
-                                        .getValue());
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName())) {
-            shape.setStrokeMiterLimit(style.getAttributeTypeHolder()
-                                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
-                                           .getValue());
-        }
+        style.getAttributeHolder()
+             .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
+             .ifPresent(strokeMiterLimit -> shape.setStrokeMiterLimit(strokeMiterLimit.getValue()));
     }
 
     /**
@@ -350,15 +329,15 @@ public final class SVGUtils {
 
         style.combineWithStyle(otherStyle);
 
-        for (Map.Entry<String, SVGAttributeType> property : style.getProperties().entrySet()) {
+        for (final Map.Entry<String, SVGAttributeType> property : style.getProperties().entrySet()) {
             if (property.getValue().getIsInherited()) {
-                SVGAttributeType otherProperty = otherStyle.getAttributeTypeHolder().getAttribute(property.getKey());
-                if (otherProperty != null && !otherProperty.getIsInherited()) {
-                    if (otherProperty.getIsNone()) {
+                final Optional<SVGAttributeType> otherProperty = otherStyle.getAttributeHolder().getAttribute(property.getKey());
+                if (otherProperty.isPresent() && !otherProperty.get().getIsInherited()) {
+                    if (otherProperty.get().getIsNone()) {
                         property.getValue().consumeText(SVGAttributeType.NONE_INDICATOR);
                     } else {
-                        property.getValue().setValue(otherProperty.getValue());
-                        property.getValue().setUnit(otherProperty.getUnit());
+                        property.getValue().setValue(otherProperty.get().getValue());
+                        property.getValue().setUnit(otherProperty.get().getUnit());
                     }
                 } else {
                     property.getValue().setValue(property.getValue().getDefaultValue());

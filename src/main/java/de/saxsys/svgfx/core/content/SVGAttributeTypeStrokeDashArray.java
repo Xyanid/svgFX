@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -49,9 +49,9 @@ public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttribu
     /**
      * Creates new instance with a default value of an empty array.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeStrokeDashArray(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeStrokeDashArray(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.xml.elements.ElementBase;
@@ -26,8 +26,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 27.10.2015.
  */
-@SVGElementMapping("g")
 public class SVGGroup extends SVGNodeBase<Group> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "g";
+
+    // endregion
 
     //region Constructor
 
@@ -39,7 +47,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGGroup(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGGroup(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -48,16 +56,16 @@ public class SVGGroup extends SVGNodeBase<Group> {
     //region SVGElementBase
 
     @Override
-    protected final Group createResult(SVGCssStyle style) throws SVGException {
-        Group result = new Group();
+    protected final Group createResult(final SVGCssStyle style) throws SVGException {
+        final Group result = new Group();
 
         result.setOpacity(1.0d);
 
-        for (ElementBase child : getChildren()) {
+        for (final ElementBase child : getChildren()) {
 
-            SVGElementBase actualChild = (SVGElementBase) child;
+            final SVGElementBase actualChild = (SVGElementBase) child;
 
-            SVGCssStyle childStyle = actualChild.getCssStyleAndResolveInheritance(style);
+            final SVGCssStyle childStyle = actualChild.getCssStyleAndResolveInheritance(style);
 
             Object childResult = actualChild.getResult(childStyle);
 

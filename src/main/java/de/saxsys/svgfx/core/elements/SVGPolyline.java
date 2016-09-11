@@ -14,8 +14,9 @@
 package de.saxsys.svgfx.core.elements;
 
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import javafx.scene.shape.Polyline;
 import org.xml.sax.Attributes;
 
 /**
@@ -23,8 +24,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("polyline")
 public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "polyline";
+
+    // endregion
 
     //region Constructor
 
@@ -36,7 +45,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -45,9 +54,9 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final javafx.scene.shape.Polyline createResult(final SVGCssStyle style) {
+    protected final Polyline createResult(final SVGCssStyle style) {
 
-        return new javafx.scene.shape.Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
+        return new Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }
 
     //endregion

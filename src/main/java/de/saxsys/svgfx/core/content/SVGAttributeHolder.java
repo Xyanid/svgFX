@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.xml.attribute.AttributeHolder;
@@ -25,13 +25,13 @@ public class SVGAttributeHolder extends AttributeHolder<SVGAttributeType> {
 
     //region Fields
 
-    private SVGDataProvider dataProvider;
+    private SVGDocumentDataProvider dataProvider;
 
     //endregion
 
     // region Constructor
 
-    public SVGAttributeHolder(final SVGDataProvider dataProvider) {
+    public SVGAttributeHolder(final SVGDocumentDataProvider dataProvider) {
         this.dataProvider = dataProvider;
     }
 

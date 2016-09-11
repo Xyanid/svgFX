@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
@@ -30,8 +30,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("use")
 public class SVGUse extends SVGElementBase<Group> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "use";
+
+    // endregion
 
     //region Constructor
 
@@ -43,7 +51,7 @@ public class SVGUse extends SVGElementBase<Group> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGUse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGUse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -59,28 +67,16 @@ public class SVGUse extends SVGElementBase<Group> {
     @Override
     protected Group createResult(final SVGCssStyle style) throws SVGException {
 
-        if (!getAttributeHolder().hasAttribute(XLinkAttributeMapper.XLINK_HREF.getName())) {
-            throw new SVGException("XLink attribute is invalid.");
-        }
+        final SVGElementBase referencedElement = SVGUtils.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
+                                                                                                             SVGAttributeTypeString.class).getValue(),
+                                                                     getDocumentDataProvider(),
+                                                                     SVGElementBase.class);
 
-        SVGElementBase referencedElement = SVGUtils.resolveIRI(getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(),
-                                                                                                 SVGAttributeTypeString.class).getValue(),
-                                                               getDataProvider(),
-                                                               SVGElementBase.class);
+        final Group result = new Group();
+        result.setLayoutX(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
+        result.setLayoutY(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
 
-        Double positionX = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_X.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.POSITION_X.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-
-        Double positionY = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_Y.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.POSITION_Y.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-
-        Group result = new Group();
-        result.setLayoutX(positionX);
-        result.setLayoutY(positionY);
-
-        SVGCssStyle childStyle = referencedElement.getCssStyleAndResolveInheritance();
+        final SVGCssStyle childStyle = referencedElement.getCssStyleAndResolveInheritance();
 
         SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
 

@@ -27,12 +27,12 @@ import java.util.Map;
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
- * @param <TAttributeTypeHolder> type of the {@link AttributeHolder} of this style.
+ * @param <TAttributeHolder> type of the {@link AttributeHolder} of this style.
  * @param <TAttributeType>       type of the {@link AttributeType} of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeTypeHolder extends AttributeHolder<TAttributeType>> {
+public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeHolder extends AttributeHolder<TAttributeType>> {
 
     // region Enumeration
 
@@ -100,7 +100,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
     /**
      * Contains all the attributes of this {@link CssStyle}.
      */
-    private final TAttributeTypeHolder attributeTypeHolder;
+    private final TAttributeHolder attributeHolder;
 
     //endregion
 
@@ -109,8 +109,8 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
     /**
      * Creates a new instance.
      */
-    public CssStyle(final TAttributeTypeHolder attributeTypeHolder) {
-        this.attributeTypeHolder = attributeTypeHolder;
+    public CssStyle(final TAttributeHolder attributeHolder) {
+        this.attributeHolder = attributeHolder;
     }
 
     /**
@@ -118,9 +118,9 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
      *
      * @param name the name to of this style.
      */
-    public CssStyle(final String name, final TAttributeTypeHolder attributeTypeHolder) {
+    public CssStyle(final String name, final TAttributeHolder attributeHolder) {
         this.name = name;
-        this.attributeTypeHolder = attributeTypeHolder;
+        this.attributeHolder = attributeHolder;
     }
 
     //endregion
@@ -135,21 +135,21 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
     }
 
     /**
-     * Return the {@link #attributeTypeHolder}.
+     * Return the {@link #attributeHolder}.
      *
-     * @return the {@link #attributeTypeHolder}.
+     * @return the {@link #attributeHolder}.
      */
-    public final TAttributeTypeHolder getAttributeTypeHolder() {
-        return attributeTypeHolder;
+    public final TAttributeHolder getAttributeHolder() {
+        return attributeHolder;
     }
 
     /**
-     * Returns the {@link #attributeTypeHolder}s {@link AttributeHolder#getAttributes()}.
+     * Returns the {@link #attributeHolder}s {@link AttributeHolder#getAttributes()}.
      *
-     * @return the {@link #attributeTypeHolder}s {@link AttributeHolder#getAttributes()}.
+     * @return the {@link #attributeHolder}s {@link AttributeHolder#getAttributes()}.
      */
     public final Map<String, TAttributeType> getProperties() {
-        return attributeTypeHolder.getAttributes();
+        return attributeHolder.getAttributes();
     }
 
     /**
@@ -200,7 +200,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
 
         String name = trimmedData.substring(0, index).trim();
 
-        TAttributeType attribute = attributeTypeHolder.createAttributeType(StringUtils.stripStringIndicators(name));
+        TAttributeType attribute = attributeHolder.createAttributeType(StringUtils.stripStringIndicators(name));
 
         if (attribute != null) {
             String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
@@ -226,7 +226,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
      *
      * @throws IllegalArgumentException if the given {@link CssStyle} is null.
      */
-    public final void combineWithStyle(final CssStyle<TAttributeType, TAttributeTypeHolder> style) {
+    public final void combineWithStyle(final CssStyle<TAttributeType, TAttributeHolder> style) {
 
         if (style == null) {
             throw new IllegalArgumentException("given style must not be null");
@@ -236,9 +236,9 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
             return;
         }
 
-        for (Map.Entry<String, TAttributeType> entry : style.attributeTypeHolder.getAttributes().entrySet()) {
-            if (!attributeTypeHolder.getAttributes().containsKey(entry.getKey())) {
-                attributeTypeHolder.getAttributes().put(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, TAttributeType> entry : style.attributeHolder.getAttributes().entrySet()) {
+            if (!attributeHolder.getAttributes().containsKey(entry.getKey())) {
+                attributeHolder.getAttributes().put(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -252,7 +252,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
 
         name = null;
         selector = Selector.NONE;
-        attributeTypeHolder.getAttributes().clear();
+        attributeHolder.getAttributes().clear();
 
         StringBuilder dataBuilder = new StringBuilder();
 
@@ -305,7 +305,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
                     Pair<String, TAttributeType> property = determineAttributeType(dataBuilder.toString());
 
                     if (property.getValue() != null) {
-                        attributeTypeHolder.getAttributes().put(property.getKey(), property.getValue());
+                        attributeHolder.getAttributes().put(property.getKey(), property.getValue());
                     }
 
                     dataBuilder.setLength(0);
@@ -318,7 +318,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeT
                         Pair<String, TAttributeType> property = determineAttributeType(dataBuilder.toString());
 
                         if (property.getValue() != null) {
-                            attributeTypeHolder.getAttributes().put(property.getKey(), property.getValue());
+                            attributeHolder.getAttributes().put(property.getKey(), property.getValue());
                         }
                     }
 

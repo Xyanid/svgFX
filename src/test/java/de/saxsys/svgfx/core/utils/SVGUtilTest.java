@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.utils;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
@@ -22,6 +22,7 @@ import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
+import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -48,6 +49,14 @@ import static org.junit.Assert.assertEquals;
  * @author Xyanid on 05.10.2015.
  */
 public final class SVGUtilTest {
+
+    //region Fields
+
+    private final SVGElementFactory factory = new SVGElementFactory();
+
+    //endregion
+
+    //region Tests
 
     /**
      * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will throw the expected exceptions when arguments
@@ -248,20 +257,20 @@ public final class SVGUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
     public void ensureResolveIRICauseTheExpectedExceptions() {
 
         try {
-            SVGUtils.resolveIRI(null, new SVGDataProvider(), SVGElementBase.class);
+            SVGUtils.resolveIRI(null, new SVGDocumentDataProvider(), SVGElementBase.class);
             Assert.fail();
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains("data"));
         }
 
         try {
-            SVGUtils.resolveIRI("", new SVGDataProvider(), SVGElementBase.class);
+            SVGUtils.resolveIRI("", new SVGDocumentDataProvider(), SVGElementBase.class);
             Assert.fail();
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains("data"));
@@ -275,21 +284,21 @@ public final class SVGUtilTest {
         }
 
         try {
-            SVGUtils.resolveIRI("test", new SVGDataProvider(), null);
+            SVGUtils.resolveIRI("test", new SVGDocumentDataProvider(), null);
             Assert.fail();
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains("clazz"));
         }
 
         try {
-            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDataProvider(), SVGCircle.class);
+            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDocumentDataProvider(), SVGCircle.class);
             Assert.fail();
         } catch (SVGException e) {
             Assert.assertTrue(e.getMessage().contains("reference"));
         }
 
         try {
-            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDataProvider(), SVGCircle.class);
+            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDocumentDataProvider(), SVGCircle.class);
             Assert.fail();
         } catch (SVGException e) {
             Assert.assertTrue(e.getMessage().contains("reference"));
@@ -297,7 +306,7 @@ public final class SVGUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
     public void ensureResolveIRICanResolveReference() {
@@ -306,9 +315,9 @@ public final class SVGUtilTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGDataProvider dataProvider = new SVGDataProvider();
+        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", new SVGCircle("circle", attributes, null, dataProvider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", factory.createElement("circle", attributes, null, dataProvider));
 
         SVGCircle circle = SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
 
@@ -320,7 +329,7 @@ public final class SVGUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
     public void ensureResolveIRICanNotResolveReference() {
@@ -330,7 +339,7 @@ public final class SVGUtilTest {
         Mockito.when(attributes.getLength()).thenReturn(0);
 
         try {
-            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test1)", new SVGDataProvider(), SVGCircle.class);
+            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test1)", new SVGDocumentDataProvider(), SVGCircle.class);
             Assert.fail();
         } catch (SVGException e) {
             Assert.assertTrue(e.getMessage().contains(Constants.IRI_IDENTIFIER + "test1)"));
@@ -344,13 +353,13 @@ public final class SVGUtilTest {
     public void ensureCombineAndResolveInheritanceCausesTheExpectedExceptions() {
 
         try {
-            SVGUtils.combineStylesAndResolveInheritance(null, new SVGCssStyle(new SVGDataProvider()));
+            SVGUtils.combineStylesAndResolveInheritance(null, new SVGCssStyle(new SVGDocumentDataProvider()));
             Assert.fail();
         } catch (IllegalArgumentException ignored) {
         }
 
         try {
-            SVGUtils.combineStylesAndResolveInheritance(new SVGCssStyle(new SVGDataProvider()), null);
+            SVGUtils.combineStylesAndResolveInheritance(new SVGCssStyle(new SVGDocumentDataProvider()), null);
             Assert.fail();
         } catch (IllegalArgumentException ignored) {
         }
@@ -362,20 +371,20 @@ public final class SVGUtilTest {
     @Test
     public void ensureCombineAndResolveInheritanceUsesValuesFromOtherStyle() {
 
-        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
+        SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
         style.parseCssText(".st1{fill:inherit;stroke:#222222}");
 
-        SVGCssStyle style1 = new SVGCssStyle(new SVGDataProvider());
+        SVGCssStyle style1 = new SVGCssStyle(new SVGDocumentDataProvider());
 
         style1.parseCssText(".st1{fill:#111111;}");
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
         assertEquals(Color.web("#111111"),
-                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
+                     style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
         assertEquals(Color.web("#222222"),
-                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue());
+                     style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue());
     }
 
     /**
@@ -384,20 +393,20 @@ public final class SVGUtilTest {
     @Test
     public void ensureCombineAndResolveInheritanceAddsValuesFromOtherStyle() {
 
-        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
+        SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
         style.parseCssText(".st1{fill:inherit;}");
 
-        SVGCssStyle style1 = new SVGCssStyle(new SVGDataProvider());
+        SVGCssStyle style1 = new SVGCssStyle(new SVGDocumentDataProvider());
 
         style1.parseCssText(".st1{fill:#111111;stroke:#222222}");
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
         assertEquals(Color.web("#111111"),
-                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
+                     style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
         assertEquals(Color.web("#222222"),
-                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue());
+                     style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).getValue());
     }
 
     /**
@@ -406,18 +415,18 @@ public final class SVGUtilTest {
     @Test
     public void ensureCombineAndResolveInheritanceDoesNotOverrideExistingValues() {
 
-        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
+        SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
         style.parseCssText(".st1{fill:#333333;}");
 
-        SVGCssStyle style1 = new SVGCssStyle(new SVGDataProvider());
+        SVGCssStyle style1 = new SVGCssStyle(new SVGDocumentDataProvider());
 
         style1.parseCssText(".st1{fill:#111111;}");
 
         SVGUtils.combineStylesAndResolveInheritance(style, style1);
 
         assertEquals(Color.web("#333333"),
-                     style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
+                     style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).getValue());
     }
 
     /**
@@ -947,4 +956,6 @@ public final class SVGUtilTest {
 
         assertEquals(0.25d, ((Color) SVGUtils.applyOpacity(red, 0.25d)).getOpacity(), 0.01d);
     }
+
+    //endregion
 }

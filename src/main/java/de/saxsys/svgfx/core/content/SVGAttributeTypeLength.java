@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import javafx.util.Pair;
 
 import java.util.EnumSet;
@@ -111,7 +111,8 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
 
     // endregion
 
-    // region Enumerations
+    // region Constants
+
     /**
      * Determines the default value for this {@link SVGAttributeType}.
      */
@@ -124,9 +125,9 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
     /**
      * Creates new instance.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeLength(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeLength(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
@@ -22,6 +22,7 @@ import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -29,8 +30,16 @@ import java.util.Set;
  *
  * @author Xyanid on 27.10.2015.
  */
-@SVGElementMapping("style")
 public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "style";
+
+    // endregion
 
     //region Static
     /**
@@ -59,7 +68,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGStyle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGStyle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -74,12 +83,12 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     @Override
     protected final Set<SVGCssStyle> createResult(final SVGCssStyle style) {
 
-        Set<SVGCssStyle> result = new HashSet<>();
+        final Set<SVGCssStyle> result = new HashSet<>();
 
-        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.TYPE.getName()) ||
-            getAttributeHolder().getAttribute(CoreAttributeMapper.TYPE.getName(), SVGAttributeTypeString.class).getValue().equals(CSS_TYPE)) {
+        final Optional<SVGAttributeTypeString> type = getAttributeHolder().getAttribute(CoreAttributeMapper.TYPE.getName(), SVGAttributeTypeString.class);
+        if (!type.isPresent() || type.get().getValue().equals(CSS_TYPE)) {
 
-            StringBuilder builder = new StringBuilder();
+            final StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < characters.length(); i++) {
 
@@ -89,7 +98,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
                 if (character == Constants.DECLARATION_BLOCK_END) {
 
-                    SVGCssStyle styleDef = new SVGCssStyle(getDataProvider());
+                    SVGCssStyle styleDef = new SVGCssStyle(getDocumentDataProvider());
 
                     styleDef.parseCssText(builder.toString());
 

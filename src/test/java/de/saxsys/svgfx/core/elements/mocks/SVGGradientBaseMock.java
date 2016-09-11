@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements.mocks;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
@@ -38,7 +38,7 @@ public class SVGGradientBaseMock extends SVGGradientBase<Color> {
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
      */
-    public SVGGradientBaseMock(String name, Attributes attributes, SVGElementBase<?> parent, SVGDataProvider dataProvider) throws IllegalArgumentException {
+    public SVGGradientBaseMock(String name, Attributes attributes, SVGElementBase<?> parent, SVGDocumentDataProvider dataProvider) throws IllegalArgumentException {
         super(name, attributes, parent, dataProvider);
     }
 

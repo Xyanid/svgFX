@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.util.Pair;
 
@@ -38,9 +38,9 @@ public class SVGAttributeTypeStyle extends SVGAttributeType<SVGCssStyle, Void> {
     /**
      * Creates new instance.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeStyle(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeStyle(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

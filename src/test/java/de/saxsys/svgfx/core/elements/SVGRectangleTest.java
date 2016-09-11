@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.elements.utils.TestUtils;
@@ -52,7 +52,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         Mockito.when(attributes.getValue(5)).thenReturn("10");
 
-        SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
+        SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(50.0d, rectangle.getResult().getX(), 0.01d);
         Assert.assertEquals(100.0d, rectangle.getResult().getY(), 0.01d);
@@ -87,7 +87,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDocumentDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50");
         Mockito.when(attributes.getValue(1)).thenReturn("A");
@@ -96,7 +96,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDocumentDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -105,7 +105,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDocumentDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -114,7 +114,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDocumentDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -123,7 +123,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("A");
         Mockito.when(attributes.getValue(5)).thenReturn("5");
 
-        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDocumentDataProvider(), SVGRectangle.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50.0");
         Mockito.when(attributes.getValue(1)).thenReturn("100.0");
@@ -132,7 +132,7 @@ public final class SVGRectangleTest {
         Mockito.when(attributes.getValue(4)).thenReturn("15");
         Mockito.when(attributes.getValue(5)).thenReturn("A");
 
-        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDataProvider(), SVGRectangle.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGRectangle::new, "rect", attributes, null, new SVGDocumentDataProvider(), SVGRectangle.class, NumberFormatException.class);
     }
 
     /**
@@ -148,13 +148,13 @@ public final class SVGRectangleTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.WIDTH.getName());
 
-        SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
+        SVGRectangle rectangle = new SVGRectangle("rect", attributes, null, new SVGDocumentDataProvider());
 
         TestUtils.assertResultFails(rectangle, NullPointerException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.HEIGHT.getName());
 
-        rectangle = new SVGRectangle("rect", attributes, null, new SVGDataProvider());
+        rectangle = new SVGRectangle("rect", attributes, null, new SVGDocumentDataProvider());
 
         TestUtils.assertResultFails(rectangle, NullPointerException.class);
     }

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
@@ -42,7 +42,7 @@ public final class SVGClipPathTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("test");
 
-        SVGDataProvider provider = new SVGDataProvider();
+        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
         SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, null, provider);
 

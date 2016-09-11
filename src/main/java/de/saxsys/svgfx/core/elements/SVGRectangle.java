@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
@@ -26,8 +26,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("rect")
 public class SVGRectangle extends SVGShapeBase<Rectangle> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "rect";
+
+    // endregion
 
     //region Constructor
 
@@ -39,7 +47,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -50,17 +58,10 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     @Override
     protected final Rectangle createResult(final SVGCssStyle style) {
 
-        Double positionX = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_X.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.POSITION_X.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-        Double positionY = getAttributeHolder().hasAttribute(CoreAttributeMapper.POSITION_Y.getName()) ? getAttributeHolder().getAttribute(
-                CoreAttributeMapper.POSITION_Y.getName(),
-                SVGAttributeTypeLength.class).getValue() : SVGAttributeTypeLength.DEFAULT_VALUE;
-
-        return new Rectangle(positionX,
-                             positionY,
-                             getAttributeHolder().getAttribute(CoreAttributeMapper.WIDTH.getName(), SVGAttributeTypeLength.class).getValue(),
-                             getAttributeHolder().getAttribute(CoreAttributeMapper.HEIGHT.getName(), SVGAttributeTypeLength.class).getValue());
+        return new Rectangle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                             getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                             getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.WIDTH.getName(), SVGAttributeTypeLength.class).getValue(),
+                             getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.HEIGHT.getName(), SVGAttributeTypeLength.class).getValue());
     }
 
     /**
@@ -72,14 +73,8 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
         super.initializeResult(rect, style);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
-
-        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.RADIUS_X.getName())) {
-            rect.setArcWidth(getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).getValue() * 2.0d);
-        }
-
-        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.RADIUS_Y.getName())) {
-            rect.setArcHeight(getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).getValue() * 2.0d);
-        }
+        getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).ifPresent(radiusX -> rect.setArcWidth(radiusX.getValue() * 2.0d));
+        getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).ifPresent(radiusY -> rect.setArcHeight(radiusY.getValue() * 2.0d));
     }
 
     //endregion

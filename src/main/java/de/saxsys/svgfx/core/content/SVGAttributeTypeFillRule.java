@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.shape.FillRule;
 import javafx.util.Pair;
@@ -39,9 +39,9 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
     /**
      * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeFillRule(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeFillRule(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

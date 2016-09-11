@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -53,7 +53,7 @@ public final class SVGUseTest {
         Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("25");
 
-        SVGDataProvider provider = new SVGDataProvider();
+        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 
@@ -108,7 +108,7 @@ public final class SVGUseTest {
         Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.FILL.getName());
         Mockito.when(attributes.getValue(2)).thenReturn("inherit");
 
-        SVGDataProvider provider = new SVGDataProvider();
+        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 
@@ -139,7 +139,7 @@ public final class SVGUseTest {
         Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(1)).thenReturn("25");
 
-        SVGDataProvider provider = new SVGDataProvider();
+        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 
@@ -175,7 +175,7 @@ public final class SVGUseTest {
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         Mockito.when(attributes.getValue(0)).thenReturn("25");
 
-        SVGDataProvider provider = new SVGDataProvider();
+        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
 

@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -48,7 +48,7 @@ public final class SVGLinearGradientTest {
         Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("0.95");
 
-        SVGLinearGradient gradient = new SVGLinearGradient("stop", attributes, null, new SVGDataProvider());
+        SVGLinearGradient gradient = new SVGLinearGradient("stop", attributes, null, new SVGDocumentDataProvider());
 
         Mockito.when(attributes.getLength()).thenReturn(2);
 
@@ -58,8 +58,8 @@ public final class SVGLinearGradientTest {
         Mockito.when(attributes.getValue(0)).thenReturn("0.1");
         Mockito.when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDataProvider()));
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDataProvider()));
+        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
 
         Assert.assertEquals(0.1d, gradient.getResult().getStartX(), 0.01d);
         Assert.assertEquals(0.15d, gradient.getResult().getStartY(), 0.01d);
@@ -77,7 +77,7 @@ public final class SVGLinearGradientTest {
 
         Mockito.when(attributes.getLength()).thenReturn(0);
 
-        SVGLinearGradient gradient = new SVGLinearGradient("stop", attributes, null, new SVGDataProvider());
+        SVGLinearGradient gradient = new SVGLinearGradient("stop", attributes, null, new SVGDocumentDataProvider());
 
         gradient.getResult();
     }

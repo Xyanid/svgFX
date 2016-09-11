@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
@@ -25,13 +25,23 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
+import java.util.Optional;
+
 /**
  * This class represents a stop element from svg
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("stop")
 public class SVGStop extends SVGElementBase<Stop> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "stop";
+
+    // endregion
 
     //region SVGStop
 
@@ -43,7 +53,7 @@ public class SVGStop extends SVGElementBase<Stop> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGStop(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGStop(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -60,30 +70,21 @@ public class SVGStop extends SVGElementBase<Stop> {
     @Override
     protected final Stop createResult(final SVGCssStyle style) throws SVGException {
 
-        Color color = (Color) SVGAttributeTypePaint.DEFAULT_VALUE;
-
-        if (!getAttributeHolder().hasAttribute(CoreAttributeMapper.OFFSET.getName())) {
-            throw new SVGException("Stop does not provide an offset value");
-        }
-
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STOP_COLOR.getName())) {
-            color = (Color) style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.STOP_COLOR.getName(), SVGAttributeTypePaint.class).getValue();
-        } else if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.COLOR.getName())) {
-            color = (Color) style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.COLOR.getName(), SVGAttributeTypePaint.class).getValue();
+        Color color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.STOP_COLOR.getName(), Color.class, null);
+        if (color == null) {
+            color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.COLOR.getName(), Color.class, (Color) SVGAttributeTypePaint.DEFAULT_VALUE);
         }
 
         if (color == null) {
             throw new SVGException("Given color must not be null");
         }
 
-        if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.STOP_OPACITY.getName())) {
-            double opacity = style.getAttributeTypeHolder()
-                                  .getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class)
-                                  .getValue();
-            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+        final Optional<SVGAttributeTypeDouble> stopOpacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class);
+        if (stopOpacity.isPresent()) {
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), stopOpacity.get().getValue());
         }
 
-        return new Stop(getAttributeHolder().getAttribute(CoreAttributeMapper.OFFSET.getName(), SVGAttributeTypeLength.class).getValue(), color);
+        return new Stop(getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.OFFSET.getName(), SVGAttributeTypeLength.class).getValue(), color);
     }
 
     @Override

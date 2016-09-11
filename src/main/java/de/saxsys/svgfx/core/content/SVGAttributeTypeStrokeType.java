@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.content;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Pair;
 
@@ -38,9 +38,9 @@ public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Voi
     /**
      * Creates new instance with a default value of {@link StrokeType#CENTERED}.
      *
-     * @param dataProvider the {@link SVGDataProvider} to use when data is needed.
+     * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeStrokeType(final SVGDataProvider dataProvider) {
+    public SVGAttributeTypeStrokeType(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 

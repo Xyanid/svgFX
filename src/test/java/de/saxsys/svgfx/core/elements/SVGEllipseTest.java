@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.elements.utils.TestUtils;
@@ -48,7 +48,7 @@ public final class SVGEllipseTest {
         Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         Mockito.when(attributes.getValue(3)).thenReturn("35");
 
-        SVGEllipse ellipse = new SVGEllipse("ellipse", attributes, null, new SVGDataProvider());
+        SVGEllipse ellipse = new SVGEllipse("ellipse", attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(50.0d, ellipse.getResult().getCenterX(), 0.01d);
         Assert.assertEquals(100.0d, ellipse.getResult().getCenterY(), 0.01d);
@@ -76,28 +76,28 @@ public final class SVGEllipseTest {
         Mockito.when(attributes.getValue(2)).thenReturn("25");
         Mockito.when(attributes.getValue(3)).thenReturn("15");
 
-        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDataProvider(), SVGEllipse.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDocumentDataProvider(), SVGEllipse.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50");
         Mockito.when(attributes.getValue(1)).thenReturn("A");
         Mockito.when(attributes.getValue(2)).thenReturn("25");
         Mockito.when(attributes.getValue(3)).thenReturn("15");
 
-        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDataProvider(), SVGEllipse.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDocumentDataProvider(), SVGEllipse.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50");
         Mockito.when(attributes.getValue(1)).thenReturn("100");
         Mockito.when(attributes.getValue(2)).thenReturn("A");
         Mockito.when(attributes.getValue(3)).thenReturn("15");
 
-        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDataProvider(), SVGEllipse.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDocumentDataProvider(), SVGEllipse.class, NumberFormatException.class);
 
         Mockito.when(attributes.getValue(0)).thenReturn("50");
         Mockito.when(attributes.getValue(1)).thenReturn("100");
         Mockito.when(attributes.getValue(2)).thenReturn("25");
         Mockito.when(attributes.getValue(3)).thenReturn("A");
 
-        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDataProvider(), SVGEllipse.class, NumberFormatException.class);
+        TestUtils.assertCreationFails(SVGEllipse::new, "ellipse", attributes, null, new SVGDocumentDataProvider(), SVGEllipse.class, NumberFormatException.class);
     }
 
     /**
@@ -113,13 +113,13 @@ public final class SVGEllipseTest {
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
 
-        SVGEllipse ellipse = new SVGEllipse("ellipse", attributes, null, new SVGDataProvider());
+        SVGEllipse ellipse = new SVGEllipse("ellipse", attributes, null, new SVGDocumentDataProvider());
 
         TestUtils.assertResultFails(ellipse, NullPointerException.class);
 
         Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
 
-        ellipse = new SVGEllipse("ellipse", attributes, null, new SVGDataProvider());
+        ellipse = new SVGEllipse("ellipse", attributes, null, new SVGDocumentDataProvider());
 
         TestUtils.assertResultFails(ellipse, NullPointerException.class);
     }

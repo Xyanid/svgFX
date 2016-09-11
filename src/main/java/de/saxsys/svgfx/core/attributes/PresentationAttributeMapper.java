@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
@@ -28,6 +28,7 @@ import de.saxsys.svgfx.core.elements.SVGClipPath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -35,7 +36,7 @@ import java.util.function.Function;
  *
  * @author Xyanid on 09.03.2016.
  */
-public class PresentationAttributeMapper extends BaseAttributeMapper<SVGDataProvider> {
+public class PresentationAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProvider> {
 
     // region Constants
 
@@ -116,24 +117,24 @@ public class PresentationAttributeMapper extends BaseAttributeMapper<SVGDataProv
     /**
      * Contains all the values that are available for this attribute class.
      */
-    public static final ArrayList<PresentationAttributeMapper> VALUES = new ArrayList<>(Arrays.asList(STROKE,
-                                                                                                      STROKE_TYPE,
-                                                                                                      STROKE_DASHARRAY,
-                                                                                                      STROKE_DASHOFFSET,
-                                                                                                      STROKE_LINECAP,
-                                                                                                      STROKE_LINEJOIN,
-                                                                                                      STROKE_MITERLIMIT,
-                                                                                                      STROKE_OPACITY,
-                                                                                                      STROKE_WIDTH,
-                                                                                                      CLIP_PATH,
-                                                                                                      CLIP_RULE,
-                                                                                                      FILL,
-                                                                                                      FILL_OPACITY,
-                                                                                                      FILL_RULE,
-                                                                                                      STOP_COLOR,
-                                                                                                      STOP_OPACITY,
-                                                                                                      COLOR,
-                                                                                                      OPACITY));
+    public static final List<PresentationAttributeMapper> VALUES = new ArrayList<>(Arrays.asList(STROKE,
+                                                                                                 STROKE_TYPE,
+                                                                                                 STROKE_DASHARRAY,
+                                                                                                 STROKE_DASHOFFSET,
+                                                                                                 STROKE_LINECAP,
+                                                                                                 STROKE_LINEJOIN,
+                                                                                                 STROKE_MITERLIMIT,
+                                                                                                 STROKE_OPACITY,
+                                                                                                 STROKE_WIDTH,
+                                                                                                 CLIP_PATH,
+                                                                                                 CLIP_RULE,
+                                                                                                 FILL,
+                                                                                                 FILL_OPACITY,
+                                                                                                 FILL_RULE,
+                                                                                                 STOP_COLOR,
+                                                                                                 STOP_OPACITY,
+                                                                                                 COLOR,
+                                                                                                 OPACITY));
 
     // endregion
 
@@ -142,7 +143,7 @@ public class PresentationAttributeMapper extends BaseAttributeMapper<SVGDataProv
     /**
      * {@inheritDoc}
      */
-    private PresentationAttributeMapper(final String name, final Function<SVGDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
+    private PresentationAttributeMapper(final String name, final Function<SVGDocumentDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
         super(name, contentTypeCreator);
     }
 

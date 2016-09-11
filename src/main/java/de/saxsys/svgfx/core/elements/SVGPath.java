@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
@@ -26,8 +26,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("path")
 public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "path";
+
+    // endregion
 
     //region Constructor
 
@@ -39,7 +47,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -51,9 +59,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle style) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
-        if (getAttributeHolder().hasAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName())) {
-            result.setContent(getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class).getValue());
-        }
+        getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class)
+                            .ifPresent(path -> result.setContent(path.getValue()));
 
         return result;
     }
@@ -67,10 +74,8 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
         super.initializeResult(path, style);
 
         if (style != null) {
-
-            if (style.getAttributeTypeHolder().hasAttribute(PresentationAttributeMapper.FILL_RULE.getName())) {
-                path.setFillRule(style.getAttributeTypeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class).getValue());
-            }
+            style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class)
+                 .ifPresent(fillRule -> path.setFillRule(fillRule.getValue()));
         }
     }
 

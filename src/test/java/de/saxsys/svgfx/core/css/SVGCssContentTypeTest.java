@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.css;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
@@ -47,7 +47,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeFillRuleIsFullySupported() {
 
-        SVGAttributeTypeFillRule contentType = new SVGAttributeTypeFillRule(new SVGDataProvider());
+        SVGAttributeTypeFillRule contentType = new SVGAttributeTypeFillRule(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -69,7 +69,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeLengthIsFullySupported() {
 
-        SVGAttributeTypeLength contentType = new SVGAttributeTypeLength(new SVGDataProvider());
+        SVGAttributeTypeLength contentType = new SVGAttributeTypeLength(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -94,7 +94,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeDoubleIsFullySupported() {
 
-        SVGAttributeTypeDouble contentType = new SVGAttributeTypeDouble(new SVGDataProvider());
+        SVGAttributeTypeDouble contentType = new SVGAttributeTypeDouble(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -113,7 +113,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypePaintIsFullySupported() {
 
-        SVGAttributeTypePaint contentType = new SVGAttributeTypePaint(new SVGDataProvider());
+        SVGAttributeTypePaint contentType = new SVGAttributeTypePaint(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -140,7 +140,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeStringIsFullySupported() {
 
-        SVGAttributeTypeString contentType = new SVGAttributeTypeString(new SVGDataProvider());
+        SVGAttributeTypeString contentType = new SVGAttributeTypeString(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -158,7 +158,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeStrokeDashArrayIsFullySupported() {
 
-        SVGAttributeTypeStrokeDashArray contentType = new SVGAttributeTypeStrokeDashArray(new SVGDataProvider());
+        SVGAttributeTypeStrokeDashArray contentType = new SVGAttributeTypeStrokeDashArray(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -200,7 +200,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeStrokeLineCapIsFullySupported() {
 
-        SVGAttributeTypeStrokeLineCap contentType = new SVGAttributeTypeStrokeLineCap(new SVGDataProvider());
+        SVGAttributeTypeStrokeLineCap contentType = new SVGAttributeTypeStrokeLineCap(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -220,7 +220,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeStrokeLineJoinIsFullySupported() {
 
-        SVGAttributeTypeStrokeLineJoin contentType = new SVGAttributeTypeStrokeLineJoin(new SVGDataProvider());
+        SVGAttributeTypeStrokeLineJoin contentType = new SVGAttributeTypeStrokeLineJoin(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());
@@ -240,7 +240,7 @@ public final class SVGCssContentTypeTest {
     @Test
     public void checkSVGCssContentTypeStrokeTypeIsFullySupported() {
 
-        SVGAttributeTypeStrokeType contentType = new SVGAttributeTypeStrokeType(new SVGDataProvider());
+        SVGAttributeTypeStrokeType contentType = new SVGAttributeTypeStrokeType(new SVGDocumentDataProvider());
 
         contentType.consumeText("inherit");
         Assert.assertTrue(contentType.getIsInherited());

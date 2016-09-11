@@ -13,19 +13,18 @@
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Contains basic functionality to handle gradients of svg.
@@ -48,7 +47,7 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
      */
-    public SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider)
+    protected SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider)
             throws IllegalArgumentException {
         super(name, attributes, parent, dataProvider);
     }
@@ -62,28 +61,23 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @return the stops which this gradient needs
      */
+    @SuppressWarnings ("unchecked")
     public final List<Stop> getStops() {
-        List<Stop> stops = new ArrayList<>();
-
-        for (ElementBase element : getChildren()) {
-            if (element instanceof SVGStop) {
-                stops.add(((SVGStop) element).getResult());
-            }
-        }
+        final List<Stop> stops = getChildren().stream()
+                                              .filter(element -> element instanceof SVGStop)
+                                              .map(element -> ((SVGStop) element).getResult())
+                                              .collect(Collectors.toList());
 
         // own stops are preferred, now we check for stops that are on referenced elements
-        if (stops.isEmpty() && getAttributeHolder().hasAttribute(XLinkAttributeMapper.XLINK_HREF.getName())) {
-
-            SVGElementBase referenceElement = SVGUtils.resolveIRI(getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(),
-                                                                                                    SVGAttributeTypeString.class).getValue(),
-                                                                  getDataProvider(),
-                                                                  SVGElementBase.class);
-
-            for (Object child : referenceElement.getChildren()) {
-                if (child instanceof SVGStop) {
-                    stops.add(((SVGStop) child).getResult());
-                }
-            }
+        if (stops.isEmpty()) {
+            getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class)
+                                .ifPresent(link -> SVGUtils.resolveIRI(link.getValue(), getDocumentDataProvider(), SVGElementBase.class)
+                                                           .getChildren()
+                                                           .forEach(child -> {
+                                                               if (child instanceof SVGStop) {
+                                                                   stops.add(((SVGStop) child).getResult());
+                                                               }
+                                                           }));
         }
 
         return stops;
