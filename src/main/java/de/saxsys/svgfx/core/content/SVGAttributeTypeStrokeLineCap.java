@@ -46,7 +46,7 @@ public class SVGAttributeTypeStrokeLineCap extends SVGAttributeType<StrokeLineCa
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     @Override
     protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {

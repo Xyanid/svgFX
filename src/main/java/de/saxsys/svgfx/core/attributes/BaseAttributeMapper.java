@@ -14,8 +14,8 @@
 package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.content.SVGAttributeType;
-import de.saxsys.svgfx.xml.attribute.AttributeType;
 import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
+import de.saxsys.svgfx.xml.elements.AttributeWrapper;
 
 import java.util.function.Function;
 
@@ -34,7 +34,7 @@ public abstract class BaseAttributeMapper<TDataProvider extends IDocumentDataPro
     private final String name;
 
     /**
-     * This function is used to create a new instance of the underlying {@link AttributeType} of the attribute using the given {@link TDataProvider}.
+     * This function is used to create a new instance of the underlying {@link AttributeWrapper} of the attribute using the given {@link TDataProvider}.
      */
     private final Function<TDataProvider, ? extends SVGAttributeType> contentTypeCreator;
 
@@ -46,7 +46,7 @@ public abstract class BaseAttributeMapper<TDataProvider extends IDocumentDataPro
      * Creates a new instance.
      *
      * @param name               the name of the attribute within the svg element
-     * @param contentTypeCreator the {@link Function} to use when a {@link AttributeType} is needed.
+     * @param contentTypeCreator the {@link Function} to use when a {@link AttributeWrapper} is needed.
      */
     BaseAttributeMapper(final String name, final Function<TDataProvider, ? extends SVGAttributeType> contentTypeCreator) {
         this.name = name;

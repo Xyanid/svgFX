@@ -16,11 +16,14 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.elements.utils.TestUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+
+import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertCreationFails;
+import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertResultFails;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure that svg line elements are fully supported.
@@ -35,25 +38,25 @@ public final class SVGLineTest {
     @Test
     public void ensureAttributesAreParsedCorrectly() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(4);
+        when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("50.0");
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("100.0");
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
-        Mockito.when(attributes.getValue(2)).thenReturn("25");
-        Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
-        Mockito.when(attributes.getValue(3)).thenReturn("35");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
+        when(attributes.getValue(0)).thenReturn("50.0");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
+        when(attributes.getValue(1)).thenReturn("100.0");
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
+        when(attributes.getValue(2)).thenReturn("25");
+        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
+        when(attributes.getValue(3)).thenReturn("35");
 
-        SVGLine line = new SVGLine("line", attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        Assert.assertEquals(50.0d, line.getResult().getStartX(), 0.01d);
-        Assert.assertEquals(100.0d, line.getResult().getStartY(), 0.01d);
-        Assert.assertEquals(25.0d, line.getResult().getEndX(), 0.01d);
-        Assert.assertEquals(35.0d, line.getResult().getEndY(), 0.01d);
+        assertEquals(50.0d, line.getResult().getStartX(), 0.01d);
+        assertEquals(100.0d, line.getResult().getStartY(), 0.01d);
+        assertEquals(25.0d, line.getResult().getEndX(), 0.01d);
+        assertEquals(35.0d, line.getResult().getEndY(), 0.01d);
     }
 
     /**
@@ -62,42 +65,42 @@ public final class SVGLineTest {
     @Test
     public void ensureSVGExceptionIsThrownWhenAttributesAreInvalid() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(4);
+        when(attributes.getLength()).thenReturn(4);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
-        Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
+        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("A");
-        Mockito.when(attributes.getValue(1)).thenReturn("75");
-        Mockito.when(attributes.getValue(2)).thenReturn("50");
-        Mockito.when(attributes.getValue(3)).thenReturn("25");
+        when(attributes.getValue(0)).thenReturn("A");
+        when(attributes.getValue(1)).thenReturn("75");
+        when(attributes.getValue(2)).thenReturn("50");
+        when(attributes.getValue(3)).thenReturn("25");
 
-        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
+        assertCreationFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
 
-        Mockito.when(attributes.getValue(0)).thenReturn("100");
-        Mockito.when(attributes.getValue(1)).thenReturn("A");
-        Mockito.when(attributes.getValue(2)).thenReturn("50");
-        Mockito.when(attributes.getValue(3)).thenReturn("25");
+        when(attributes.getValue(0)).thenReturn("100");
+        when(attributes.getValue(1)).thenReturn("A");
+        when(attributes.getValue(2)).thenReturn("50");
+        when(attributes.getValue(3)).thenReturn("25");
 
-        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
+        assertCreationFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
 
-        Mockito.when(attributes.getValue(0)).thenReturn("100");
-        Mockito.when(attributes.getValue(1)).thenReturn("75");
-        Mockito.when(attributes.getValue(2)).thenReturn("A");
-        Mockito.when(attributes.getValue(3)).thenReturn("25");
+        when(attributes.getValue(0)).thenReturn("100");
+        when(attributes.getValue(1)).thenReturn("75");
+        when(attributes.getValue(2)).thenReturn("A");
+        when(attributes.getValue(3)).thenReturn("25");
 
-        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
+        assertCreationFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
 
-        Mockito.when(attributes.getValue(0)).thenReturn("100");
-        Mockito.when(attributes.getValue(1)).thenReturn("75");
-        Mockito.when(attributes.getValue(2)).thenReturn("50");
-        Mockito.when(attributes.getValue(3)).thenReturn("A");
+        when(attributes.getValue(0)).thenReturn("100");
+        when(attributes.getValue(1)).thenReturn("75");
+        when(attributes.getValue(2)).thenReturn("50");
+        when(attributes.getValue(3)).thenReturn("A");
 
-        TestUtils.assertCreationFails(SVGLine::new, "line", attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
+        assertCreationFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGLine.class, NumberFormatException.class);
     }
 
     /**
@@ -106,43 +109,43 @@ public final class SVGLineTest {
     @Test
     public void ensureSVGExceptionIsThrownWhenAttributesAreMissing() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(3);
-        Mockito.when(attributes.getValue(0)).thenReturn("75");
-        Mockito.when(attributes.getValue(1)).thenReturn("50");
-        Mockito.when(attributes.getValue(2)).thenReturn("25");
+        when(attributes.getLength()).thenReturn(3);
+        when(attributes.getValue(0)).thenReturn("75");
+        when(attributes.getValue(1)).thenReturn("50");
+        when(attributes.getValue(2)).thenReturn("25");
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
 
-        SVGLine line = new SVGLine("line", attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        TestUtils.assertResultFails(line, NullPointerException.class);
+        assertResultFails(line, IllegalArgumentException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        line = new SVGLine("line", attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line1 = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        TestUtils.assertResultFails(line, NullPointerException.class);
+        assertResultFails(line1, IllegalArgumentException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        line = new SVGLine("line", attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line2 = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        TestUtils.assertResultFails(line, NullPointerException.class);
+        assertResultFails(line2, IllegalArgumentException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_Y.getName());
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        line = new SVGLine("line", attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line3 = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        TestUtils.assertResultFails(line, NullPointerException.class);
+        assertResultFails(line3, IllegalArgumentException.class);
     }
 }

@@ -46,7 +46,7 @@ public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Voi
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     @Override
     protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {

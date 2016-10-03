@@ -34,10 +34,10 @@ public class SVGAttributeTypeString extends SVGAttributeType<String, Void> {
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     @Override
-    protected Pair<String, Void> getValueAndUnit(String cssText) {
+    protected Pair<String, Void> getValueAndUnit(final String cssText) {
 
         return new Pair<>(cssText, null);
     }

@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
+import static org.mockito.Mockito.when;
+
 /**
  * This test will ensure that svg radial gradient elements is fully supported.
  *
@@ -35,33 +37,33 @@ public final class SVGRadialGradientTest {
     @Test
     public void ensureAttributesAreParsedCorrectly() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(5);
+        when(attributes.getLength()).thenReturn(5);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("0.15");
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.FOCUS_X.getName());
-        Mockito.when(attributes.getValue(2)).thenReturn("0.9");
-        Mockito.when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
-        Mockito.when(attributes.getValue(3)).thenReturn("0.95");
-        Mockito.when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        Mockito.when(attributes.getValue(4)).thenReturn("0.5");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
+        when(attributes.getValue(1)).thenReturn("0.15");
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.FOCUS_X.getName());
+        when(attributes.getValue(2)).thenReturn("0.9");
+        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
+        when(attributes.getValue(3)).thenReturn("0.95");
+        when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(4)).thenReturn("0.5");
 
-        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDocumentDataProvider());
+        final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getValue(1)).thenReturn("red");
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
 
         Assert.assertEquals(0.1d, gradient.getResult().getCenterX(), 0.01d);
         Assert.assertEquals(0.15d, gradient.getResult().getCenterY(), 0.01d);
@@ -72,14 +74,14 @@ public final class SVGRadialGradientTest {
     /**
      * Ensures that the an {@link SVGException} is thrown if there are no stops elements.
      */
-    @Test(expected = SVGException.class)
+    @Test (expected = SVGException.class)
     public void ensureSVGExceptionIsThrownWhenStopsAreMissing() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDocumentDataProvider());
+        final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         gradient.getResult();
     }
@@ -87,25 +89,25 @@ public final class SVGRadialGradientTest {
     /**
      * Ensures that the an {@link SVGException} is thrown if there needed attributes are missing.
      */
-    @Test(expected = SVGException.class)
+    @Test (expected = SVGException.class)
     public void ensureSVGExceptionIsThrownWhenAttributesAreMissing() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGRadialGradient gradient = new SVGRadialGradient("stop", attributes, null, new SVGDocumentDataProvider());
+        final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getValue(1)).thenReturn("red");
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
 
         gradient.getResult();
     }

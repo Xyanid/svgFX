@@ -18,11 +18,16 @@ import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import de.saxsys.svgfx.core.elements.SVGRectangle;
 import de.saxsys.svgfx.core.elements.SVGStyle;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Ensure that {@link SVGDocumentDataProvider} works as intended.
@@ -56,15 +61,15 @@ public class SVGDocumentDataProviderTest {
 
         DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
 
         DATA_PROVIDER.data.put("test", FACTORY.createElement("rect", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
 
         DATA_PROVIDER.data.remove("test");
 
-        Assert.assertEquals(0, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(0, DATA_PROVIDER.getUnmodifiableData().size());
     }
 
     /**
@@ -75,11 +80,11 @@ public class SVGDocumentDataProviderTest {
 
         DATA_PROVIDER.styles.add(new SVGCssStyle("test", DATA_PROVIDER));
 
-        Assert.assertEquals(1, DATA_PROVIDER.getStyles().size());
+        assertEquals(1, DATA_PROVIDER.getStyles().size());
 
         DATA_PROVIDER.styles.remove(new SVGCssStyle("test", DATA_PROVIDER));
 
-        Assert.assertEquals(0, DATA_PROVIDER.getStyles().size());
+        assertEquals(0, DATA_PROVIDER.getStyles().size());
     }
 
     /**
@@ -89,11 +94,11 @@ public class SVGDocumentDataProviderTest {
     public void testHasData() {
         DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertTrue(DATA_PROVIDER.hasData("test"));
+        assertTrue(DATA_PROVIDER.hasData("test"));
 
         DATA_PROVIDER.data.remove("test");
 
-        Assert.assertFalse(DATA_PROVIDER.hasData("test"));
+        assertFalse(DATA_PROVIDER.hasData("test"));
     }
 
     /**
@@ -104,11 +109,11 @@ public class SVGDocumentDataProviderTest {
     public void testSetData() {
         DATA_PROVIDER.setData("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+        assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
 
         DATA_PROVIDER.setData("test", FACTORY.createElement("style", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertNotNull(DATA_PROVIDER.getData(SVGStyle.class, "test"));
+        assertNotNull(DATA_PROVIDER.getData(SVGStyle.class, "test"));
     }
 
     /**
@@ -118,13 +123,13 @@ public class SVGDocumentDataProviderTest {
     public void testGetData() {
         DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+        assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
 
-        Assert.assertNull(DATA_PROVIDER.getData(SVGRectangle.class, "test"));
+        assertNull(DATA_PROVIDER.getData(SVGRectangle.class, "test"));
 
         DATA_PROVIDER.data.remove("test");
 
-        Assert.assertNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+        assertNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
     }
 
     /**
@@ -135,11 +140,11 @@ public class SVGDocumentDataProviderTest {
 
         DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        Assert.assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
 
         DATA_PROVIDER.clear();
 
-        Assert.assertEquals(0, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(0, DATA_PROVIDER.getUnmodifiableData().size());
     }
 
     //endregion

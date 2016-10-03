@@ -47,7 +47,7 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     @Override
     protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {

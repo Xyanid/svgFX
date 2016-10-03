@@ -26,6 +26,7 @@ import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * This class represents a stop element from svg
@@ -62,13 +63,25 @@ public class SVGStop extends SVGElementBase<Stop> {
     //region SVGElementBase
 
     /**
+     * {@inheritDoc}
+     *
+     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    /**
      * {@inheritDoc}.
      * This stop used both the {@link PresentationAttributeMapper#STOP_COLOR} and {@link PresentationAttributeMapper#COLOR}, however
      * the {@link PresentationAttributeMapper#STOP_COLOR} is preferred if both are present. Furthermore if an
      * {@link PresentationAttributeMapper#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
-    protected final Stop createResult(final SVGCssStyle style) throws SVGException {
+    protected final Stop createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+
+        final SVGCssStyle style = styleSupplier.get();
 
         Color color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.STOP_COLOR.getName(), Color.class, null);
         if (color == null) {
@@ -88,7 +101,7 @@ public class SVGStop extends SVGElementBase<Stop> {
     }
 
     @Override
-    protected final void initializeResult(final javafx.scene.paint.Stop stop, final SVGCssStyle inheritanceResolver) throws SVGException {
+    protected final void initializeResult(final javafx.scene.paint.Stop stop, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
     }
 
     //endregion

@@ -20,6 +20,8 @@ import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a base class which contains shape element from svg.
  *
@@ -49,17 +51,27 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
 
     /**
      * {@inheritDoc}
+     *
+     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return !((this.getParent() instanceof SVGClipPath) || (this.getParent() instanceof SVGGroup));
+    }
+
+    /**
+     * {@inheritDoc}
      * Will apply the transformation to the element.
      */
     @Override
-    protected void initializeResult(final TNode node, final SVGCssStyle style) throws SVGException {
+    protected void initializeResult(final TNode node, final Supplier<SVGCssStyle> supplier) throws SVGException {
 
         final Transform transform = getTransformation();
         if (transform != null) {
             node.getTransforms().add(transform);
         }
 
-        final Node clip = getClipPath(style);
+        final Node clip = getClipPath(supplier);
         if (clip != null) {
             node.setClip(clip);
         }

@@ -21,6 +21,8 @@ import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a line element from svg
  *
@@ -56,7 +58,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle style) {
+    protected final javafx.scene.shape.SVGPath createResult(final Supplier<SVGCssStyle> styleSupplier) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
         getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class)
@@ -70,13 +72,12 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final SVGCssStyle style) {
-        super.initializeResult(path, style);
+    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final Supplier<SVGCssStyle> styleSupplier) {
+        super.initializeResult(path, styleSupplier);
 
-        if (style != null) {
-            style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class)
-                 .ifPresent(fillRule -> path.setFillRule(fillRule.getValue()));
-        }
+        styleSupplier.get().getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class)
+                     .ifPresent(fillRule -> path.setFillRule(fillRule.getValue()));
+
     }
 
     //endregion

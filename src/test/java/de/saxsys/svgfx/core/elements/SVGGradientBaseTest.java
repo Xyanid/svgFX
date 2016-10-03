@@ -14,13 +14,12 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.elements.mocks.SVGGradientBaseMock;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -29,12 +28,17 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure that {@link SVGGradientBase} works as intended.
  *
  * @author Xyanid on 05.10.2015.
  */
+@SuppressWarnings ("unchecked")
 public final class SVGGradientBaseTest {
 
     /**
@@ -43,48 +47,53 @@ public final class SVGGradientBaseTest {
     @Test
     public void ensureStopElementsAreRetrievedFromReferencedElement() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getValue(1)).thenReturn("red");
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getValue(1)).thenReturn("red");
 
-        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
+        final SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", elementBase);
 
-        List<SVGElementBase> stops = new ArrayList<>();
+        final List<SVGElementBase> stops = new ArrayList<>();
 
-        stops.add(new SVGStop("stop", attributes, null, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.2");
-        Mockito.when(attributes.getValue(1)).thenReturn("blue");
+        when(attributes.getValue(0)).thenReturn("0.2");
+        when(attributes.getValue(1)).thenReturn("blue");
 
-        stops.add(new SVGStop("stop", attributes, null, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
 
-        Mockito.when(elementBase.getChildren()).thenReturn(stops);
+        when(elementBase.getChildren()).thenReturn(stops);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getLength()).thenReturn(1);
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
 
-        SVGGradientBaseMock gradient = new SVGGradientBaseMock("gradientbase", attributes, null, dataProvider);
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
+            @Override
+            protected Color createResult(Supplier supplier) throws SVGException {
+                return null;
+            }
+        };
 
-        List<Stop> actualStops = gradient.getStops();
+        final List<Stop> actualStops = gradient.getStops();
 
-        Assert.assertEquals(2, actualStops.size());
+        assertEquals(2, actualStops.size());
 
-        Assert.assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
-        Assert.assertEquals(Color.RED, actualStops.get(0).getColor());
+        assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(Color.RED, actualStops.get(0).getColor());
 
-        Assert.assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
-        Assert.assertEquals(Color.BLUE, actualStops.get(1).getColor());
+        assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(Color.BLUE, actualStops.get(1).getColor());
     }
 
     /**
@@ -93,64 +102,69 @@ public final class SVGGradientBaseTest {
     @Test
     public void ensureOwnStopElementsArePreferred() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
+        final SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", elementBase);
 
-        List<SVGElementBase> stops = new ArrayList<>();
+        final List<SVGElementBase> stops = new ArrayList<>();
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getValue(1)).thenReturn("red");
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getValue(1)).thenReturn("red");
 
-        stops.add(new SVGStop("stop", attributes, elementBase, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, elementBase, dataProvider));
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.2");
-        Mockito.when(attributes.getValue(1)).thenReturn("blue");
+        when(attributes.getValue(0)).thenReturn("0.2");
+        when(attributes.getValue(1)).thenReturn("blue");
 
-        stops.add(new SVGStop("stop", attributes, elementBase, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, elementBase, dataProvider));
 
-        Mockito.when(elementBase.getChildren()).thenReturn(stops);
+        when(elementBase.getChildren()).thenReturn(stops);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
 
-        SVGGradientBaseMock gradient = new SVGGradientBaseMock("gradientbase", attributes, null, dataProvider);
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
+            @Override
+            protected Color createResult(Supplier supplier) throws SVGException {
+                return null;
+            }
+        };
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.3");
-        Mockito.when(attributes.getValue(1)).thenReturn("green");
+        when(attributes.getValue(0)).thenReturn("0.3");
+        when(attributes.getValue(1)).thenReturn("green");
 
         gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.4");
-        Mockito.when(attributes.getValue(1)).thenReturn("yellow");
+        when(attributes.getValue(0)).thenReturn("0.4");
+        when(attributes.getValue(1)).thenReturn("yellow");
 
         gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
-        List<Stop> actualStops = gradient.getStops();
+        final List<Stop> actualStops = gradient.getStops();
 
-        Assert.assertEquals(2, actualStops.size());
+        assertEquals(2, actualStops.size());
 
-        Assert.assertEquals(0.3d, actualStops.get(0).getOffset(), 0.01d);
-        Assert.assertEquals(Color.GREEN, actualStops.get(0).getColor());
+        assertEquals(0.3d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(Color.GREEN, actualStops.get(0).getColor());
 
-        Assert.assertEquals(0.4d, actualStops.get(1).getOffset(), 0.01d);
-        Assert.assertEquals(Color.YELLOW, actualStops.get(1).getColor());
+        assertEquals(0.4d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(Color.YELLOW, actualStops.get(1).getColor());
     }
 
     /**
@@ -159,44 +173,49 @@ public final class SVGGradientBaseTest {
     @Test
     public void ensureStopElementsAreRetrievedFromSelf() {
 
-        SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
 
-        SVGGradientBaseMock gradient = new SVGGradientBaseMock("gradientbase", attributes, null, dataProvider);
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
+            @Override
+            protected Color createResult(Supplier supplier) throws SVGException {
+                return null;
+            }
+        };
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.1");
-        Mockito.when(attributes.getValue(1)).thenReturn("red");
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getValue(1)).thenReturn("red");
 
         gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
-        Mockito.when(attributes.getValue(0)).thenReturn("0.2");
-        Mockito.when(attributes.getValue(1)).thenReturn("blue");
+        when(attributes.getValue(0)).thenReturn("0.2");
+        when(attributes.getValue(1)).thenReturn("blue");
 
         gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getLength()).thenReturn(1);
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
 
-        List<Stop> actualStops = gradient.getStops();
+        final List<Stop> actualStops = gradient.getStops();
 
-        Assert.assertEquals(2, actualStops.size());
+        assertEquals(2, actualStops.size());
 
-        Assert.assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
-        Assert.assertEquals(Color.RED, actualStops.get(0).getColor());
+        assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(Color.RED, actualStops.get(0).getColor());
 
-        Assert.assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
-        Assert.assertEquals(Color.BLUE, actualStops.get(1).getColor());
+        assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(Color.BLUE, actualStops.get(1).getColor());
     }
 }

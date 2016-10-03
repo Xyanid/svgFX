@@ -136,6 +136,10 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProv
      * Represents the type of the element.
      */
     public static final CoreAttributeMapper TYPE = new CoreAttributeMapper("type", SVGAttributeTypeString::new);
+    /**
+     * Represents the viewBox which is hosted inside a {@link de.saxsys.svgfx.core.elements.SVGRoot}.
+     */
+    public static final CoreAttributeMapper VIEW_BOX = new CoreAttributeMapper("viewBox", SVGAttributeTypeString::new);
 
     /**
      * Contains all the values that are available for this attribute class.
@@ -164,7 +168,8 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProv
                                                                                               WIDTH,
                                                                                               HEIGHT,
                                                                                               OFFSET,
-                                                                                              TYPE));
+                                                                                              TYPE,
+                                                                                              VIEW_BOX));
 
     // endregion
 

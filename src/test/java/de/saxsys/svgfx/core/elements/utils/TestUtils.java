@@ -16,8 +16,11 @@ package de.saxsys.svgfx.core.elements.utils;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
-import org.junit.Assert;
 import org.xml.sax.Attributes;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 19.03.2016.
@@ -36,10 +39,10 @@ public class TestUtils {
                                                                              final Class<? extends Exception> exception) {
         try {
             creator.apply(name, attributes, parent, dataProvider);
-            Assert.fail();
+            fail();
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains(elementClass.getName()));
-            Assert.assertEquals(exception, e.getCause().getClass());
+            assertTrue(e.getMessage().contains(elementClass.getName()));
+            assertEquals(exception, e.getCause().getClass());
         }
     }
 
@@ -49,10 +52,10 @@ public class TestUtils {
     public static void assertResultFails(final SVGElementBase element, final Class<? extends Exception> exception) {
         try {
             element.getResult();
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(element.getClass().getName()));
-            Assert.assertEquals(exception, e.getCause().getClass());
+            fail();
+        } catch (final SVGException e) {
+            assertTrue(e.getMessage().contains(element.getClass().getName()));
+            assertEquals(exception, e.getCause().getClass());
         }
     }
 }

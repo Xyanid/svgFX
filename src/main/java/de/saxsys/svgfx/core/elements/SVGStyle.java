@@ -24,6 +24,7 @@ import org.xml.sax.Attributes;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * This class represents the style element from svg
@@ -78,10 +79,37 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     /**
      * {@inheritDoc}
+     * Saves all characters in a StringBuilder to use them later
+     */
+    @Override
+    public void processCharacterData(final char[] ch, final int start, final int length) {
+
+        for (int i = start; i < length; i++) {
+            characters.append(ch[i]);
+        }
+    }
+
+    @Override
+    public void endProcessing() {
+        getDocumentDataProvider().getStyles().addAll((this).getResult());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return !((this.getParent() instanceof SVGClipPath) || (this.getParent() instanceof SVGGroup));
+    }
+
+    /**
+     * {@inheritDoc}
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResult(final SVGCssStyle style) {
+    protected final Set<SVGCssStyle> createResult(final Supplier<SVGCssStyle> styleSupplier) {
 
         final Set<SVGCssStyle> result = new HashSet<>();
 
@@ -113,20 +141,8 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final SVGCssStyle style) throws SVGException {
+    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
 
-    }
-
-    /**
-     * {@inheritDoc}
-     * Saves all characters in a StringBuilder to use them later
-     */
-    @Override
-    public void processCharacterData(final char[] ch, final int start, final int length) {
-
-        for (int i = start; i < length; i++) {
-            characters.append(ch[i]);
-        }
     }
 
     //endregion

@@ -53,7 +53,7 @@ public class SVGAttributeTypeStyle extends SVGAttributeType<SVGCssStyle, Void> {
      */
     @Override
     protected Pair<SVGCssStyle, Void> getValueAndUnit(final String text) {
-        SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
+        final SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
         ownStyle.parseCssText(text);
         return new Pair<>(ownStyle, null);
     }

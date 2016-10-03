@@ -20,6 +20,8 @@ import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a base class which contains shape element from svg.
  *
@@ -52,10 +54,10 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * Applies the css style the the element if possible.
      */
     @Override
-    protected void initializeResult(final TShape shape, final SVGCssStyle style) throws SVGException {
-        super.initializeResult(shape, style);
+    protected void initializeResult(final TShape shape, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+        super.initializeResult(shape, styleSupplier);
 
-        SVGUtils.applyStyle(shape, style, getDocumentDataProvider());
+        SVGUtils.applyStyle(shape, getStyle(), getDocumentDataProvider());
     }
 
     // endregion

@@ -14,8 +14,6 @@
 package de.saxsys.svgfx.xml.elements;
 
 
-import de.saxsys.svgfx.xml.attribute.AttributeHolder;
-import de.saxsys.svgfx.xml.attribute.AttributeType;
 import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import org.xml.sax.Attributes;
@@ -29,15 +27,17 @@ import java.util.Map;
 /**
  * Represents an actual element of the parsed document from an {@link SAXParser}.
  *
- * @param <TAttributeType>       the type of the {@link AttributeType} to be used
- * @param <TAttributeTypeHolder> the type of the {@link AttributeHolder} to be used
- * @param <TDocumentDataProvider>        the type of the {@link IDocumentDataProvider} to be used
- * @param <TResult>              the type of result provided by the element
- * @param <TParent>              the type of parent of this element
+ * @param <TAttributeType>        the type of the {@link AttributeWrapper} to be used
+ * @param <TAttributeHolder>      the type of the {@link AttributeHolder} to be used
+ * @param <TDocumentDataProvider> the type of the {@link IDocumentDataProvider} to be used
+ * @param <TResult>               the type of result provided by the element
+ * @param <TParent>               the type of parent of this element
  *
  * @author Xyanid on 24.10.2015.
  */
-public abstract class ElementBase<TAttributeType extends AttributeType, TAttributeTypeHolder extends AttributeHolder<TAttributeType>, TDocumentDataProvider extends IDocumentDataProvider, TResult,
+public abstract class ElementBase<TAttributeType extends AttributeWrapper,
+        TAttributeHolder extends AttributeHolder<TAttributeType>,
+        TDocumentDataProvider extends IDocumentDataProvider, TResult,
         TParent extends ElementBase<?, ?, TDocumentDataProvider, ?, ?>> {
 
     //region Fields
@@ -65,7 +65,7 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
     /**
      * This contains the actual attributes of the element.
      */
-    private final TAttributeTypeHolder attributeHolder;
+    private final TAttributeHolder attributeHolder;
 
     //endregion
 
@@ -74,9 +74,9 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
     /**
      * Creates a new instance of he element using the given attributes, parent and documentDataProvider.
      *
-     * @param name         value of the element, must not be null
-     * @param attributes   attributes to be used
-     * @param parent       parent of the element
+     * @param name                 value of the element, must not be null
+     * @param attributes           attributes to be used
+     * @param parent               parent of the element
      * @param documentDataProvider documentDataProvider to be used, must not be null
      *
      * @throws IllegalArgumentException if either value or documentDataProvider are null
@@ -85,7 +85,7 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
                        final Attributes attributes,
                        final TParent parent,
                        final TDocumentDataProvider documentDataProvider,
-                       final TAttributeTypeHolder attributeHolder) throws IllegalArgumentException {
+                       final TAttributeHolder attributeHolder) throws IllegalArgumentException {
 
         if (name == null) {
             throw new IllegalArgumentException(String.format("Creation of element %s failed. Given name must not be null", getClass().getName()));
@@ -103,15 +103,16 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
         this.attributeHolder = attributeHolder;
 
         if (attributes != null) {
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (int i = 0; i < attributes.getLength(); ++i) {
 
-                String attributeName = attributes.getQName(i);
-                TAttributeType contentType = this.attributeHolder.createAttributeType(attributeName);
-                String attributeValue = attributes.getValue(i);
+                final String attributeName = attributes.getQName(i);
+                final TAttributeType contentType = this.attributeHolder.createAttributeType(attributeName);
+                final String attributeValue = attributes.getValue(i);
+
                 if (contentType != null) {
                     try {
-                        contentType.consumeText(attributeValue);
-                    } catch (Exception e) {
+                        contentType.setText(attributeValue);
+                    } catch (final Exception e) {
                         throw new IllegalArgumentException(String.format("Creation of element %s failed. The attribute %s is not valid, value is %s",
                                                                          getClass().getName(),
                                                                          attributeName,
@@ -181,7 +182,7 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
      *
      * @return the {@link #attributeHolder}
      */
-    public TAttributeTypeHolder getAttributeHolder() {
+    public TAttributeHolder getAttributeHolder() {
         return attributeHolder;
     }
 
@@ -214,6 +215,11 @@ public abstract class ElementBase<TAttributeType extends AttributeType, TAttribu
      * @throws SAXException will be thrown when an error occurs during processing
      */
     public abstract void endProcessing() throws SAXException;
+
+    /**
+     * Determines whether the result of this element will be requested or not. A Ccall to this method should be made prior to the {@link #getResult()}
+     */
+    public abstract boolean canConsumeResult();
 
     /**
      * Returns the result for the current element.

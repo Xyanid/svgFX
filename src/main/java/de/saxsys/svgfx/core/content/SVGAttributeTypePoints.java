@@ -80,7 +80,7 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
 
             for (String pointsSplit : values) {
                 SVGAttributeTypePoint actualPoint = new SVGAttributeTypePoint(getDataProvider());
-                actualPoint.consumeText(pointsSplit);
+                actualPoint.setText(pointsSplit);
                 actualPoints.add(actualPoint);
             }
         }

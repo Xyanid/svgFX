@@ -21,6 +21,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents the style element from svg
  *
@@ -56,7 +58,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
     //region SVGElementBase
 
     @Override
-    protected final Group createResult(final SVGCssStyle style) throws SVGException {
+    protected final Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
         final Group result = new Group();
 
         result.setOpacity(1.0d);
@@ -65,9 +67,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
 
             final SVGElementBase actualChild = (SVGElementBase) child;
 
-            final SVGCssStyle childStyle = actualChild.getCssStyleAndResolveInheritance(style);
-
-            Object childResult = actualChild.getResult(childStyle);
+            Object childResult = actualChild.createAndInitializeResult(() -> actualChild.getStyleAndResolveInheritance(styleSupplier.get()));
 
             if (childResult instanceof Node) {
                 result.getChildren().add((Node) childResult);

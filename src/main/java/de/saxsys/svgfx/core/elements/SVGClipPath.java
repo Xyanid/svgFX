@@ -21,6 +21,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a clipPath element from svg @author Xyanid on 25.10.2015.
  */
@@ -53,21 +55,29 @@ public class SVGClipPath extends SVGNodeBase<Group> {
 
     // region SVGElementBase
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return false always.
+     */
     @Override
-    protected final Group createResult(final SVGCssStyle style) throws SVGException {
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    @Override
+    protected final Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
 
         Group result = new Group();
 
         int counter = 0;
 
-        for (ElementBase child : getChildren()) {
+        for (final ElementBase child : getChildren()) {
             try {
 
-                SVGElementBase actualChild = (SVGElementBase) child;
-
-                SVGCssStyle childStyle = actualChild.getCssStyleAndResolveInheritance(style);
-
-                result.getChildren().add((Node) actualChild.createAndInitializeResult(childStyle));
+                // instead of letting the child use the clip path as its parent, we simply tell the child that the parent style to use is the style of the element using the clip path
+                final SVGElementBase actualChild = (SVGElementBase) child;
+                result.getChildren().add((Node) actualChild.createAndInitializeResult(() -> actualChild.getStyleAndResolveInheritance(styleSupplier.get())));
             } catch (SVGException e) {
                 throw new SVGException(String.format("Could not get result from child %d", counter), e);
             }

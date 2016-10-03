@@ -15,9 +15,13 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
+
+import java.util.function.Supplier;
 
 /**
  * This class represents a stop element from svg
@@ -54,12 +58,36 @@ public class SVGDefinitions extends SVGElementBase<Node> {
     //region SVGElementBase
 
     @Override
-    protected final Node createResult(final SVGCssStyle style) throws SVGException {
+    public void startProcessing() {
+        //definitions will not be kept as children
+        if (getParent() != null) {
+            getParent().getChildren().remove(this);
+        }
+    }
+
+    @Override
+    public void endProcessing() {
+        getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
+                            .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return false always
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    @Override
+    protected final Node createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
         return null;
     }
 
     @Override
-    protected final void initializeResult(final Node node, final SVGCssStyle style) throws SVGException {
+    protected final void initializeResult(final Node node, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
 
     }
 

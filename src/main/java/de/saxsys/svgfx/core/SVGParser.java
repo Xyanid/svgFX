@@ -13,15 +13,8 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.elements.SVGClipPath;
-import de.saxsys.svgfx.core.elements.SVGDefinitions;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
-import de.saxsys.svgfx.core.elements.SVGGradientBase;
-import de.saxsys.svgfx.core.elements.SVGGroup;
-import de.saxsys.svgfx.core.elements.SVGStyle;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -55,36 +48,15 @@ public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElem
 
     @Override
     protected void leavingDocument(final Group result) {
-
     }
 
     @Override
     protected void consumeElementStart(final Group result, final SVGDocumentDataProvider dataProvider, final SVGElementBase<?> element) {
-
-        //definitions will not be kept as children
-        if (element instanceof SVGDefinitions && element.getParent() != null) {
-            element.getParent().getChildren().remove(element);
-        }
     }
 
     @Override
     protected void consumeElementEnd(final Group result, final SVGDocumentDataProvider documentDataProvider, final SVGElementBase<?> element) throws SAXException {
-
-        // all elements in def and all gradients are considered data
-        if (element.getParent() instanceof SVGDefinitions || element instanceof SVGGradientBase) {
-            element.getAttributeHolder()
-                   .getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
-                   .ifPresent(id -> documentDataProvider.setData(id.getValue(), element));
-        }
-        // styles are also added to the dataprovider
-        else if (element instanceof SVGStyle) {
-            documentDataProvider.getStyles().addAll(((SVGStyle) element).getResult());
-        }
-        //elements which are inside a group or clip SVGPath as well as clipPath elements will not be added
-        else if (!((element instanceof SVGClipPath) || (element.getParent() instanceof SVGClipPath) || (element.getParent() instanceof SVGGroup)) &&
-                 element.getResult() instanceof Node) {
-            result.getChildren().add((Node) element.getResult());
-        }
+        result.getChildren().add((Node) element.getResult());
     }
 
     //endregion

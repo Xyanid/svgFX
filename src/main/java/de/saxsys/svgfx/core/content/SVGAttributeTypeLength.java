@@ -133,7 +133,7 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     /**
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeLength}

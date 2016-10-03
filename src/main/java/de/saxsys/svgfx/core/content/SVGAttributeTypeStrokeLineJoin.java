@@ -46,7 +46,7 @@ public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJ
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     @Override
     protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {

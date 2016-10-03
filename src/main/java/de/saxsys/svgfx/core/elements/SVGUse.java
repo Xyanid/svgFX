@@ -25,12 +25,14 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a use element from svg
  *
  * @author Xyanid on 25.10.2015.
  */
-public class SVGUse extends SVGElementBase<Group> {
+public class SVGUse extends SVGNodeBase<Group> {
 
     // region Constants
 
@@ -65,7 +67,7 @@ public class SVGUse extends SVGElementBase<Group> {
      * @throws SVGException if the {@link XLinkAttributeMapper#XLINK_HREF} is empty or null.
      */
     @Override
-    protected Group createResult(final SVGCssStyle style) throws SVGException {
+    protected Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
 
         final SVGElementBase referencedElement = SVGUtils.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
                                                                                                              SVGAttributeTypeString.class).getValue(),
@@ -75,12 +77,7 @@ public class SVGUse extends SVGElementBase<Group> {
         final Group result = new Group();
         result.setLayoutX(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
         result.setLayoutY(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
-
-        final SVGCssStyle childStyle = referencedElement.getCssStyleAndResolveInheritance();
-
-        SVGUtils.combineStylesAndResolveInheritance(childStyle, style);
-
-        result.getChildren().add((Node) referencedElement.createAndInitializeResult(childStyle));
+        result.getChildren().add((Node) referencedElement.createAndInitializeResult(() -> referencedElement.getStyleAndResolveInheritance(styleSupplier.get())));
 
         return result;
     }

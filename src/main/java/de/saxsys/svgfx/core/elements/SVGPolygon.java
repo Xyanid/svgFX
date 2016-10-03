@@ -18,6 +18,8 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a line element from svg
  *
@@ -53,7 +55,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
     //region Override SVGElementBase
 
     @Override
-    protected final Polygon createResult(final SVGCssStyle style) {
+    protected final Polygon createResult(final Supplier<SVGCssStyle> styleSupplier) {
 
         return new Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

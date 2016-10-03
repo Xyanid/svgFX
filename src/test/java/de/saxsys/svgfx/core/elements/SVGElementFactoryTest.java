@@ -15,7 +15,6 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.xml.elements.ElementBase;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
@@ -24,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.saxsys.svgfx.core.elements.SVGElementFactory.KNOWN_CLASSES;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Xyanid on 05.10.2015.
@@ -62,12 +63,12 @@ public final class SVGElementFactoryTest {
 
         final SVGElementFactory cut = new SVGElementFactory();
 
-        Assert.assertEquals(16, KNOWN_CLASSES.size());
+        assertEquals(16, KNOWN_CLASSES.size());
 
-        for (Map.Entry<String, Class<? extends SVGElementBase>> entry : classesToCreate.entrySet()) {
+        for (final Map.Entry<String, Class<? extends SVGElementBase>> entry : classesToCreate.entrySet()) {
             final ElementBase element = cut.createElement(entry.getKey(), attributes, null, dataProvider);
-            Assert.assertNotNull(String.format(creationFailMessage, entry.getKey()), element);
-            Assert.assertEquals(element.getClass(), entry.getValue());
+            assertNotNull(String.format(creationFailMessage, entry.getKey()), element);
+            assertEquals(entry.getValue(), element.getClass());
         }
     }
 }

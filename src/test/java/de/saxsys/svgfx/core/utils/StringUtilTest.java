@@ -13,8 +13,10 @@
 
 package de.saxsys.svgfx.core.utils;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * This class will test all methods of the {@link StringUtils}
@@ -26,32 +28,32 @@ public final class StringUtilTest {
      * Will if the last character in a string is replaces if it was found.
      */
     @Test
-    public void replaceLastOccurrenceInString() {
-        String test = "this is a test;";
+    public void theLastOccurrenceInStringWillBeReplaced() {
+        final String test = "this is a test;";
 
         //first we test the string version
-        Assert.assertEquals("this is a test-", StringUtils.replaceLast(test, ";", "-"));
+        assertEquals("this is a test-", StringUtils.replaceLast(test, ";", "-"));
 
-        Assert.assertEquals(test, StringUtils.replaceLast(test, "-", ""));
+        assertEquals(test, StringUtils.replaceLast(test, "-", ""));
 
-        Assert.assertEquals(null, StringUtils.replaceLast(null, "-", ""));
+        assertNull(StringUtils.replaceLast(null, "-", ""));
 
         //here we test the char version which is actually the same anyway but still we need to test it
-        Assert.assertEquals("this is a test-", StringUtils.replaceLast(test, ';', '-'));
+        assertEquals("this is a test-", StringUtils.replaceLast(test, ';', '-'));
 
-        Assert.assertEquals(test, StringUtils.replaceLast(test, '-', ' '));
+        assertEquals(test, StringUtils.replaceLast(test, '-', ' '));
 
-        Assert.assertEquals(null, StringUtils.replaceLast(null, '-', ' '));
+        assertNull(StringUtils.replaceLast(null, '-', ' '));
     }
 
     /**
      * Test if string characters are removed at the start and end.
      */
     @Test
-    public void removeStringIndicators() {
-        String test = "\"this\" is a test;\"";
+    public void stringIndicatorsAreRemovedAtTheStartAndEnd() {
+        final String test = "\"this\" is a test;\"";
 
         //first we test the string version
-        Assert.assertEquals("this\" is a test;", StringUtils.stripStringIndicators(test));
+        assertEquals("this\" is a test;", StringUtils.stripStringIndicators(test));
     }
 }

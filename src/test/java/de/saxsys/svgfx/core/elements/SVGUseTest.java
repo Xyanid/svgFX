@@ -23,7 +23,6 @@ import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -31,11 +30,17 @@ import org.xml.sax.Attributes;
 
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
+
 /**
  * This test will ensure that svg use elements is fully supported.
  *
  * @author Xyanid on 05.10.2015.
  */
+@SuppressWarnings ({"unchecked", "OptionalGetWithoutIsPresent"})
 public final class SVGUseTest {
 
     /**
@@ -44,51 +49,46 @@ public final class SVGUseTest {
     @Test
     public void ensureAttributesAreAppliedToTheReferencedElement() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("test");
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("25");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
+        when(attributes.getValue(0)).thenReturn("test");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(1)).thenReturn("25");
 
-        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
 
-        Mockito.when(attributes.getLength()).thenReturn(3);
+        when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.POSITION_X.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("1");
-        Mockito.when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.POSITION_Y.getName());
-        Mockito.when(attributes.getValue(2)).thenReturn("2");
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.POSITION_X.getName());
+        when(attributes.getValue(1)).thenReturn("1");
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.POSITION_Y.getName());
+        when(attributes.getValue(2)).thenReturn("2");
 
-        SVGUse use = new SVGUse("use", attributes, null, provider);
+        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
 
-        Assert.assertEquals("#test",
-                            use.getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class).getValue());
-        Assert.assertEquals(1.0d,
-                            use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class).getValue(),
-                            0.01d);
-        Assert.assertEquals(2.0d,
-                            use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class).getValue(),
-                            0.01d);
+        assertEquals("#test", use.getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class).get().getValue());
+        assertEquals(1.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class).get().getValue(), 0.01d);
+        assertEquals(2.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class).get().getValue(), 0.01d);
 
-        Assert.assertNotNull(use.getResult());
-        Assert.assertEquals(Group.class, use.getResult().getClass());
-        Assert.assertEquals(1.0d, use.getResult().getLayoutX(), 0.01d);
-        Assert.assertEquals(2.0d, use.getResult().getLayoutY(), 0.01d);
+        assertNotNull(use.getResult());
+        assertEquals(Group.class, use.getResult().getClass());
+        assertEquals(1.0d, use.getResult().getLayoutX(), 0.01d);
+        assertEquals(2.0d, use.getResult().getLayoutY(), 0.01d);
 
-        Group group = use.getResult();
+        final Group group = use.getResult();
 
-        Circle circle = (Circle) group.getChildren().get(0);
+        final Circle circle = (Circle) group.getChildren().get(0);
 
-        Assert.assertEquals(25.0d, circle.getRadius(), 0.01d);
-        Assert.assertEquals(0.0d, circle.getCenterX(), 0.01d);
-        Assert.assertEquals(0.0d, circle.getCenterY(), 0.01d);
+        assertEquals(25.0d, circle.getRadius(), 0.01d);
+        assertEquals(0.0d, circle.getCenterX(), 0.01d);
+        assertEquals(0.0d, circle.getCenterY(), 0.01d);
     }
 
     /**
@@ -97,31 +97,31 @@ public final class SVGUseTest {
     @Test
     public void ensureStyleAreInheritedForReferencedElements() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(3);
+        when(attributes.getLength()).thenReturn(3);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("test");
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("25");
-        Mockito.when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.FILL.getName());
-        Mockito.when(attributes.getValue(2)).thenReturn("inherit");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
+        when(attributes.getValue(0)).thenReturn("test");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(1)).thenReturn("25");
+        when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.FILL.getName());
+        when(attributes.getValue(2)).thenReturn("inherit");
 
-        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("black");
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL.getName());
+        when(attributes.getValue(1)).thenReturn("black");
 
-        SVGUse use = new SVGUse("use", attributes, null, provider);
+        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
 
-        Assert.assertEquals(Color.BLACK, ((Circle) use.getResult().getChildren().get(0)).getFill());
+        assertEquals(Color.BLACK, ((Circle) use.getResult().getChildren().get(0)).getFill());
     }
 
     /**
@@ -130,59 +130,59 @@ public final class SVGUseTest {
     @Test
     public void ensureElementsAreDuplicated() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("test");
-        Mockito.when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("25");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
+        when(attributes.getValue(0)).thenReturn("test");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(1)).thenReturn("25");
 
-        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
 
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#test");
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
 
-        SVGUse use1 = new SVGUse("use", attributes, null, provider);
+        final SVGUse use1 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
 
-        SVGUse use2 = new SVGUse("use", attributes, null, provider);
+        final SVGUse use2 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
 
-        Assert.assertNotNull(use1.getResult());
-        Assert.assertEquals(Circle.class, use1.getResult().getChildren().get(0).getClass());
+        assertNotNull(use1.getResult());
+        assertEquals(Circle.class, use1.getResult().getChildren().get(0).getClass());
 
-        Assert.assertNotNull(use2.getResult());
-        Assert.assertEquals(Circle.class, use2.getResult().getChildren().get(0).getClass());
+        assertNotNull(use2.getResult());
+        assertEquals(Circle.class, use2.getResult().getChildren().get(0).getClass());
 
-        Assert.assertNotEquals(use1.getResult(), use2.getResult());
+        assertNotEquals(use1.getResult(), use2.getResult());
     }
 
 
     /**
      * Ensures that an {@link de.saxsys.svgfx.core.SVGException} is thrown if the referenced element can not be found
      */
-    @Test(expected = SVGException.class)
+    @Test (expected = SVGException.class)
     public void ensureSVGExceptionIsThrownWhenReferencedElementCanNotBeResolved() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("test");
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("25");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
+        when(attributes.getValue(0)).thenReturn("test");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(0)).thenReturn("25");
 
-        SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
+        final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle("circle", attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
 
-        Mockito.when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("#something");
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#something");
 
-        SVGUse use1 = new SVGUse("use", attributes, null, provider);
+        final SVGUse use1 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
 
         use1.getResult();
     }

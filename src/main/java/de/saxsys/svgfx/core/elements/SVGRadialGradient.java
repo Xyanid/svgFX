@@ -24,6 +24,7 @@ import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * This Class represents a radial gradient from svg
@@ -60,7 +61,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     //region Override SVGGradientBase
 
     @Override
-    protected final RadialGradient createResult(final SVGCssStyle style) {
+    protected final RadialGradient createResult(final Supplier<SVGCssStyle> styleSupplier) {
 
         List<Stop> stops = getStops();
 

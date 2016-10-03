@@ -14,7 +14,7 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.xml.attribute.AttributeType;
+import de.saxsys.svgfx.xml.elements.AttributeWrapper;
 import javafx.util.Pair;
 
 /**
@@ -25,43 +25,44 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TValue, TUnit> {
+public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
 
     // region Enumerations
 
     /**
      * Contains a {@link String} which indicates that the {@link SVGAttributeType} of a property is inherited.
      */
-    public static String INHERIT_INDICATOR = "inherit";
+    private static String INHERIT_INDICATOR = "inherit";
 
     /**
      * Contains a {@link String} which indicates that the {@link SVGAttributeType} of a property is none, meaning its not used.
      */
-    public static String NONE_INDICATOR = "none";
+    private static String NONE_INDICATOR = "none";
 
     // endregion
 
     //region Fields
 
     /**
-     * Contains the text that was last passed to the {@link #consumeText(String)}.
-     */
-    private String lastConsumedText;
-
-    /**
      * Determines whether the value will be retrieved from its parent.
      */
     private boolean isInherited;
-
     /**
      * Determines that the value is none, so no data will be processed.
      */
     private boolean isNone;
-
     /**
      * Determines the data provider to use when additional data is needed.
      */
     private final SVGDocumentDataProvider dataProvider;
+    /**
+     * Contains the default value of this.
+     */
+    private final TValue defaultValue;
+    /**
+     * The actual value and unit contained within the parsed text
+     */
+    private Pair<TValue, TUnit> valueAndUnit;
 
     //endregion
 
@@ -74,8 +75,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TVal
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
     public SVGAttributeType(final TValue defaultValue, final SVGDocumentDataProvider dataProvider) {
-        super(defaultValue);
-
+        this.defaultValue = defaultValue;
         this.dataProvider = dataProvider;
     }
 
@@ -84,36 +84,89 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TVal
     //region Getter
 
     /**
-     * Returns the {@link #lastConsumedText}.
-     *
-     * @return the {@link #lastConsumedText}.
+     * @return The {@link #dataProvider}.
      */
-    public String getLastConsumedText() {
-        return lastConsumedText;
+    public final SVGDocumentDataProvider getDataProvider() {
+        return dataProvider;
     }
 
     /**
      * @return The {@link #isInherited}.
      */
-    public boolean getIsInherited() {
+    public final boolean getIsInherited() {
+        initializeValueAndUnit();
         return isInherited;
     }
 
     /**
      * @return The {@link #isNone}.
      */
-    public boolean getIsNone() {
+    public final boolean getIsNone() {
+        initializeValueAndUnit();
         return isNone;
     }
 
     /**
-     * @return The {@link #dataProvider}.
+     * Returns the {@link #valueAndUnit)}s key.
+     *
+     * @return {@link #valueAndUnit}s key.
      */
-    public SVGDocumentDataProvider getDataProvider() {
-        return dataProvider;
+    public TValue getValue() {
+        initializeValueAndUnit();
+        return valueAndUnit.getKey();
     }
 
-    //endregion
+    /**
+     * Returns the {@link #valueAndUnit}s value.
+     *
+     * @return The {@link #valueAndUnit}s value.
+     */
+    public final TUnit getUnit() {
+        initializeValueAndUnit();
+        return valueAndUnit.getValue();
+    }
+
+    /**
+     * Returns the {@link #valueAndUnit}.
+     *
+     * @return the {@link #valueAndUnit}.
+     */
+    public final Pair<TValue, TUnit> getValueAndUnit() {
+        initializeValueAndUnit();
+        return valueAndUnit;
+    }
+
+    /**
+     * Set the default value
+     */
+    public final void useDefaultValue() {
+        this.valueAndUnit = new Pair<>(defaultValue, null);
+    }
+
+    @Override
+    public void setText(final String text) {
+        super.setText(text);
+    }
+
+    // endregion
+
+    // region Private
+
+    /**
+     * Initializes the result based on the
+     */
+    private void initializeValueAndUnit() {
+        final String text = getText();
+
+        isInherited = INHERIT_INDICATOR.equals(text);
+        isNone = NONE_INDICATOR.equals(text);
+
+        if (!isInherited && !isNone) {
+            valueAndUnit = getValueAndUnit(getText());
+        }
+    }
+
+    // endregion
 
     //region Abstract
 
@@ -121,65 +174,11 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeType<TVal
      * This will be called if actual data is present in the css text, this is the case if the cssText is not
      * {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
-     * @param cssText cssText which is not equal to {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
+     * @param text cssText which is not equal to {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
      * @return a {@link Pair} which contains the value as the key and the value as the value.
      */
-    protected abstract Pair<TValue, TUnit> getValueAndUnit(final String cssText);
-
-    //endregion
-
-    // region Override AttributeType
-
-    @Override
-    public final void consumeText(final String text) {
-
-        isInherited = INHERIT_INDICATOR.equals(text);
-        isNone = NONE_INDICATOR.equals(text);
-        lastConsumedText = text;
-
-        if (!isInherited && !isNone) {
-            Pair<TValue, TUnit> data = getValueAndUnit(text);
-
-            if (data != null) {
-                value = data.getKey();
-                unit = data.getValue();
-            }
-        }
-    }
-
-    // endregion
-
-    //region Override Object
-
-    /**
-     * @return the XORed hash of
-     */
-    @Override
-    public int hashCode() {
-        return Boolean.hashCode(isNone) ^ Boolean.hashCode(isInherited) ^ super.hashCode();
-    }
-
-    /**
-     * Checks whether the object is reference equal or if its also a {@link SVGAttributeType} and its {@link #isNone} and {@link #isInherited} are the same.
-     *
-     * @param obj object to check.
-     *
-     * @return true if the object is the same otherwise false.
-     */
-    @Override
-    public boolean equals(Object obj) {
-
-        boolean result = super.equals(obj);
-
-        // in this case the object might be the same be we also need to check if inherit and none are the same
-        if (result && obj instanceof SVGAttributeType) {
-            SVGAttributeType base = (SVGAttributeType) obj;
-            result = isNone == base.isNone && isInherited == base.isInherited;
-        }
-
-        return result;
-    }
+    protected abstract Pair<TValue, TUnit> getValueAndUnit(final String text);
 
     //endregion
 }

@@ -16,7 +16,9 @@ package de.saxsys.svgfx.core.content;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.xml.attribute.AttributeHolder;
+import de.saxsys.svgfx.xml.elements.AttributeHolder;
+
+import java.util.Optional;
 
 /**
  * @author Xyanid on 27.03.2016.
@@ -36,6 +38,23 @@ public class SVGAttributeHolder extends AttributeHolder<SVGAttributeType> {
     }
 
     // endregion
+
+    /**
+     * Returns the value of the desired attribute as the desired type using the provided key or the given default value should the attribute not exist.
+     *
+     * @param <TValue> type of the value of the attribute desired.
+     * @param name     name of the property
+     * @param clazz    class of the type of the property used for casting.
+     *
+     * @return the value of the desired attribute as the {@link TValue} or the default value should the attribute not exist.
+     */
+    public final <TValue> TValue getAttributeValue(final String name, final Class<TValue> clazz, final TValue defaultValue) {
+        final Optional<SVGAttributeType> attribute = getAttribute(name);
+
+        if (!attribute.isPresent()) { return defaultValue; }
+
+        return clazz.cast(attribute.get().getValue());
+    }
 
     //region Override AttributeHolder
 

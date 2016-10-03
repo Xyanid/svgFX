@@ -106,7 +106,7 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
 
     //endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     /**
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypePoint}
@@ -114,15 +114,15 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
     @Override
     protected Pair<SVGPoint, Void> getValueAndUnit(final String text) {
 
-        String[] pointSplit = text.split(Constants.POSITION_DELIMITER_STRING);
+        final String[] pointSplit = text.split(Constants.POSITION_DELIMITER_STRING);
 
         if (pointSplit.length != 2) {
             throw new IllegalArgumentException("point does not provide x and y position");
         }
 
-        SVGPoint point = new SVGPoint(getDataProvider());
-        point.getX().consumeText(pointSplit[0].trim());
-        point.getY().consumeText(pointSplit[1].trim());
+        final SVGPoint point = new SVGPoint(getDataProvider());
+        point.getX().setText(pointSplit[0].trim());
+        point.getY().setText(pointSplit[1].trim());
 
         return new Pair<>(point, null);
     }

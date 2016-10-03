@@ -15,6 +15,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
@@ -24,6 +25,7 @@ import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -88,7 +90,23 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     // region Override SVGElementBase
 
     @Override
-    protected final void initializeResult(final TPaint paint, final SVGCssStyle style) throws SVGException {
+    public void endProcessing() {
+        getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
+                            .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return false always.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    @Override
+    protected final void initializeResult(final TPaint paint, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
     }
 
     // endregion

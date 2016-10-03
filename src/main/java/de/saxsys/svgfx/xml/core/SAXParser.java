@@ -32,9 +32,9 @@ import java.io.InputStream;
 /**
  * Basic XML parser which uses a given elementFactory to process the data provided while parsing.
  *
- * @param <TResult>         the type of the result provided by this parser
- * @param <TDocumentDataProvider>   the type of the {@link IDocumentDataProvider}
- * @param <TElementFactory> the type of the {@link IElementFactory} @author Xyanid on 24.10.2015.
+ * @param <TResult>               the type of the result provided by this parser
+ * @param <TDocumentDataProvider> the type of the {@link IDocumentDataProvider}
+ * @param <TElementFactory>       the type of the {@link IElementFactory} @author Xyanid on 24.10.2015.
  */
 public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocumentDataProvider, TElementFactory extends IElementFactory<TDocumentDataProvider, TElement>, TElement
         extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement>>
@@ -134,8 +134,8 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     /**
      * Creates a new instance of the parser using the provided interfaces.
      *
-     * @param elementFactory element creator to be used
-     * @param documentDataProvider   data provider to be used
+     * @param elementFactory       element creator to be used
+     * @param documentDataProvider data provider to be used
      *
      * @throws IllegalArgumentException if either elementFactory or documentDataProvider are null
      */
@@ -428,7 +428,9 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
             currentElement.endProcessing();
 
-            consumeElementEnd(result, documentDataProvider, currentElement);
+            if (currentElement.canConsumeResult()) {
+                consumeElementEnd(result, documentDataProvider, currentElement);
+            }
 
             // clear the previous element that was processed before the current one, so we can also end its processing if need be
             currentElement = currentElement.getParent();

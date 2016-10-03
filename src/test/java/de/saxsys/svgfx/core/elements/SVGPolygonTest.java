@@ -16,11 +16,14 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.elements.utils.TestUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+
+import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertCreationFails;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure that svg polygon elements are fully supported.
@@ -35,22 +38,22 @@ public final class SVGPolygonTest {
     @Test
     public void ensureAttributesAreParsedCorrectly() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDocumentDataProvider());
+        final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        Assert.assertEquals(6, polygon.getResult().getPoints().size());
-        Assert.assertEquals(60.0d, polygon.getResult().getPoints().get(0), 0.01d);
-        Assert.assertEquals(20.0d, polygon.getResult().getPoints().get(1), 0.01d);
-        Assert.assertEquals(100.0d, polygon.getResult().getPoints().get(2), 0.01d);
-        Assert.assertEquals(40.0d, polygon.getResult().getPoints().get(3), 0.01d);
-        Assert.assertEquals(100.0d, polygon.getResult().getPoints().get(4), 0.01d);
-        Assert.assertEquals(80.0d, polygon.getResult().getPoints().get(5), 0.01d);
+        assertEquals(6, polygon.getResult().getPoints().size());
+        assertEquals(60.0d, polygon.getResult().getPoints().get(0), 0.01d);
+        assertEquals(20.0d, polygon.getResult().getPoints().get(1), 0.01d);
+        assertEquals(100.0d, polygon.getResult().getPoints().get(2), 0.01d);
+        assertEquals(40.0d, polygon.getResult().getPoints().get(3), 0.01d);
+        assertEquals(100.0d, polygon.getResult().getPoints().get(4), 0.01d);
+        assertEquals(80.0d, polygon.getResult().getPoints().get(5), 0.01d);
     }
 
     /**
@@ -59,19 +62,19 @@ public final class SVGPolygonTest {
     @Test
     public void ensureSVGExceptionIfTheContentContainsInvalidData() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, NumberFormatException.class);
+        assertCreationFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, NumberFormatException.class);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        TestUtils.assertCreationFails(SVGPolygon::new, "polygon", attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, SVGException.class);
+        assertCreationFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, SVGException.class);
     }
 
     /**
@@ -80,16 +83,16 @@ public final class SVGPolygonTest {
     @Test
     public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGPolygon polygon = new SVGPolygon("polygon", attributes, null, new SVGDocumentDataProvider());
+        final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         try {
-            Assert.assertEquals(0, polygon.getResult().getPoints().size());
-        } catch (SVGException e) {
-            Assert.fail();
+            assertEquals(0, polygon.getResult().getPoints().size());
+        } catch (final SVGException e) {
+            fail();
         }
     }
 }

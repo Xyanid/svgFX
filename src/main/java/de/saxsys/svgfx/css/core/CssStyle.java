@@ -17,8 +17,8 @@ package de.saxsys.svgfx.css.core;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
-import de.saxsys.svgfx.xml.attribute.AttributeHolder;
-import de.saxsys.svgfx.xml.attribute.AttributeType;
+import de.saxsys.svgfx.xml.elements.AttributeHolder;
+import de.saxsys.svgfx.xml.elements.AttributeWrapper;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
 
@@ -28,11 +28,11 @@ import java.util.Map;
  * This Class does not directly represent a SVG element but rather a Css element
  *
  * @param <TAttributeHolder> type of the {@link AttributeHolder} of this style.
- * @param <TAttributeType>       type of the {@link AttributeType} of this style.
+ * @param <TAttributeType>       type of the {@link AttributeWrapper} of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeHolder extends AttributeHolder<TAttributeType>> {
+public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttributeHolder extends AttributeHolder<TAttributeType>> {
 
     // region Enumeration
 
@@ -190,7 +190,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeH
             throw new SVGException("Given data must not be null in order to create a attribute type from it");
         }
 
-        String trimmedData = data.trim();
+        final String trimmedData = data.trim();
 
         int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
 
@@ -198,15 +198,15 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeH
             throw new SVGException("Given data either does not provide a attribute type separator separator or is to short");
         }
 
-        String name = trimmedData.substring(0, index).trim();
+        final String name = trimmedData.substring(0, index).trim();
 
         TAttributeType attribute = attributeHolder.createAttributeType(StringUtils.stripStringIndicators(name));
 
         if (attribute != null) {
-            String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
+            final String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
 
             try {
-                attribute.consumeText(cssText);
+                attribute.setText(cssText);
             } catch (Exception e) {
                 throw new SVGException(String.format("Could not parse %s for attribute type %s", cssText, attribute.getClass().getName()), e);
             }
@@ -220,7 +220,7 @@ public abstract class CssStyle<TAttributeType extends AttributeType, TAttributeH
     // region Public
 
     /**
-     * Combines this {@link CssStyle} with the given {@link CssStyle}, new {@link AttributeType}s not present in this style will be added.
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, new {@link AttributeWrapper}s not present in this style will be added.
      *
      * @param style the {@link CssStyle} which is be used, must not be null.
      *

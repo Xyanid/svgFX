@@ -20,6 +20,8 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a line element from svg
  *
@@ -55,7 +57,7 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Circle createResult(final SVGCssStyle style) {
+    protected final Circle createResult(final Supplier<SVGCssStyle> styleSupplier) {
 
         return new Circle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                           getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),

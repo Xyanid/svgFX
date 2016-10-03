@@ -40,8 +40,8 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
 
     // endregion
 
-
     // region Fields
+
     /**
      * Determines that the color is to be retrieved from the color attribute.
      */
@@ -68,22 +68,23 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
      * @return The {@link #isCurrentColor}.
      */
     public boolean getIsCurrentColor() {
+        getValueAndUnit();
         return isCurrentColor;
     }
 
     // endregion
 
-    //region Override AttributeType
+    //region Override AttributeTypeAdjustable
 
     @Override
-    protected Pair<Paint, Void> getValueAndUnit(final String cssText) {
-        isCurrentColor = CURRENT_COLOR.equals(cssText);
+    public Pair<Paint, Void> getValueAndUnit(final String text) {
+        isCurrentColor = CURRENT_COLOR.equals(text);
 
         if (isCurrentColor) {
             return null;
         }
 
-        return new Pair<>(SVGUtils.parseColor(cssText, getDataProvider()), null);
+        return new Pair<>(SVGUtils.parseColor(text, getDataProvider()), null);
     }
 
     //endregion

@@ -19,6 +19,8 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Group;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents the svg element from svg
  *
@@ -54,12 +56,22 @@ public class SVGRoot extends SVGElementBase<Group> {
     //region Override SVGElementBase
 
     @Override
-    protected Group createResult(final SVGCssStyle style) throws SVGException {
+    public void endProcessing() {
+        getDocumentDataProvider().setData(ELEMENT_NAME, this);
+    }
+
+    @Override
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    @Override
+    protected Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
         return null;
     }
 
     @Override
-    protected void initializeResult(final Group group, final SVGCssStyle style) throws SVGException {
+    protected void initializeResult(final Group group, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
 
     }
 

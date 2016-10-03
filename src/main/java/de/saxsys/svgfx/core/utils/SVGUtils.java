@@ -32,6 +32,7 @@ import de.saxsys.svgfx.core.elements.SVGLinearGradient;
 import de.saxsys.svgfx.core.elements.SVGRadialGradient;
 import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Affine;
@@ -199,7 +200,7 @@ public final class SVGUtils {
      * @throws SVGException             if the data references another element which is not found in the given data dataProvider.
      * @throws IllegalArgumentException if the the data is empty, the dataProvider is null.
      */
-    public static Paint parseColor(final String data, final SVGDocumentDataProvider dataProvider) throws SVGException, IllegalArgumentException {
+    public static Paint parseColor(final String data, final SVGDocumentDataProvider dataProvider, final SVGElementBase element) throws SVGException, IllegalArgumentException {
 
         if (StringUtils.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("given data must not be null or empty");
@@ -234,6 +235,7 @@ public final class SVGUtils {
         return result;
     }
 
+
     /**
      * Applies the basic style every {@link Shape} supports to the given shape.
      *
@@ -258,6 +260,8 @@ public final class SVGUtils {
         if (style == null) {
             throw new IllegalArgumentException("Given style must not be null");
         }
+
+        // TODO check if the fill is actually url reference to a linear gradient and then
 
         style.getAttributeHolder()
              .getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class)
@@ -332,16 +336,10 @@ public final class SVGUtils {
         for (final Map.Entry<String, SVGAttributeType> property : style.getProperties().entrySet()) {
             if (property.getValue().getIsInherited()) {
                 final Optional<SVGAttributeType> otherProperty = otherStyle.getAttributeHolder().getAttribute(property.getKey());
-                if (otherProperty.isPresent() && !otherProperty.get().getIsInherited()) {
-                    if (otherProperty.get().getIsNone()) {
-                        property.getValue().consumeText(SVGAttributeType.NONE_INDICATOR);
-                    } else {
-                        property.getValue().setValue(otherProperty.get().getValue());
-                        property.getValue().setUnit(otherProperty.get().getUnit());
-                    }
+                if (otherProperty.isPresent()) {
+                    property.getValue().setText(otherProperty.get().getText());
                 } else {
-                    property.getValue().setValue(property.getValue().getDefaultValue());
-                    property.getValue().setUnit(null);
+                    property.getValue().useDefaultValue();
                 }
             }
         }
@@ -404,6 +402,10 @@ public final class SVGUtils {
         if (paint instanceof Color) {
             Color color = (Color) paint;
             return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+        } else if (paint instanceof LinearGradient) {
+
+        } else {
+
         }
         return paint;
     }

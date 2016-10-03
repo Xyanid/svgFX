@@ -21,6 +21,8 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Line;
 import org.xml.sax.Attributes;
 
+import java.util.function.Supplier;
+
 /**
  * This class represents a line element from svg
  *
@@ -56,7 +58,8 @@ public class SVGLine extends SVGShapeBase<Line> {
     //region Override SVGElementBase
 
     @Override
-    protected final Line createResult(final SVGCssStyle style) throws SVGException {
+    protected final Line createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+
         return new Line(getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_X.getName(), SVGAttributeTypeLength.class).getValue(),
                         getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_Y.getName(), SVGAttributeTypeLength.class).getValue(),
                         getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.END_X.getName(), SVGAttributeTypeLength.class).getValue(),

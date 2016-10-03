@@ -68,7 +68,7 @@ public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttribu
 
     // endregion
 
-    //region Override AttributeType
+    //region Override AttributeWrapper
 
     /**
      * {@inheritDoc} This implementation will parse the given data as a coma separated list of dashValues.
@@ -85,7 +85,7 @@ public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttribu
 
         for (int i = 0; i < values.length; i++) {
             array[i] = new SVGAttributeTypeLength(getDataProvider());
-            array[i].consumeText(values[i].trim());
+            array[i].setText(values[i].trim());
             dashValues.add(array[i].getValue());
         }
 

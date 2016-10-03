@@ -14,10 +14,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure that svg svg elements are fully supported.
@@ -32,12 +35,30 @@ public final class SVGRootTest {
     @Test
     public void ensureNoResultIsCreated() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGRoot root = new SVGRoot("svg", attributes, null, new SVGDocumentDataProvider());
+        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        Assert.assertNull(root.getResult());
+        assertNull(root.getResult());
+    }
+
+    /**
+     * When the element has been read the {@link SVGDocumentDataProvider} will contain the element.
+     */
+    @Test
+    public void whenTheElementIsFinishedProcessingTheDocumentDataLoaderWillContainTheElement() {
+
+        final Attributes attributes = mock(Attributes.class);
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+
+        when(attributes.getLength()).thenReturn(0);
+
+        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, dataProvider);
+
+        root.endProcessing();
+
+        assertSame(root, dataProvider.getData(SVGRoot.class, SVGRoot.ELEMENT_NAME));
     }
 }

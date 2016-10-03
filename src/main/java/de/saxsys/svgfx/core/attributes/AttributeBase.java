@@ -13,12 +13,12 @@
 
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.xml.attribute.AttributeType;
+import de.saxsys.svgfx.xml.elements.AttributeWrapper;
 
 /**
  * @author Xyanid on 16.03.2016.
  */
-public abstract class AttributeBase<TSVGContentType extends AttributeType> {
+public abstract class AttributeBase<TSVGContentType extends AttributeWrapper> {
 
     // region Fields
 

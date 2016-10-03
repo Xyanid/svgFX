@@ -23,6 +23,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 /**
  * This test will ensure that svg path elements are fully supported.
  *
@@ -36,14 +39,14 @@ public final class SVGPathTest {
     @Test
     public void ensureAttributesAreParsedCorrectly() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
+        when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals("M 100 100 L 300 100 L 200 300 z", line.getResult().getContent());
     }
@@ -54,16 +57,16 @@ public final class SVGPathTest {
     @Test
     public void ensureFillRuleParsedCorrectly() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
-        Mockito.when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
-        Mockito.when(attributes.getValue(1)).thenReturn("evenodd");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
+        when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
+        when(attributes.getValue(1)).thenReturn("evenodd");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(FillRule.EVEN_ODD, line.getResult().getFillRule());
     }
@@ -74,19 +77,19 @@ public final class SVGPathTest {
     @Test
     public void ensureNoSVGExceptionIfTheContentContainsInvalidData() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("M =& 100 L 300 ?) 300 z");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
+        when(attributes.getValue(0)).thenReturn("M =& 100 L 300 ?) 300 z");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         try {
             line.getResult();
-        } catch (SVGException e) {
-            Assert.fail();
+        } catch (final SVGException e) {
+            fail();
         }
     }
 
@@ -96,11 +99,11 @@ public final class SVGPathTest {
     @Test
     public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGPath path = new SVGPath("path", attributes, null, new SVGDocumentDataProvider());
+        final SVGPath path = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         path.getResult();
     }
