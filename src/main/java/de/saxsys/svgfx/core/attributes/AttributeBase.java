@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.attributes;
 
-import de.saxsys.svgfx.xml.elements.AttributeWrapper;
+import de.saxsys.svgfx.xml.core.AttributeWrapper;
 
 /**
  * @author Xyanid on 16.03.2016.

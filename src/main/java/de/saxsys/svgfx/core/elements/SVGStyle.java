@@ -18,13 +18,14 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * This class represents the style element from svg
@@ -77,21 +78,28 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     //region SVGElementBase
 
+    @Override
+    public boolean rememberElement() {
+        return true;
+    }
+
+    @Override
+    public void startProcessing() throws SAXException {}
+
     /**
      * {@inheritDoc}
      * Saves all characters in a StringBuilder to use them later
      */
     @Override
-    public void processCharacterData(final char[] ch, final int start, final int length) {
-
+    public void processCharacterData(final char[] ch, final int start, final int length) throws SAXException {
         for (int i = start; i < length; i++) {
             characters.append(ch[i]);
         }
     }
 
     @Override
-    public void endProcessing() {
-        getDocumentDataProvider().getStyles().addAll((this).getResult());
+    public void endProcessing() throws SAXException {
+        getDocumentDataProvider().getStyles().addAll(getResult());
     }
 
     /**
@@ -109,7 +117,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final Set<SVGCssStyle> createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         final Set<SVGCssStyle> result = new HashSet<>();
 
@@ -141,7 +149,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final StyleSupplier styleSupplier) throws SVGException {
 
     }
 

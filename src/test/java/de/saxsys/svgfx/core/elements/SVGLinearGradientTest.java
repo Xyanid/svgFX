@@ -60,8 +60,8 @@ public final class SVGLinearGradientTest {
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
-        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getUnmodifiableChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getUnmodifiableChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
 
         assertEquals(0.1d, gradient.getResult().getStartX(), 0.01d);
         assertEquals(0.15d, gradient.getResult().getStartY(), 0.01d);

@@ -14,14 +14,13 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a line element from svg
@@ -58,7 +57,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.SVGPath createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final javafx.scene.shape.SVGPath createResult(final StyleSupplier styleSupplier) {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
         getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class)
@@ -72,7 +71,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final Supplier<SVGCssStyle> styleSupplier) {
+    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final StyleSupplier styleSupplier) throws SVGException {
         super.initializeResult(path, styleSupplier);
 
         styleSupplier.get().getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class)

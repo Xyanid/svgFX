@@ -14,7 +14,7 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.xml.elements.ElementBase;
+import de.saxsys.svgfx.xml.core.ElementBase;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;

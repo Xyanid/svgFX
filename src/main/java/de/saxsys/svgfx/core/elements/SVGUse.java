@@ -19,13 +19,11 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a use element from svg
@@ -67,7 +65,7 @@ public class SVGUse extends SVGNodeBase<Group> {
      * @throws SVGException if the {@link XLinkAttributeMapper#XLINK_HREF} is empty or null.
      */
     @Override
-    protected Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected Group createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         final SVGElementBase referencedElement = SVGUtils.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
                                                                                                              SVGAttributeTypeString.class).getValue(),
@@ -83,7 +81,7 @@ public class SVGUse extends SVGNodeBase<Group> {
     }
 
     @Override
-    protected void initializeResult(final Group node, final SVGCssStyle inheritanceResolver) throws SVGException {
+    protected void initializeResult(final Group node, final StyleSupplier styleSupplier) throws SVGException {
     }
 
     //endregion

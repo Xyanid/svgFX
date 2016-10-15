@@ -15,11 +15,10 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.Group;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
+import org.xml.sax.SAXException;
 
 /**
  * This class represents the svg element from svg
@@ -55,9 +54,34 @@ public class SVGRoot extends SVGElementBase<Group> {
 
     //region Override SVGElementBase
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void endProcessing() {
+    public boolean rememberElement() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startProcessing() throws SAXException {
         getDocumentDataProvider().setData(ELEMENT_NAME, this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void processCharacterData(final char[] ch, final int start, final int length) throws SAXException {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void endProcessing() throws SAXException {
     }
 
     @Override
@@ -66,12 +90,12 @@ public class SVGRoot extends SVGElementBase<Group> {
     }
 
     @Override
-    protected Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected Group createResult(final StyleSupplier styleSupplier) throws SVGException {
         return null;
     }
 
     @Override
-    protected void initializeResult(final Group group, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected void initializeResult(final Group group, final StyleSupplier styleSupplier) throws SVGException {
 
     }
 

@@ -15,12 +15,13 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
+import org.xml.sax.SAXException;
 
 /**
  * This class represents a base class which contains shape element from svg.
@@ -49,6 +50,25 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
 
     // region Override SVGElementBase
 
+    @Override
+    public boolean rememberElement() {
+        return true;
+    }
+
+    @Override
+    public void startProcessing() throws SAXException {}
+
+    @Override
+    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    @Override
+    public void endProcessing() throws SAXException {
+        if (getParent() instanceof SVGDefinitions) {
+            getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
+                                .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+        }
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -56,15 +76,14 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      */
     @Override
     public boolean canConsumeResult() {
-        return !((this.getParent() instanceof SVGClipPath) || (this.getParent() instanceof SVGGroup));
+        return !((getParent() instanceof SVGClipPath) || (getParent() instanceof SVGGroup));
     }
 
     /**
-     * {@inheritDoc}
-     * Will apply the transformation to the element.
+     * {@inheritDoc}Will apply the transformation to the element.
      */
     @Override
-    protected void initializeResult(final TNode node, final Supplier<SVGCssStyle> supplier) throws SVGException {
+    protected void initializeResult(final TNode node, final StyleSupplier supplier) throws SVGException {
 
         final Transform transform = getTransformation();
         if (transform != null) {

@@ -14,7 +14,8 @@
 package de.saxsys.svgfx.core.content;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.xml.elements.AttributeWrapper;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.xml.core.AttributeWrapper;
 import javafx.util.Pair;
 
 /**
@@ -93,7 +94,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     /**
      * @return The {@link #isInherited}.
      */
-    public final boolean getIsInherited() {
+    public final boolean getIsInherited() throws SVGException {
         initializeValueAndUnit();
         return isInherited;
     }
@@ -101,7 +102,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     /**
      * @return The {@link #isNone}.
      */
-    public final boolean getIsNone() {
+    public final boolean getIsNone() throws SVGException {
         initializeValueAndUnit();
         return isNone;
     }
@@ -111,7 +112,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      *
      * @return {@link #valueAndUnit}s key.
      */
-    public TValue getValue() {
+    public TValue getValue() throws SVGException {
         initializeValueAndUnit();
         return valueAndUnit.getKey();
     }
@@ -121,7 +122,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      *
      * @return The {@link #valueAndUnit}s value.
      */
-    public final TUnit getUnit() {
+    public final TUnit getUnit() throws SVGException {
         initializeValueAndUnit();
         return valueAndUnit.getValue();
     }
@@ -131,7 +132,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      *
      * @return the {@link #valueAndUnit}.
      */
-    public final Pair<TValue, TUnit> getValueAndUnit() {
+    public final Pair<TValue, TUnit> getValueAndUnit() throws SVGException {
         initializeValueAndUnit();
         return valueAndUnit;
     }
@@ -155,7 +156,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     /**
      * Initializes the result based on the
      */
-    private void initializeValueAndUnit() {
+    private void initializeValueAndUnit() throws SVGException {
         final String text = getText();
 
         isInherited = INHERIT_INDICATOR.equals(text);
@@ -178,7 +179,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      *
      * @return a {@link Pair} which contains the value as the key and the value as the value.
      */
-    protected abstract Pair<TValue, TUnit> getValueAndUnit(final String text);
+    protected abstract Pair<TValue, TUnit> getValueAndUnit(final String text) throws SVGException;
 
     //endregion
 }

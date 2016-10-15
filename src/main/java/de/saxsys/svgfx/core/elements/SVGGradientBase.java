@@ -18,15 +18,16 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Contains basic functionality to handle gradients of svg.
@@ -64,22 +65,19 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      * @return the stops which this gradient needs
      */
     @SuppressWarnings ("unchecked")
-    public final List<Stop> getStops() {
-        final List<Stop> stops = getChildren().stream()
-                                              .filter(element -> element instanceof SVGStop)
-                                              .map(element -> ((SVGStop) element).getResult())
-                                              .collect(Collectors.toList());
+    public final List<Stop> getStops() throws SVGException {
+        final List<Stop> stops = new ArrayList<>(0);
+
+        fillStopsOrFail(stops, getUnmodifiableChildren());
 
         // own stops are preferred, now we check for stops that are on referenced elements
         if (stops.isEmpty()) {
-            getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class)
-                                .ifPresent(link -> SVGUtils.resolveIRI(link.getValue(), getDocumentDataProvider(), SVGElementBase.class)
-                                                           .getChildren()
-                                                           .forEach(child -> {
-                                                               if (child instanceof SVGStop) {
-                                                                   stops.add(((SVGStop) child).getResult());
-                                                               }
-                                                           }));
+
+            final Optional<SVGAttributeTypeString> link = getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class);
+
+            if (link.isPresent()) {
+                fillStopsOrFail(stops, SVGUtils.resolveIRI(link.get().getValue(), getDocumentDataProvider(), SVGElementBase.class).getUnmodifiableChildren());
+            }
         }
 
         return stops;
@@ -90,9 +88,22 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     // region Override SVGElementBase
 
     @Override
-    public void endProcessing() {
-        getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
-                            .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+    public boolean rememberElement() {
+        return true;
+    }
+
+    @Override
+    public void startProcessing() throws SAXException {}
+
+    @Override
+    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    @Override
+    public void endProcessing() throws SAXException {
+        if (getParent() instanceof SVGDefinitions) {
+            getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
+                                .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+        }
     }
 
     /**
@@ -106,7 +117,22 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     }
 
     @Override
-    protected final void initializeResult(final TPaint paint, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final void initializeResult(final TPaint paint, final StyleSupplier styleSupplier) throws SVGException {}
+
+    // endregion
+
+    // region Private
+
+    private void fillStopsOrFail(final List<Stop> stops, final List<SVGElementBase<?>> children) throws SVGException {
+        for (final SVGElementBase child : children) {
+            if (child instanceof SVGStop) {
+                try {
+                    stops.add(((SVGStop) child).getResult());
+                } catch (final SAXException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not create result for stop: %s", child));
+                }
+            }
+        }
     }
 
     // endregion

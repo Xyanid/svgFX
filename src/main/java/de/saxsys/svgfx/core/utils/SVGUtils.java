@@ -15,7 +15,6 @@ package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
@@ -34,6 +33,7 @@ import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
+import javafx.scene.paint.RadialGradient;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -41,8 +41,8 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Shear;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import org.xml.sax.SAXException;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -105,10 +105,10 @@ public final class SVGUtils {
      *
      * @throws IllegalArgumentException if data is null or empty.
      */
-    public static String stripIRIIdentifiers(final String data) throws IllegalArgumentException {
+    public static String stripIRIIdentifiers(final String data) throws SVGException {
 
         if (StringUtils.isNullOrEmpty(data)) {
-            throw new IllegalArgumentException("given data must not be null or empty");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given data must not be null or empty");
         }
 
         // initially we assume that the IRI_IDENTIFIER was used
@@ -152,37 +152,28 @@ public final class SVGUtils {
      *
      * @return the {@link SVGElementBase} which is referenced by the data or null if the data does not reference an element.
      *
-     * @throws SVGException             if the data references a resource which is not contained in the {@link SVGDocumentDataProvider}.
-     * @throws IllegalArgumentException if either the data is null or empty, the dataProvider is null or the clazz is null.
+     * @throws SVGException if the data references a resource which is not contained in the {@link SVGDocumentDataProvider}.
      */
     public static <TSVGElementBase extends SVGElementBase<?>> TSVGElementBase resolveIRI(final String data,
                                                                                          final SVGDocumentDataProvider dataProvider,
                                                                                          final Class<TSVGElementBase> clazz)
-            throws SVGException, IllegalArgumentException {
+            throws SVGException {
 
-        if (dataProvider == null) {
-            throw new IllegalArgumentException("given dataprovider must not be null");
-        }
-
-        if (clazz == null) {
-            throw new IllegalArgumentException("given clazz must not be null");
-        }
-
-        String reference = stripIRIIdentifiers(data);
+        final String reference = stripIRIIdentifiers(data);
         if (StringUtils.isNullOrEmpty(reference)) {
-            throw new SVGException(String.format("Given data %s appears to not be a IRI reference.", data));
+            throw new SVGException(SVGException.Reason.NOT_AN_IRI_IDENTIFIER, String.format("Given data %s appears to not be a IRI reference.", data));
         }
 
         TSVGElementBase result;
 
         try {
-            result = dataProvider.getData(clazz, reference);
-        } catch (Exception e) {
-            throw new SVGException("An error occurred during the parsing of the reference", e);
+            result = dataProvider.getData(reference, clazz);
+        } catch (final Exception e) {
+            throw new SVGException(SVGException.Reason.FAILED_TO_PARSE_IRI, "An error occurred during the parsing of the reference", e);
         }
 
         if (result == null) {
-            throw new SVGException(String.format("Given reference %s could not be resolved", data));
+            throw new SVGException(SVGException.Reason.MISSING_IRI, String.format("Given reference %s could not be resolved", data));
         }
 
         return result;
@@ -197,13 +188,15 @@ public final class SVGUtils {
      *
      * @return {@link Paint} which represents the color
      *
-     * @throws SVGException             if the data references another element which is not found in the given data dataProvider.
-     * @throws IllegalArgumentException if the the data is empty, the dataProvider is null.
+     * @throws SVGException <ul>
+     *                      <li>if the data references another element which is not found in the given data dataProvider.</li>
+     *                      <li>if the the data is empty, the dataProvider is null.</li>
+     *                      </ul>
      */
-    public static Paint parseColor(final String data, final SVGDocumentDataProvider dataProvider, final SVGElementBase element) throws SVGException, IllegalArgumentException {
+    public static Paint parseColor(final String data, final SVGDocumentDataProvider dataProvider) throws SVGException {
 
         if (StringUtils.isNullOrEmpty(data)) {
-            throw new IllegalArgumentException("given data must not be null or empty");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given data must not be null or empty");
         }
 
         // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
@@ -217,14 +210,18 @@ public final class SVGUtils {
 
         if (reference != null) {
 
-            if (reference instanceof SVGLinearGradient) {
-                result = ((SVGLinearGradient) reference).getResult();
-            } else if (reference instanceof SVGRadialGradient) {
-                result = ((SVGRadialGradient) reference).getResult();
+            try {
+                if (reference instanceof SVGLinearGradient) {
+                    result = ((SVGLinearGradient) reference).getResult();
+                } else if (reference instanceof SVGRadialGradient) {
+                    result = ((SVGRadialGradient) reference).getResult();
+                }
+            } catch (SAXException e) {
+                throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, "Could not parse color due to an error when resolving the gradients", e);
             }
 
             if (result == null) {
-                throw new IllegalArgumentException("given data can not be resolved to a color");
+                throw new SVGException(SVGException.Reason.MISSING_COLOR, "given data can not be resolved to a color");
             }
         } else if (data.equals(Constants.PROPERTY_VALUE_NONE)) {
             result = Color.TRANSPARENT;
@@ -247,18 +244,18 @@ public final class SVGUtils {
      * @throws IllegalArgumentException if either shape or style is null
      */
     public static <TShape extends Shape> void applyStyle(final TShape shape, final SVGCssStyle style, final SVGDocumentDataProvider dataProvider)
-            throws IllegalArgumentException {
+            throws SVGException {
 
         if (dataProvider == null) {
-            throw new IllegalArgumentException("Given dataProvider must not be null");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given dataProvider must not be null");
         }
 
         if (shape == null) {
-            throw new IllegalArgumentException("Given shape must not be null");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given shape must not be null");
         }
 
         if (style == null) {
-            throw new IllegalArgumentException("Given style must not be null");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given style must not be null");
         }
 
         // TODO check if the fill is actually url reference to a linear gradient and then
@@ -404,7 +401,7 @@ public final class SVGUtils {
             return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         } else if (paint instanceof LinearGradient) {
 
-        } else {
+        } else if (paint instanceof RadialGradient) {
 
         }
         return paint;
@@ -431,11 +428,11 @@ public final class SVGUtils {
      */
     public static Transform getTransform(final Enumerations.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
         if (StringUtils.isNullOrEmpty(data)) {
-            throw new IllegalArgumentException("Given data must not be null or empty");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given data must not be null or empty");
         }
 
         if (matrix == Enumerations.Matrix.NONE) {
-            throw new IllegalArgumentException("Given matrix must not be NONE");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given matrix must not be NONE");
         }
 
         Transform result;
@@ -465,9 +462,9 @@ public final class SVGUtils {
             // a matrix will create an affine matrix and has 6 values
             case MATRIX:
                 if (values.size() != 6) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 6 values but got %d",
-                                                         matrix.getName(),
-                                                         values.size()));
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 6 values but got %d",
+                                                                                                      matrix.getName(),
+                                                                                                      values.size()));
                 }
 
                 try {
@@ -478,8 +475,8 @@ public final class SVGUtils {
                                         Double.parseDouble(values.get(1).trim()),
                                         Double.parseDouble(values.get(3).trim()),
                                         Double.parseDouble(values.get(5).trim()));
-                } catch (NumberFormatException e) {
-                    throw new SVGException(e);
+                } catch (final NumberFormatException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
                 }
                 break;
 
@@ -487,9 +484,9 @@ public final class SVGUtils {
             case TRANSLATE:
             case SCALE:
                 if (values.size() != 1 && values.size() != 2) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 or 2 values but got %d",
-                                                         matrix.getName(),
-                                                         values.size()));
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 1 or 2 values but got %d",
+                                                                                                      matrix.getName(),
+                                                                                                      values.size()));
                 }
 
                 try {
@@ -502,17 +499,17 @@ public final class SVGUtils {
                     } else {
                         result = new Scale(x, y);
                     }
-                } catch (NumberFormatException e) {
-                    throw new SVGException(e);
+                } catch (final NumberFormatException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
                 }
                 break;
 
             // a rotate will create a rotate matrix and has either 1 or 3 values
             case ROTATE:
                 if (values.size() != 1 && values.size() != 3) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 or 3 values but got %d",
-                                                         matrix.getName(),
-                                                         values.size()));
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 1 or 3 values but got %d",
+                                                                                                      matrix.getName(),
+                                                                                                      values.size()));
                 }
 
                 // if more then one value is present then the rotation also contains a translation
@@ -521,8 +518,8 @@ public final class SVGUtils {
                     double y = values.size() == 3 ? Double.parseDouble(values.get(2).trim()) : 0.0d;
 
                     result = new Rotate(Double.parseDouble(values.get(0).trim()), x, y);
-                } catch (NumberFormatException e) {
-                    throw new SVGException(e);
+                } catch (final NumberFormatException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
                 }
                 break;
 
@@ -532,17 +529,17 @@ public final class SVGUtils {
             case SKEW_Y:
             default:
                 if (values.size() != 1) {
-                    throw new SVGException(String.format("Given number of values does not match for matrix %s. Expected 1 value but got %d",
-                                                         matrix.getName(),
-                                                         values.size()));
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 1 value but got %d",
+                                                                                                      matrix.getName(),
+                                                                                                      values.size()));
                 }
 
                 double shearing;
 
                 try {
                     shearing = Double.parseDouble(values.get(0).trim());
-                } catch (NumberFormatException e) {
-                    throw new SVGException(e);
+                } catch (final NumberFormatException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
                 }
 
                 if (matrix == Enumerations.Matrix.SKEW_X) {
@@ -616,19 +613,6 @@ public final class SVGUtils {
         }
 
         return result;
-    }
-
-    // endregion
-
-    // region Misc
-
-    public static Point getRelativePosition(final Point position, final SVGElementBase parent) {
-        SVGAttributeTypeLength parentX = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName()));
-        SVGAttributeTypeLength parentY = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName()));
-        SVGAttributeTypeLength width = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.WIDTH.getName()));
-        SVGAttributeTypeLength height = SVGAttributeTypeLength.class.cast(parent.getAttributeHolder().getAttribute(CoreAttributeMapper.HEIGHT.getName()));
-
-        return null;
     }
 
     // endregion

@@ -56,10 +56,10 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
     //region Override SVGAttributeType
 
     /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypePoint}.
+     * @throws SVGException when any value inside the array is not a valid {@link SVGAttributeTypePoint}.
      */
     @Override
-    protected Pair<List<SVGAttributeTypePoint>, Void> getValueAndUnit(final String text) {
+    protected Pair<List<SVGAttributeTypePoint>, Void> getValueAndUnit(final String text) throws SVGException {
         List<SVGAttributeTypePoint> actualPoints = new ArrayList<>();
 
         if (StringUtils.isNotNullOrEmpty(text)) {
@@ -72,7 +72,7 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
                 }
                 // in this special case we have two non delimiters characters separated by a split delimiter which is invalid e.G. "1,2 3 4,5"
                 else if (index == text.length() - 1 || text.charAt(index + 1) != Constants.POINTS_DELIMITER) {
-                    throw new SVGException("Invalid points format");
+                    throw new SVGException(SVGException.Reason.INVALID_POINT_FORMAT, "Invalid points format");
                 }
 
                 return false;

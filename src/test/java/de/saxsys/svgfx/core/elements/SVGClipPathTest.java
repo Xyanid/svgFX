@@ -53,12 +53,12 @@ public final class SVGClipPathTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("50");
 
-        clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
+        clipPath.getUnmodifiableChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("25");
 
-        clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
+        clipPath.getUnmodifiableChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
 
         assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).get().getValue());
         Assert.assertNotNull(clipPath.getResult());

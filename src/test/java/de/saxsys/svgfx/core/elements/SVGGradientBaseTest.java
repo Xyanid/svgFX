@@ -72,7 +72,7 @@ public final class SVGGradientBaseTest {
 
         stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
 
-        when(elementBase.getChildren()).thenReturn(stops);
+        when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
@@ -127,7 +127,7 @@ public final class SVGGradientBaseTest {
 
         stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, elementBase, dataProvider));
 
-        when(elementBase.getChildren()).thenReturn(stops);
+        when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
 
         when(attributes.getLength()).thenReturn(1);
 
@@ -149,12 +149,12 @@ public final class SVGGradientBaseTest {
         when(attributes.getValue(0)).thenReturn("0.3");
         when(attributes.getValue(1)).thenReturn("green");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.4");
         when(attributes.getValue(1)).thenReturn("yellow");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         final List<Stop> actualStops = gradient.getStops();
 
@@ -197,12 +197,12 @@ public final class SVGGradientBaseTest {
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.2");
         when(attributes.getValue(1)).thenReturn("blue");
 
-        gradient.getChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());

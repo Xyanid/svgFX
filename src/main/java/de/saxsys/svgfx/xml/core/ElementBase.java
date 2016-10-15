@@ -11,11 +11,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.xml.elements;
+package de.saxsys.svgfx.xml.core;
 
 
-import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
-import de.saxsys.svgfx.xml.core.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -38,9 +36,14 @@ import java.util.Map;
 public abstract class ElementBase<TAttributeType extends AttributeWrapper,
         TAttributeHolder extends AttributeHolder<TAttributeType>,
         TDocumentDataProvider extends IDocumentDataProvider, TResult,
-        TParent extends ElementBase<?, ?, TDocumentDataProvider, ?, ?>> {
+        TParent extends ElementBase<?, ?, TDocumentDataProvider, ?, ?, ?>,
+        TChild extends ElementBase<?, ?, TDocumentDataProvider, ?, ?, ?>> {
 
     //region Fields
+    /**
+     * The parent element of this element if any.
+     */
+    private final TParent parent;
 
     /**
      * the value of the element which is also its identifier.
@@ -48,14 +51,9 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
     private final String name;
 
     /**
-     * The parent element of this element if any.
-     */
-    private final TParent parent;
-
-    /**
      * Contains the children of this node if any.
      */
-    private final List<ElementBase> children;
+    private final List<TChild> children;
 
     /**
      * Method to be called when data contained in the document is needed by this element.
@@ -160,15 +158,6 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
     }
 
     /**
-     * Gets the {@link #children}.
-     *
-     * @return the {@link #children}
-     */
-    public List<ElementBase> getChildren() {
-        return children;
-    }
-
-    /**
      * Gets the {@link #documentDataProvider}.
      *
      * @return the {@link #documentDataProvider}
@@ -188,7 +177,31 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
 
     //endregion
 
+    // region Children
+
+    /**
+     * Gets an unmodifiable instance of the {@link #children}.
+     *
+     * @return an unmodifiable instance of the {@link #children}
+     */
+    public List<TChild> getUnmodifiableChildren() {
+        return Collections.unmodifiableList(children);
+    }
+
+    boolean addChild(final TChild child) {
+        return children.add(child);
+    }
+
+    // endregion
+
     //region Abstract
+
+    /**
+     * Determines if the element will be kept, meaning it will be kept in memory and is available as a parent for all its children.
+     *
+     * @return true if the element will be kept, otherwise false.
+     */
+    public abstract boolean rememberElement();
 
     /**
      * Will be called when an element is started that represents this element.
@@ -217,7 +230,7 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
     public abstract void endProcessing() throws SAXException;
 
     /**
-     * Determines whether the result of this element will be requested or not. A Ccall to this method should be made prior to the {@link #getResult()}
+     * Determines whether the result of this element will be requested or not. A call to this method should be made prior to the {@link #getResult()}
      */
     public abstract boolean canConsumeResult();
 

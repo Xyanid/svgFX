@@ -74,10 +74,9 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      *
      * @return the list of points contained by the attributes
      *
-     * @throws SVGException             if any of the points in the corresponding attribute does not provide x and y position.
-     * @throws IllegalArgumentException if any of the points in the corresponding attribute does not provide x and y position.
+     * @throws SVGException if any of the points in the corresponding attribute does not provide x and y position.
      */
-    public final List<Double> getPoints() throws SVGException, IllegalArgumentException {
+    public final List<Double> getPoints() throws SVGException {
         final List<Double> actualPoints = new ArrayList<>();
 
         getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class)

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.xml.elements;
+package de.saxsys.svgfx.xml.core;
 
 /**
  * This class is used for parsing data which comes from a text. Usually when parsing text into data, there might be more then just normal atomic values as a result of the parsing. This class allows

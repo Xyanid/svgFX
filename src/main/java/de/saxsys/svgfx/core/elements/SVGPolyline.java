@@ -15,11 +15,10 @@ package de.saxsys.svgfx.core.elements;
 
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Polyline;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a polyline element from svg
@@ -56,7 +55,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final Polyline createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final Polyline createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         return new Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

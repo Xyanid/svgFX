@@ -62,8 +62,8 @@ public final class SVGRadialGradientTest {
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
-        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getUnmodifiableChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getUnmodifiableChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
 
         Assert.assertEquals(0.1d, gradient.getResult().getCenterX(), 0.01d);
         Assert.assertEquals(0.15d, gradient.getResult().getCenterY(), 0.01d);
@@ -106,8 +106,8 @@ public final class SVGRadialGradientTest {
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
-        gradient.getChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getUnmodifiableChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
+        gradient.getUnmodifiableChildren().add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, gradient, new SVGDocumentDataProvider()));
 
         gradient.getResult();
     }

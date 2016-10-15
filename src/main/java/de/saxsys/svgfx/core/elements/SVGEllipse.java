@@ -16,11 +16,9 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Ellipse;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a svg ellipse element from svg
@@ -57,7 +55,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
     //region Override SVGElementBase
 
     @Override
-    protected final Ellipse createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final Ellipse createResult(final StyleSupplier styleSupplier) {
 
         return new Ellipse(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                            getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),

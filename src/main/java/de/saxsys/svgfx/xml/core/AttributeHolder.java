@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.xml.elements;
+package de.saxsys.svgfx.xml.core;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public abstract class AttributeHolder<TAttribute extends AttributeWrapper> {
     /**
      * Returns the {@link #attributes}.
      *
-     * @return the {@link #attributes}
+     * @return the {@link #attributes}.
      */
     public final Map<String, TAttribute> getAttributes() {
         return attributes;

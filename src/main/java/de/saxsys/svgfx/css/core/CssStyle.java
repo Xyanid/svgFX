@@ -14,21 +14,22 @@
 package de.saxsys.svgfx.css.core;
 
 
-import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
-import de.saxsys.svgfx.xml.elements.AttributeHolder;
-import de.saxsys.svgfx.xml.elements.AttributeWrapper;
+import de.saxsys.svgfx.xml.core.AttributeHolder;
+import de.saxsys.svgfx.xml.core.AttributeWrapper;
 import javafx.util.Pair;
 import org.w3c.dom.DOMException;
 
 import java.util.Map;
 
+import static org.w3c.dom.DOMException.SYNTAX_ERR;
+
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
  * @param <TAttributeHolder> type of the {@link AttributeHolder} of this style.
- * @param <TAttributeType>       type of the {@link AttributeWrapper} of this style.
+ * @param <TAttributeType>   type of the {@link AttributeWrapper} of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
@@ -185,9 +186,9 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
      *
      * @return a new {@link Pair} containing the name of the {@link TAttributeType} as the key and the {@link TAttributeType} as the value;
      */
-    private Pair<String, TAttributeType> determineAttributeType(final String data) throws SVGException {
+    private Pair<String, TAttributeType> determineAttributeType(final String data) throws IllegalArgumentException {
         if (StringUtils.isNullOrEmpty(data)) {
-            throw new SVGException("Given data must not be null in order to create a attribute type from it");
+            throw new IllegalArgumentException("Given data must not be null in order to create a attribute type from it");
         }
 
         final String trimmedData = data.trim();
@@ -195,7 +196,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
         int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
 
         if (index == -1 || index >= trimmedData.length() - 1) {
-            throw new SVGException("Given data either does not provide a attribute type separator separator or is to short");
+            throw new IllegalArgumentException("Given data either does not provide a attribute type separator separator or is to short");
         }
 
         final String name = trimmedData.substring(0, index).trim();
@@ -203,13 +204,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
         TAttributeType attribute = attributeHolder.createAttributeType(StringUtils.stripStringIndicators(name));
 
         if (attribute != null) {
-            final String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
-
-            try {
-                attribute.setText(cssText);
-            } catch (Exception e) {
-                throw new SVGException(String.format("Could not parse %s for attribute type %s", cssText, attribute.getClass().getName()), e);
-            }
+            attribute.setText(StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim()));
         }
 
         return new Pair<>(name, attribute);
@@ -335,7 +330,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
         }
 
         if (isInsideDeclarationBlock) {
-            throw new SVGException("Css text not properly closed");
+            throw new DOMException(SYNTAX_ERR, "Css text not properly closed");
         }
     }
 

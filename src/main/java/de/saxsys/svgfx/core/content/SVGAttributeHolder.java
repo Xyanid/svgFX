@@ -16,7 +16,7 @@ package de.saxsys.svgfx.core.content;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.xml.elements.AttributeHolder;
+import de.saxsys.svgfx.xml.core.AttributeHolder;
 
 import java.util.Optional;
 
@@ -60,13 +60,13 @@ public class SVGAttributeHolder extends AttributeHolder<SVGAttributeType> {
 
     @Override
     public SVGAttributeType createAttributeType(final String name) {
-        for (PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
+        for (final PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
             if (attribute.getName().equals(name)) {
                 return attribute.getContentTypeCreator().apply(dataProvider);
             }
         }
 
-        for (CoreAttributeMapper attribute : CoreAttributeMapper.VALUES) {
+        for (final CoreAttributeMapper attribute : CoreAttributeMapper.VALUES) {
             if (attribute.getName().equals(name)) {
                 return attribute.getContentTypeCreator().apply(dataProvider);
             }

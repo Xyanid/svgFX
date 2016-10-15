@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.xml.core;
 
-import de.saxsys.svgfx.xml.elements.ElementBase;
 import org.xml.sax.Attributes;
 
 /**
@@ -21,7 +20,7 @@ import org.xml.sax.Attributes;
  *
  * @param <TDataProvider> the type of the {@link IDocumentDataProvider} @author Xyanid on 25.10.2015.
  */
-public interface IElementFactory<TDataProvider extends IDocumentDataProvider, TElement extends ElementBase<?, ?, TDataProvider, ?, ?>> {
+public interface IElementFactory<TDataProvider extends IDocumentDataProvider, TElement extends ElementBase<?, ?, TDataProvider, ?, ?, ?>> {
 
     /**
      * creates a new instance of the desired {@link ElementBase} using the given value as an indicator which instance

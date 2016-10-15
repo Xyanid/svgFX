@@ -14,13 +14,12 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a line element from svg
@@ -57,7 +56,7 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Circle createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final Circle createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         return new Circle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                           getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),

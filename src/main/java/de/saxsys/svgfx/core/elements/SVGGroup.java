@@ -15,13 +15,11 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.xml.elements.ElementBase;
+import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents the style element from svg
@@ -58,12 +56,12 @@ public class SVGGroup extends SVGNodeBase<Group> {
     //region SVGElementBase
 
     @Override
-    protected final Group createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final Group createResult(final StyleSupplier styleSupplier) throws SVGException {
         final Group result = new Group();
 
         result.setOpacity(1.0d);
 
-        for (final ElementBase child : getChildren()) {
+        for (final ElementBase child : getUnmodifiableChildren()) {
 
             final SVGElementBase actualChild = (SVGElementBase) child;
 

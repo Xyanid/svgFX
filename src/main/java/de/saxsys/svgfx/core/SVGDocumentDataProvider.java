@@ -100,23 +100,23 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
     /**
      * Returns the data of the given key as the desired type if it exists.
      *
-     * @param clazz   class to be used, must not be null
-     * @param key     key to be used must not be null or empty
      * @param <TData> desired type of the data
+     * @param key     key to be used must not be null or empty
+     * @param clazz   class to be used, must not be null
      *
      * @return the data as the desired type or null if the data is null or can not be cast into the desired type
      */
-    public final <TData extends SVGElementBase> TData getData(final Class<TData> clazz, final String key) {
+    public final <TData extends SVGElementBase> TData getData(final String key, final Class<TData> clazz) throws SVGException {
 
         if (clazz == null) {
-            throw new IllegalArgumentException("given class must not be null or empty");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given class must not be null or empty");
         }
 
         if (StringUtils.isNullOrEmpty(key)) {
-            throw new IllegalArgumentException("given key must not be null or empty");
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given key must not be null or empty");
         }
 
-        SVGElementBase data = this.data.get(key);
+        final SVGElementBase data = this.data.get(key);
 
         if (data != null && clazz.isAssignableFrom(data.getClass())) {
             return clazz.cast(data);

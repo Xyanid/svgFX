@@ -21,12 +21,13 @@ import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * This class represents a stop element from svg
@@ -62,6 +63,20 @@ public class SVGStop extends SVGElementBase<Stop> {
 
     //region SVGElementBase
 
+    @Override
+    public boolean rememberElement() {
+        return true;
+    }
+
+    @Override
+    public void startProcessing() throws SAXException {}
+
+    @Override
+    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    @Override
+    public void endProcessing() throws SAXException {}
+
     /**
      * {@inheritDoc}
      *
@@ -79,7 +94,7 @@ public class SVGStop extends SVGElementBase<Stop> {
      * {@link PresentationAttributeMapper#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
-    protected final Stop createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final Stop createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         final SVGCssStyle style = styleSupplier.get();
 
@@ -89,7 +104,7 @@ public class SVGStop extends SVGElementBase<Stop> {
         }
 
         if (color == null) {
-            throw new SVGException("Given color must not be null");
+            throw new SVGException(SVGException.Reason.MISSING_COLOR, String.format("%s can not be created without a color", SVGStop.class.getSimpleName()));
         }
 
         final Optional<SVGAttributeTypeDouble> stopOpacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class);
@@ -101,7 +116,7 @@ public class SVGStop extends SVGElementBase<Stop> {
     }
 
     @Override
-    protected final void initializeResult(final javafx.scene.paint.Stop stop, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final void initializeResult(final javafx.scene.paint.Stop stop, final StyleSupplier styleSupplier) throws SVGException {
     }
 
     //endregion

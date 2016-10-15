@@ -14,11 +14,10 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Polygon;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a line element from svg
@@ -55,7 +54,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
     //region Override SVGElementBase
 
     @Override
-    protected final Polygon createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final Polygon createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         return new Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

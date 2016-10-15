@@ -17,11 +17,9 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
 
 /**
  * This class represents a line element from svg
@@ -58,7 +56,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Rectangle createResult(final Supplier<SVGCssStyle> styleSupplier) {
+    protected final Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         return new Rectangle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                              getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
@@ -71,7 +69,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * Applies the corner radius if any.
      */
     @Override
-    protected void initializeResult(final Rectangle rect, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected void initializeResult(final Rectangle rect, final StyleSupplier styleSupplier) throws SVGException {
         super.initializeResult(rect, styleSupplier);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason

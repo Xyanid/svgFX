@@ -15,13 +15,10 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
-
-import java.util.function.Supplier;
+import org.xml.sax.SAXException;
 
 /**
  * This class represents a stop element from svg
@@ -58,18 +55,21 @@ public class SVGDefinitions extends SVGElementBase<Node> {
     //region SVGElementBase
 
     @Override
-    public void startProcessing() {
-        //definitions will not be kept as children
-        if (getParent() != null) {
-            getParent().getChildren().remove(this);
-        }
+    public boolean rememberElement() {
+        return false;
     }
 
     @Override
-    public void endProcessing() {
-        getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
-                            .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
-    }
+    public void startProcessing() throws SAXException {}
+
+    @Override
+    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    /**
+     * {@inheritDoc}This implementation will use the id of each child and add it
+     */
+    @Override
+    public void endProcessing() throws SAXException {}
 
     /**
      * {@inheritDoc}
@@ -82,12 +82,12 @@ public class SVGDefinitions extends SVGElementBase<Node> {
     }
 
     @Override
-    protected final Node createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final Node createResult(final StyleSupplier styleSupplier) throws SVGException {
         return null;
     }
 
     @Override
-    protected final void initializeResult(final Node node, final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final void initializeResult(final Node node, final StyleSupplier styleSupplier) throws SVGException {
 
     }
 

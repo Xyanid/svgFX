@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.xml.core;
 
-import de.saxsys.svgfx.xml.elements.ElementBase;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyProperty;
 import org.xml.sax.Attributes;
@@ -37,7 +36,7 @@ import java.io.InputStream;
  * @param <TElementFactory>       the type of the {@link IElementFactory} @author Xyanid on 24.10.2015.
  */
 public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocumentDataProvider, TElementFactory extends IElementFactory<TDocumentDataProvider, TElement>, TElement
-        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement>>
+        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement, TElement>>
         extends DefaultHandler {
 
     // region Enumeration
@@ -183,15 +182,6 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      */
     public final long getSuccessfulParses() {
         return successfulParses;
-    }
-
-    /**
-     * sets the {@link SAXParser#successfulParses}.
-     *
-     * @param value value to be used for {@link SAXParser#successfulParses}
-     */
-    public final void setSuccessfulParses(final long value) {
-        successfulParses = value;
     }
 
     /**
@@ -405,8 +395,9 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         if (nextElement != null) {
 
-            if (currentElement != null) {
-                currentElement.getChildren().add(nextElement);
+            // we create a tree here if the element will be kept and we have a parent for the element
+            if (currentElement != null && nextElement.rememberElement()) {
+                currentElement.addChild(nextElement);
             }
 
             currentElement = nextElement;

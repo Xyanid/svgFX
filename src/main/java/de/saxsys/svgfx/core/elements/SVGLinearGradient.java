@@ -16,15 +16,16 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.content.SVGAttributeTypeGradientUnits;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * This class represents the linear gradient element from svg
@@ -61,11 +62,11 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     //region Override SVGElementBase
 
     @Override
-    protected final LinearGradient createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final LinearGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
 
         final List<Stop> stops = getStops();
         if (stops.isEmpty()) {
-            throw new SVGException("Given linear gradient does not have colors");
+            throw new SVGException(SVGException.Reason.MISSING_STOPS);
         }
 
         Double startX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
@@ -73,7 +74,23 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
         Double endX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
         Double endY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
 
+        Enumerations.GradientUnits gradientUnits = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
+                                                                                          Enumerations.GradientUnits.class,
+                                                                                          Enumerations.GradientUnits.OBJECT_BOUNDING_BOX);
+
+        if (gradientUnits == Enumerations.GradientUnits.USER_SPACE_ON_USE) {
+            final SVGRoot root = getDocumentDataProvider().getData(SVGRoot.ELEMENT_NAME, SVGRoot.class);
+            if (root == null) { throw new SVGException(SVGException.Reason.MISSING_SVG_ROOT); }
+        }
+
         // TODO apply transform and figure out if svg supports the cycle method
+
+        getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_UNITS.getName(), SVGAttributeTypeGradientUnits.class).ifPresent(gradientUnit -> {
+            if (gradientUnit.getValue() == Enumerations.GradientUnits.USER_SPACE_ON_USE) {
+
+            }
+        });
+
 
         return new LinearGradient(startX, startY, endX, endY, false, CycleMethod.NO_CYCLE, stops);
     }

@@ -109,27 +109,27 @@ public class SVGDocumentDataProviderTest {
     public void testSetData() {
         DATA_PROVIDER.setData("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+        assertNotNull(DATA_PROVIDER.getData("test", SVGCircle.class));
 
         DATA_PROVIDER.setData("test", FACTORY.createElement("style", ATTRIBUTES, null, DATA_PROVIDER));
 
-        assertNotNull(DATA_PROVIDER.getData(SVGStyle.class, "test"));
+        assertNotNull(DATA_PROVIDER.getData("test", SVGStyle.class));
     }
 
     /**
-     * Ensure that {@link SVGDocumentDataProvider#getData(Class, String)} works as intended.
+     * Ensure that {@link SVGDocumentDataProvider#getData(String, Class)} works as intended.
      */
     @Test
     public void testGetData() {
         DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
 
-        assertNotNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+        assertNotNull(DATA_PROVIDER.getData("test", SVGCircle.class));
 
-        assertNull(DATA_PROVIDER.getData(SVGRectangle.class, "test"));
+        assertNull(DATA_PROVIDER.getData("test", SVGRectangle.class));
 
         DATA_PROVIDER.data.remove("test");
 
-        assertNull(DATA_PROVIDER.getData(SVGCircle.class, "test"));
+        assertNull(DATA_PROVIDER.getData("test", SVGCircle.class));
     }
 
     /**

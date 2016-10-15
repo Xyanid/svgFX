@@ -14,8 +14,8 @@
 package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.xml.core.AttributeWrapper;
 import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
-import de.saxsys.svgfx.xml.elements.AttributeWrapper;
 
 import java.util.function.Function;
 

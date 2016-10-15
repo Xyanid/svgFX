@@ -22,23 +22,24 @@ import de.saxsys.svgfx.core.content.SVGAttributeType;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.content.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtils;
 import de.saxsys.svgfx.core.utils.StringUtils;
 import de.saxsys.svgfx.css.definitions.Constants;
-import de.saxsys.svgfx.xml.elements.ElementBase;
+import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * This class represents a basic scg element, which provides some basic functionality to get the style of the class.
  *
  * @param <TResult> The type of the result this element will provide @author Xyanid on 28.10.2015.
  */
-public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeType, SVGAttributeHolder, SVGDocumentDataProvider, TResult, SVGElementBase<?>> {
+public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeType, SVGAttributeHolder, SVGDocumentDataProvider, TResult, SVGElementBase<?>, SVGElementBase<?>> {
 
     // region Fields
 
@@ -73,30 +74,13 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      * {@inheritDoc}
      */
     @Override
-    public void startProcessing() throws SVGException {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void processCharacterData(final char[] ch, final int start, final int length) throws SVGException {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void endProcessing() throws SVGException {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final TResult getResult() throws SVGException {
+    public final TResult getResult() throws SAXException {
         if (result == null) {
-            result = createAndInitializeResult();
+            try {
+                result = createAndInitializeResult();
+            } catch (final SVGException e) {
+                throw new SAXException(e);
+            }
         }
 
         return result;
@@ -106,7 +90,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
 
     // region Public
 
-    public final TResult createAndInitializeResult() {
+    public final TResult createAndInitializeResult() throws SVGException {
         return createAndInitializeResult(this::getStyle);
     }
 
@@ -117,7 +101,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @throws SVGException thrown when an exception during creation occurs.
      */
-    public final TResult createAndInitializeResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    public final TResult createAndInitializeResult(final StyleSupplier styleSupplier) throws SVGException {
 
         final TResult result;
 
@@ -125,7 +109,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
             result = createResult(styleSupplier);
             initializeResult(result, styleSupplier);
         } catch (final Exception e) {
-            throw new SVGException(String.format("Creation of element %s failed.\nOriginal element is %s ", getClass().getName(), toString()), e);
+            throw new SVGException(SVGException.Reason.ELEMENT_CREATION_FAILED,
+                                   String.format("Creation of element %s failed.\nOriginal element is %s ", getClass().getName(), toString()), e);
         }
 
         return result;
@@ -160,7 +145,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #documentDataProvider}.
      * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
      */
-    protected final Node getClipPath(final Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+    protected final Node getClipPath(final StyleSupplier styleSupplier) throws SVGException {
 
         final Optional<SVGAttributeTypeString> referenceIRI = getStyle().getAttributeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
 
@@ -176,7 +161,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @return this elements own style.
      */
-    public final SVGCssStyle getStyle() {
+    public final SVGCssStyle getStyle() throws SVGException {
         return getStyleAndResolveInheritance(getParent() != null ? getParent().getStyle() : new SVGCssStyle(getDocumentDataProvider()));
     }
 
@@ -188,7 +173,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @return the {@link SVGCssStyle} if this element combined and resolved with the given {@link SVGCssStyle}.
      */
-    public final SVGCssStyle getStyleAndResolveInheritance(final SVGCssStyle otherStyle) {
+    public final SVGCssStyle getStyleAndResolveInheritance(final SVGCssStyle otherStyle) throws SVGException {
         final SVGCssStyle style = getCombinedStyle();
 
         SVGUtils.combineStylesAndResolveInheritance(style, otherStyle);
@@ -251,7 +236,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @return the {@link SVGCssStyle} of this element or null if no style can be determined.
      */
-    private SVGCssStyle getCombinedStyle() {
+    private SVGCssStyle getCombinedStyle() throws SVGException {
 
         // first we get a referenced style class if any
         SVGCssStyle style = getPresentationCssStyle();
@@ -289,7 +274,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @return the {@link SVGCssStyle} of this element or null if there is none.
      */
-    private SVGCssStyle getOwnStyle() {
+    private SVGCssStyle getOwnStyle() throws SVGException {
 
         final Optional<SVGAttributeTypeString> style = getAttributeHolder().getAttribute(CoreAttributeMapper.STYLE.getName(), SVGAttributeTypeString.class);
         if (style.isPresent()) {
@@ -321,11 +306,13 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         final Optional<SVGAttributeTypeString> className = getAttributeHolder().getAttribute(CoreAttributeMapper.CLASS.getName(), SVGAttributeTypeString.class);
         if (className.isPresent()) {
             final String reference = className.get().getValue();
-            try {
-                return getDocumentDataProvider().getStyles().stream().filter(data -> data.getName().endsWith(reference)).findFirst().get();
-            } catch (Exception e) {
-                throw new SVGException(String.format("Given style reference %s was not found", reference), e);
-            }
+
+            return getDocumentDataProvider().getStyles()
+                                            .stream()
+                                            .filter(data -> data.getName().endsWith(reference))
+                                            .findFirst()
+                                            .orElseThrow(() -> new SVGException(SVGException.Reason.STYLE_NOT_FOUND, String.format("Given style reference %s was not found", reference)));
+
         }
         return null;
     }
@@ -377,10 +364,10 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @throws SVGException will be thrown when an error during creation occurs
      */
-    protected abstract TResult createResult(final Supplier<SVGCssStyle> styleSupplier) throws SVGException;
+    protected abstract TResult createResult(final StyleSupplier styleSupplier) throws SVGException;
 
     /**
-     * This method will be called in the {@link #createAndInitializeResult(Supplier)} and allows to modify the result such as applying a style or
+     * This method will be called in the {@link #createAndInitializeResult(StyleSupplier)} and allows to modify the result such as applying a style or
      * transformations.
      * The given inheritanceResolver should be used to retrieve such data, this simply is needed because some elements can actually be referenced e.g.
      * {@link SVGUse} and their actual parent is not
@@ -390,7 +377,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @throws SVGException will be thrown when an error during modification
      */
-    protected abstract void initializeResult(final TResult result, final Supplier<SVGCssStyle> styleSupplier) throws SVGException;
+    protected abstract void initializeResult(final TResult result, final StyleSupplier styleSupplier) throws SVGException;
 
     // endregion
 }

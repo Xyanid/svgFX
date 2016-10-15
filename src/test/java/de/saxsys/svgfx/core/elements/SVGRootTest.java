@@ -59,6 +59,6 @@ public final class SVGRootTest {
 
         root.endProcessing();
 
-        assertSame(root, dataProvider.getData(SVGRoot.class, SVGRoot.ELEMENT_NAME));
+        assertSame(root, dataProvider.getData(SVGRoot.ELEMENT_NAME, SVGRoot.class));
     }
 }

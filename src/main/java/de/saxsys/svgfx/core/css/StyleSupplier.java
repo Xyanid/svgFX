@@ -11,18 +11,24 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.xml.core;
+package de.saxsys.svgfx.core.css;
+
+import de.saxsys.svgfx.core.SVGException;
 
 /**
- * This interface will be used to enable xml element to load data of the parsed xml file.
- * It is also possible for element to add data to the data provider.
+ * Special interface to allow for the {@link SVGException} to be thrown when requesting a {@link SVGCssStyle}.
  *
- * @author Xyanid on 03.11.2015.
+ * @author Xyanid on 16.10.2016.
  */
-public interface IDocumentDataProvider {
+@FunctionalInterface
+public interface StyleSupplier {
 
     /**
-     * Reset the dataprovider and clears out all allocated resources.
+     * Returns the {@link SVGCssStyle} required.
+     *
+     * @return the {@link SVGCssStyle} required.
+     *
+     * @throws SVGException if an error occurs during the retrieval of the {@link SVGCssStyle}.
      */
-    void clear();
+    SVGCssStyle get() throws SVGException;
 }
