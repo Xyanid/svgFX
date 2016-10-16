@@ -13,6 +13,7 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 
 /**
@@ -37,21 +38,13 @@ public class SVGException extends Exception {
          */
         NULL_ARGUMENT,
         /**
-         * Meaning that a {@link de.saxsys.svgfx.core.elements.SVGElementBase} could not be created for any reason.
-         */
-        ELEMENT_CREATION_FAILED,
-        /**
-         * Meaning the {@link SVGElementBase#getResult()} failed for any reason.
-         */
-        FAILED_TO_GET_RESULT,
-        /**
          * Meaning that a {@link de.saxsys.svgfx.core.elements.SVGStyle} was referenced but was not found.
          */
-        STYLE_NOT_FOUND,
+        MISSING_STYLE,
         /**
-         * Meaning that the {@link de.saxsys.svgfx.core.elements.SVGRoot} was requested from the {@link SVGDocumentDataProvider} but was not found.
+         * Meaning that a {@link String} is an {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} that could not be found.
          */
-        MISSING_SVG_ROOT,
+        MISSING_ELEMENT,
         /**
          * Meaning that a {@link javafx.scene.paint.Color} could not be created/found even though it was required.
          */
@@ -61,29 +54,54 @@ public class SVGException extends Exception {
          */
         MISSING_STOPS,
         /**
+         * Meaning a {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeType} that was required was not found.
+         */
+        MISSING_ATTRIBUTE,
+        /**
+         * Meaning that during the creation of a {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoint}, the point format was not as expected.
+         */
+        INVALID_POINT_FORMAT,
+        /**
+         * Meaning the text that is used to create a {@link javafx.scene.paint.Color} is invalid.
+         */
+        INVALID_COLOR_FORMAT,
+        /**
+         * Meaning that the text that should represent a {@link Enumerations.GradientUnit} is not valid.
+         */
+        INVALID_GRADIENT_UNIT_FORMAT,
+        /**
+         * Meaning that during the creation of a {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle}, the text that was used did not provide the required information.
+         */
+        INVALID_RECTANGLE_FORMAT,
+        /**
          * Meaning that a {@link String} was parsed that was not actually an {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER}.
          */
-        NOT_AN_IRI_IDENTIFIER,
+        INVALID_IRI_IDENTIFIER,
+        /**
+         * Meaning that a text that describes a css style is invalid and can not be parsed.
+         */
+        INVALID_CSS_STYLE,
+        /**
+         * Meaning that a {@link de.saxsys.svgfx.core.elements.SVGElementBase} could not be created for any reason.
+         */
+        FAILED_TO_CREATE_RESULT,
         /**
          * Meaning that a {@link String} that could be an {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} to another element could not be parsed.
          */
         FAILED_TO_PARSE_IRI,
         /**
-         * Meaning that a {@link String} is an {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} that could not be found.
+         * Meaning the {@link SVGElementBase#getResult()} failed for any reason.
          */
-        MISSING_IRI,
+        FAILED_TO_GET_RESULT,
         /**
          * Meaning that the {@link javafx.scene.transform.Transform} could not be created due to a problem with the matrix.
          */
         FAILED_TO_CREATE_MATRIX,
         /**
-         * Meaning that a {@link de.saxsys.svgfx.core.content.SVGAttributeType} could not be created.
+         * Meaning that a {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeType} could not be created.
          */
         FAILED_TO_CREATE_ATTRIBUTE_TYPE,
-        /**
-         * Meaning that during the creation of a {@link de.saxsys.svgfx.core.content.SVGAttributeTypePoint}, the point format was not as expected.
-         */
-        INVALID_POINT_FORMAT,
+
     }
 
     // endregion

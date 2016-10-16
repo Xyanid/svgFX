@@ -14,12 +14,12 @@
 package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.content.SVGAttributeType;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeGradientUnits;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePoints;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeTransform;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeGradientUnits;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoints;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGEllipse;
 

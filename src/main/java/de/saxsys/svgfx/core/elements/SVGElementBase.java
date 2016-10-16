@@ -17,14 +17,14 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeHolder;
-import de.saxsys.svgfx.core.content.SVGAttributeType;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeTransform;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeHolder;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.utils.SVGUtil;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Node;
@@ -32,6 +32,7 @@ import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -77,7 +78,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     public final TResult getResult() throws SAXException {
         if (result == null) {
             try {
-                result = createAndInitializeResult();
+                result = createAndInitializeResult(this::getStyle);
             } catch (final SVGException e) {
                 throw new SAXException(e);
             }
@@ -89,10 +90,6 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     // endregion
 
     // region Public
-
-    public final TResult createAndInitializeResult() throws SVGException {
-        return createAndInitializeResult(this::getStyle);
-    }
 
     /**
      * Creates a result represented by this element and uses the given supplier in order to fetch data needed to initialize the result
@@ -109,11 +106,38 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
             result = createResult(styleSupplier);
             initializeResult(result, styleSupplier);
         } catch (final Exception e) {
-            throw new SVGException(SVGException.Reason.ELEMENT_CREATION_FAILED,
+            throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_RESULT,
                                    String.format("Creation of element %s failed.\nOriginal element is %s ", getClass().getName(), toString()), e);
         }
 
         return result;
+    }
+
+    /**
+     * Gets the elements own style and resolves its inheritance, also removed any self references.
+     *
+     * @return this elements own style.
+     */
+    public final SVGCssStyle getStyle() throws SVGException {
+        return getStyleAndResolveInheritance(getParent() != null ? getParent().getStyle() : new SVGCssStyle(getDocumentDataProvider()));
+    }
+
+    /**
+     * Gets the elements own {@link SVGCssStyle} and combines it with the given {@link SVGCssStyle}
+     *
+     * @param otherStyle the other {@link SVGCssStyle} the own style shall be combined with, can be null in which case {@link #combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)}
+     *                   is not invoked, hence it will only return its own style.
+     *
+     * @return the {@link SVGCssStyle} if this element combined and resolved with the given {@link SVGCssStyle}.
+     */
+    public final SVGCssStyle getStyleAndResolveInheritance(final SVGCssStyle otherStyle) throws SVGException {
+        final SVGCssStyle style = getCombinedStyle();
+
+        combineStylesAndResolveInheritance(style, otherStyle);
+
+        cleanStyleBeforeUsing(style);
+
+        return style;
     }
 
     //endregion
@@ -149,38 +173,25 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
 
         final Optional<SVGAttributeTypeString> referenceIRI = getStyle().getAttributeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
 
-        if (referenceIRI.isPresent() && StringUtils.isNotNullOrEmpty(referenceIRI.get().getValue())) {
-            return SVGUtils.resolveIRI(referenceIRI.get().getValue(), getDocumentDataProvider(), SVGClipPath.class).createAndInitializeResult(styleSupplier);
+        if (referenceIRI.isPresent() && StringUtil.isNotNullOrEmpty(referenceIRI.get().getValue())) {
+            return SVGUtil.resolveIRI(referenceIRI.get().getValue(), getDocumentDataProvider(), SVGClipPath.class).createAndInitializeResult(styleSupplier);
         }
 
         return null;
     }
 
     /**
-     * Gets the elements own style and resolves its inheritance, also removed any self references.
+     * Checks if the element is inside a {@link SVGDefinitions} and store it inside the {@link #documentDataProvider} if so.
      *
-     * @return this elements own style.
+     * @throws SVGException if an error occurs during the retrieval of the id.
      */
-    public final SVGCssStyle getStyle() throws SVGException {
-        return getStyleAndResolveInheritance(getParent() != null ? getParent().getStyle() : new SVGCssStyle(getDocumentDataProvider()));
-    }
-
-    /**
-     * Gets the elements own {@link SVGCssStyle} and combines it with the given {@link SVGCssStyle}
-     *
-     * @param otherStyle the other {@link SVGCssStyle} the own style shall be combined with, can be null in which case {@link SVGUtils#combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)}
-     *                   is not invoked, hence it will only return its own style.
-     *
-     * @return the {@link SVGCssStyle} if this element combined and resolved with the given {@link SVGCssStyle}.
-     */
-    public final SVGCssStyle getStyleAndResolveInheritance(final SVGCssStyle otherStyle) throws SVGException {
-        final SVGCssStyle style = getCombinedStyle();
-
-        SVGUtils.combineStylesAndResolveInheritance(style, otherStyle);
-
-        cleanStyleBeforeUsing(style);
-
-        return style;
+    protected final void storeElementInDocumentDataProvider() throws SVGException {
+        if (getParent() instanceof SVGDefinitions) {
+            final Optional<SVGAttributeTypeString> id = getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class);
+            if (id.isPresent()) {
+                getDocumentDataProvider().setData(id.get().getValue(), this);
+            }
+        }
     }
 
     // endregion
@@ -192,19 +203,22 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @param style the {@link SVGCssStyle} that should be cleaned.
      */
-    private void cleanStyleBeforeUsing(final SVGCssStyle style) {
-        // since the style is used here we need to ensure its not possible for an element to reference itself
-        getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
-                            .ifPresent(id -> style.getAttributeHolder()
-                                                  .getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class)
-                                                  .ifPresent(clipPath -> {
-                                                      final String clipPathReference = SVGUtils.stripIRIIdentifiers(clipPath.getValue());
-                                                      if (StringUtils.isNotNullOrEmpty(clipPathReference) &&
-                                                          clipPathReference.equals(id.getValue())) {
-                                                          style.getProperties()
-                                                               .remove(PresentationAttributeMapper.CLIP_PATH.getName());
-                                                      }
-                                                  }));
+    private void cleanStyleBeforeUsing(final SVGCssStyle style) throws SVGException {
+
+        final Optional<SVGAttributeTypeString> id = getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class);
+        if (!id.isPresent()) {
+            return;
+        }
+
+        final Optional<SVGAttributeTypeString> clipPath = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
+        if (!clipPath.isPresent()) {
+            return;
+        }
+
+        final String clipPathReference = SVGUtil.stripIRIIdentifiers(clipPath.get().getValue());
+        if (StringUtil.isNotNullOrEmpty(clipPathReference) && clipPathReference.equals(id.get().getValue())) {
+            style.getProperties().remove(PresentationAttributeMapper.CLIP_PATH.getName());
+        }
     }
 
     /**
@@ -311,7 +325,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
                                             .stream()
                                             .filter(data -> data.getName().endsWith(reference))
                                             .findFirst()
-                                            .orElseThrow(() -> new SVGException(SVGException.Reason.STYLE_NOT_FOUND, String.format("Given style reference %s was not found", reference)));
+                                            .orElseThrow(() -> new SVGException(SVGException.Reason.MISSING_STYLE, String.format("Given style reference %s was not found", reference)));
 
         }
         return null;
@@ -333,7 +347,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         for (final PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
             getAttributeHolder().getAttribute(attribute.getName()).ifPresent(contentType -> {
                 String data = contentType.getText();
-                if (StringUtils.isNotNullOrEmpty(data)) {
+                if (StringUtil.isNotNullOrEmpty(data)) {
                     if (cssText.length() == 0) {
                         cssText.append("presentationStyle" + Constants.DECLARATION_BLOCK_START);
                     }
@@ -351,6 +365,39 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
 
         return result;
     }
+
+    /**
+     * This method will use the contentMap of the given style, if any property uses inheritance, the given otherStyle will be used to resolve it.
+     * If the otherStyle does not contain a value for the inherited property, then the default value will be used.
+     *
+     * @param style      {@link SVGCssStyle} which contains the contentMap which are to be set, must not be null.
+     * @param otherStyle the {@link SVGCssStyle} to use as a parent in order to resolve the inheritance, must not be null.
+     *
+     * @throws IllegalArgumentException if either style or inheritanceResolver are null.
+     */
+    private void combineStylesAndResolveInheritance(final SVGCssStyle style, final SVGCssStyle otherStyle) throws SVGException {
+        if (style == null) {
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given style must not be null");
+        }
+
+        if (otherStyle == null) {
+            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given otherStyle must not be null");
+        }
+
+        style.combineWithStyle(otherStyle);
+
+        for (final Map.Entry<String, SVGAttributeType> property : style.getProperties().entrySet()) {
+            if (property.getValue().getIsInherited()) {
+                final Optional<SVGAttributeType> otherProperty = otherStyle.getAttributeHolder().getAttribute(property.getKey());
+                if (otherProperty.isPresent()) {
+                    property.getValue().setText(otherProperty.get().getText());
+                } else {
+                    property.getValue().useDefaultValue();
+                }
+            }
+        }
+    }
+
 
     // endregion
 

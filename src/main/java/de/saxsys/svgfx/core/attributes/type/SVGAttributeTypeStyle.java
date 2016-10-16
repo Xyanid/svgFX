@@ -11,11 +11,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.util.Pair;
+import org.w3c.dom.DOMException;
 
 /**
  * This class represents a svg transform content type. This means it will contains matrix transformation.
@@ -49,12 +51,16 @@ public class SVGAttributeTypeStyle extends SVGAttributeType<SVGCssStyle, Void> {
     //region Override SVGAttributeType
 
     /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypeStyle}
+     * @throws SVGException when the given text can not be resolved to a valid {@link SVGAttributeTypeStyle}
      */
     @Override
-    protected Pair<SVGCssStyle, Void> getValueAndUnit(final String text) {
-        final SVGCssStyle ownStyle = new SVGCssStyle(getDataProvider());
-        ownStyle.parseCssText(text);
+    protected Pair<SVGCssStyle, Void> getValueAndUnit(final String text) throws SVGException {
+        final SVGCssStyle ownStyle = new SVGCssStyle(getDocumentDataProvider());
+        try {
+            ownStyle.parseCssText(text);
+        } catch (final DOMException e) {
+            throw new SVGException(SVGException.Reason.INVALID_IRI_IDENTIFIER, e);
+        }
         return new Pair<>(ownStyle, null);
     }
 

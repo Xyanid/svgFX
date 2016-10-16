@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.xml.core.AttributeHolder;
@@ -42,13 +43,14 @@ public class SVGAttributeHolder extends AttributeHolder<SVGAttributeType> {
     /**
      * Returns the value of the desired attribute as the desired type using the provided key or the given default value should the attribute not exist.
      *
-     * @param <TValue> type of the value of the attribute desired.
-     * @param name     name of the property
-     * @param clazz    class of the type of the property used for casting.
+     * @param <TValue>     type of the value of the attribute desired.
+     * @param name         name of the property
+     * @param clazz        class of the type of the property used for casting.
+     * @param defaultValue the default value to provide if the desired attribute was not found.
      *
      * @return the value of the desired attribute as the {@link TValue} or the default value should the attribute not exist.
      */
-    public final <TValue> TValue getAttributeValue(final String name, final Class<TValue> clazz, final TValue defaultValue) {
+    public final <TValue> TValue getAttributeValue(final String name, final Class<TValue> clazz, final TValue defaultValue) throws SVGException {
         final Optional<SVGAttributeType> attribute = getAttribute(name);
 
         if (!attribute.isPresent()) { return defaultValue; }

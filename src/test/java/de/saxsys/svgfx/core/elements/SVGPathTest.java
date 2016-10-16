@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -37,7 +38,7 @@ public final class SVGPathTest {
      * Ensures that the path required for a line are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void ensureAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -55,7 +56,7 @@ public final class SVGPathTest {
      * Ensures that the fill rule is parsed correctly.
      */
     @Test
-    public void ensureFillRuleParsedCorrectly() {
+    public void ensureFillRuleParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -88,7 +89,7 @@ public final class SVGPathTest {
 
         try {
             line.getResult();
-        } catch (final SVGException e) {
+        } catch (final SAXException e) {
             fail();
         }
     }
@@ -97,7 +98,7 @@ public final class SVGPathTest {
      * Ensures that no {@link SVGException} is thrown of one of the attributes is missing.
      */
     @Test
-    public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() {
+    public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

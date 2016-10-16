@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertCreationFails;
 import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertResultFails;
@@ -36,7 +37,7 @@ public final class SVGEllipseTest {
      * Ensures that the attributes required for a ellipse are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void ensureAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

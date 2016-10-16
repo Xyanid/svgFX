@@ -14,8 +14,10 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import org.junit.Test;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -33,7 +35,7 @@ public final class SVGRootTest {
      * Ensures that no result is created when calling SVGRoot
      */
     @Test
-    public void ensureNoResultIsCreated() {
+    public void ensureNoResultIsCreated() throws SAXException {
 
         final Attributes attributes = mock(Attributes.class);
 
@@ -48,7 +50,7 @@ public final class SVGRootTest {
      * When the element has been read the {@link SVGDocumentDataProvider} will contain the element.
      */
     @Test
-    public void whenTheElementIsFinishedProcessingTheDocumentDataLoaderWillContainTheElement() {
+    public void whenTheElementIsFinishedProcessingTheDocumentDataLoaderWillContainTheElement() throws SAXException, SVGException {
 
         final Attributes attributes = mock(Attributes.class);
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();

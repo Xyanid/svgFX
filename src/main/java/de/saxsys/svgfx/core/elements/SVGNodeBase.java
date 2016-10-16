@@ -15,8 +15,6 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;
@@ -63,9 +61,10 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
 
     @Override
     public void endProcessing() throws SAXException {
-        if (getParent() instanceof SVGDefinitions) {
-            getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
-                                .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+        try {
+            storeElementInDocumentDataProvider();
+        } catch (SVGException e) {
+            throw new SAXException(e);
         }
     }
 

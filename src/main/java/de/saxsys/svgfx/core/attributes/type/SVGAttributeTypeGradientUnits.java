@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.util.Pair;
 
@@ -22,14 +23,14 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations.GradientUnits, Void> {
+public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations.GradientUnit, Void> {
 
     // region Static
 
     /**
      * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final Enumerations.GradientUnits DEFAULT_VALUE = Enumerations.GradientUnits.OBJECT_BOUNDING_BOX;
+    public static final Enumerations.GradientUnit DEFAULT_VALUE = Enumerations.GradientUnit.OBJECT_BOUNDING_BOX;
 
     // endregion
 
@@ -49,21 +50,25 @@ public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations
     //region Override SVGAttributeType
 
     /**
-     * @throws de.saxsys.svgfx.core.SVGException when any value inside the array is not a valid {@link SVGAttributeTypeGradientUnits}
+     * @throws SVGException when any value inside the array is not a valid {@link SVGAttributeTypeGradientUnits}
      */
     @Override
-    protected Pair<Enumerations.GradientUnits, Void> getValueAndUnit(final String cssText) {
+    protected Pair<Enumerations.GradientUnit, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        Enumerations.GradientUnits gradientUnits = Enumerations.GradientUnits.NONE;
+        Enumerations.GradientUnit gradientUnit = null;
 
-        for (Enumerations.GradientUnits units : Enumerations.GradientUnits.values()) {
+        for (final Enumerations.GradientUnit units : Enumerations.GradientUnit.values()) {
             if (units.getName().equals(cssText)) {
-                gradientUnits = units;
+                gradientUnit = units;
                 break;
             }
         }
 
-        return new Pair<>(gradientUnits, null);
+        if (gradientUnit == null) {
+            throw new SVGException(SVGException.Reason.INVALID_GRADIENT_UNIT_FORMAT, String.format("Given %s can not be parsed into a gradient unit", cssText));
+        }
+
+        return new Pair<>(gradientUnit, null);
     }
 
     //endregion

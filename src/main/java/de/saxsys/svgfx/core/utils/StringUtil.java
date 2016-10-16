@@ -13,14 +13,53 @@
 
 package de.saxsys.svgfx.core.utils;
 
+import de.saxsys.svgfx.core.SVGException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class provides functionality to handle Strings
  *
  * @author by Xyanid on 28.10.2015.
  */
-public final class StringUtils {
+public final class StringUtil {
+
+    // region Classes
+
+    /**
+     * This interface allows that {@link #split(String, List, SplitPredicate)} to consume data an indicate whether to further add new characters or consume
+     * the currentData.
+     */
+    @FunctionalInterface
+    public interface SplitPredicate {
+        /**
+         * Called when a delimiter or the last character is read and will indicate whether the current read data can be used or not.
+         *
+         * @param currentData {@link String} containing the currently read data so far.
+         * @param index       the index of the character in the original data that was currently read
+         *
+         * @return true if the currentData shall be consumed otherwise false if not.
+         *
+         * @throws SVGException in case the splitting is not possible due to invalid data ans so on.
+         */
+        boolean test(final String data, int index) throws SVGException;
+    }
+
+    // endregion
 
     // region Constructor
+
+    /**
+     *
+     */
+    private StringUtil() {
+
+    }
+
+    // endregion
+
+    //region Methods
 
     /**
      * Replaces the last occurrence of a character in the given source.
@@ -35,8 +74,6 @@ public final class StringUtils {
 
         return replaceLast(source, String.valueOf(toReplace), String.valueOf(toUse));
     }
-
-    // endregion
 
     /**
      * Replaces the last occurrence of a character in the given source.
@@ -69,7 +106,7 @@ public final class StringUtils {
      *
      * @return true if the {@link String} is null or empty otherwise false.
      */
-    public static boolean isNullOrEmpty(String data) {
+    public static boolean isNullOrEmpty(final String data) {
         return data == null || data.isEmpty();
     }
 
@@ -80,7 +117,7 @@ public final class StringUtils {
      *
      * @return true if the {@link String} is not null or empty otherwise false.
      */
-    public static boolean isNotNullOrEmpty(String data) {
+    public static boolean isNotNullOrEmpty(final String data) {
         return !isNullOrEmpty(data);
     }
 
@@ -93,7 +130,7 @@ public final class StringUtils {
      *
      * @throws IllegalArgumentException if the given data is null or empty
      */
-    public static String stripStringIndicators(String data) {
+    public static String stripStringIndicators(final String data) {
         if (isNullOrEmpty(data)) {
             throw new IllegalArgumentException("given data must not be null or empty");
         }
@@ -102,9 +139,56 @@ public final class StringUtils {
     }
 
     /**
+     * Creates a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
      *
+     * @param data       the data that needs to be split.
+     * @param delimiters the delimiters that indicate when the string needs to be split.
+     *
+     * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
      */
-    private StringUtils() {
-
+    public static List<String> splitByDelimiters(final String data, final List<Character> delimiters) throws SVGException {
+        return splitByDelimiters(data, delimiters, (split, index) -> true);
     }
+
+    /**
+     * Creates a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
+     *
+     * @param data       the data that needs to be split.
+     * @param delimiters the delimiters that indicate when the string needs to be split.
+     *
+     * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
+     */
+    public static List<String> splitByDelimiters(final String data, final List<Character> delimiters, final SplitPredicate consumePredicate) throws SVGException {
+
+        final List<String> result = new ArrayList<>();
+        final StringBuilder builder = new StringBuilder();
+
+        boolean isLastCharacter;
+        boolean isDelimiter;
+
+        for (int i = 0; i < data.length(); i++) {
+            char character = data.charAt(i);
+
+            isDelimiter = delimiters.contains(character);
+            isLastCharacter = i == data.length() - 1;
+
+            if (isLastCharacter || isDelimiter) {
+
+                if (isLastCharacter && !isDelimiter) {
+                    builder.append(character);
+                }
+
+                if (builder.length() > 0 && consumePredicate.test(builder.toString(), i)) {
+                    result.add(builder.toString());
+                    builder.setLength(0);
+                }
+            } else {
+                builder.append(character);
+            }
+        }
+
+        return result;
+    }
+
+    //endregion
 }

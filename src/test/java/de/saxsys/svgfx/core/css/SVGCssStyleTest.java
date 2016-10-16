@@ -14,17 +14,18 @@
 package de.saxsys.svgfx.core.css;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeType;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeDashArray;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineCap;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeDashArray;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineCap;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.StrokeLineCap;
@@ -52,7 +53,7 @@ public final class SVGCssStyleTest {
      * Parses a css text to create a css style and ensures that all elements are present.
      */
     @Test
-    public void parseCssTextToCreateCssStyle() {
+    public void parseCssTextToCreateCssStyle() throws SVGException {
 
         final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
@@ -92,7 +93,7 @@ public final class SVGCssStyleTest {
      * Ensures that styles read with property that are not inside the {@link PresentationAttributeMapper}s are still contained as {@link SVGAttributeTypeString}.
      */
     @Test
-    public void ensureUnknownPropertyArePresentAsStrings() {
+    public void ensureUnknownPropertyArePresentAsStrings() throws SVGException {
 
         final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
@@ -136,7 +137,7 @@ public final class SVGCssStyleTest {
      * Parses a css text to create a css style and ensures that all elements are present.
      */
     @Test
-    public void parseCssTextToEnsureAllAttributesAreSupported() {
+    public void parseCssTextToEnsureAllAttributesAreSupported() throws SVGException {
 
         final StringBuilder cssText = new StringBuilder();
         cssText.append(".st0{");
@@ -220,7 +221,7 @@ public final class SVGCssStyleTest {
      * This will ensure that no character inside a string will interrupt the parsing.
      */
     @Test
-    public void parseCssTextWithCommentAndCssCharactersToCreateCssStyle() {
+    public void parseCssTextWithCommentAndCssCharactersToCreateCssStyle() throws SVGException {
 
         final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
@@ -292,7 +293,7 @@ public final class SVGCssStyleTest {
      * This will ensure that no character inside a string will interrupt the parsing.
      */
     @Test
-    public void parseCssTextWithStringIndicatorsAndCssCharactersToCreateCssStyle() {
+    public void parseCssTextWithStringIndicatorsAndCssCharactersToCreateCssStyle() throws SVGException {
 
         final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 
@@ -363,7 +364,7 @@ public final class SVGCssStyleTest {
      * Combines two css styles and checks if the contentMap have been overwritten as expected.
      */
     @Test
-    public void combineCssStyles() {
+    public void combineCssStyles() throws SVGException {
 
         final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
 

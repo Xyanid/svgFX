@@ -11,47 +11,49 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import javafx.scene.shape.StrokeLineJoin;
+import de.saxsys.svgfx.core.SVGException;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
+ * This class represents a svg length content type
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJoin, Void> {
+public class SVGAttributeTypeDouble extends SVGAttributeType<Double, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGAttributeType}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
+    public static final double DEFAULT_VALUE = 0.0d;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeStrokeLineJoin(final SVGDocumentDataProvider dataProvider) {
-        super(DEFAULT_VALUE, dataProvider);
+    public SVGAttributeTypeDouble(final SVGDocumentDataProvider dataProvider) {
+        super(0.0d, dataProvider);
     }
 
     //endregion
 
-    //region Override AttributeWrapper
+    //region Override SVGAttributeType
 
+    /**
+     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeDouble}
+     */
     @Override
-    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) {
-
-        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
+    protected Pair<Double, Void> getValueAndUnit(final String cssText) throws SVGException {
+        return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
     }
 
     //endregion

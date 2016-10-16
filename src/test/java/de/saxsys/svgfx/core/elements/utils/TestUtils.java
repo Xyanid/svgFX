@@ -14,9 +14,9 @@
 package de.saxsys.svgfx.core.elements.utils;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -47,13 +47,13 @@ public class TestUtils {
     }
 
     /**
-     * Asserts that the creation of teh result fails.
+     * Asserts that the creation of the result fails.
      */
     public static void assertResultFails(final SVGElementBase element, final Class<? extends Exception> exception) {
         try {
             element.getResult();
             fail();
-        } catch (final SVGException e) {
+        } catch (final SAXException e) {
             assertTrue(e.getMessage().contains(element.getClass().getName()));
             assertEquals(exception, e.getCause().getClass());
         }

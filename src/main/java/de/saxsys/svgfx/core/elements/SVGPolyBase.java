@@ -16,12 +16,14 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePoints;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoints;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base class for polygons and polyline.
@@ -79,12 +81,13 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     public final List<Double> getPoints() throws SVGException {
         final List<Double> actualPoints = new ArrayList<>();
 
-        getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class)
-                            .ifPresent(points -> points.getValue()
-                                                       .forEach(point -> {
-                                                           actualPoints.add(point.getValue().getX().getValue());
-                                                           actualPoints.add(point.getValue().getY().getValue());
-                                                       }));
+        final Optional<SVGAttributeTypePoints> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class);
+        if (points.isPresent()) {
+            for (final SVGAttributeTypePoint point : points.get().getValue()) {
+                actualPoints.add(point.getValue().getX().getValue());
+                actualPoints.add(point.getValue().getY().getValue());
+            }
+        }
 
         return actualPoints;
     }

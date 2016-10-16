@@ -15,8 +15,8 @@ package de.saxsys.svgfx.core.css;
 
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.content.SVGAttributeHolder;
-import de.saxsys.svgfx.core.content.SVGAttributeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeHolder;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeType;
 import de.saxsys.svgfx.css.core.CssStyle;
 
 /**

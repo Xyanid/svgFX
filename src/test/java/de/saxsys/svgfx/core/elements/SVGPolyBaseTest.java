@@ -16,17 +16,13 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Polygon;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
-import java.util.function.Supplier;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -40,7 +36,7 @@ public final class SVGPolyBaseTest {
      * Ensures Points are parsed correctly
      */
     @Test
-    public void ensurePointsAreParsedCorrectly() {
+    public void ensurePointsAreParsedCorrectly() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -51,7 +47,7 @@ public final class SVGPolyBaseTest {
 
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
             @Override
-            protected Polygon createResult(Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
         };
@@ -69,7 +65,7 @@ public final class SVGPolyBaseTest {
      * Ensures multiple spaces in a row will cause no problem.
      */
     @Test
-    public void ensureMultipleSpacesCaseNotProblems() {
+    public void ensureMultipleSpacesCaseNotProblems() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -79,8 +75,9 @@ public final class SVGPolyBaseTest {
         when(attributes.getValue(0)).thenReturn("60,20    100,40    100,80");
 
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+
             @Override
-            protected Polygon createResult(Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
         };
@@ -98,15 +95,16 @@ public final class SVGPolyBaseTest {
      * Ensures there are no points if the {@link CoreAttributeMapper#POINTS} is missing.
      */
     @Test
-    public void ensurePointsAreEmptyIfAttributeIsMissing() {
+    public void ensurePointsAreEmptyIfAttributeIsMissing() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
         when(attributes.getLength()).thenReturn(0);
 
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+
             @Override
-            protected Polygon createResult(Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
         };
@@ -127,19 +125,19 @@ public final class SVGPolyBaseTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        assertCreationFailes(attributes);
+        assertCreationFails(attributes);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,10 100");
 
-        assertCreationFailes(attributes);
+        assertCreationFails(attributes);
     }
 
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
     @Test (expected = IllegalArgumentException.class)
-    public void ensureExceptionIsThrownWhenAPointContainsInvalidData() {
+    public void ensureExceptionIsThrownWhenAPointContainsInvalidData() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -149,27 +147,13 @@ public final class SVGPolyBaseTest {
         when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+
             @Override
-            protected Polygon createResult(Supplier<SVGCssStyle> styleSupplier) throws SVGException {
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
         };
 
         polyBase.getPoints();
-    }
-
-
-    private void assertCreationFailes(final Attributes attributes) {
-        try {
-            final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
-                @Override
-                protected Polygon createResult(Supplier<SVGCssStyle> styleSupplier) throws SVGException {
-                    return null;
-                }
-            };
-            fail();
-        } catch (final SVGException e) {
-            assertTrue(e.getMessage().contains(SVGPolyBase.class.getName()));
-        }
     }
 }

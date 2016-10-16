@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertCreationFails;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,7 @@ public final class SVGPolylineTest {
      * Ensures that the polyline required for a line are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void ensureAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -78,10 +79,10 @@ public final class SVGPolylineTest {
     }
 
     /**
-     * Ensures that a {@link SVGException} is thrown of one of the attributes is missing.
+     * Ensures that a {@link SAXException} is thrown of one of the attributes is missing.
      */
     @Test
-    public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() {
+    public void ensureNoSAXExceptionIsThrownWhenAttributesAreMissing() {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -91,7 +92,7 @@ public final class SVGPolylineTest {
 
         try {
             assertEquals(0, polyline.getResult().getPoints().size());
-        } catch (final SVGException e) {
+        } catch (final SAXException e) {
             fail();
         }
     }

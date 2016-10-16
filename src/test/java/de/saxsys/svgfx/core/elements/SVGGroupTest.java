@@ -14,13 +14,15 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -39,7 +41,7 @@ public final class SVGGroupTest {
      * Ensures elements within a group produce the correct output.
      */
     @Test
-    public void ensureGroupResultContainsTheCorrectData() {
+    public void ensureGroupResultContainsTheCorrectData() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

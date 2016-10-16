@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.definitions;
 
-import de.saxsys.svgfx.core.content.SVGAttributeTypeGradientUnits;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeGradientUnits;
 import javafx.scene.shape.FillRule;
 
 /**
@@ -135,8 +135,7 @@ public final class Enumerations {
     /**
      * Contains the possible values for {@link SVGAttributeTypeGradientUnits}.
      */
-    public enum GradientUnits {
-        NONE(""),
+    public enum GradientUnit {
         USER_SPACE_ON_USE("userSpaceOnUse"),
         OBJECT_BOUNDING_BOX("objectBoundingBox");
 
@@ -157,7 +156,7 @@ public final class Enumerations {
          *
          * @param name the name of the attribute within the svg element.
          */
-        GradientUnits(final String name) {
+        GradientUnit(final String name) {
             this.name = name;
         }
 

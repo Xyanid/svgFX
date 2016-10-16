@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import javafx.util.Pair;
 
 import java.util.EnumSet;
@@ -139,7 +140,7 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeLength}
      */
     @Override
-    protected Pair<Double, Unit> getValueAndUnit(final String cssText) {
+    protected Pair<Double, Unit> getValueAndUnit(final String cssText) throws SVGException {
 
         Unit usedUnit = Unit.NONE;
 

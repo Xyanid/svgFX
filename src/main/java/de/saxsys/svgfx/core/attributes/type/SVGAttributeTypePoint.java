@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Constants;
 import javafx.util.Pair;
 
@@ -22,22 +23,17 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoint.SVGPoint, Void> {
+public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoint.SVGTypePoint, Void> {
 
-    // region Classes
+    // region Class
 
     /**
-     * This class represents a point in svg, it differs from a normal point in the sense that each x and y coordinates are {@link SVGAttributeTypeLength}
-     * instead of normal double or ints.
+     * @author Xyanid on 16.10.2016.
      */
-    public class SVGPoint {
+    public static class SVGTypePoint {
 
         //region Fields
 
-        /**
-         * The {@link SVGDocumentDataProvider} to be used.
-         */
-        private final SVGDocumentDataProvider dataProvider;
         /**
          * Determines the x coordinate of the point.
          */
@@ -51,10 +47,9 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
 
         //region Constructor
 
-        public SVGPoint(final SVGDocumentDataProvider dataProvider) {
-            this.dataProvider = dataProvider;
-            x = new SVGAttributeTypeLength(this.dataProvider);
-            y = new SVGAttributeTypeLength(this.dataProvider);
+        public SVGTypePoint(final SVGDocumentDataProvider dataProvider) {
+            x = new SVGAttributeTypeLength(dataProvider);
+            y = new SVGAttributeTypeLength(dataProvider);
         }
 
         //endregion
@@ -89,7 +84,7 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
     /**
      * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final SVGPoint DEFAULT_VALUE = null;
+    public static final SVGTypePoint DEFAULT_VALUE = null;
 
     // endregion
 
@@ -112,15 +107,15 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypePoint}
      */
     @Override
-    protected Pair<SVGPoint, Void> getValueAndUnit(final String text) {
+    protected Pair<SVGTypePoint, Void> getValueAndUnit(final String text) throws SVGException {
 
         final String[] pointSplit = text.split(Constants.POSITION_DELIMITER_STRING);
 
         if (pointSplit.length != 2) {
-            throw new IllegalArgumentException("point does not provide x and y position");
+            throw new SVGException(SVGException.Reason.INVALID_POINT_FORMAT, "point does not provide x and y position");
         }
 
-        final SVGPoint point = new SVGPoint(getDataProvider());
+        final SVGTypePoint point = new SVGTypePoint(getDocumentDataProvider());
         point.getX().setText(pointSplit[0].trim());
         point.getY().setText(pointSplit[1].trim());
 

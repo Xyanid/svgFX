@@ -11,36 +11,38 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import javafx.scene.shape.StrokeType;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.definitions.Enumerations;
+import javafx.scene.shape.FillRule;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
+ * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Void> {
+public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
 
     // region Static
 
     /**
-     * Determines the default value to use for this {@link SVGAttributeType}.
+     * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
+    public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
+     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
      *
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeStrokeType(final SVGDocumentDataProvider dataProvider) {
+    public SVGAttributeTypeFillRule(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -49,9 +51,18 @@ public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Voi
     //region Override AttributeWrapper
 
     @Override
-    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) {
+    protected Pair<FillRule, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
+        FillRule rule = DEFAULT_VALUE;
+
+        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
+            if (mapping.getName().equals(cssText)) {
+                rule = mapping.getRule();
+                break;
+            }
+        }
+
+        return new Pair<>(rule, null);
     }
 
     //endregion

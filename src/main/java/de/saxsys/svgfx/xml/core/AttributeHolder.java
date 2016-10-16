@@ -13,6 +13,8 @@
 
 package de.saxsys.svgfx.xml.core;
 
+import de.saxsys.svgfx.core.SVGException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -95,10 +97,10 @@ public abstract class AttributeHolder<TAttribute extends AttributeWrapper> {
      *
      * @throws IllegalArgumentException if the desired attribute does not exist.
      */
-    public final <TContent extends TAttribute> TContent getAttributeOrFail(final String name, final Class<TContent> clazz) {
+    public final <TContent extends TAttribute> TContent getAttributeOrFail(final String name, final Class<TContent> clazz) throws SVGException {
         final TContent attribute = clazz.cast(attributes.get(name));
 
-        if (attribute == null) { throw new IllegalArgumentException(String.format("Could not find attribute %s", name)); }
+        if (attribute == null) { throw new SVGException(SVGException.Reason.MISSING_ATTRIBUTE, String.format("Could not find attribute %s", name)); }
 
         return attribute;
     }

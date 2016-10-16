@@ -11,37 +11,37 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.definitions.Enumerations;
-import javafx.scene.shape.FillRule;
+import de.saxsys.svgfx.core.SVGException;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
+ * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
+public class SVGAttributeTypeStrokeLineCap extends SVGAttributeType<StrokeLineCap, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGAttributeType}.
+     * Determines the default value to use for this {@link SVGAttributeType}.
      */
-    public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
+    public static final StrokeLineCap DEFAULT_VALUE = StrokeLineCap.SQUARE;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
+     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
      *
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeFillRule(final SVGDocumentDataProvider dataProvider) {
+    public SVGAttributeTypeStrokeLineCap(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -50,18 +50,9 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
     //region Override AttributeWrapper
 
     @Override
-    protected Pair<FillRule, Void> getValueAndUnit(final String cssText) {
+    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        FillRule rule = DEFAULT_VALUE;
-
-        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
-            if (mapping.getName().equals(cssText)) {
-                rule = mapping.getRule();
-                break;
-            }
-        }
-
-        return new Pair<>(rule, null);
+        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

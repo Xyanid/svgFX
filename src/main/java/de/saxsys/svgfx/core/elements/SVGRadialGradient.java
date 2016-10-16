@@ -16,7 +16,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -55,13 +55,32 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         super(name, attributes, parent, dataProvider);
     }
 
+
     //endregion
 
     //region Override SVGGradientBase
 
     @Override
     protected final RadialGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
+        return determineResult(styleSupplier, null);
+    }
 
+
+    //endregion
+
+    // region SVGGradientBase
+
+    @Override
+    public RadialGradient createResult(final StyleSupplier styleSupplier, final SVGElementBase<?> element) throws SVGException {
+        return determineResult(styleSupplier, element);
+    }
+
+    // endregion
+
+
+    // region Private
+
+    private RadialGradient determineResult(final StyleSupplier styleSupplier, final SVGElementBase<?> element) throws SVGException {
         final List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
@@ -94,5 +113,5 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                   stops);
     }
 
-    //endregion
+    // endregion
 }

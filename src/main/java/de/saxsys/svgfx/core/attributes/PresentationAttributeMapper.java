@@ -14,16 +14,16 @@
 package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.content.SVGAttributeType;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeDashArray;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineCap;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineJoin;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeDashArray;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineCap;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineJoin;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeType;
 import de.saxsys.svgfx.core.elements.SVGClipPath;
 
 import java.util.ArrayList;

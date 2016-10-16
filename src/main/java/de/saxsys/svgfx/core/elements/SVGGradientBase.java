@@ -15,11 +15,10 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.utils.SVGUtils;
+import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
@@ -76,7 +75,7 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
             final Optional<SVGAttributeTypeString> link = getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class);
 
             if (link.isPresent()) {
-                fillStopsOrFail(stops, SVGUtils.resolveIRI(link.get().getValue(), getDocumentDataProvider(), SVGElementBase.class).getUnmodifiableChildren());
+                fillStopsOrFail(stops, SVGUtil.resolveIRI(link.get().getValue(), getDocumentDataProvider(), SVGElementBase.class).getUnmodifiableChildren());
             }
         }
 
@@ -100,9 +99,10 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     @Override
     public void endProcessing() throws SAXException {
-        if (getParent() instanceof SVGDefinitions) {
-            getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class)
-                                .ifPresent(id -> getDocumentDataProvider().setData(id.getValue(), this));
+        try {
+            storeElementInDocumentDataProvider();
+        } catch (final SVGException e) {
+            throw new SAXException(e);
         }
     }
 
@@ -134,6 +134,19 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
             }
         }
     }
+
+    // endregion
+
+    // region Abstract
+
+    /**
+     * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
+     *
+     * @param element the {@link SVGElementBase} requesting this gradient.
+     *
+     * @return a new {@link TPaint}.
+     */
+    public abstract TPaint createResult(final StyleSupplier styleSupplier, final SVGElementBase<?> element) throws SVGException;
 
     // endregion
 }

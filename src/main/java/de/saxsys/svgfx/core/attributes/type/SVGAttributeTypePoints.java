@@ -11,13 +11,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Constants;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -62,8 +61,8 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
     protected Pair<List<SVGAttributeTypePoint>, Void> getValueAndUnit(final String text) throws SVGException {
         List<SVGAttributeTypePoint> actualPoints = new ArrayList<>();
 
-        if (StringUtils.isNotNullOrEmpty(text)) {
-            List<String> values = SVGUtils.split(text, Collections.singletonList(Constants.POINTS_DELIMITER), (currentData, index) -> {
+        if (StringUtil.isNotNullOrEmpty(text)) {
+            List<String> values = StringUtil.splitByDelimiters(text, Collections.singletonList(Constants.POINTS_DELIMITER), (currentData, index) -> {
 
                 // check if the required delimiter is present and that the last character is not a delimiter so the string can be split
                 boolean containsDelimiter = currentData.contains(Constants.POSITION_DELIMITER_STRING);
@@ -78,8 +77,8 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
                 return false;
             });
 
-            for (String pointsSplit : values) {
-                SVGAttributeTypePoint actualPoint = new SVGAttributeTypePoint(getDataProvider());
+            for (final String pointsSplit : values) {
+                final SVGAttributeTypePoint actualPoint = new SVGAttributeTypePoint(getDocumentDataProvider());
                 actualPoint.setText(pointsSplit);
                 actualPoints.add(actualPoint);
             }

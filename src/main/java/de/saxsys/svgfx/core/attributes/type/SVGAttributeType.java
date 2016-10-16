@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
@@ -87,7 +87,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     /**
      * @return The {@link #dataProvider}.
      */
-    public final SVGDocumentDataProvider getDataProvider() {
+    public final SVGDocumentDataProvider getDocumentDataProvider() {
         return dataProvider;
     }
 

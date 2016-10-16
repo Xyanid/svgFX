@@ -18,8 +18,8 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public final class SVGUseTest {
      * Ensures that a attributes used by the use node are applied to the referenced result
      */
     @Test
-    public void ensureAttributesAreAppliedToTheReferencedElement() {
+    public void ensureAttributesAreAppliedToTheReferencedElement() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -95,7 +96,7 @@ public final class SVGUseTest {
      * Ensure that a referenced element which has style attributes that uses inheritance will get its actually value from the use element.
      */
     @Test
-    public void ensureStyleAreInheritedForReferencedElements() {
+    public void ensureStyleAreInheritedForReferencedElements() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -128,7 +129,7 @@ public final class SVGUseTest {
      * Ensures that a use duplicates an element.
      */
     @Test
-    public void ensureElementsAreDuplicated() {
+    public void ensureElementsAreDuplicated() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -161,10 +162,10 @@ public final class SVGUseTest {
 
 
     /**
-     * Ensures that an {@link de.saxsys.svgfx.core.SVGException} is thrown if the referenced element can not be found
+     * Ensures that an {@link SAXException} is thrown if the referenced element can not be found
      */
-    @Test (expected = SVGException.class)
-    public void ensureSVGExceptionIsThrownWhenReferencedElementCanNotBeResolved() {
+    @Test (expected = SAXException.class)
+    public void ensureSAXExceptionIsThrownWhenReferencedElementCanNotBeResolved() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

@@ -14,13 +14,15 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -37,7 +39,7 @@ public final class SVGClipPathTest {
      * Ensures that the attributes required for a clip path are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void ensureAttributesAreParsedCorrectly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

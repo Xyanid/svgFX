@@ -18,6 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.junit.Test;
@@ -28,7 +29,6 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -45,7 +45,7 @@ public final class SVGGradientBaseTest {
      * Ensure that stop elements are retrieved from a referenced element.
      */
     @Test
-    public void ensureStopElementsAreRetrievedFromReferencedElement() {
+    public void ensureStopElementsAreRetrievedFromReferencedElement() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -80,7 +80,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
             @Override
-            protected Color createResult(Supplier supplier) throws SVGException {
+            protected Color createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+
+            @Override
+            public Color createResult(StyleSupplier styleSupplier, SVGElementBase<?> element) throws SVGException {
                 return null;
             }
         };
@@ -100,7 +105,7 @@ public final class SVGGradientBaseTest {
      * Ensure that stop elements are retrieved from the element itself even when referenced elements are available
      */
     @Test
-    public void ensureOwnStopElementsArePreferred() {
+    public void ensureOwnStopElementsArePreferred() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -136,7 +141,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
             @Override
-            protected Color createResult(Supplier supplier) throws SVGException {
+            protected Color createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+
+            @Override
+            public Color createResult(StyleSupplier styleSupplier, SVGElementBase<?> element) throws SVGException {
                 return null;
             }
         };
@@ -171,7 +181,7 @@ public final class SVGGradientBaseTest {
      * Ensure that stop elements are retrieved from the element itself
      */
     @Test
-    public void ensureStopElementsAreRetrievedFromSelf() {
+    public void ensureStopElementsAreRetrievedFromSelf() throws SVGException {
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
@@ -184,7 +194,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
             @Override
-            protected Color createResult(Supplier supplier) throws SVGException {
+            protected Color createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+
+            @Override
+            public Color createResult(StyleSupplier styleSupplier, SVGElementBase<?> element) throws SVGException {
                 return null;
             }
         };

@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import de.saxsys.svgfx.xml.core.IDocumentDataProvider;
 
 import java.util.Collections;
@@ -86,7 +86,7 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
      */
     public final void setData(final String key, SVGElementBase data) {
 
-        if (StringUtils.isNullOrEmpty(key)) {
+        if (StringUtil.isNullOrEmpty(key)) {
             throw new IllegalArgumentException("given key must not be null or empty");
         }
 
@@ -112,7 +112,7 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
             throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given class must not be null or empty");
         }
 
-        if (StringUtils.isNullOrEmpty(key)) {
+        if (StringUtil.isNullOrEmpty(key)) {
             throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given key must not be null or empty");
         }
 

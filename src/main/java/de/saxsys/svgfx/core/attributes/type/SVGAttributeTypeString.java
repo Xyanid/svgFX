@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import javafx.util.Pair;
 
 /**
@@ -37,7 +38,7 @@ public class SVGAttributeTypeString extends SVGAttributeType<String, Void> {
     //region Override AttributeWrapper
 
     @Override
-    protected Pair<String, Void> getValueAndUnit(final String cssText) {
+    protected Pair<String, Void> getValueAndUnit(final String cssText) throws SVGException {
 
         return new Pair<>(cssText, null);
     }

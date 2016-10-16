@@ -17,13 +17,14 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeDouble;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeFillRule;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeStrokeLineCap;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineCap;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
@@ -60,7 +61,7 @@ public class SVGElementBaseTest {
      * Ensure that presentation attributes create a valid css style.
      */
     @Test
-    public void ensureThatPresentationAttributesCreateValidCssStyle() {
+    public void ensureThatPresentationAttributesCreateValidCssStyle() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -132,7 +133,7 @@ public class SVGElementBaseTest {
      * Ensures that {@link PresentationAttributeMapper}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
     @Test
-    public void ensureThatPresentationStyleIsPreferredAndOwnCssStyleAttributesAreKept() {
+    public void ensureThatPresentationStyleIsPreferredAndOwnCssStyleAttributesAreKept() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -169,7 +170,7 @@ public class SVGElementBaseTest {
      * Ensures that {@link PresentationAttributeMapper}s will be preferred and own {@link SVGCssStyle} attributes are kept.
      */
     @Test
-    public void ensureThatOwnStyleIsPreferredAndReferencedCssStyleAttributesAreKept() {
+    public void ensureThatOwnStyleIsPreferredAndReferencedCssStyleAttributesAreKept() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -212,7 +213,7 @@ public class SVGElementBaseTest {
      * exceptions.
      */
     @Test
-    public void ensureThatCssStyleAttributesAreInheritedFromParent() {
+    public void ensureThatCssStyleAttributesAreInheritedFromParent() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -259,7 +260,7 @@ public class SVGElementBaseTest {
      * Ensures that attributes of {@link SVGCssStyle} can be inherited from the parent tree and that missing attributes have the default value.
      */
     @Test
-    public void ensureThatCssStyleAttributesAreInheritedFromParentTreeAndDefaultValuesAreApplied() {
+    public void ensureThatCssStyleAttributesAreInheritedFromParentTreeAndDefaultValuesAreApplied() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -302,7 +303,7 @@ public class SVGElementBaseTest {
      * Ensure the {@link SVGElementBase#getStyle()} will always return a new {@link SVGCssStyle} and never null.
      */
     @Test
-    public void ensureGetCssStyleWillAlwaysReturnANewStyleAndNeverNull() {
+    public void ensureGetCssStyleWillAlwaysReturnANewStyleAndNeverNull() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -341,7 +342,7 @@ public class SVGElementBaseTest {
      * element does not have a parent.
      */
     @Test
-    public void ensureGetCssStyleAndResolveInheritanceWillWorkIfThereIsNoParent() {
+    public void ensureGetCssStyleAndResolveInheritanceWillWorkIfThereIsNoParent() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -385,7 +386,7 @@ public class SVGElementBaseTest {
      * Ensures that {@link CoreAttributeMapper#TRANSFORM} attribute is correctly read.
      */
     @Test
-    public void ensureThatTransformAttributeIsRead() {
+    public void ensureThatTransformAttributeIsRead() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -429,7 +430,7 @@ public class SVGElementBaseTest {
      * Ensure that no {@link SVGClipPath} will be created if the element does not have {@link PresentationAttributeMapper#CLIP_PATH} attribute.
      */
     @Test
-    public void ensureNoClipPathIsReturnedIfTheElementDoesNotHaveAClipPathAttribute() {
+    public void ensureNoClipPathIsReturnedIfTheElementDoesNotHaveAClipPathAttribute() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -444,7 +445,7 @@ public class SVGElementBaseTest {
      * Ensure that an {@link SVGException} is thrown if the referenced {@link SVGClipPath} is not present in the {@link SVGDocumentDataProvider}.
      */
     @Test (expected = SVGException.class)
-    public void ensureSVGExceptionIsThrownIfTheClipPathReferenceIsMissingInTheDataProvider() {
+    public void ensureSVGExceptionIsThrownIfTheClipPathReferenceIsMissingInTheDataProvider() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -462,7 +463,7 @@ public class SVGElementBaseTest {
      * Ensure that a {@link SVGClipPath} will be created if the element meets all the requirements.
      */
     @Test
-    public void ensureClipPathIsReturnedIfThereIsClipPathReference() {
+    public void ensureClipPathIsReturnedIfThereIsClipPathReference() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -486,7 +487,7 @@ public class SVGElementBaseTest {
      * Ensure that a {@link SVGClipPath} will always return a new instance.
      */
     @Test
-    public void ensureClipPathIsAlwaysADifferentInstance() {
+    public void ensureClipPathIsAlwaysADifferentInstance() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -521,7 +522,7 @@ public class SVGElementBaseTest {
      * Ensure that a {@link SVGClipPath} will not be able to cause a stack overflow in case the {@link SVGClipPath} reference it self.
      */
     @Test
-    public void ensureClipPathWillNotCauseStackOverflow() {
+    public void ensureClipPathWillNotCauseStackOverflow() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -547,4 +548,75 @@ public class SVGElementBaseTest {
 
         assertNotNull(clipPath);
     }
+
+    /**
+     * Ensures that {@link SVGElementBase#combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)} causes the expected exceptions
+     */
+    @Test (expected = SVGException.class)
+    public void ensureCombineAndResolveInheritanceCausesTheExpectedExceptions() throws SVGException {
+
+        final SVGCircle circle = new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, dataProvider);
+
+        circle.getStyleAndResolveInheritance(null);
+    }
+
+    /**
+     * Ensures that attributes of {@link SVGCssStyle} can be inherited and that the value will be retrieved from the provided {@link SVGCssStyle}.
+     */
+    @Test
+    public void ensureCombineAndResolveInheritanceUsesValuesFromOtherStyle() throws SVGException {
+
+        final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
+
+        style.parseCssText(".st1{fill:inherit;stroke:#222222}");
+
+        final SVGCssStyle style1 = new SVGCssStyle(new SVGDocumentDataProvider());
+
+        style1.parseCssText(".st1{fill:#111111;}");
+
+        SVGUtil.combineStylesAndResolveInheritance(style, style1);
+
+        assertEquals(Color.web("#111111"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).get().getValue());
+        assertEquals(Color.web("#222222"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).get().getValue());
+    }
+
+    /**
+     * Ensures that attributes of {@link SVGCssStyle} of the inheritanceResolver will be added.
+     */
+    @Test
+    public void ensureCombineAndResolveInheritanceAddsValuesFromOtherStyle() throws SVGException {
+
+        final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
+
+        style.parseCssText(".st1{fill:inherit;}");
+
+        final SVGCssStyle style1 = new SVGCssStyle(new SVGDocumentDataProvider());
+
+        style1.parseCssText(".st1{fill:#111111;stroke:#222222}");
+
+        SVGUtil.combineStylesAndResolveInheritance(style, style1);
+
+        assertEquals(Color.web("#111111"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).get().getValue());
+        assertEquals(Color.web("#222222"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).get().getValue());
+    }
+
+    /**
+     * Ensures that attributes of {@link SVGCssStyle} can be inherited and that the value already set will not be overwritten.
+     */
+    @Test
+    public void ensureCombineAndResolveInheritanceDoesNotOverrideExistingValues() throws SVGException {
+
+        final SVGCssStyle style = new SVGCssStyle(new SVGDocumentDataProvider());
+
+        style.parseCssText(".st1{fill:#333333;}");
+
+        final SVGCssStyle style1 = new SVGCssStyle(new SVGDocumentDataProvider());
+
+        style1.parseCssText(".st1{fill:#111111;}");
+
+        SVGUtil.combineStylesAndResolveInheritance(style, style1);
+
+        assertEquals(Color.web("#333333"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).get().getValue());
+    }
+
 }

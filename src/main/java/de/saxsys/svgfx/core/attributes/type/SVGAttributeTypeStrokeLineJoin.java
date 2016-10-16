@@ -11,48 +11,48 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Pair;
 
 /**
- * This class represents a svg length content type
+ * Represents a {@link StrokeLineJoin}, the default value is {@link StrokeLineJoin#MITER}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeDouble extends SVGAttributeType<Double, Void> {
+public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJoin, Void> {
 
     // region Static
 
     /**
-     * Determines the default value for this {@link SVGAttributeType}.
+     * Determines the default value to use for this {@link SVGAttributeType}.
      */
-    public static final double DEFAULT_VALUE = 0.0d;
+    public static final StrokeLineJoin DEFAULT_VALUE = StrokeLineJoin.MITER;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance.
+     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
      *
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeDouble(final SVGDocumentDataProvider dataProvider) {
-        super(0.0d, dataProvider);
+    public SVGAttributeTypeStrokeLineJoin(final SVGDocumentDataProvider dataProvider) {
+        super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override SVGAttributeType
+    //region Override AttributeWrapper
 
-    /**
-     * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeDouble}
-     */
     @Override
-    protected Pair<Double, Void> getValueAndUnit(final String cssText) {
-        return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
+    protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) throws SVGException {
+
+        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

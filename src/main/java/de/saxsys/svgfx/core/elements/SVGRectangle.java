@@ -16,10 +16,12 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
+
+import java.util.Optional;
 
 /**
  * This class represents a line element from svg
@@ -73,8 +75,15 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
         super.initializeResult(rect, styleSupplier);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
-        getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).ifPresent(radiusX -> rect.setArcWidth(radiusX.getValue() * 2.0d));
-        getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).ifPresent(radiusY -> rect.setArcHeight(radiusY.getValue() * 2.0d));
+        final Optional<SVGAttributeTypeLength> radiusX = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class);
+        if (radiusX.isPresent()) {
+            rect.setArcWidth(radiusX.get().getValue() * 2.0d);
+        }
+
+        final Optional<SVGAttributeTypeLength> radiusY = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class);
+        if (radiusY.isPresent()) {
+            rect.setArcHeight(radiusY.get().getValue() * 2.0d);
+        }
     }
 
     //endregion

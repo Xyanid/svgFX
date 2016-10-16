@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttribu
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypeLength}
      */
     @Override
-    protected Pair<SVGAttributeTypeLength[], Void> getValueAndUnit(final String cssText) {
+    protected Pair<SVGAttributeTypeLength[], Void> getValueAndUnit(final String cssText) throws SVGException {
 
         String[] values = cssText.split(",");
 
@@ -84,7 +85,7 @@ public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttribu
         dashValues.clear();
 
         for (int i = 0; i < values.length; i++) {
-            array[i] = new SVGAttributeTypeLength(getDataProvider());
+            array[i] = new SVGAttributeTypeLength(getDocumentDataProvider());
             array[i].setText(values[i].trim());
             dashValues.add(array[i].getValue());
         }

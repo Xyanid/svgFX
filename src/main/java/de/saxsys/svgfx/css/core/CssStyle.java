@@ -14,7 +14,7 @@
 package de.saxsys.svgfx.css.core;
 
 
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.core.AttributeHolder;
 import de.saxsys.svgfx.xml.core.AttributeWrapper;
@@ -159,7 +159,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
      * @param name the name to use which might contain the selector.
      */
     private void setNameAndSelector(final String name) {
-        if (StringUtils.isNotNullOrEmpty(name)) {
+        if (StringUtil.isNotNullOrEmpty(name)) {
             if (name.startsWith(Selector.ID.getName())) {
                 selector = Selector.ID;
                 this.name = name.replace(Selector.ID.getName(), "");
@@ -187,7 +187,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
      * @return a new {@link Pair} containing the name of the {@link TAttributeType} as the key and the {@link TAttributeType} as the value;
      */
     private Pair<String, TAttributeType> determineAttributeType(final String data) throws IllegalArgumentException {
-        if (StringUtils.isNullOrEmpty(data)) {
+        if (StringUtil.isNullOrEmpty(data)) {
             throw new IllegalArgumentException("Given data must not be null in order to create a attribute type from it");
         }
 
@@ -201,10 +201,10 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
 
         final String name = trimmedData.substring(0, index).trim();
 
-        TAttributeType attribute = attributeHolder.createAttributeType(StringUtils.stripStringIndicators(name));
+        TAttributeType attribute = attributeHolder.createAttributeType(StringUtil.stripStringIndicators(name));
 
         if (attribute != null) {
-            attribute.setText(StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim()));
+            attribute.setText(StringUtil.stripStringIndicators(trimmedData.substring(index + 1).trim()));
         }
 
         return new Pair<>(name, attribute);

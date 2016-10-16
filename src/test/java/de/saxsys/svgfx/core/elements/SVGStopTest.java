@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertCreationFails;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +38,7 @@ public final class SVGStopTest {
      * Ensures that the attributes are parsed correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void ensureAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -61,7 +62,7 @@ public final class SVGStopTest {
      * Ensures that the {@link PresentationAttributeMapper#STOP_COLOR} is preferred.
      */
     @Test
-    public void ensureThatStopColorIsPreferred() {
+    public void ensureThatStopColorIsPreferred() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

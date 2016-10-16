@@ -17,10 +17,10 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.utils.SVGUtils;
+import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import org.xml.sax.Attributes;
@@ -67,10 +67,10 @@ public class SVGUse extends SVGNodeBase<Group> {
     @Override
     protected Group createResult(final StyleSupplier styleSupplier) throws SVGException {
 
-        final SVGElementBase referencedElement = SVGUtils.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
-                                                                                                             SVGAttributeTypeString.class).getValue(),
-                                                                     getDocumentDataProvider(),
-                                                                     SVGElementBase.class);
+        final SVGElementBase referencedElement = SVGUtil.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
+                                                                                                            SVGAttributeTypeString.class).getValue(),
+                                                                    getDocumentDataProvider(),
+                                                                    SVGElementBase.class);
 
         final Group result = new Group();
         result.setLayoutX(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));

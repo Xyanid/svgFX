@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.mockito.Mockito.when;
 
@@ -35,7 +36,7 @@ public final class SVGRadialGradientTest {
      * Ensures that the attributes are parsed correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void ensureAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -72,10 +73,10 @@ public final class SVGRadialGradientTest {
     }
 
     /**
-     * Ensures that the an {@link SVGException} is thrown if there are no stops elements.
+     * Ensures that the an {@link SAXException} is thrown if there are no stops elements.
      */
-    @Test (expected = SVGException.class)
-    public void ensureSVGExceptionIsThrownWhenStopsAreMissing() {
+    @Test (expected = SAXException.class)
+    public void ensureSVGExceptionIsThrownWhenStopsAreMissing() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -89,8 +90,8 @@ public final class SVGRadialGradientTest {
     /**
      * Ensures that the an {@link SVGException} is thrown if there needed attributes are missing.
      */
-    @Test (expected = SVGException.class)
-    public void ensureSVGExceptionIsThrownWhenAttributesAreMissing() {
+    @Test (expected = SAXException.class)
+    public void ensureSVGExceptionIsThrownWhenAttributesAreMissing() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

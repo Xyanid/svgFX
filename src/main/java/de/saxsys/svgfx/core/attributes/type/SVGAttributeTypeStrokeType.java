@@ -11,36 +11,37 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.content;
+package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import javafx.scene.shape.StrokeLineCap;
+import de.saxsys.svgfx.core.SVGException;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link StrokeLineCap}, the default value is {@link StrokeLineCap#SQUARE}.
+ * Represents a {@link StrokeType}, the default value is {@link StrokeType#INSIDE}.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeStrokeLineCap extends SVGAttributeType<StrokeLineCap, Void> {
+public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Void> {
 
     // region Static
 
     /**
      * Determines the default value to use for this {@link SVGAttributeType}.
      */
-    public static final StrokeLineCap DEFAULT_VALUE = StrokeLineCap.SQUARE;
+    public static final StrokeType DEFAULT_VALUE = StrokeType.CENTERED;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link #DEFAULT_VALUE}.
+     * Creates new instance with a default value of {@link StrokeType#CENTERED}.
      *
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeStrokeLineCap(final SVGDocumentDataProvider dataProvider) {
+    public SVGAttributeTypeStrokeType(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
@@ -49,9 +50,9 @@ public class SVGAttributeTypeStrokeLineCap extends SVGAttributeType<StrokeLineCa
     //region Override AttributeWrapper
 
     @Override
-    protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) {
+    protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
+        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
     }
 
     //endregion

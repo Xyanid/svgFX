@@ -14,10 +14,11 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
-import de.saxsys.svgfx.core.content.SVGAttributeTypeLength;
-import de.saxsys.svgfx.core.content.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.paint.Color;
 import org.junit.Assert;
@@ -25,6 +26,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -42,7 +44,7 @@ public final class SVGStyleTest {
      * Ensures that one css style provided by {@link SVGStyle} is correct based on the input.
      */
     @Test
-    public void ensureOneResultIsCreatedCorrectly() {
+    public void ensureOneResultIsCreatedCorrectly() throws SAXException, SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -79,7 +81,7 @@ public final class SVGStyleTest {
      * Ensures that the {@link de.saxsys.svgfx.css.definitions.Constants#PROPERTY_END} can be missing and end of a style
      */
     @Test
-    public void ensureMissingPropertyEndStringsAreHandledCorrectly() {
+    public void ensureMissingPropertyEndStringsAreHandledCorrectly() throws SAXException, SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -118,7 +120,7 @@ public final class SVGStyleTest {
      */
     @SuppressWarnings ("MismatchedQueryAndUpdateOfStringBuilder")
     @Test
-    public void ensureMultipleResultAreCreatedCorrectly() {
+    public void ensureMultipleResultAreCreatedCorrectly() throws SAXException, SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
