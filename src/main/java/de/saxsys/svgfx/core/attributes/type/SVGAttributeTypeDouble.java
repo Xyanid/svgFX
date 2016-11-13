@@ -53,7 +53,11 @@ public class SVGAttributeTypeDouble extends SVGAttributeType<Double, Void> {
      */
     @Override
     protected Pair<Double, Void> getValueAndUnit(final String cssText) throws SVGException {
-        return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
+        try {
+            return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
+        } catch (final NumberFormatException e) {
+            throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
+        }
     }
 
     //endregion

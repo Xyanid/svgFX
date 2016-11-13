@@ -31,9 +31,12 @@ import org.xml.sax.SAXException;
 
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 /**
@@ -48,7 +51,7 @@ public final class SVGUseTest {
      * Ensures that a attributes used by the use node are applied to the referenced result
      */
     @Test
-    public void ensureAttributesAreAppliedToTheReferencedElement() throws SVGException, SAXException {
+    public void attributesAreAppliedToTheReferencedElement() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -96,7 +99,7 @@ public final class SVGUseTest {
      * Ensure that a referenced element which has style attributes that uses inheritance will get its actually value from the use element.
      */
     @Test
-    public void ensureStyleAreInheritedForReferencedElements() throws SAXException {
+    public void styleAreInheritedForReferencedElements() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -129,7 +132,7 @@ public final class SVGUseTest {
      * Ensures that a use duplicates an element.
      */
     @Test
-    public void ensureElementsAreDuplicated() throws SAXException {
+    public void elementsWillBeDuplicatedWhenTheResultIsRequestedMultipleTimes() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -164,8 +167,8 @@ public final class SVGUseTest {
     /**
      * Ensures that an {@link SAXException} is thrown if the referenced element can not be found
      */
-    @Test (expected = SAXException.class)
-    public void ensureSAXExceptionIsThrownWhenReferencedElementCanNotBeResolved() throws SAXException {
+    @Test
+    public void whenReferencedElementCanNotBeResolvedAnSVGExceptionWillBeThrown() {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -183,8 +186,14 @@ public final class SVGUseTest {
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(0)).thenReturn("#something");
 
-        final SVGUse use1 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
+        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
 
-        use1.getResult();
+        try {
+            use.getResult();
+            fail("Should not be able to get result when referenced element is missing");
+        } catch (final SAXException e) {
+            assertThat(e.getCause(), instanceOf(SVGException.class));
+            assertEquals(SVGException.Reason.MISSING_ELEMENT, ((SVGException) e.getCause()).getReason());
+        }
     }
 }

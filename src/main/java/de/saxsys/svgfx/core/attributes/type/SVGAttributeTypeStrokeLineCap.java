@@ -51,8 +51,11 @@ public class SVGAttributeTypeStrokeLineCap extends SVGAttributeType<StrokeLineCa
 
     @Override
     protected Pair<StrokeLineCap, Void> getValueAndUnit(final String cssText) throws SVGException {
-
-        return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
+        try {
+            return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
+        } catch (IllegalArgumentException e) {
+            throw new SVGException(SVGException.Reason.INVALID_STROKE_LINE_CAP, e);
+        }
     }
 
     //endregion

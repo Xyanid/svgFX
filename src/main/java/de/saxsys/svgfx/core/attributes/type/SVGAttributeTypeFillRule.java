@@ -55,7 +55,7 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
 
         FillRule rule = DEFAULT_VALUE;
 
-        for (Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
+        for (final Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
             if (mapping.getName().equals(cssText)) {
                 rule = mapping.getRule();
                 break;

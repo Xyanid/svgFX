@@ -19,11 +19,8 @@ import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.core.AttributeHolder;
 import de.saxsys.svgfx.xml.core.AttributeWrapper;
 import javafx.util.Pair;
-import org.w3c.dom.DOMException;
 
 import java.util.Map;
-
-import static org.w3c.dom.DOMException.SYNTAX_ERR;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
@@ -243,7 +240,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
      *
      * @param cssText the text that is to be consumed, must not be null or empty.
      */
-    public final void parseCssText(final String cssText) throws DOMException {
+    public final void parseCssText(final String cssText) {
 
         name = null;
         selector = Selector.NONE;
@@ -330,7 +327,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
         }
 
         if (isInsideDeclarationBlock) {
-            throw new DOMException(SYNTAX_ERR, "Css text not properly closed");
+            throw new IllegalArgumentException("Css text not properly closed, can not use this css data.");
         }
     }
 

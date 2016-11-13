@@ -142,11 +142,11 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     /**
      * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
      *
-     * @param element the {@link SVGElementBase} requesting this gradient.
+     * @param shape the {@link SVGShapeBase} requesting this gradient.
      *
      * @return a new {@link TPaint}.
      */
-    public abstract TPaint createResult(final StyleSupplier styleSupplier, final SVGElementBase<?> element) throws SVGException;
+    public abstract TPaint createResult(final SVGShapeBase<?> shape) throws SVGException;
 
     // endregion
 }

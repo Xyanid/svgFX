@@ -52,7 +52,6 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
          * Meaning the value is defined in inches.
          */
         INCH("in"),
-
         /**
          * Meaning the value is defined in centimeters.
          */
@@ -151,7 +150,11 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
             }
         }
 
-        return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length()).replaceAll(",", ".")), usedUnit);
+        try {
+            return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length()).replaceAll(",", ".")), usedUnit);
+        } catch (final NumberFormatException e) {
+            throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
+        }
     }
 
     //endregion

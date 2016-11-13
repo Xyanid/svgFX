@@ -99,7 +99,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     @Override
     public void endProcessing() throws SAXException {
-        getDocumentDataProvider().getStyles().addAll(getResult());
+        getDocumentDataProvider().addStyles(getResult());
     }
 
     /**

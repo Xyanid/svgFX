@@ -51,8 +51,11 @@ public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJ
 
     @Override
     protected Pair<StrokeLineJoin, Void> getValueAndUnit(final String cssText) throws SVGException {
-
-        return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
+        try {
+            return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
+        } catch (IllegalArgumentException e) {
+            throw new SVGException(SVGException.Reason.INVALID_STROKE_LINE_JOIN, e);
+        }
     }
 
     //endregion

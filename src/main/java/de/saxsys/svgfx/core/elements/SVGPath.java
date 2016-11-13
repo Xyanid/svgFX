@@ -18,6 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import org.xml.sax.Attributes;
@@ -82,6 +83,12 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
         if (fillRule.isPresent()) {
             path.setFillRule(fillRule.get().getValue());
         }
+    }
+
+    @Override
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+        // TODO figure out how to get the bounding box from a path
+        return null;
     }
 
     //endregion

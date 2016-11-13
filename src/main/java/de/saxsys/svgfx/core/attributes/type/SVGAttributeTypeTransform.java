@@ -175,9 +175,10 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
             // a matrix will create an affine matrix and has 6 values
             case MATRIX:
                 if (values.size() != 6) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 6 values but got %d",
-                                                                                                      matrix.getName(),
-                                                                                                      values.size()));
+                    throw new SVGException(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
+                                           String.format("Given number of values does not match for matrix %s. Expected 6 values but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 try {
@@ -189,7 +190,7 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
                                         Double.parseDouble(values.get(3).trim()),
                                         Double.parseDouble(values.get(5).trim()));
                 } catch (final NumberFormatException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
+                    throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
                 }
                 break;
 
@@ -197,9 +198,10 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
             case TRANSLATE:
             case SCALE:
                 if (values.size() != 1 && values.size() != 2) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 1 or 2 values but got %d",
-                                                                                                      matrix.getName(),
-                                                                                                      values.size()));
+                    throw new SVGException(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
+                                           String.format("Given number of values does not match for matrix %s. Expected 1 or 2 values but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 try {
@@ -213,16 +215,17 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
                         result = new Scale(x, y);
                     }
                 } catch (final NumberFormatException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
+                    throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
                 }
                 break;
 
             // a rotate will create a rotate matrix and has either 1 or 3 values
             case ROTATE:
                 if (values.size() != 1 && values.size() != 3) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 1 or 3 values but got %d",
-                                                                                                      matrix.getName(),
-                                                                                                      values.size()));
+                    throw new SVGException(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
+                                           String.format("Given number of values does not match for matrix %s. Expected 1 or 3 values but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 // if more then one value is present then the rotation also contains a translation
@@ -232,7 +235,7 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
 
                     result = new Rotate(Double.parseDouble(values.get(0).trim()), x, y);
                 } catch (final NumberFormatException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
+                    throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
                 }
                 break;
 
@@ -242,9 +245,10 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
             case SKEW_Y:
             default:
                 if (values.size() != 1) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, String.format("Given number of values does not match for matrix %s. Expected 1 value but got %d",
-                                                                                                      matrix.getName(),
-                                                                                                      values.size()));
+                    throw new SVGException(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
+                                           String.format("Given number of values does not match for matrix %s. Expected 1 value but got %d",
+                                                         matrix.getName(),
+                                                         values.size()));
                 }
 
                 double shearing;
@@ -252,7 +256,7 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
                 try {
                     shearing = Double.parseDouble(values.get(0).trim());
                 } catch (final NumberFormatException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_MATRIX, e);
+                    throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
                 }
 
                 if (matrix == Enumerations.Matrix.SKEW_X) {

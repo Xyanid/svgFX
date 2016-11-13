@@ -21,8 +21,10 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import static de.saxsys.svgfx.core.elements.utils.TestUtils.assertCreationFails;
+import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +39,7 @@ public final class SVGPolygonTest {
      * Ensures that the polygon required for a line are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() throws SAXException {
+    public void allAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -61,28 +63,34 @@ public final class SVGPolygonTest {
      * Ensures that a {@link SVGException} is thrown of one of the attributes is invalid.
      */
     @Test
-    public void ensureSVGExceptionIfTheContentContainsInvalidData() {
+    public void whenAnyAttributeIsInvalidAnSVGExceptionIsThrownDuringTheCreatingOfTheResult() {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
-        when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(1);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        assertCreationFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, NumberFormatException.class);
+        assertResultFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+            assertThat(exception.getCause(), instanceOf(SVGException.class));
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
+        });
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        assertCreationFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), SVGPolygon.class, SVGException.class);
+        assertResultFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+            assertThat(exception.getCause(), instanceOf(SVGException.class));
+            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, ((SVGException) exception.getCause()).getReason());
+        });
     }
 
     /**
      * Ensures that a {@link SAXException} is thrown of one of the attributes is missing.
      */
     @Test
-    public void ensureNoSAXExceptionIsThrownWhenAttributesAreMissing() {
+    public void whenAnyAttributeIsMissingNoSVGExceptionIsThrownDuringTheCreatingOfTheResult() {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

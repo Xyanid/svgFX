@@ -38,7 +38,7 @@ public final class SVGPathTest {
      * Ensures that the path required for a line are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() throws SAXException {
+    public void allAttributesAreParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -56,7 +56,7 @@ public final class SVGPathTest {
      * Ensures that the fill rule is parsed correctly.
      */
     @Test
-    public void ensureFillRuleParsedCorrectly() throws SAXException {
+    public void fillRuleWillBeParsedCorrectly() throws SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -76,7 +76,7 @@ public final class SVGPathTest {
      * Ensures that no {@link SVGException} is thrown of one of the attributes is invalid.
      */
     @Test
-    public void ensureNoSVGExceptionIfTheContentContainsInvalidData() {
+    public void noSVGExceptionIfTheContentContainsInvalidData() {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -90,7 +90,7 @@ public final class SVGPathTest {
         try {
             line.getResult();
         } catch (final SAXException e) {
-            fail();
+            fail("Should not throw exception if attributes are invalid");
         }
     }
 
@@ -98,7 +98,7 @@ public final class SVGPathTest {
      * Ensures that no {@link SVGException} is thrown of one of the attributes is missing.
      */
     @Test
-    public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() throws SAXException {
+    public void noSVGExceptionIsThrownWhenAttributesAreMissing() {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -106,6 +106,18 @@ public final class SVGPathTest {
 
         final SVGPath path = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
-        path.getResult();
+        try {
+            path.getResult();
+        } catch (final SAXException e) {
+            fail("Should not throw exception if attributes are missing");
+        }
+    }
+
+    /**
+     * The bounding rectangle described by the shape can be correctly determined.
+     */
+    @Test
+    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
+
     }
 }

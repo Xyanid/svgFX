@@ -14,28 +14,25 @@
 package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
-import de.saxsys.svgfx.core.utils.SVGUtil;
-import javafx.scene.paint.Color;
+import de.saxsys.svgfx.core.SVGException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Xyanid on 16.10.2016.
  */
-@RunWith (MockitoJUnitRunner.class)
-public class SVGAttributeTypePaintTest {
+public class SVGAttributeTypeStringIntegrationTest {
 
     // region Fields
 
-    @Mock
-    private SVGDocumentDataProvider dataProvider;
+    private final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-    private SVGAttributeTypePaint cut;
+    private SVGAttributeTypeString cut;
 
     // endregion
 
@@ -43,7 +40,7 @@ public class SVGAttributeTypePaintTest {
 
     @Before
     public void setUp() {
-        cut = new SVGAttributeTypePaint(dataProvider);
+        cut = new SVGAttributeTypeString(dataProvider);
     }
 
     // endregion
@@ -51,16 +48,20 @@ public class SVGAttributeTypePaintTest {
     //region Tests
 
     /**
-     * Test that the opacity is altered as expected.
+     * All units can be converted when being provided as text.
      */
     @Test
-    public void opacityWillBeAppliedToColorCorrectly() {
+    public void differentStringsCanBeUsedAsInputAndWillNotCauseAnExceptions() throws SVGException {
 
-        final Color red = Color.RED;
+        int counter = 20;
 
-        SVGUtil.applyOpacity(red, 0.25d);
+        while (counter-- > 0) {
+            final String value = UUID.randomUUID().toString();
 
-        assertEquals(0.25d, ((Color) SVGUtil.applyOpacity(red, 0.25d)).getOpacity(), 0.01d);
+            cut.setText(value);
+            assertEquals(value, cut.getValue());
+            assertNull(cut.getUnit());
+        }
     }
 
     //endregion

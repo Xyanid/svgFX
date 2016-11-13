@@ -112,7 +112,7 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      *
      * @return {@link #valueAndUnit}s key.
      */
-    public TValue getValue() throws SVGException {
+    public final TValue getValue() throws SVGException {
         initializeValueAndUnit();
         return valueAndUnit.getKey();
     }
@@ -145,8 +145,9 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     }
 
     @Override
-    public void setText(final String text) {
+    public final void setText(final String text) {
         super.setText(text);
+        valueAndUnit = null;
     }
 
     // endregion
@@ -157,13 +158,17 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      * Initializes the result based on the
      */
     private void initializeValueAndUnit() throws SVGException {
-        final String text = getText();
+        if (valueAndUnit == null) {
+            final String text = getText();
 
-        isInherited = INHERIT_INDICATOR.equals(text);
-        isNone = NONE_INDICATOR.equals(text);
+            isInherited = INHERIT_INDICATOR.equals(text);
+            isNone = NONE_INDICATOR.equals(text);
 
-        if (!isInherited && !isNone) {
-            valueAndUnit = getValueAndUnit(getText());
+            if (!isInherited && !isNone) {
+                valueAndUnit = getValueAndUnit(getText());
+            } else {
+                valueAndUnit = new Pair<>(null, null);
+            }
         }
     }
 

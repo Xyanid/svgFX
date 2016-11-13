@@ -100,16 +100,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      */
     public final TResult createAndInitializeResult(final StyleSupplier styleSupplier) throws SVGException {
 
-        final TResult result;
-
-        try {
-            result = createResult(styleSupplier);
-            initializeResult(result, styleSupplier);
-        } catch (final Exception e) {
-            throw new SVGException(SVGException.Reason.FAILED_TO_CREATE_RESULT,
-                                   String.format("Creation of element %s failed.\nOriginal element is %s ", getClass().getName(), toString()), e);
-        }
-
+        final TResult result = createResult(styleSupplier);
+        initializeResult(result, styleSupplier);
         return result;
     }
 
@@ -189,7 +181,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         if (getParent() instanceof SVGDefinitions) {
             final Optional<SVGAttributeTypeString> id = getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class);
             if (id.isPresent()) {
-                getDocumentDataProvider().setData(id.get().getValue(), this);
+                getDocumentDataProvider().storeData(id.get().getValue(), this);
             }
         }
     }
@@ -297,11 +289,16 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
 
             final SVGCssStyle ownStyle = new SVGCssStyle(getDocumentDataProvider());
 
-            ownStyle.parseCssText(String.format("ownStyle%s%s%s%s",
-                                                Constants.DECLARATION_BLOCK_START,
-                                                attribute,
-                                                attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
-                                                Constants.DECLARATION_BLOCK_END));
+
+            try {
+                ownStyle.parseCssText(String.format("ownStyle%s%s%s%s",
+                                                    Constants.DECLARATION_BLOCK_START,
+                                                    attribute,
+                                                    attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
+                                                    Constants.DECLARATION_BLOCK_END));
+            } catch (final IllegalArgumentException e) {
+                throw new SVGException(SVGException.Reason.INVALID_CSS_STYLE, e);
+            }
 
             return ownStyle;
         }
@@ -321,7 +318,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         if (className.isPresent()) {
             final String reference = className.get().getValue();
 
-            return getDocumentDataProvider().getStyles()
+            return getDocumentDataProvider().getUnmodifiableStyles()
                                             .stream()
                                             .filter(data -> data.getName().endsWith(reference))
                                             .findFirst()
@@ -338,21 +335,21 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      * @return a {@link SVGCssStyle} containing the {@link PresentationAttributeMapper}s of this element if any or null if not attributes are submitted.
      * {@link PresentationAttributeMapper} exists.
      */
-    private SVGCssStyle getPresentationCssStyle() {
+    private SVGCssStyle getPresentationCssStyle() throws SVGException {
 
         SVGCssStyle result = null;
 
         final StringBuilder cssText = new StringBuilder();
 
-        for (final PresentationAttributeMapper attribute : PresentationAttributeMapper.VALUES) {
-            getAttributeHolder().getAttribute(attribute.getName()).ifPresent(contentType -> {
-                String data = contentType.getText();
+        for (final PresentationAttributeMapper attributeMapper : PresentationAttributeMapper.VALUES) {
+            getAttributeHolder().getAttribute(attributeMapper.getName()).ifPresent(attribute -> {
+                final String data = attribute.getText();
                 if (StringUtil.isNotNullOrEmpty(data)) {
                     if (cssText.length() == 0) {
                         cssText.append("presentationStyle" + Constants.DECLARATION_BLOCK_START);
                     }
 
-                    cssText.append(String.format("%s%s%s%s", attribute.getName(), Constants.PROPERTY_SEPARATOR, data, Constants.PROPERTY_END));
+                    cssText.append(String.format("%s%s%s%s", attributeMapper.getName(), Constants.PROPERTY_SEPARATOR, data, Constants.PROPERTY_END));
                 }
             });
         }
@@ -360,7 +357,12 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         if (cssText.length() > 0) {
             cssText.append(Constants.DECLARATION_BLOCK_END);
             result = new SVGCssStyle(getDocumentDataProvider());
-            result.parseCssText(cssText.toString());
+
+            try {
+                result.parseCssText(cssText.toString());
+            } catch (final Exception e) {
+                throw new SVGException(SVGException.Reason.INVALID_CSS_STYLE, e);
+            }
         }
 
         return result;

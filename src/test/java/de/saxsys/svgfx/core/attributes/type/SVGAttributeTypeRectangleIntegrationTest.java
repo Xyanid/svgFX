@@ -15,10 +15,8 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -26,13 +24,11 @@ import static org.junit.Assert.fail;
 /**
  * @author Xyanid on 16.10.2016.
  */
-@RunWith (MockitoJUnitRunner.class)
-public class SVGAttributeTypeRectangleTest {
+public class SVGAttributeTypeRectangleIntegrationTest {
 
     // region Fields
 
-    @Mock
-    private SVGDocumentDataProvider dataProvider;
+    private final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
     private SVGAttributeTypeRectangle cut;
 
@@ -40,6 +36,7 @@ public class SVGAttributeTypeRectangleTest {
 
     // region setup
 
+    @Before
     public void setUp() {
         cut = new SVGAttributeTypeRectangle(dataProvider);
     }
@@ -52,7 +49,7 @@ public class SVGAttributeTypeRectangleTest {
      * When a text is provided that does not contain 4 values separated either by a space or comma, an exception will be thrown.
      */
     @Test
-    public void anExceptionWillBeThrownWhenTheProvidedTextIsNotInTheWriteFormat() {
+    public void whenTheProvidedTextIsInvalidAnSVGExceptionWillBeThrown() {
 
         cut.setText("1");
 
@@ -101,9 +98,9 @@ public class SVGAttributeTypeRectangleTest {
         cut.setText("1, 2 3, 4");
 
         assertEquals(1.0d, cut.getValue().getMinX().getValue(), 0.0d);
-        assertEquals(1.0d, cut.getValue().getMinY().getValue(), 0.0d);
-        assertEquals(1.0d, cut.getValue().getMaxX().getValue(), 0.0d);
-        assertEquals(1.0d, cut.getValue().getMaxY().getValue(), 0.0d);
+        assertEquals(2.0d, cut.getValue().getMinY().getValue(), 0.0d);
+        assertEquals(3.0d, cut.getValue().getMaxX().getValue(), 0.0d);
+        assertEquals(4.0d, cut.getValue().getMaxY().getValue(), 0.0d);
     }
 
     // endregion

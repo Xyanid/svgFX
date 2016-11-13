@@ -51,8 +51,11 @@ public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Voi
 
     @Override
     protected Pair<StrokeType, Void> getValueAndUnit(final String cssText) throws SVGException {
-
-        return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
+        try {
+            return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
+        } catch (final IllegalArgumentException e) {
+            throw new SVGException(SVGException.Reason.INVALID_STROKE_TYPE, e);
+        }
     }
 
     //endregion

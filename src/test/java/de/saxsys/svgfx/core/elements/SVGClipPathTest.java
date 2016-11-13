@@ -20,10 +20,13 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.utils.TestUtils.getChildren;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -32,14 +35,15 @@ import static org.mockito.Mockito.when;
  *
  * @author Xyanid on 05.10.2015.
  */
-@SuppressWarnings ("OptionalGetWithoutIsPresent")
+@SuppressWarnings ({"OptionalGetWithoutIsPresent", "unchecked"})
+@RunWith (MockitoJUnitRunner.class)
 public final class SVGClipPathTest {
 
     /**
      * Ensures that the attributes required for a clip path are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() throws SVGException, SAXException {
+    public void allAttributesAreParsedCorrectly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -55,12 +59,12 @@ public final class SVGClipPathTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("50");
 
-        clipPath.getUnmodifiableChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle("circle", attributes, clipPath, provider));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("25");
 
-        clipPath.getUnmodifiableChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle("circle", attributes, clipPath, provider));
 
         assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).get().getValue());
         Assert.assertNotNull(clipPath.getResult());

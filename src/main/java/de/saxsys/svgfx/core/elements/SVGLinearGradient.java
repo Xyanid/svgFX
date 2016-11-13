@@ -64,7 +64,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
     @Override
     protected final LinearGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
-        return determineResult(styleSupplier, null);
+        return determineResult(null);
     }
 
     //endregion
@@ -72,15 +72,15 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     // region Implement SVGGradientBase
 
     @Override
-    public LinearGradient createResult(final StyleSupplier styleSupplier, final SVGElementBase<?> elementBase) throws SVGException {
-        return determineResult(styleSupplier, elementBase);
+    public LinearGradient createResult(final SVGShapeBase<?> shape) throws SVGException {
+        return determineResult(shape);
     }
 
     // endregion
 
     // region Private
 
-    private LinearGradient determineResult(final StyleSupplier styleSupplier, final SVGElementBase<?> element) throws SVGException {
+    private LinearGradient determineResult(final SVGShapeBase<?> shape) throws SVGException {
 
         final List<Stop> stops = getStops();
         if (stops.isEmpty()) {
@@ -97,23 +97,30 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
                                                                                               Enumerations.GradientUnit.OBJECT_BOUNDING_BOX);
 
         if (gradientUnit == Enumerations.GradientUnit.USER_SPACE_ON_USE) {
-            if (element == null) {
-                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create gradient when user space is defined but the referenced element is missing");
+            if (shape == null) {
+                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but the requesting shape is missing.");
             }
-            getRelativePosition(startX, startY, endX, endY, element);
+            adjustPosition(startX, startY, endX, endY, shape);
         }
 
 
         return new LinearGradient(startX.get(), startY.get(), endX.get(), endY.get(), false, CycleMethod.NO_CYCLE, stops);
     }
 
-    private SVGAttributeTypeRectangle.SVGTypeRectangle getRelativePosition(final AtomicReference<Double> startX,
-                                                                           final AtomicReference<Double> startY,
-                                                                           final AtomicReference<Double> endX,
-                                                                           final AtomicReference<Double> endY,
-                                                                           final SVGElementBase<?> element) throws SVGException {
+    private void adjustPosition(final AtomicReference<Double> startX,
+                                final AtomicReference<Double> startY,
+                                final AtomicReference<Double> endX,
+                                final AtomicReference<Double> endY,
+                                final SVGShapeBase<?> shape) throws SVGException {
 
-        return null;
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = shape.createBoundingBox();
+        final Double width = boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue();
+        final Double height = boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue();
+
+        startX.set(width / Math.abs(boundingBox.getMinX().getValue() - startX.get()));
+        startY.set(height / Math.abs(boundingBox.getMinY().getValue() - startY.get()));
+        endX.set(width / Math.abs(boundingBox.getMinX().getValue() - endX.get()));
+        endY.set(height / Math.abs(boundingBox.getMinY().getValue() - endY.get()));
     }
 
     // endregion

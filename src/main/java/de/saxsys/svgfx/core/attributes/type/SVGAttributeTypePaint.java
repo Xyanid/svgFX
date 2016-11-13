@@ -15,11 +15,9 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
+import de.saxsys.svgfx.core.elements.SVGShapeBase;
 import de.saxsys.svgfx.core.utils.SVGUtil;
-import de.saxsys.svgfx.css.definitions.Constants;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Pair;
@@ -86,11 +84,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
         isCurrentColor = CURRENT_COLOR.equals(text);
 
         if (isCurrentColor) {
-            return null;
-        }
-
-        if (text.equals(Constants.PROPERTY_VALUE_NONE)) {
-            return new Pair<>(Color.TRANSPARENT, null);
+            return new Pair<>(null, null);
         }
 
         try {
@@ -107,7 +101,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF) or a reference which can be resolved into a {@link SVGGradientBase}.
      *
-     * @param element the element for which this paint is
+     * @param shape the element for which this paint is
      *
      * @return {@link Paint} which represents the color
      *
@@ -115,23 +109,15 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
      *                      <li>if the paint is actually a reference to a {@link SVGGradientBase} that was not found.</li>
      *                      </ul>
      */
-    public Paint getValue(final StyleSupplier styleSupplier, final SVGElementBase<?> element) throws SVGException {
+    @SuppressWarnings ("unchecked")
+    public Paint getValue(final SVGShapeBase<?> shape) throws SVGException {
 
         // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
-        SVGElementBase reference = null;
         if (getText().startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
-            reference = SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGElementBase.class);
+            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(shape);
         }
 
-        if (reference != null) {
-            if (reference instanceof SVGGradientBase) {
-                return ((SVGGradientBase<?>) reference).createResult(styleSupplier, element);
-            }
-
-            throw new SVGException(SVGException.Reason.MISSING_ELEMENT, String.format("Given %s can not be resolved to a color", getText()));
-        } else {
-            return getValue();
-        }
+        return getValue();
     }
 
     // endregion

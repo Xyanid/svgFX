@@ -67,7 +67,7 @@ public class SVGRoot extends SVGElementBase<Group> {
      */
     @Override
     public void startProcessing() throws SAXException {
-        getDocumentDataProvider().setData(ELEMENT_NAME, this);
+        getDocumentDataProvider().storeData(ELEMENT_NAME, this);
     }
 
     /**

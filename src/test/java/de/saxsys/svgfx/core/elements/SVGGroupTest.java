@@ -20,10 +20,13 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.utils.TestUtils.getChildren;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -35,13 +38,14 @@ import static org.mockito.Mockito.when;
  * @author Xyanid on 05.10.2015.
  */
 @SuppressWarnings ("OptionalGetWithoutIsPresent")
+@RunWith (MockitoJUnitRunner.class)
 public final class SVGGroupTest {
 
     /**
      * Ensures elements within a group produce the correct output.
      */
     @Test
-    public void ensureGroupResultContainsTheCorrectData() throws SVGException, SAXException {
+    public void groupResultContainsTheCorrectData() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -57,12 +61,12 @@ public final class SVGGroupTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("50");
 
-        clipPath.getUnmodifiableChildren().add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, clipPath, provider));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("25");
 
-        clipPath.getUnmodifiableChildren().add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, clipPath, provider));
 
         assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).get().getValue());
         Assert.assertNotNull(clipPath.getResult());

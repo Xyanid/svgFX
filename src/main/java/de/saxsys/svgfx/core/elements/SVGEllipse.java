@@ -17,6 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Ellipse;
 import org.xml.sax.Attributes;
@@ -62,6 +63,23 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
                            getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                            getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).getValue(),
                            getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).getValue());
+    }
+
+    @Override
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+
+        final SVGAttributeTypeLength centerX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_X.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength centerY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_Y.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength radiusX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength radiusY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class);
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+        result.getMinX().setText(String.format("%f%s", centerX.getValue() - radiusX.getValue(), radiusX.getUnit().getName()));
+        result.getMinY().setText(String.format("%f%s", centerY.getValue() - radiusY.getValue(), radiusY.getUnit().getName()));
+        result.getMaxX().setText(String.format("%f%s", centerX.getValue() + radiusX.getValue(), radiusX.getUnit().getName()));
+        result.getMaxY().setText(String.format("%f%s", centerY.getValue() + radiusY.getValue(), radiusY.getUnit().getName()));
+
+        return result;
     }
 
     //endregion

@@ -42,7 +42,6 @@ public final class SVGParserTest {
         try {
             parser.parse(url.getFile());
         } catch (Exception e) {
-            e.printStackTrace();
             Assert.fail();
         }
 

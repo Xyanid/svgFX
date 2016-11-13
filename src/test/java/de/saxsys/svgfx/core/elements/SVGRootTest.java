@@ -35,7 +35,7 @@ public final class SVGRootTest {
      * Ensures that no result is created when calling SVGRoot
      */
     @Test
-    public void ensureNoResultIsCreated() throws SAXException {
+    public void noResultIsCreatedWhenTheResultIsRequested() throws SAXException {
 
         final Attributes attributes = mock(Attributes.class);
 
@@ -59,7 +59,7 @@ public final class SVGRootTest {
 
         final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, dataProvider);
 
-        root.endProcessing();
+        root.startProcessing();
 
         assertSame(root, dataProvider.getData(SVGRoot.ELEMENT_NAME, SVGRoot.class));
     }

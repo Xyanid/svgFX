@@ -22,8 +22,9 @@ import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -39,27 +41,27 @@ import static org.mockito.Mockito.when;
  * @author Xyanid on 05.10.2015.
  */
 @SuppressWarnings ("unchecked")
+@RunWith (MockitoJUnitRunner.class)
 public final class SVGGradientBaseTest {
 
     /**
      * Ensure that stop elements are retrieved from a referenced element.
      */
     @Test
-    public void ensureStopElementsAreRetrievedFromReferencedElement() throws SVGException {
+    public void stopElementsAreRetrievedFromReferencedElement() throws SVGException {
 
-        final Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
         when(attributes.getLength()).thenReturn(2);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
-
         when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("red");
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        final SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
+        final SVGElementBase elementBase = mock(SVGElementBase.class);
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", elementBase);
 
@@ -80,12 +82,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
             @Override
-            protected Color createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Color createResult(final StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
 
             @Override
-            public Color createResult(StyleSupplier styleSupplier, SVGElementBase<?> element) throws SVGException {
+            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
                 return null;
             }
         };
@@ -105,13 +107,13 @@ public final class SVGGradientBaseTest {
      * Ensure that stop elements are retrieved from the element itself even when referenced elements are available
      */
     @Test
-    public void ensureOwnStopElementsArePreferred() throws SVGException {
+    public void ownStopElementsArePreferredBeforeReferencedStops() throws SVGException {
 
-        final Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        final SVGElementBase elementBase = Mockito.mock(SVGElementBase.class);
+        final SVGElementBase elementBase = mock(SVGElementBase.class);
 
         ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", elementBase);
 
@@ -120,9 +122,8 @@ public final class SVGGradientBaseTest {
         when(attributes.getLength()).thenReturn(2);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
-
         when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("red");
 
         stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, elementBase, dataProvider));
@@ -141,12 +142,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
             @Override
-            protected Color createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Color createResult(final StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
 
             @Override
-            public Color createResult(StyleSupplier styleSupplier, SVGElementBase<?> element) throws SVGException {
+            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
                 return null;
             }
         };
@@ -154,17 +155,16 @@ public final class SVGGradientBaseTest {
         when(attributes.getLength()).thenReturn(2);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
-
         when(attributes.getValue(0)).thenReturn("0.3");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("green");
 
-        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.4");
         when(attributes.getValue(1)).thenReturn("yellow");
 
-        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         final List<Stop> actualStops = gradient.getStops();
 
@@ -181,11 +181,11 @@ public final class SVGGradientBaseTest {
      * Ensure that stop elements are retrieved from the element itself
      */
     @Test
-    public void ensureStopElementsAreRetrievedFromSelf() throws SVGException {
+    public void stopElementsAreRetrievedFromTheElementItselfIfTheAreReferenced() throws SVGException {
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        final Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
         when(attributes.getLength()).thenReturn(0);
 
@@ -194,12 +194,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
             @Override
-            protected Color createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Color createResult(final StyleSupplier styleSupplier) throws SVGException {
                 return null;
             }
 
             @Override
-            public Color createResult(StyleSupplier styleSupplier, SVGElementBase<?> element) throws SVGException {
+            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
                 return null;
             }
         };
@@ -207,17 +207,16 @@ public final class SVGGradientBaseTest {
         when(attributes.getLength()).thenReturn(2);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
-        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
-
         when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("red");
 
-        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.2");
         when(attributes.getValue(1)).thenReturn("blue");
 
-        gradient.getUnmodifiableChildren().add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());

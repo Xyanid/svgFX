@@ -17,6 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
@@ -84,6 +85,23 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
         if (radiusY.isPresent()) {
             rect.setArcHeight(radiusY.get().getValue() * 2.0d);
         }
+    }
+
+    @Override
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+
+        final SVGAttributeTypeLength posX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength posY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength width = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.WIDTH.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength height = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.HEIGHT.getName(), SVGAttributeTypeLength.class);
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+        result.getMinX().setText(String.format("%f%s", posX.getValue(), posX.getUnit().getName()));
+        result.getMinY().setText(String.format("%f%s", posY.getValue(), posY.getUnit().getName()));
+        result.getMaxX().setText(String.format("%f%s", posX.getValue() + width.getValue(), posX.getUnit().getName()));
+        result.getMaxY().setText(String.format("%f%s", posY.getValue() + height.getValue(), posY.getUnit().getName()));
+
+        return result;
     }
 
     //endregion

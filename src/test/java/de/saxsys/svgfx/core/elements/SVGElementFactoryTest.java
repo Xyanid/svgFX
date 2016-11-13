@@ -16,7 +16,9 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 
 import java.util.HashMap;
@@ -29,13 +31,14 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Xyanid on 05.10.2015.
  */
+@RunWith (MockitoJUnitRunner.class)
 public final class SVGElementFactoryTest {
 
     /**
      * Ensures that all elements supported by the {@link SVGElementFactory} are created.
      */
     @Test
-    public void createAllSupportedElements() {
+    public void allSupportedElementsCanBeCreated() {
 
         final String creationFailMessage = "failed to create element %s";
 

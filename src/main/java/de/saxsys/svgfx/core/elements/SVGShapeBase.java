@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeDouble;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeDashArray;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineCap;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineJoin;
@@ -99,7 +100,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         final Optional<SVGAttributeTypePaint> fill = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class);
         if (fill.isPresent()) {
 
-            Paint paint = fill.get().getValue(styleSupplier, this);
+            Paint paint = fill.get().getValue(this);
 
             final Optional<SVGAttributeTypeDouble> opacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class);
             if (opacity.isPresent()) {
@@ -112,9 +113,9 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         // apply stroke
         final Optional<SVGAttributeTypePaint> stroke = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class);
         if (stroke.isPresent()) {
-            Paint paint = stroke.get().getValue(styleSupplier, this);
+            Paint paint = stroke.get().getValue(this);
 
-            final Optional<SVGAttributeTypeDouble> opacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class);
+            final Optional<SVGAttributeTypeDouble> opacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_OPACITY.getName(), SVGAttributeTypeDouble.class);
             if (opacity.isPresent()) {
                 paint = applyOpacity(paint, opacity.get().getValue());
             }
@@ -123,7 +124,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         }
 
         // apply stroke type
-        final Optional<SVGAttributeTypeStrokeType> strokeType = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypeStrokeType.class);
+        final Optional<SVGAttributeTypeStrokeType> strokeType = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGAttributeTypeStrokeType.class);
         if (strokeType.isPresent()) {
             shape.setStrokeType(strokeType.get().getValue());
         }
@@ -217,6 +218,17 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         }
         return paint;
     }
+
+    // endregion
+
+    // region Abstract
+
+    /**
+     * Returns this elements bounding rectangle, which contains the entire shape.
+     *
+     * @return this elements bounding box.
+     */
+    public abstract SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException;
 
     // endregion
 }

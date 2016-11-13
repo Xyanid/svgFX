@@ -31,7 +31,7 @@ public class XLinkAttributeMapper extends BaseAttributeMapper<SVGDocumentDataPro
     // region Constants
 
     /**
-     * Determines the color of a stroke, this is either a name or a hexadezimal value representing the color.
+     * Determines the a link to another element.
      */
     public static final XLinkAttributeMapper XLINK_HREF = new XLinkAttributeMapper("xlink:href", SVGAttributeTypeString::new);
 

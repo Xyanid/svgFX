@@ -35,7 +35,7 @@ public final class StringUtilTest {
      * Will if the last character in a string is replaces if it was found.
      */
     @Test
-    public void theLastOccurrenceInStringWillBeReplaced() {
+    public void theLastOccurrenceInStringWillBeReplacedCorrectly() {
         final String test = "this is a test;";
 
         //first we test the string version
@@ -75,7 +75,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtil#split(String, List, SVGUtil.SplitPredicate)} is able to split a string which contains spaces
+     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} is able to split a string which contains spaces
      * as expected.
      */
     @Test
@@ -94,7 +94,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtil#split(String, List, SVGUtil.SplitPredicate)} is able to split a string which contains multiple
+     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} is able to split a string which contains multiple
      * delimiters.
      */
     @Test
@@ -115,7 +115,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtil#split(String, List, SVGUtil.SplitPredicate)} will only process {@link String}s without
+     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} will only process {@link String}s without
      * delimiters.
      */
     @Test
@@ -140,16 +140,16 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtil#split(String, List, SVGUtil.SplitPredicate)} will only process {@link String}s that are not
+     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} will only process {@link String}s that are not
      * empty.
      */
     @Test
-    public void ensureAStringThatWasSplitWillNeverContainEmptyStrings() throws SVGException {
+    public void aStringThatWasSplitWillNeverContainEmptyStrings() throws SVGException {
 
         final List<Character> delimiters = new ArrayList<>();
         delimiters.add(' ');
 
-        final List<String> result = StringUtil.splitByDelimiters(" This , is a test ", delimiters, (currentData, index) -> {
+        final List<String> result = StringUtil.splitByDelimiters(" This  , is a test ", delimiters, (currentData, index) -> {
 
             assertTrue(currentData.length() > 0);
 
@@ -165,12 +165,11 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link SVGUtil#split(String, List, SVGUtil.SplitPredicate)} is able to combine strings if the dataConsumer
-     * returns false.
-     * In this test we will use the {@link String} "1 , 2 3 , 4" and the result should be "1,2" and "3,4".
+     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} is able to combine strings if the dataConsumer returns false. In this test we will use the
+     * {@link String} "1 , 2 3 , 4" and the result should be "1,2" and "3,4".
      */
     @Test
-    public void ensureThatAMoreComplexStringIsAbleToCombineResults() throws SVGException {
+    public void aMoreComplexStringCanBeSplitBasedOnTheProvidedDataConsumerAndTheResultingStringWillBeAsExpected() throws SVGException {
 
         final List<Character> delimiters = new ArrayList<>();
         delimiters.add(' ');

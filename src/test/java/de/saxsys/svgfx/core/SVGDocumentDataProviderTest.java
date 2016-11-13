@@ -17,16 +17,16 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import de.saxsys.svgfx.core.elements.SVGRectangle;
-import de.saxsys.svgfx.core.elements.SVGStyle;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -34,118 +34,97 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Xyanid on 14.12.2015.
  */
+@RunWith (MockitoJUnitRunner.class)
 public class SVGDocumentDataProviderTest {
 
-    //region Fields
+    // region Fields
 
-    private static final SVGDocumentDataProvider DATA_PROVIDER = new SVGDocumentDataProvider();
+    @Mock
+    private Attributes attributes;
 
-    private static final Attributes ATTRIBUTES = Mockito.mock(Attributes.class);
+    private final SVGElementFactory factory = new SVGElementFactory();
 
-    private static final SVGElementFactory FACTORY = new SVGElementFactory();
+    private SVGDocumentDataProvider cut;
 
-    //endregion
+    // endregion
 
-    //region Tests
+    // region SetUp
 
     @Before
     public void setUp() {
-        Mockito.when(ATTRIBUTES.getLength()).thenReturn(0);
+        Mockito.when(attributes.getLength()).thenReturn(0);
+
+        cut = new SVGDocumentDataProvider();
+    }
+
+    // endregion
+
+    // region Test
+
+    /**
+     * Ensure that {@link SVGDocumentDataProvider#getUnmodifiableData()} is set correctly when adding and removing data.
+     */
+    @Test
+    public void savingTheSameDataTwiceWillOverwriteTheOldData() throws Exception {
+
+        cut.storeData("test", factory.createElement("circle", attributes, null, cut));
+
+        assertEquals(1, cut.getUnmodifiableData().size());
+
+        cut.storeData("test", factory.createElement("rect", attributes, null, cut));
+
+        assertEquals(1, cut.getUnmodifiableData().size());
+    }
+
+    /**
+     * When data is stored it is possible to retrieved it, data that is not saved can not be retrieved and once the {@link SVGDocumentDataProvider} is cleared, no data can be retrieved
+     */
+    @Test
+    public void storedDataCanBeRetrievedButUnsavedDataCanNot() throws SVGException {
+
+        cut.storeData("test", factory.createElement("circle", attributes, null, cut));
+
+        assertTrue(cut.getData("test", SVGCircle.class).isPresent());
+
+        assertFalse(cut.getData("test", SVGRectangle.class).isPresent());
+
+        cut.clear();
+
+        assertFalse(cut.getData("test", SVGCircle.class).isPresent());
+    }
+
+    /**
+     * Ensure that {@link SVGDocumentDataProvider#getUnmodifiableStyles()} is set correctly when adding and removing data.
+     */
+    @Test
+    public void stylesCanBeAddedAndWillBeClearedWhenTheDocumentDataProviderIsCleared() {
+
+        cut.addStyle(new SVGCssStyle("test", cut));
+
+        assertEquals(1, cut.getUnmodifiableStyles().size());
+
+        cut.clear();
+
+        assertEquals(0, cut.getUnmodifiableStyles().size());
     }
 
     /**
      * Ensure that {@link SVGDocumentDataProvider#getUnmodifiableData()} is set correctly when adding and removing data.
      */
     @Test
-    public void testGetUnmodifiableData() throws Exception {
+    public void whenTheDocumentDataProviderIsClearedStoredDataAndStylesAreLost() throws Exception {
 
-        DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
+        cut.addStyle(new SVGCssStyle("test", cut));
+        cut.storeData("test", factory.createElement("circle", attributes, null, cut));
 
-        assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(1, cut.getUnmodifiableData().size());
+        assertEquals(1, cut.getUnmodifiableStyles().size());
 
-        DATA_PROVIDER.data.put("test", FACTORY.createElement("rect", ATTRIBUTES, null, DATA_PROVIDER));
+        cut.clear();
 
-        assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
-
-        DATA_PROVIDER.data.remove("test");
-
-        assertEquals(0, DATA_PROVIDER.getUnmodifiableData().size());
+        assertEquals(0, cut.getUnmodifiableData().size());
+        assertEquals(0, cut.getUnmodifiableStyles().size());
     }
 
-    /**
-     * Ensure that {@link SVGDocumentDataProvider#getStyles()} is set correctly when adding and removing data.
-     */
-    @Test
-    public void testGetStyles() {
-
-        DATA_PROVIDER.styles.add(new SVGCssStyle("test", DATA_PROVIDER));
-
-        assertEquals(1, DATA_PROVIDER.getStyles().size());
-
-        DATA_PROVIDER.styles.remove(new SVGCssStyle("test", DATA_PROVIDER));
-
-        assertEquals(0, DATA_PROVIDER.getStyles().size());
-    }
-
-    /**
-     * Ensure that {@link SVGDocumentDataProvider#hasData(String)} works as intended.
-     */
-    @Test
-    public void testHasData() {
-        DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
-
-        assertTrue(DATA_PROVIDER.hasData("test"));
-
-        DATA_PROVIDER.data.remove("test");
-
-        assertFalse(DATA_PROVIDER.hasData("test"));
-    }
-
-    /**
-     * Ensure that {@link SVGDocumentDataProvider#setData(String, de.saxsys.svgfx.core.elements.SVGElementBase)} works as intended and adds and overwrites elements in
-     * {@link SVGDocumentDataProvider#data}.
-     */
-    @Test
-    public void testSetData() {
-        DATA_PROVIDER.setData("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
-
-        assertNotNull(DATA_PROVIDER.getData("test", SVGCircle.class));
-
-        DATA_PROVIDER.setData("test", FACTORY.createElement("style", ATTRIBUTES, null, DATA_PROVIDER));
-
-        assertNotNull(DATA_PROVIDER.getData("test", SVGStyle.class));
-    }
-
-    /**
-     * Ensure that {@link SVGDocumentDataProvider#getData(String, Class)} works as intended.
-     */
-    @Test
-    public void testGetData() {
-        DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
-
-        assertNotNull(DATA_PROVIDER.getData("test", SVGCircle.class));
-
-        assertNull(DATA_PROVIDER.getData("test", SVGRectangle.class));
-
-        DATA_PROVIDER.data.remove("test");
-
-        assertNull(DATA_PROVIDER.getData("test", SVGCircle.class));
-    }
-
-    /**
-     * Ensure that {@link SVGDocumentDataProvider#clear()} works as intended.
-     */
-    @Test
-    public void testClear() {
-
-        DATA_PROVIDER.data.put("test", FACTORY.createElement("circle", ATTRIBUTES, null, DATA_PROVIDER));
-
-        assertEquals(1, DATA_PROVIDER.getUnmodifiableData().size());
-
-        DATA_PROVIDER.clear();
-
-        assertEquals(0, DATA_PROVIDER.getUnmodifiableData().size());
-    }
-
-    //endregion
+    // endregion
 }

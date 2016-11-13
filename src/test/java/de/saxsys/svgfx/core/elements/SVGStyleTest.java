@@ -44,7 +44,7 @@ public final class SVGStyleTest {
      * Ensures that one css style provided by {@link SVGStyle} is correct based on the input.
      */
     @Test
-    public void ensureOneResultIsCreatedCorrectly() throws SAXException, SVGException {
+    public void allAttributesAreParsedCorrectly() throws SAXException, SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -78,10 +78,10 @@ public final class SVGStyleTest {
     }
 
     /**
-     * Ensures that the {@link de.saxsys.svgfx.css.definitions.Constants#PROPERTY_END} can be missing and end of a style
+     * Ensures that the {@link de.saxsys.svgfx.css.definitions.Constants#PROPERTY_END} can be missing at the end of a style
      */
     @Test
-    public void ensureMissingPropertyEndStringsAreHandledCorrectly() throws SAXException, SVGException {
+    public void missingPropertyEndStringsAreHandledCorrectly() throws SAXException, SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -120,7 +120,7 @@ public final class SVGStyleTest {
      */
     @SuppressWarnings ("MismatchedQueryAndUpdateOfStringBuilder")
     @Test
-    public void ensureMultipleResultAreCreatedCorrectly() throws SAXException, SVGException {
+    public void multipleResultAreCreatedCorrectly() throws SAXException, SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 

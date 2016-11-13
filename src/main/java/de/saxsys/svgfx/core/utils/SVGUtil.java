@@ -83,7 +83,7 @@ public final class SVGUtil {
      * @param clazz             the class of the element that is expected.
      * @param <TSVGElementBase> the type of element which is expected.
      *
-     * @return the {@link SVGElementBase} which is referenced by the data or null if the data does not reference an element.
+     * @return the {@link SVGElementBase} which is referenced by the data.
      *
      * @throws SVGException if the data references a resource which is not contained in the {@link SVGDocumentDataProvider}.
      */
@@ -97,19 +97,8 @@ public final class SVGUtil {
             throw new SVGException(SVGException.Reason.INVALID_IRI_IDENTIFIER, String.format("Given data %s appears to not be a IRI reference.", data));
         }
 
-        TSVGElementBase result;
-
-        try {
-            result = dataProvider.getData(reference, clazz);
-        } catch (final Exception e) {
-            throw new SVGException(SVGException.Reason.FAILED_TO_PARSE_IRI, "An error occurred during the parsing of the reference", e);
-        }
-
-        if (result == null) {
-            throw new SVGException(SVGException.Reason.MISSING_ELEMENT, String.format("Given reference %s could not be resolved", data));
-        }
-
-        return result;
+        return dataProvider.getData(reference, clazz)
+                           .orElseThrow(() -> new SVGException(SVGException.Reason.MISSING_ELEMENT, String.format("Given reference %s could not be resolved", data)));
     }
 
     // endregion

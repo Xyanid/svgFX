@@ -18,6 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoint;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoints;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
@@ -93,4 +94,42 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     }
 
     //endregion
+
+    // region Implement SVGShapeBase
+
+    @Override
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+
+        final Optional<SVGAttributeTypePoints> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class);
+        if (points.isPresent()) {
+            for (final SVGAttributeTypePoint point : points.get().getValue()) {
+
+                if (result.getMinX() == null
+                    || result.getMinX().getValue() > point.getValue().getX().getValue()) {
+                    result.getMinX().setText(String.format("%f%s", point.getValue().getX().getValue(), point.getValue().getX().getUnit().getName()));
+                }
+
+                if (result.getMinY() == null
+                    || result.getMinY().getValue() > point.getValue().getY().getValue()) {
+                    result.getMinY().setText(String.format("%f%s", point.getValue().getY().getValue(), point.getValue().getY().getUnit().getName()));
+                }
+
+                if (result.getMaxX() == null
+                    || result.getMaxX().getValue() < point.getValue().getX().getValue()) {
+                    result.getMaxX().setText(String.format("%f%s", point.getValue().getX().getValue(), point.getValue().getX().getUnit().getName()));
+                }
+
+                if (result.getMaxY() == null
+                    || result.getMaxY().getValue() < point.getValue().getY().getValue()) {
+                    result.getMaxY().setText(String.format("%f%s", point.getValue().getY().getValue(), point.getValue().getY().getUnit().getName()));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // endregion
 }

@@ -82,9 +82,25 @@ public class SVGException extends Exception {
          */
         INVALID_CSS_STYLE,
         /**
-         * Meaning that a {@link de.saxsys.svgfx.core.elements.SVGElementBase} could not be created for any reason.
+         * Meaning that a {@link String} that represents a numeric value could not be parsed into its numeric counterpart.
          */
-        FAILED_TO_CREATE_RESULT,
+        INVALID_NUMBER_FORMAT,
+        /**
+         * Meaning that the {@link javafx.scene.transform.Transform} could not be created due to a problem with the matrix, having not enough elements
+         */
+        INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
+        /**
+         * Meaning the value that should represent a valid {@link javafx.scene.shape.StrokeLineCap} can not be converted into it.
+         */
+        INVALID_STROKE_LINE_CAP,
+        /**
+         * Meaning the value that should represent a valid {@link javafx.scene.shape.StrokeLineJoin} can not be converted into it.
+         */
+        INVALID_STROKE_LINE_JOIN,
+        /**
+         * Meaning the value that should represent a valid {@link javafx.scene.shape.StrokeType} can not be converted into it.
+         */
+        INVALID_STROKE_TYPE,
         /**
          * Meaning that a {@link String} that could be an {@link de.saxsys.svgfx.core.definitions.Constants#IRI_IDENTIFIER} to another element could not be parsed.
          */
@@ -94,14 +110,9 @@ public class SVGException extends Exception {
          */
         FAILED_TO_GET_RESULT,
         /**
-         * Meaning that the {@link javafx.scene.transform.Transform} could not be created due to a problem with the matrix.
-         */
-        FAILED_TO_CREATE_MATRIX,
-        /**
          * Meaning that a {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeType} could not be created.
          */
         FAILED_TO_CREATE_ATTRIBUTE_TYPE,
-
     }
 
     // endregion

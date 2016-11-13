@@ -16,7 +16,6 @@ package de.saxsys.svgfx.core.attributes.type;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
-import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -26,9 +25,6 @@ import javafx.scene.transform.Translate;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -40,13 +36,11 @@ import static org.junit.Assert.fail;
 /**
  * @author Xyanid on 16.10.2016.
  */
-@RunWith (MockitoJUnitRunner.class)
-public class SVGAttributeTypeTransformTest {
+public class SVGAttributeTypeTransformIntegrationTest {
 
     // region Fields
 
-    @Mock
-    private SVGDocumentDataProvider dataProvider;
+    private final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
     private SVGAttributeTypeTransform cut;
 
@@ -63,20 +57,17 @@ public class SVGAttributeTypeTransformTest {
 
     //region Tests
 
+    // matrix
+
     /**
      * This test will create ensure that all types of matrix are supported by
      * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}}.
      */
     @Test
-    public void aMatrixCanBeParsed() {
+    public void aMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
 
-        Transform transform = null;
-
-        try {
-            transform = SVGUtil.getTransform("matrix(1,2,3,4,5,6)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("matrix(1,2,3,4,5,6)");
+        Transform transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, instanceOf(Affine.class));
@@ -88,11 +79,8 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(transform.getMyy(), 4.0d, 0.01d);
         assertEquals(transform.getTy(), 6.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("matrix(1 2 3 4 5 6)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("matrix(1 2 3 4 5 6)");
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, instanceOf(Affine.class));
@@ -109,15 +97,10 @@ public class SVGAttributeTypeTransformTest {
      * Parsing a matrix with an invalid name will not cause an exception.
      */
     @Test
-    public void ensureInvalidMatrixNameWillNotCauseAnException() {
+    public void anInvalidMatrixNameWillNotCauseAnSVGException() throws SVGException {
+        cut.setText("motrix(1,2,3,4,5,6)");
 
-        Transform transform = null;
-
-        try {
-            transform = SVGUtil.getTransform("motrix(1,2,3,4,5,6)");
-        } catch (final Exception e) {
-            fail();
-        }
+        final Transform transform = cut.getValue();
 
         assertNull(transform);
     }
@@ -126,44 +109,48 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that matrices which are invalid cause the expected exception.
      */
     @Test
-    public void throwExceptionIfAnInvalidNumberOfAttributesForMatrixIsProvided() {
+    public void ifAnInvalidFormatForMatrixIsProvidedAnSVGExceptionWillBeThrown() {
+
+        cut.setText("matrix(1,2,3,4,5)");
 
         try {
-            SVGUtil.getTransform("matrix(1,2,3,4,5)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
         }
 
-        try {
-            SVGUtil.getTransform("matrix(1,2,3,4,5,6,7)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
-        }
+        cut.setText("matrix(1,2,3,4,5,6,7)");
 
         try {
-            SVGUtil.getTransform("matrix(1,2,3,4,5,A)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        }
+
+        cut.setText("matrix(1,2,3,4,5,A)");
+
+        try {
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
         }
     }
+
+    // transform
 
     /**
      * This test will create ensure that all types of translate are supported by
      * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
-    public void aTranslateMatrixCanBeParsed() {
+    public void aTranslateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("translate(1, 2)");
 
-        try {
-            transform = SVGUtil.getTransform("translate(1, 2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        Transform transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
@@ -175,11 +162,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(transform.getMyy(), 1.0d, 0.01d);
         assertEquals(transform.getTy(), 2.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("translate(1 2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("translate(1 2)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
@@ -191,11 +176,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(transform.getMyy(), 1.0d, 0.01d);
         assertEquals(transform.getTy(), 2.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("translate(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("translate(1)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
@@ -212,15 +195,10 @@ public class SVGAttributeTypeTransformTest {
      * Parsing a translate with an invalid name will not cause an exception.
      */
     @Test
-    public void ensureInvalidTranslateNameWillNotCauseAnException() {
+    public void anInvalidTranslateNameWillNotCauseAnSVGException() throws SVGException {
+        cut.setText("translata(1,2)");
 
-        Transform transform = null;
-
-        try {
-            transform = SVGUtil.getTransform("translata(1,2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        final Transform transform = cut.getValue();
 
         assertNull(transform);
     }
@@ -229,37 +207,39 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that matrices which are invalid cause the expected exception.
      */
     @Test
-    public void throwExceptionIfAnInvalidTranslateMatrixIsProvided() {
+    public void ifAnInvalidFormatForTranslateMatrixIsProvidedAnSVGExceptionWillBeThrown() {
+
+        cut.setText("translate(1,2,3)");
 
         try {
-            SVGUtil.getTransform("translate(1,2,3)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
         }
 
+        cut.setText("translate(1,A)");
+
         try {
-            SVGUtil.getTransform("translate(1,A)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
         }
     }
+
+    // scale
 
     /**
      * This test will create ensure that all types of scale are supported by
      * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
-    public void aScaleMatrixCanBeParsed() {
+    public void aScaleMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("scale(1, 2)");
 
-        try {
-            transform = SVGUtil.getTransform("scale(1, 2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        Transform transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
@@ -271,11 +251,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(transform.getMyy(), 2.0d, 0.01d);
         assertEquals(transform.getTy(), 0.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("scale(1 2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("scale(1 2)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
@@ -287,11 +265,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(transform.getMyy(), 2.0d, 0.01d);
         assertEquals(transform.getTy(), 0.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("scale(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("scale(1)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
@@ -308,15 +284,11 @@ public class SVGAttributeTypeTransformTest {
      * That an invalid name of a scale matrix will be cause an exception
      */
     @Test
-    public void ensureInvalidScaleNameWillNotCauseAnExceptionMatrix() {
+    public void anInvalidScaleNameWillNotCauseAnSVGException() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("scdle(1,2)");
 
-        try {
-            transform = SVGUtil.getTransform("scdle(1,2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        final Transform transform = cut.getValue();
 
         assertNull(transform);
     }
@@ -325,37 +297,39 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that scale which are invalid cause the expected exception.
      */
     @Test
-    public void throwExceptionIfAnInvalidScaleMatrixIsProvided() {
+    public void ifAnInvalidFormatForScaleMatrixIsProvidedAnSVGExceptionWillBeThrown() {
+
+        cut.setText("scale(1,2,3)");
 
         try {
-            SVGUtil.getTransform("scale(1,2,3)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
         }
 
+        cut.setText("scale(1,A)");
+
         try {
-            SVGUtil.getTransform("scale(1,A)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
         }
     }
+
+    // rotate
 
     /**
      * This test will create ensure that all types of scale are supported by
      * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
-    public void aRotateMatrixCanBeParsed() {
+    public void aRotateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("rotate(1, 2, 3)");
 
-        try {
-            transform = SVGUtil.getTransform("rotate(1, 2, 3)");
-        } catch (final Exception e) {
-            fail();
-        }
+        Transform transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Rotate.class));
@@ -366,11 +340,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
         assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("rotate(1 2 3)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("rotate(1 2 3)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Rotate.class));
@@ -381,11 +353,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
         assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("rotate(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("rotate(1)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Rotate.class));
@@ -401,15 +371,11 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that an invalid name of rotate matrix will not cause an exception.
      */
     @Test
-    public void ensureInvalidRotateNameWillNotCauseAnException() {
+    public void anInvalidRotateNameWillNotCauseAnSVGException() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("rosate(1,2)");
 
-        try {
-            transform = SVGUtil.getTransform("rosate(1,2)");
-        } catch (final Exception e) {
-            fail();
-        }
+        final Transform transform = cut.getValue();
 
         assertNull(transform);
     }
@@ -418,44 +384,48 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that scale which are invalid cause the expected exception.
      */
     @Test
-    public void throwExceptionIfAnInvalidRotateMatrixIsProvided() {
+    public void ifAnInvalidFormatForRotateMatrixIsProvidedAnSVGExceptionWillBeThrown() {
+
+        cut.setText("rotate(1,2)");
 
         try {
-            SVGUtil.getTransform("rotate(1,2)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
         }
 
-        try {
-            SVGUtil.getTransform("rotate(1,2,3, 4)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
-        }
+        cut.setText("rotate(1,2,3, 4)");
 
         try {
-            SVGUtil.getTransform("rotate(1,A)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        }
+
+        cut.setText("rotate(1,2,A)");
+
+        try {
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
         }
     }
+
+    // Skew
 
     /**
      * This test will create ensure that all types of skewX are supported by
      * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
-    public void aSkewMatrixCanBeParsed() {
+    public void aSkewMatrixCanBeParsedForXOrYDirection() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("skewX(1)");
 
-        try {
-            transform = SVGUtil.getTransform("skewX(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        Transform transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Shear.class));
@@ -464,11 +434,9 @@ public class SVGAttributeTypeTransformTest {
 
         assertEquals(shear.getX(), 1.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("skewY(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("skewY(1)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Shear.class));
@@ -482,23 +450,17 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that an invalid skew name will not cause an exception.
      */
     @Test
-    public void ensureInvalidSkewNameWillNotCauseAnException() {
+    public void anInvalidSkewNameWillNotCauseAnSVGException() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("sketX(1)");
 
-        try {
-            transform = SVGUtil.getTransform("sketX(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        Transform transform = cut.getValue();
 
         assertNull(transform);
 
-        try {
-            transform = SVGUtil.getTransform("sketY(1)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("sketY(1)");
+
+        transform = cut.getValue();
 
         assertNull(transform);
     }
@@ -507,34 +469,42 @@ public class SVGAttributeTypeTransformTest {
      * Ensures that scale which are invalid cause the expected exception.
      */
     @Test
-    public void throwExceptionIfAnInvalidSkewMatrixIsProvided() {
+    public void ifAnInvalidFormatForSkewMatrixIsProvidedAnSVGExceptionWillBeThrown() {
+
+        cut.setText("skewX(1,2)");
 
         try {
-            SVGUtil.getTransform("skewX(1,2)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
         }
 
-        try {
-            SVGUtil.getTransform("skewY(1,2)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
-        }
+        cut.setText("skewY(1,2)");
 
         try {
-            SVGUtil.getTransform("skewX(A)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
         }
 
+        cut.setText("skewX(A)");
+
         try {
-            SVGUtil.getTransform("skewY(A)");
-            fail();
-        } catch (final Exception e) {
-            assertThat(e, new IsInstanceOf(SVGException.class));
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        }
+
+        cut.setText("skewY(A)");
+
+        try {
+            cut.getValue();
+            fail("Should not be able to get result when matrix is invalid");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
         }
     }
 
@@ -543,15 +513,11 @@ public class SVGAttributeTypeTransformTest {
      * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
      */
     @Test
-    public void multipleTransformMatricesWillBeCombined() {
+    public void multipleTransformMatricesWillBeCombined() throws SVGException {
 
-        Transform transform = null;
+        cut.setText("translate(1,2) translate(3, 4)");
 
-        try {
-            transform = SVGUtil.getTransform("translate(1,2) translate(3, 4)");
-        } catch (final Exception e) {
-            fail();
-        }
+        Transform transform = cut.getValue();
 
         assertNotNull(transform);
 
@@ -562,11 +528,9 @@ public class SVGAttributeTypeTransformTest {
         assertEquals(transform.getMyy(), 1.0d, 0.01d);
         assertEquals(transform.getTy(), 6.0d, 0.01d);
 
-        try {
-            transform = SVGUtil.getTransform("translate(1,2) scale(3, 4)");
-        } catch (final Exception e) {
-            fail();
-        }
+        cut.setText("translate(1,2) scale(3, 4)");
+
+        transform = cut.getValue();
 
         assertNotNull(transform);
 
