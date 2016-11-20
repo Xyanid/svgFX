@@ -156,6 +156,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     /**
      * Returns a node which represents the clip path to be applied to this element.
      *
+     * @param styleSupplier  the {@link StyleSupplier} to be used when there is a {@link SVGClipPath} defined for the element and it needs a style.
+     *
      * @return the clip path to use or null if this element does not have a clip path.
      *
      * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #documentDataProvider}.

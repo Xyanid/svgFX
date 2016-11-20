@@ -29,17 +29,14 @@ import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.shape.StrokeType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,12 +45,11 @@ import static org.mockito.Mockito.when;
  */
 @SuppressWarnings ("unchecked")
 @RunWith (MockitoJUnitRunner.class)
-public class SVGShapeBaseTest {
+public class SVGShapeBaseIntegrationTest {
 
     // region Fields
 
-    @Mock
-    private SVGDocumentDataProvider dataProvider;
+    private final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
     // endregion
 
@@ -104,7 +100,7 @@ public class SVGShapeBaseTest {
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
-        when(attributes.getValue(0)).thenReturn("fill:#url(test);opacity:0.5;");
+        when(attributes.getValue(0)).thenReturn("fill:url(#test);opacity:0.5;");
 
         final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
             @Override
@@ -131,12 +127,11 @@ public class SVGShapeBaseTest {
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
-        when(dataProvider.getData("test", SVGGradientBase.class)).thenReturn(Optional.of(gradientBase));
+        dataProvider.storeData("test", gradientBase);
         when(gradientBase.createResult(cut)).thenReturn(linearGradient);
 
         final Rectangle result = cut.getResult();
 
-        assertSame(linearGradient, result.getFill());
         assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getFill()).getStops().get(0).getColor());
         assertEquals(new Color(0.0d, 1.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getFill()).getStops().get(1).getColor());
     }
@@ -151,7 +146,7 @@ public class SVGShapeBaseTest {
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
-        when(attributes.getValue(0)).thenReturn("fill:#url(test);opacity:0.5;");
+        when(attributes.getValue(0)).thenReturn("fill:url(#test);opacity:0.5;");
 
         final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
             @Override
@@ -178,14 +173,13 @@ public class SVGShapeBaseTest {
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
-        when(dataProvider.getData("test", SVGGradientBase.class)).thenReturn(Optional.of(gradientBase));
+        dataProvider.storeData("test", gradientBase);
         when(gradientBase.createResult(cut)).thenReturn(radialGradient);
 
         final Rectangle result = cut.getResult();
 
-        assertSame(radialGradient, result.getFill());
-        assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getFill()).getStops().get(0).getColor());
-        assertEquals(new Color(0.0d, 1.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getFill()).getStops().get(1).getColor());
+        assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5), RadialGradient.class.cast(result.getFill()).getStops().get(0).getColor());
+        assertEquals(new Color(0.0d, 1.0d, 0.0d, 0.5), RadialGradient.class.cast(result.getFill()).getStops().get(1).getColor());
     }
 
     /**
@@ -233,7 +227,7 @@ public class SVGShapeBaseTest {
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
-        when(attributes.getValue(0)).thenReturn("stroke:#url(test);stroke-opacity:0.5;");
+        when(attributes.getValue(0)).thenReturn("stroke:url(#test);stroke-opacity:0.5;");
 
         final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
             @Override
@@ -260,12 +254,11 @@ public class SVGShapeBaseTest {
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
-        when(dataProvider.getData("test", SVGGradientBase.class)).thenReturn(Optional.of(gradientBase));
+        dataProvider.storeData("test", gradientBase);
         when(gradientBase.createResult(cut)).thenReturn(linearGradient);
 
         final Rectangle result = cut.getResult();
 
-        assertSame(linearGradient, result.getStroke());
         assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getStroke()).getStops().get(0).getColor());
         assertEquals(new Color(0.0d, 1.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getStroke()).getStops().get(1).getColor());
     }
@@ -280,7 +273,7 @@ public class SVGShapeBaseTest {
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
-        when(attributes.getValue(0)).thenReturn("stroke:#url(test);stroke-opacity:0.5;");
+        when(attributes.getValue(0)).thenReturn("stroke:url(#test);stroke-opacity:0.5;");
 
         final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
             @Override
@@ -307,14 +300,13 @@ public class SVGShapeBaseTest {
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
-        when(dataProvider.getData("test", SVGGradientBase.class)).thenReturn(Optional.of(gradientBase));
+        dataProvider.storeData("test", gradientBase);
         when(gradientBase.createResult(cut)).thenReturn(radialGradient);
 
         final Rectangle result = cut.getResult();
 
-        assertSame(radialGradient, result.getStroke());
-        assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getStroke()).getStops().get(0).getColor());
-        assertEquals(new Color(0.0d, 1.0d, 0.0d, 0.5), LinearGradient.class.cast(result.getStroke()).getStops().get(1).getColor());
+        assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5), RadialGradient.class.cast(result.getStroke()).getStops().get(0).getColor());
+        assertEquals(new Color(0.0d, 1.0d, 0.0d, 0.5), RadialGradient.class.cast(result.getStroke()).getStops().get(1).getColor());
     }
 
     /**
@@ -355,9 +347,9 @@ public class SVGShapeBaseTest {
         assertEquals(1.0d, result.getStrokeWidth(), 0.01d);
         assertEquals(4, result.getStrokeDashArray().size());
         assertEquals(2.0d, result.getStrokeDashArray().get(0), 0.01d);
-        assertEquals(3.0d, result.getStrokeDashArray().get(0), 0.01d);
-        assertEquals(4.0d, result.getStrokeDashArray().get(0), 0.01d);
-        assertEquals(5.0d, result.getStrokeDashArray().get(0), 0.01d);
+        assertEquals(3.0d, result.getStrokeDashArray().get(1), 0.01d);
+        assertEquals(4.0d, result.getStrokeDashArray().get(2), 0.01d);
+        assertEquals(5.0d, result.getStrokeDashArray().get(3), 0.01d);
         assertEquals(6.0d, result.getStrokeDashOffset(), 0.01d);
         assertEquals(StrokeLineJoin.BEVEL, result.getStrokeLineJoin());
         assertEquals(StrokeLineCap.BUTT, result.getStrokeLineCap());

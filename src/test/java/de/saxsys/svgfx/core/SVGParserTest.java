@@ -41,7 +41,7 @@ public final class SVGParserTest {
 
         try {
             parser.parse(url.getFile());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Assert.fail();
         }
 

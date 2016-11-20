@@ -25,6 +25,7 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Base class for polygons and polyline.
@@ -102,28 +103,33 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
 
+        final AtomicBoolean isFirstRun = new AtomicBoolean(true);
+
         final Optional<SVGAttributeTypePoints> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class);
         if (points.isPresent()) {
             for (final SVGAttributeTypePoint point : points.get().getValue()) {
-
-                if (result.getMinX() == null
+                if (isFirstRun.get()
                     || result.getMinX().getValue() > point.getValue().getX().getValue()) {
                     result.getMinX().setText(String.format("%f%s", point.getValue().getX().getValue(), point.getValue().getX().getUnit().getName()));
                 }
 
-                if (result.getMinY() == null
+                if (isFirstRun.get()
                     || result.getMinY().getValue() > point.getValue().getY().getValue()) {
                     result.getMinY().setText(String.format("%f%s", point.getValue().getY().getValue(), point.getValue().getY().getUnit().getName()));
                 }
 
-                if (result.getMaxX() == null
+                if (isFirstRun.get()
                     || result.getMaxX().getValue() < point.getValue().getX().getValue()) {
                     result.getMaxX().setText(String.format("%f%s", point.getValue().getX().getValue(), point.getValue().getX().getUnit().getName()));
                 }
 
-                if (result.getMaxY() == null
+                if (isFirstRun.get()
                     || result.getMaxY().getValue() < point.getValue().getY().getValue()) {
                     result.getMaxY().setText(String.format("%f%s", point.getValue().getY().getValue(), point.getValue().getY().getUnit().getName()));
+                }
+
+                if (isFirstRun.get()) {
+                    isFirstRun.set(false);
                 }
             }
         }

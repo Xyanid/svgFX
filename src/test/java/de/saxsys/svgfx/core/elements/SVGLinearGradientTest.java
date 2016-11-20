@@ -222,7 +222,7 @@ public final class SVGLinearGradientTest {
         final SVGShapeBase<?> shape = mock(SVGShapeBase.class);
         when(shape.createBoundingBox()).thenReturn(boundingBox);
 
-        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider()).createResult(shape);
+        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, null, dataProvider).createResult(shape);
 
         assertEquals(0.5d, gradient.getStartX(), 0.01d);
         assertEquals(0.5d, gradient.getStartY(), 0.01d);

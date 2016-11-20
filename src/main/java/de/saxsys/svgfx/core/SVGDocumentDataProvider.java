@@ -90,17 +90,6 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
     }
 
     /**
-     * Determines whether the given key exists in the {@link SVGDocumentDataProvider#data}.
-     *
-     * @param key key to check
-     *
-     * @return true if the given key exists
-     */
-    public final boolean hasData(final String key) {
-        return data.get(key) != null;
-    }
-
-    /**
      * Sets the given data into the map.
      *
      * @param key  the key of the identifier of the data, must not be null or epmty.

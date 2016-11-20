@@ -206,8 +206,8 @@ public final class SVGRectangleTest {
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = rectangle.createBoundingBox();
 
         assertEquals(50.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(75.0d, boundingBox.getMinY().getValue(), 0.01d);
+        assertEquals(75.0d, boundingBox.getMaxX().getValue(), 0.01d);
+        assertEquals(100.0d, boundingBox.getMinY().getValue(), 0.01d);
         assertEquals(135.0d, boundingBox.getMaxY().getValue(), 0.01d);
     }
 }

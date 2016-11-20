@@ -95,7 +95,6 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      * @return The {@link #isInherited}.
      */
     public final boolean getIsInherited() throws SVGException {
-        initializeValueAndUnit();
         return isInherited;
     }
 
@@ -103,7 +102,6 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      * @return The {@link #isNone}.
      */
     public final boolean getIsNone() throws SVGException {
-        initializeValueAndUnit();
         return isNone;
     }
 
@@ -147,6 +145,8 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     @Override
     public final void setText(final String text) {
         super.setText(text);
+        isInherited = INHERIT_INDICATOR.equals(text);
+        isNone = NONE_INDICATOR.equals(text);
         valueAndUnit = null;
     }
 
@@ -159,11 +159,6 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      */
     private void initializeValueAndUnit() throws SVGException {
         if (valueAndUnit == null) {
-            final String text = getText();
-
-            isInherited = INHERIT_INDICATOR.equals(text);
-            isNone = NONE_INDICATOR.equals(text);
-
             if (!isInherited && !isNone) {
                 valueAndUnit = getValueAndUnit(getText());
             } else {

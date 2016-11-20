@@ -19,8 +19,11 @@ import org.junit.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,6 +64,9 @@ public final class SVGRootTest {
 
         root.startProcessing();
 
-        assertSame(root, dataProvider.getData(SVGRoot.ELEMENT_NAME, SVGRoot.class));
+        final Optional<SVGRoot> rootData = dataProvider.getData(SVGRoot.ELEMENT_NAME, SVGRoot.class);
+
+        assertTrue(rootData.isPresent());
+        assertSame(root, rootData.get());
     }
 }

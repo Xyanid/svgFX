@@ -62,7 +62,7 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
         List<SVGAttributeTypePoint> actualPoints = new ArrayList<>();
 
         if (StringUtil.isNotNullOrEmpty(text)) {
-            List<String> values = StringUtil.splitByDelimiters(text, Collections.singletonList(Constants.POINTS_DELIMITER), (currentData, index) -> {
+            final List<String> values = StringUtil.splitByDelimiters(text, Collections.singletonList(Constants.POINTS_DELIMITER), (currentData, index) -> {
 
                 // check if the required delimiter is present and that the last character is not a delimiter so the string can be split
                 boolean containsDelimiter = currentData.contains(Constants.POSITION_DELIMITER_STRING);

@@ -20,19 +20,17 @@ import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
 
 import java.util.Map;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -54,10 +52,15 @@ public final class SVGUtilTest {
     /**
      * Ensures that {@link SVGUtil#stripIRIIdentifiers(String)} is able to resolve the url as expected.
      */
-    @Test (expected = IllegalArgumentException.class)
-    public void ensureStripIRIExpectedExceptions() throws SVGException {
+    @Test
+    public void ensureStripIRIExpectedExceptions() {
 
-        SVGUtil.stripIRIIdentifiers(null);
+        try {
+            SVGUtil.stripIRIIdentifiers(null);
+            fail("Should not be able to resolve empty string");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
+        }
     }
 
     /**
@@ -107,20 +110,17 @@ public final class SVGUtilTest {
         }
 
         try {
-            SVGUtil.resolveIRI("test", null, SVGElementBase.class);
+            SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", new SVGDocumentDataProvider(), null);
             fail();
         } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.FAILED_TO_PARSE_IRI, e.getReason());
-            assertThat(e.getCause(), instanceOf(NullPointerException.class));
+            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
         }
 
         try {
-            SVGUtil.resolveIRI("test", new SVGDocumentDataProvider(), null);
+            SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", new SVGDocumentDataProvider(), SVGElementBase.class);
             fail();
         } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.FAILED_TO_PARSE_IRI, e.getReason());
-            assertThat(e.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.NULL_ARGUMENT, ((SVGException) e.getCause()).getReason());
+            assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
 
         try {
@@ -131,13 +131,14 @@ public final class SVGUtilTest {
         }
     }
 
+
     /**
      * Ensures that {@link SVGUtil#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
     public void ensureResolveIRICanResolveReference() throws SVGException {
 
-        final Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
         when(attributes.getLength()).thenReturn(0);
 
@@ -160,7 +161,7 @@ public final class SVGUtilTest {
     @Test
     public void ensureResolveIRICanNotResolveReference() {
 
-        final Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
         when(attributes.getLength()).thenReturn(0);
 

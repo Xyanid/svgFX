@@ -90,7 +90,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
         try {
             return new Pair<>(Color.web(text), null);
         } catch (final Exception e) {
-            throw new SVGException(SVGException.Reason.INVALID_COLOR_FORMAT, e);
+            throw new SVGException(SVGException.Reason.INVALID_COLOR_FORMAT, String.format("Color %s is invalid", text), e);
         }
     }
 

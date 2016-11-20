@@ -117,10 +117,10 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
         final Double width = boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue();
         final Double height = boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue();
 
-        startX.set(width / Math.abs(boundingBox.getMinX().getValue() - startX.get()));
-        startY.set(height / Math.abs(boundingBox.getMinY().getValue() - startY.get()));
-        endX.set(width / Math.abs(boundingBox.getMinX().getValue() - endX.get()));
-        endY.set(height / Math.abs(boundingBox.getMinY().getValue() - endY.get()));
+        startX.set(Math.abs(boundingBox.getMinX().getValue() - startX.get()) / width);
+        startY.set(Math.abs(boundingBox.getMinY().getValue() - startY.get()) / height);
+        endX.set(Math.abs(boundingBox.getMinX().getValue() - endX.get()) / width);
+        endY.set(Math.abs(boundingBox.getMinY().getValue() - endY.get()) / height);
     }
 
     // endregion
