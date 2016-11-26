@@ -16,6 +16,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
@@ -41,6 +42,10 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
      * Contains the name of this element in an svg file, used to identify the element when parsing.
      */
     public static final String ELEMENT_NAME = "linearGradient";
+    /**
+     * Determines the default value to use for the end x.
+     */
+    private static final Double DEFAULT_END_X = 1.0d;
 
     // endregion
 
@@ -89,7 +94,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
         final AtomicReference<Double> startX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
         final AtomicReference<Double> startY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
-        final AtomicReference<Double> endX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
+        final AtomicReference<Double> endX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, DEFAULT_END_X));
         final AtomicReference<Double> endY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
 
         final Enumerations.GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
@@ -104,7 +109,13 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
         }
 
 
-        return new LinearGradient(startX.get(), startY.get(), endX.get(), endY.get(), false, CycleMethod.NO_CYCLE, stops);
+        return new LinearGradient(startX.get(),
+                                  startY.get(),
+                                  endX.get(),
+                                  endY.get(),
+                                  true,
+                                  getAttributeHolder().getAttributeValue(CoreAttributeMapper.SPREAD_METHOD.getName(), CycleMethod.class, SVGAttributeTypeCycleMethod.DEFAULT_VALUE),
+                                  stops);
     }
 
     private void adjustPosition(final AtomicReference<Double> startX,

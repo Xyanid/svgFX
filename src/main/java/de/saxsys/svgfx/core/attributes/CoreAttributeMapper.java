@@ -15,6 +15,7 @@ package de.saxsys.svgfx.core.attributes;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeType;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeGradientUnits;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoints;
@@ -48,6 +49,10 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProv
      * Determines the gradient transformation of a gradient.
      */
     public static final CoreAttributeMapper GRADIENT_TRANSFORM = new CoreAttributeMapper("gradientUnits", SVGAttributeTypeTransform::new);
+    /**
+     * Determines the spread method used in a gradient.
+     */
+    public static final CoreAttributeMapper SPREAD_METHOD = new CoreAttributeMapper("spreadMethod", SVGAttributeTypeCycleMethod::new);
     /**
      * Represents the transformation to be applied to an element.
      */
@@ -146,6 +151,7 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProv
      */
     public static final ArrayList<CoreAttributeMapper> VALUES = new ArrayList<>(Arrays.asList(ID,
                                                                                               GRADIENT_UNITS,
+                                                                                              SPREAD_METHOD,
                                                                                               GRADIENT_TRANSFORM,
                                                                                               TRANSFORM,
                                                                                               STYLE,

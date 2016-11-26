@@ -20,6 +20,7 @@ import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,7 +81,7 @@ public final class SVGLinearGradientTest {
 
         when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
 
-        when(attributes.getLength()).thenReturn(5);
+        when(attributes.getLength()).thenReturn(6);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
@@ -89,8 +90,10 @@ public final class SVGLinearGradientTest {
         when(attributes.getValue(2)).thenReturn("0.9");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         when(attributes.getValue(3)).thenReturn("0.95");
-        when(attributes.getQName(4)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        when(attributes.getValue(4)).thenReturn("#test");
+        when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.SPREAD_METHOD.getName());
+        when(attributes.getValue(4)).thenReturn(Enumerations.CycleMethodMapping.REPEAT.getName());
+        when(attributes.getQName(5)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(5)).thenReturn("#test");
 
         final SVGLinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, null, dataProvider);
 
@@ -98,6 +101,7 @@ public final class SVGLinearGradientTest {
         assertEquals(0.15d, gradient.getResult().getStartY(), 0.01d);
         assertEquals(0.9d, gradient.getResult().getEndX(), 0.01d);
         assertEquals(0.95d, gradient.getResult().getEndY(), 0.01d);
+        assertEquals(CycleMethod.REPEAT, gradient.getResult().getCycleMethod());
     }
 
     /**

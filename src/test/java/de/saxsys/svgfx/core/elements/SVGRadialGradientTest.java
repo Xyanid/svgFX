@@ -20,6 +20,7 @@ import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.definitions.Enumerations;
+import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -79,7 +80,7 @@ public final class SVGRadialGradientTest {
 
         when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
 
-        when(attributes.getLength()).thenReturn(6);
+        when(attributes.getLength()).thenReturn(7);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
@@ -90,8 +91,10 @@ public final class SVGRadialGradientTest {
         when(attributes.getValue(3)).thenReturn("0.95");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(4)).thenReturn("0.5");
-        when(attributes.getQName(5)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
-        when(attributes.getValue(5)).thenReturn("#test");
+        when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.SPREAD_METHOD.getName());
+        when(attributes.getValue(5)).thenReturn(Enumerations.CycleMethodMapping.REPEAT.getName());
+        when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(6)).thenReturn("#test");
 
         final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, dataProvider);
 
@@ -99,6 +102,7 @@ public final class SVGRadialGradientTest {
         Assert.assertEquals(0.15d, gradient.getResult().getCenterY(), 0.01d);
         Assert.assertEquals(Math.hypot(0.9d - 0.1d, 0.95d - 0.15d), gradient.getResult().getFocusDistance(), 0.01d);
         Assert.assertEquals(Math.atan2(0.95d - 0.15d, 0.9d - 0.1d), gradient.getResult().getFocusAngle(), 0.01d);
+        assertEquals(CycleMethod.REPEAT, gradient.getResult().getCycleMethod());
     }
 
     /**

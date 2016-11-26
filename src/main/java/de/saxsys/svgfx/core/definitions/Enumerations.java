@@ -14,6 +14,7 @@
 package de.saxsys.svgfx.core.definitions;
 
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeGradientUnits;
+import javafx.scene.paint.CycleMethod;
 import javafx.scene.shape.FillRule;
 
 /**
@@ -24,7 +25,7 @@ import javafx.scene.shape.FillRule;
 public final class Enumerations {
 
     /**
-     * Contains information which maps a given svg fill rule to the javafx fill rule.
+     * Contains information which maps a given svg fill rule to the javafx {@link FillRule} rule.
      */
     public enum FillRuleMapping {
         EVEN_ODD("evenodd", FillRule.EVEN_ODD),
@@ -77,6 +78,66 @@ public final class Enumerations {
          */
         public final FillRule getRule() {
             return rule;
+        }
+
+        // endregion
+    }
+
+    /**
+     * Contains information which maps a given svg spread method rule to the javafx {@link CycleMethod} rule.
+     */
+    public enum CycleMethodMapping {
+        PAD("pad", CycleMethod.NO_CYCLE),
+        REFLECT("reflect ", CycleMethod.REFLECT),
+        REPEAT("repeat ", CycleMethod.REPEAT);
+
+        // region Fields
+
+        /**
+         * the name of the rule within css.
+         */
+        private final String name;
+
+        /**
+         * the {@link FillRule} that this rule corresponds to.
+         */
+        private final CycleMethod method;
+
+        // endregion
+
+        // region Constructor
+
+        /**
+         * Creates a new instance.
+         *
+         * @param name   name to be used
+         * @param method {@link CycleMethod} this spread method corresponds to
+         */
+        CycleMethodMapping(final String name, final CycleMethod method) {
+            this.name = name;
+            this.method = method;
+        }
+
+        // endregion
+
+        // region Getter
+
+        /**
+         * Returns the {@link #name}.
+         *
+         * @return {@link #name}
+         */
+        public final String getName() {
+            return name;
+        }
+
+        /**
+         * Returns the {@link #method}.
+         *
+         * @return {@link #method}
+         */
+        public final CycleMethod getMethod() {
+            return method;
         }
 
         // endregion

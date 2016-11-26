@@ -358,8 +358,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
             successfulParses++;
 
-        } catch (Exception e) {
-
+        } catch (final Exception e) {
             throw new SAXParseException(null, null, e);
         }
     }

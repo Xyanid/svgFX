@@ -244,7 +244,7 @@ public class SVGElementBaseTest {
 
         final SVGCssStyle referencedStyle = new SVGCssStyle(new SVGDocumentDataProvider());
 
-        referencedStyle.parseCssText("st1{fill:none;stroke:#001122;fill-rule:odd;}");
+        referencedStyle.parseCssText("st1{fill:none;stroke:#001122;fill-rule:evenodd;}");
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 

@@ -33,7 +33,6 @@ public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElem
      * Creates a new instance of the parser and uses the given elementCreator.
      */
     public SVGParser() {
-
         super(new SVGElementFactory(), new SVGDocumentDataProvider());
     }
 

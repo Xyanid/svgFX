@@ -16,7 +16,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
-import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.core.definitions.Enumerations;
@@ -41,6 +41,14 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
      * Contains the name of this element in an svg file, used to identify the element when parsing.
      */
     public static final String ELEMENT_NAME = "radialGradient";
+    /**
+     * Contains the default value for the radius if it was not provided
+     */
+    private static final Double DEFAULT_RADIUS = 0.5d;
+    /**
+     * Contains the default value for the radius if it was not provided
+     */
+    private static final Double DEFAULT_CENTER = 0.5d;
 
     // endregion
 
@@ -92,16 +100,21 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
         final AtomicReference<Double> centerX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(),
                                                                                                              Double.class,
-                                                                                                             SVGAttributeTypeLength.DEFAULT_VALUE));
+                                                                                                             DEFAULT_CENTER));
         final AtomicReference<Double> centerY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(),
                                                                                                              Double.class,
-                                                                                                             SVGAttributeTypeLength.DEFAULT_VALUE));
+                                                                                                             DEFAULT_CENTER));
         final AtomicReference<Double> focusX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_X.getName(),
                                                                                                             Double.class,
-                                                                                                            SVGAttributeTypeLength.DEFAULT_VALUE));
+                                                                                                            centerX.get()));
         final AtomicReference<Double> focusY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_Y.getName(),
                                                                                                             Double.class,
-                                                                                                            SVGAttributeTypeLength.DEFAULT_VALUE));
+                                                                                                            centerY.get()));
+        final AtomicReference<Double> radius = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.RADIUS.getName(),
+                                                                                                            Double.class,
+                                                                                                            DEFAULT_RADIUS));
+
+        // TODO apply transform
 
         final Enumerations.GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
                                                                                               Enumerations.GradientUnit.class,
@@ -111,26 +124,23 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
             if (shape == null) {
                 throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but the requesting shape is missing.");
             }
-            adjustPosition(centerX, centerY, focusX, focusY, shape);
+            adjustPosition(centerX, centerY, focusX, focusY, radius, shape);
         }
-
-        // TODO convert the coordinates into the correct space, first convert then apply transform
 
         double diffX = focusX.get() - centerX.get();
         double diffY = focusY.get() - centerY.get();
 
         double distance = diffX != 0 && diffY != 0 ? Math.hypot(diffX, diffY) : 0;
-        double angle = diffX != 0 && diffY != 0 ? Math.atan2(diffY, diffX) : 0;
 
-        // TODO figure out if the focus angle is correct or not
+        double angle = diffX != 0 && diffY != 0 ? Math.atan2(diffY, diffX) : 0;
 
         return new RadialGradient(angle,
                                   distance,
                                   centerX.get(),
                                   centerY.get(),
-                                  getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS.getName(), SVGAttributeTypeLength.class).getValue(),
-                                  false,
-                                  CycleMethod.NO_CYCLE,
+                                  radius.get(),
+                                  true,
+                                  getAttributeHolder().getAttributeValue(CoreAttributeMapper.SPREAD_METHOD.getName(), CycleMethod.class, SVGAttributeTypeCycleMethod.DEFAULT_VALUE),
                                   stops);
     }
 
@@ -138,12 +148,18 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                 final AtomicReference<Double> centerY,
                                 final AtomicReference<Double> focusX,
                                 final AtomicReference<Double> focusY,
+                                final AtomicReference<Double> radius,
                                 final SVGShapeBase<?> shape) throws SVGException {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = shape.createBoundingBox();
         final Double width = boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue();
         final Double height = boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue();
 
+        centerX.set(Math.abs(boundingBox.getMinX().getValue() - centerX.get()) / width);
+        centerY.set(Math.abs(boundingBox.getMinY().getValue() - centerY.get()) / height);
+        focusX.set(Math.abs(boundingBox.getMinX().getValue() - focusX.get()) / width);
+        focusY.set(Math.abs(boundingBox.getMinY().getValue() - focusY.get()) / height);
+        radius.set(Math.abs(boundingBox.getMinY().getValue() - radius.get()) / height);
     }
 
     // endregion

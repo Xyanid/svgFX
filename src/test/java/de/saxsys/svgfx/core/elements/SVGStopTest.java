@@ -145,4 +145,23 @@ public final class SVGStopTest {
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
     }
+
+    /**
+     * When the {@link CoreAttributeMapper#OFFSET} is in {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength.Unit#PERCENT}, it will be adjusted accordingly.
+     */
+    @Test
+    public void whenTheOffsetIsInPercentItWillBeAdjustedCorrectly() throws SAXException {
+
+        final Attributes attributes = Mockito.mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(2);
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getValue(0)).thenReturn("50%");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
+        when(attributes.getValue(1)).thenReturn("blue");
+
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+
+        assertEquals(0.5d, stop.getResult().getOffset(), 0.01d);
+    }
 }

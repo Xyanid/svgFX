@@ -18,6 +18,8 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.xml.core.AttributeWrapper;
 import javafx.util.Pair;
 
+import java.util.Objects;
+
 /**
  * This class is the base class for svg content used either in css oder by attributes of an {@link de.saxsys.svgfx.core.elements.SVGElementBase}.
  *
@@ -123,6 +125,19 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     public final TUnit getUnit() throws SVGException {
         initializeValueAndUnit();
         return valueAndUnit.getValue();
+    }
+
+    /**
+     * Determines if this length value has the provided unit.
+     *
+     * @param unit the {@link SVGAttributeTypeLength.Unit} that is expected.
+     *
+     * @return true if the unit of this attribute is equals to th expected one, otherwise false.
+     *
+     * @throws SVGException if a problem occurs during the retrieval of the unit and value of this attribute.
+     */
+    public boolean hasUnit(final TUnit unit) throws SVGException {
+        return Objects.equals(getUnit(), unit);
     }
 
     /**

@@ -112,7 +112,12 @@ public class SVGStop extends SVGElementBase<Stop> {
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), stopOpacity.get().getValue());
         }
 
-        return new Stop(getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.OFFSET.getName(), SVGAttributeTypeLength.class).getValue(), color);
+        final SVGAttributeTypeLength offset = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.OFFSET.getName(), SVGAttributeTypeLength.class);
+        if (offset.hasUnit(SVGAttributeTypeLength.Unit.PERCENT)) {
+            return new Stop(offset.getValue() / 100.0d, color);
+        } else {
+            return new Stop(offset.getValue(), color);
+        }
     }
 
     @Override

@@ -70,6 +70,14 @@ public class SVGException extends Exception {
          */
         INVALID_GRADIENT_UNIT_FORMAT,
         /**
+         * Meaning that the text that should represent a {@link Enumerations.CycleMethodMapping} is not valid.
+         */
+        INVALID_CYCLE_METHOD,
+        /**
+         * Meaning that the text that should represent a {@link Enumerations.FillRuleMapping} is not valid.
+         */
+        INVALID_FILL_RULE,
+        /**
          * Meaning that during the creation of a {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle}, the text that was used did not provide the required information.
          */
         INVALID_RECTANGLE_FORMAT,

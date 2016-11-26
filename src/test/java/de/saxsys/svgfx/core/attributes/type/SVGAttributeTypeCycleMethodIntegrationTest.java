@@ -24,15 +24,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
- * @author Xyanid on 16.10.2016.
+ * @author Xyanid on 22.11.2016.
  */
-public class SVGAttributeTypeFillRuleIntegrationTest {
+public class SVGAttributeTypeCycleMethodIntegrationTest {
 
     // region Fields
 
     private final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-    private SVGAttributeTypeFillRule cut;
+    private SVGAttributeTypeCycleMethod cut;
 
     // endregion
 
@@ -40,7 +40,7 @@ public class SVGAttributeTypeFillRuleIntegrationTest {
 
     @Before
     public void setUp() {
-        cut = new SVGAttributeTypeFillRule(dataProvider);
+        cut = new SVGAttributeTypeCycleMethod(dataProvider);
     }
 
     // endregion
@@ -56,20 +56,20 @@ public class SVGAttributeTypeFillRuleIntegrationTest {
 
         try {
             cut.getValue();
-            fail("Should not be able to parse invalid fill rule");
+            fail("Should not be able to parse invalid cycle method");
         } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_FILL_RULE, e.getReason());
+            assertEquals(SVGException.Reason.INVALID_CYCLE_METHOD, e.getReason());
         }
     }
 
     /**
-     * All fill rules can be converted when being provided as text.
+     * All {@link javafx.scene.paint.CycleMethod}s can be converted when being provided as text.
      */
     @Test
-    public void allFillRulesAreCorrectlyParsed() throws SVGException {
-        for (final Enumerations.FillRuleMapping value : Enumerations.FillRuleMapping.values()) {
+    public void allCycleMethodsAreCorrectlyParsed() throws SVGException {
+        for (final Enumerations.CycleMethodMapping value : Enumerations.CycleMethodMapping.values()) {
             cut.setText(value.getName());
-            assertEquals(value.getRule(), cut.getValue());
+            assertEquals(value.getMethod(), cut.getValue());
             assertNull(cut.getUnit());
         }
     }

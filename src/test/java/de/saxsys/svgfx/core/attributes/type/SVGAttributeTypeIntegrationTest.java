@@ -138,5 +138,32 @@ public class SVGAttributeTypeIntegrationTest {
         assertEquals(2, counter.get());
     }
 
+    /**
+     * True will be returned if the unit of an attribute is equals to an expected one, this is also true if both the expected and actual unit are null.
+     */
+    @Test
+    public void itIsPossibleToDetermineIfTheAttributeHasAnExpectedUnit() throws SVGException {
+
+        final SVGAttributeType<Long, Long> cut = new SVGAttributeType<Long, Long>(Long.MAX_VALUE, dataProvider) {
+            @Override
+            protected Pair<Long, Long> getValueAndUnit(final String text) throws SVGException {
+
+                return new Pair<>(Long.parseLong(text.substring(0, 1)), text.length() == 2 ? Long.parseLong(text.substring(1)) : null);
+            }
+        };
+
+        cut.setText("11");
+
+        assertTrue(cut.hasUnit(1L));
+        assertFalse(cut.hasUnit(2L));
+        assertFalse(cut.hasUnit(null));
+
+        cut.setText("1");
+
+        assertFalse(cut.hasUnit(1L));
+        assertTrue(cut.hasUnit(null));
+    }
+
+
     //endregion
 }

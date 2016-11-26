@@ -16,54 +16,57 @@ package de.saxsys.svgfx.core.attributes.type;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Enumerations;
-import javafx.scene.shape.FillRule;
+import javafx.scene.paint.CycleMethod;
 import javafx.util.Pair;
 
 /**
- * Represents a {@link FillRule}, the default value is {@link FillRule#EVEN_ODD}.
+ * This class represents a svg transform content type. This means it will contains matrix transformation.
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
+public class SVGAttributeTypeCycleMethod extends SVGAttributeType<CycleMethod, Void> {
 
     // region Static
 
     /**
      * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final FillRule DEFAULT_VALUE = FillRule.EVEN_ODD;
+    public static final CycleMethod DEFAULT_VALUE = CycleMethod.NO_CYCLE;
 
     // endregion
 
     //region Constructor
 
     /**
-     * Creates new instance with a default value of {@link FillRule#EVEN_ODD}.
+     * Creates new instance.
      *
      * @param dataProvider the {@link SVGDocumentDataProvider} to use when data is needed.
      */
-    public SVGAttributeTypeFillRule(final SVGDocumentDataProvider dataProvider) {
+    public SVGAttributeTypeCycleMethod(final SVGDocumentDataProvider dataProvider) {
         super(DEFAULT_VALUE, dataProvider);
     }
 
     //endregion
 
-    //region Override AttributeWrapper
+    //region Override SVGAttributeType
 
+    /**
+     * @throws SVGException when any value inside the array is not a valid {@link SVGAttributeTypeCycleMethod}
+     */
     @Override
-    protected Pair<FillRule, Void> getValueAndUnit(final String cssText) throws SVGException {
+    protected Pair<CycleMethod, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        FillRule result = null;
+        CycleMethod result = null;
 
-        for (final Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
-            if (mapping.getName().equals(cssText)) {
-                result = mapping.getRule();
+        for (final Enumerations.CycleMethodMapping cycleMethod : Enumerations.CycleMethodMapping.values()) {
+            if (cycleMethod.getName().equals(cssText)) {
+                result = cycleMethod.getMethod();
                 break;
             }
         }
 
         if (result == null) {
-            throw new SVGException(SVGException.Reason.INVALID_FILL_RULE, String.format("Given %s can not be parsed into a fill rule", cssText));
+            throw new SVGException(SVGException.Reason.INVALID_CYCLE_METHOD, String.format("Given %s can not be parsed into a cycle method", cssText));
         }
 
         return new Pair<>(result, null);
