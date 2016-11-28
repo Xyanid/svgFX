@@ -16,6 +16,7 @@ package de.saxsys.svgfx.xml.core;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyProperty;
 import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 
 /**
  * Basic XML parser which uses a given elementFactory to process the data provided while parsing.
@@ -37,7 +39,16 @@ import java.io.InputStream;
  */
 public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocumentDataProvider, TElementFactory extends IElementFactory<TDocumentDataProvider, TElement>, TElement
         extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement, TElement>>
-        extends DefaultHandler {
+        extends DefaultHandler
+        implements EntityResolver {
+
+    // region Constants
+
+    private static final InputSource FAKE_ENTITY_SOURCE = new InputSource(new StringReader(""));
+
+    private static final String FEATURE_VALIDATION = "http://xml.org/sax/features/validation";
+
+    // endregion
 
     // region Enumeration
 
@@ -90,6 +101,11 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     // endregion
 
     // region Fields
+
+    /**
+     * Determines whether this parser will use DTD validation and such or not. This flag can be set per parse.
+     */
+    private boolean useValidation;
 
     /**
      * Determines the data provider to be used to supply elements with data.
@@ -158,7 +174,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     // region Getter    
 
     /**
-     * Gets the {@link SAXParser#result}, which is only set after {@link SAXParser#parse(InputSource)} has been called.
+     * Gets the {@link SAXParser#result}, which is only set after {@link SAXParser#parse(InputSource, boolean)}  has been called.
      *
      * @return {@link SAXParser#result}
      */
@@ -216,56 +232,6 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     }
 
     /**
-     * This method will be called as soon as the parsing of the document has started and set the current {@link #result}.
-     * Ideally a new result will be initialized here so it can be filled when the document is processed.
-     *
-     * @return the new value for the {@link #result}.
-     *
-     * @throws SAXException when an error occurs
-     */
-    protected abstract TResult enteringDocument() throws SAXException;
-
-    // endregion
-
-    // region Abstract
-
-    /**
-     * This method will be called as soon as the parsing of the document has been finished, the current {@link #result}
-     * will be be provided so final operation can be performed.
-     *
-     * @param result the current {@link #result}, which was initialized during {@link #enteringDocument()}.
-     *
-     * @throws SAXException when an error occurs
-     */
-    protected abstract void leavingDocument(final TResult result) throws SAXException;
-
-    /**
-     * This method will be called when a new element is starting in the XML tree.
-     * If possible the data of the element can be processed here already for the {@link #result}.
-     *
-     * @param result       the current {@link #result}, which was initialized during {@link #enteringDocument()}.
-     * @param dataProvider the {@link #documentDataProvider} that as provided during initialization
-     * @param element      element to be consumed
-     *
-     * @throws SAXException when an error occurs
-     */
-    protected abstract void consumeElementStart(final TResult result, final TDocumentDataProvider dataProvider, final TElement element) throws SAXException;
-
-    /**
-     * This method will be called when an element has ended in the XML tree.
-     * Generally the data of the element should be consumed here, however it might not be necessary to consume the data of the element here,
-     * since it could be contained in another element. E.g. if an element A contains an element B, then the data of B can still be consumed when element A
-     * ends, since element B will be available as child of A.
-     *
-     * @param result       the current {@link #result}, which was initialized during {@link #enteringDocument()}.
-     * @param dataProvider the {@link #documentDataProvider} that as provided during initialization.
-     * @param element      element to be consumed.
-     *
-     * @throws SAXException when an error occurs
-     */
-    protected abstract void consumeElementEnd(final TResult result, final TDocumentDataProvider dataProvider, final TElement element) throws SAXException;
-
-    /**
      * Gets the property State.
      *
      * @return the State property
@@ -276,13 +242,48 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
     // endregion
 
+    // region Abstract
+
+    /**
+     * Allows to configure the reader that will be used to parse the file.
+     * NOte. it is not possible to do the following:
+     * <ul>
+     *     <li>assign a new handler</li>
+     *     <li>assign a new entity resolver</li>
+     *     <li>toggling sax validation</li>
+     * </ul>
+     *
+     * @param reader the {@link XMLReader} that is being used.
+     */
+    protected abstract void configureReader(final XMLReader reader) throws SAXException;
+
+    /**
+     * This method will be called as soon as the parsing of the document has started.
+     *
+     * @throws SAXException when an error occurs
+     */
+    protected abstract void enteringDocument() throws SAXException;
+
+    /**
+     * This method will be called as soon as the parsing of the document has been finished.
+     *
+     * @return the result, which was initialized during {@link #enteringDocument()}.
+     *
+     * @throws SAXException when an error occurs
+     */
+    protected abstract TResult leavingDocument(final TElement element) throws SAXException;
+
+    // endregion
+
     // region Public
 
     /**
      * This method will clear the current {@link #result} as well as calling {@link IDocumentDataProvider#clear()}.
      */
     public final void clear() {
-        result = null;
+        if (isBusy()) {
+            throw new IllegalStateException("Can not clean while parser is still working");
+        }
         documentDataProvider.clear();
     }
 
@@ -296,8 +297,8 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * @throws IllegalStateException    if this method is being called while the parser is still busy
      * @throws IOException              if the file can not be found or opened
      */
-    public final void parse(final String path) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
-        parse(new File(path));
+    public final void parse(final String path, final boolean useValidation) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
+        parse(new File(path), useValidation);
     }
 
     /**
@@ -310,14 +311,14 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * @throws IllegalStateException    if this method is being called while the parser is still busy
      * @throws IOException              if the file can not be found or opened
      */
-    public final void parse(final File file) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
+    public final void parse(final File file, boolean useValidation) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
         if (file == null) {
             throw new IllegalArgumentException("given file must not be null");
         }
 
         InputStream stream = new FileInputStream(file);
 
-        parse(new InputSource(stream));
+        parse(new InputSource(stream), useValidation);
 
         stream.close();
     }
@@ -331,7 +332,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * @throws IllegalArgumentException if the given data is null
      * @throws IllegalStateException    if this method is being called while the parser is still busy
      */
-    public final void parse(final InputSource data) throws SAXParseException, IllegalArgumentException, IllegalStateException {
+    public final void parse(final InputSource data, final boolean useValidation) throws SAXParseException, IllegalArgumentException, IllegalStateException {
 
         if (data == null) {
             throw new IllegalArgumentException("given data must not be null");
@@ -340,6 +341,8 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
         if (isBusy()) {
             throw new IllegalStateException("Can not attempt to parse while the parser is still working");
         }
+
+        this.useValidation = useValidation;
 
         try {
             setState(State.PREPARING);
@@ -350,9 +353,11 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
             final XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 
-            reader.setContentHandler(this);
+            configureReader(reader);
 
-            reader.setFeature("http://xml.org/sax/features/validation", false);
+            reader.setContentHandler(this);
+            reader.setEntityResolver(this);
+            reader.setFeature(FEATURE_VALIDATION, useValidation);
 
             reader.parse(data);
 
@@ -369,20 +374,16 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
     @Override
     public final void startDocument() throws SAXException {
-        result = enteringDocument();
-
         currentElement = null;
-
+        enteringDocument();
         setState(State.STARTING);
     }
 
     @Override
     public final void endDocument() throws SAXException {
-        currentElement = null;
-
+        result = leavingDocument(currentElement);
         setState(State.FINISHED);
-
-        leavingDocument(result);
+        currentElement = null;
     }
 
     @Override
@@ -391,19 +392,13 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
         setState(State.PARSING_ENTERING_ELEMENT);
 
         final TElement nextElement = elementFactory.createElement(qName, attributes, currentElement, documentDataProvider);
-
         if (nextElement != null) {
-
             // we create a tree here if the element will be kept and we have a parent for the element
             if (currentElement != null && nextElement.rememberElement()) {
                 currentElement.addChild(nextElement);
             }
-
             currentElement = nextElement;
-
             currentElement.startProcessing();
-
-            consumeElementStart(result, documentDataProvider, currentElement);
         }
 
         setState(State.PARSING_ENTERING_ELEMENT_FINISHED);
@@ -418,12 +413,10 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
             currentElement.endProcessing();
 
-            if (currentElement.canConsumeResult()) {
-                consumeElementEnd(result, documentDataProvider, currentElement);
-            }
-
             // clear the previous element that was processed before the current one, so we can also end its processing if need be
-            currentElement = currentElement.getParent();
+            if (currentElement.getParent() != null) {
+                currentElement = currentElement.getParent();
+            }
         }
 
         setState(State.PARSING_LEAVING_ELEMENT_FINISHED);
@@ -439,6 +432,15 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
         }
 
         setState(State.PARSING_ENTERING_ELEMENT_CHARACTERS_FINISHED);
+    }
+
+    // endregion
+
+    // region Implements EntityResolver
+
+    @Override
+    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
+        return useValidation ? null : FAKE_ENTITY_SOURCE;
     }
 
     // endregion

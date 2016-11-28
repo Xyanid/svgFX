@@ -18,16 +18,18 @@ import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * This parser is used to create SVG path data for javafx
  *
  * @author Xyanid on 24.10.2015.
  */
-public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElementFactory, SVGElementBase<?>> {
+public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElementFactory, SVGElementBase<?>> implements EntityResolver {
 
-    //region Constructor
+    // region Constructor
 
     /**
      * Creates a new instance of the parser and uses the given elementCreator.
@@ -36,27 +38,28 @@ public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElem
         super(new SVGElementFactory(), new SVGDocumentDataProvider());
     }
 
-    //endregion
+    // endregion
 
-    //region Override SAXParser
-
-    @Override
-    protected Group enteringDocument() {
-        return new Group();
-    }
+    // region Override SAXParser
 
     @Override
-    protected void leavingDocument(final Group result) {
-    }
+    protected void configureReader(final XMLReader reader) throws SAXException {}
 
     @Override
-    protected void consumeElementStart(final Group result, final SVGDocumentDataProvider dataProvider, final SVGElementBase<?> element) {
-    }
+    protected void enteringDocument() {}
 
     @Override
-    protected void consumeElementEnd(final Group result, final SVGDocumentDataProvider documentDataProvider, final SVGElementBase<?> element) throws SAXException {
-        result.getChildren().add((Node) element.getResult());
+    protected Group leavingDocument(final SVGElementBase<?> element) throws SAXException {
+        final Group result = new Group();
+
+        if (element != null) {
+            for (final SVGElementBase child : element.getUnmodifiableChildren()) {
+                result.getChildren().add((Node) child.getResult());
+            }
+        }
+
+        return result;
     }
 
-    //endregion
+    // endregion
 }

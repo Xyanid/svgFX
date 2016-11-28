@@ -23,7 +23,6 @@ import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -178,7 +177,6 @@ public final class SVGRadialGradientTest {
      * Ensures that the an {@link SVGException} is thrown if there are no stops elements.
      */
     @Test
-    @Ignore
     public void whenGradientUnitsAreProvidedUserSpaceOnUseTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
@@ -208,15 +206,15 @@ public final class SVGRadialGradientTest {
 
         when(attributes.getLength()).thenReturn(7);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
-        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
-        when(attributes.getValue(1)).thenReturn("0.15");
+        when(attributes.getValue(1)).thenReturn("175");
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.FOCUS_X.getName());
-        when(attributes.getValue(2)).thenReturn("0.9");
+        when(attributes.getValue(2)).thenReturn("125");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
-        when(attributes.getValue(3)).thenReturn("0.95");
+        when(attributes.getValue(3)).thenReturn("125");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        when(attributes.getValue(4)).thenReturn("0.5");
+        when(attributes.getValue(4)).thenReturn("50");
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(5)).thenReturn(Enumerations.GradientUnit.USER_SPACE_ON_USE.getName());
         when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
@@ -224,15 +222,19 @@ public final class SVGRadialGradientTest {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = new SVGAttributeTypeRectangle.SVGTypeRectangle(new SVGDocumentDataProvider());
         boundingBox.getMinX().setText("50");
-        boundingBox.getMaxX().setText("100");
+        boundingBox.getMaxX().setText("150");
         boundingBox.getMinY().setText("100");
-        boundingBox.getMaxY().setText("150");
+        boundingBox.getMaxY().setText("200");
 
         final SVGShapeBase<?> shape = mock(SVGShapeBase.class);
         when(shape.createBoundingBox()).thenReturn(boundingBox);
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, dataProvider).createResult(shape);
 
-        throw new UnsupportedOperationException("implement");
+        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
+        assertEquals(0.75d, gradient.getCenterY(), 0.01d);
+        assertEquals(Math.hypot(0.75d - 0.5d, 0.25d - 0.75d), gradient.getFocusDistance(), 0.01d);
+        assertEquals(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d), gradient.getFocusAngle(), 0.01d);
+        assertEquals(0.5d, gradient.getRadius(), 0.01d);
     }
 }

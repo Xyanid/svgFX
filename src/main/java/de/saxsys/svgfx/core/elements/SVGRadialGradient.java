@@ -159,7 +159,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         centerY.set(Math.abs(boundingBox.getMinY().getValue() - centerY.get()) / height);
         focusX.set(Math.abs(boundingBox.getMinX().getValue() - focusX.get()) / width);
         focusY.set(Math.abs(boundingBox.getMinY().getValue() - focusY.get()) / height);
-        radius.set(Math.abs(boundingBox.getMinY().getValue() - radius.get()) / height);
+        radius.set(radius.get() / height);
     }
 
     // endregion
