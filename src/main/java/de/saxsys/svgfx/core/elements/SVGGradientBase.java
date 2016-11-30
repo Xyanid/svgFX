@@ -62,6 +62,8 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      * Gets the stops related to this gradient.
      *
      * @return the stops which this gradient needs
+     *
+     * @throws SVGException if an error occurs during the retrieval of the stops.
      */
     @SuppressWarnings ("unchecked")
     public final List<Stop> getStops() throws SVGException {
@@ -145,6 +147,8 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      * @param shape the {@link SVGShapeBase} requesting this gradient.
      *
      * @return a new {@link TPaint}.
+     *
+     * @throws SVGException if an error occurs during the creation of the result.
      */
     public abstract TPaint createResult(final SVGShapeBase<?> shape) throws SVGException;
 

@@ -95,7 +95,7 @@ public abstract class AttributeHolder<TAttribute extends AttributeWrapper> {
      *
      * @return the desired attribute as the {@link TAttribute}.
      *
-     * @throws IllegalArgumentException if the desired attribute does not exist.
+     * @throws SVGException if the desired attribute does not exist.
      */
     public final <TContent extends TAttribute> TContent getAttributeOrFail(final String name, final Class<TContent> clazz) throws SVGException {
         final TContent attribute = clazz.cast(attributes.get(name));

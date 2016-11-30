@@ -49,6 +49,8 @@ public class SVGAttributeHolder extends AttributeHolder<SVGAttributeType> {
      * @param defaultValue the default value to provide if the desired attribute was not found.
      *
      * @return the value of the desired attribute as the {@link TValue} or the default value should the attribute not exist.
+     *
+     * @throws SVGException when an error occurs during the retrieval of the value.
      */
     public final <TValue> TValue getAttributeValue(final String name, final Class<TValue> clazz, final TValue defaultValue) throws SVGException {
         final Optional<SVGAttributeType> attribute = getAttribute(name);

@@ -69,6 +69,8 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
 
     /**
      * @return The {@link #isCurrentColor}.
+     *
+     * @throws SVGException when an error occurs during the retrieval of the value.
      */
     public boolean getIsCurrentColor() throws SVGException {
         getValueAndUnit();

@@ -227,6 +227,8 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * Returns this elements bounding rectangle, which contains the entire shape.
      *
      * @return this elements bounding box.
+     *
+     * @throws SVGException when an error occurs during the creation of the bounding box.
      */
     public abstract SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException;
 

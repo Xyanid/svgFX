@@ -76,6 +76,7 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
      * @param attributes           attributes to be used
      * @param parent               parent of the element
      * @param documentDataProvider documentDataProvider to be used, must not be null
+     * @param attributeHolder      the element that will contain the attributes of this element.
      *
      * @throws IllegalArgumentException if either value or documentDataProvider are null
      */
@@ -230,7 +231,9 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
     public abstract void endProcessing() throws SAXException;
 
     /**
-     * Determines whether the result of this element will be requested or not. A call to this method should be made prior to the {@link #getResult()}
+     * Determines whether the result of this element will be requested or not. A call to this method should be made prior to the {@link #getResult()}.
+     *
+     * @return true if the element can be consume, otherwise false.
      */
     public abstract boolean canConsumeResult();
 

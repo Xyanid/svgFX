@@ -94,6 +94,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     /**
      * Creates a result represented by this element and uses the given supplier in order to fetch data needed to initialize the result
      *
+     * @param styleSupplier the {@link StyleSupplier} to use when a {@link SVGCssStyle} is needed.
+     *
      * @return the result produced by this element.
      *
      * @throws SVGException thrown when an exception during creation occurs.
@@ -121,6 +123,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *                   is not invoked, hence it will only return its own style.
      *
      * @return the {@link SVGCssStyle} if this element combined and resolved with the given {@link SVGCssStyle}.
+     *
+     * @throws SVGException when an error occurs during the retrieval of the style.
      */
     public final SVGCssStyle getStyleAndResolveInheritance(final SVGCssStyle otherStyle) throws SVGException {
         final SVGCssStyle style = getCombinedStyle();
@@ -156,7 +160,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     /**
      * Returns a node which represents the clip path to be applied to this element.
      *
-     * @param styleSupplier  the {@link StyleSupplier} to be used when there is a {@link SVGClipPath} defined for the element and it needs a style.
+     * @param styleSupplier the {@link StyleSupplier} to be used when there is a {@link SVGClipPath} defined for the element and it needs a style.
      *
      * @return the clip path to use or null if this element does not have a clip path.
      *
@@ -411,6 +415,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      * Must be overwritten in the actual implementation to create a new result for this element based on the
      * information available.
      *
+     * @param styleSupplier the {@link StyleSupplier} to use when a {@link SVGCssStyle} is needed.
+     *
      * @return a new instance of the result or null of no result was created
      *
      * @throws SVGException will be thrown when an error during creation occurs
@@ -424,7 +430,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      * {@link SVGUse} and their actual parent is not
      * the one from which the inherited style attributes can be retrieved.
      *
-     * @param result the result which should be modified.
+     * @param result        the result which should be modified.
+     * @param styleSupplier the {@link StyleSupplier} to use when a {@link SVGCssStyle} is needed.
      *
      * @throws SVGException will be thrown when an error during modification
      */

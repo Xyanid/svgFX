@@ -62,6 +62,8 @@ public class SVGAttributeTypeStrokeDashArray extends SVGAttributeType<SVGAttribu
 
     /**
      * @return the {@link #dashValues}.
+     *
+     * @throws SVGException when an error occurs during the retrieval of the value.
      */
     public final List<Double> getDashValues() throws SVGException {
         getValue();

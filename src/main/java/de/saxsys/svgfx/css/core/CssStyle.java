@@ -106,6 +106,8 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
 
     /**
      * Creates a new instance.
+     *
+     * @param attributeHolder the element that will contain the attributes of this style.
      */
     public CssStyle(final TAttributeHolder attributeHolder) {
         this.attributeHolder = attributeHolder;
@@ -114,7 +116,8 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
     /**
      * Creates a new instance.
      *
-     * @param name the name to of this style.
+     * @param name            the name to of this style.
+     * @param attributeHolder the element that will contain the attributes of this style.
      */
     public CssStyle(final String name, final TAttributeHolder attributeHolder) {
         this.name = name;

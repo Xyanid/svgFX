@@ -96,21 +96,23 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
     /**
      * @return The {@link #isInherited}.
      */
-    public final boolean getIsInherited() throws SVGException {
+    public final boolean getIsInherited() {
         return isInherited;
     }
 
     /**
      * @return The {@link #isNone}.
      */
-    public final boolean getIsNone() throws SVGException {
+    public final boolean getIsNone() {
         return isNone;
     }
 
     /**
-     * Returns the {@link #valueAndUnit)}s key.
+     * Returns the {@link #valueAndUnit}s key.
      *
      * @return {@link #valueAndUnit}s key.
+     *
+     * @throws SVGException when an error occurs during the initialization of the value and unit.
      */
     public final TValue getValue() throws SVGException {
         initializeValueAndUnit();
@@ -121,6 +123,8 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      * Returns the {@link #valueAndUnit}s value.
      *
      * @return The {@link #valueAndUnit}s value.
+     *
+     * @throws SVGException when an error occurs during the initialization of the value and unit.
      */
     public final TUnit getUnit() throws SVGException {
         initializeValueAndUnit();
@@ -193,6 +197,8 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      * @param text cssText which is not equal to {@link #INHERIT_INDICATOR} or {@link #NONE_INDICATOR}.
      *
      * @return a {@link Pair} which contains the value as the key and the value as the value.
+     *
+     * @throws SVGException when any error occurs during the consumption of the given text.
      */
     protected abstract Pair<TValue, TUnit> getValueAndUnit(final String text) throws SVGException;
 

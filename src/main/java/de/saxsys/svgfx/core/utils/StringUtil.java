@@ -28,7 +28,7 @@ public final class StringUtil {
     // region Classes
 
     /**
-     * This interface allows that {@link #split(String, List, SplitPredicate)} to consume data an indicate whether to further add new characters or consume
+     * This interface allows that {@link #splitByDelimiters(String, List)} to consume data an indicate whether to further add new characters or consume
      * the currentData.
      */
     @FunctionalInterface
@@ -36,8 +36,8 @@ public final class StringUtil {
         /**
          * Called when a delimiter or the last character is read and will indicate whether the current read data can be used or not.
          *
-         * @param currentData {@link String} containing the currently read data so far.
-         * @param index       the index of the character in the original data that was currently read
+         * @param data  the {@link String} containing the currently read data so far.
+         * @param index the index of the character in the original data that was currently read
          *
          * @return true if the currentData shall be consumed otherwise false if not.
          *
@@ -145,6 +145,8 @@ public final class StringUtil {
      * @param delimiters the delimiters that indicate when the string needs to be split.
      *
      * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
+     *
+     * @throws SVGException when an error occurs during the splitting.
      */
     public static List<String> splitByDelimiters(final String data, final List<Character> delimiters) throws SVGException {
         return splitByDelimiters(data, delimiters, (split, index) -> true);
@@ -153,10 +155,13 @@ public final class StringUtil {
     /**
      * Creates a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
      *
-     * @param data       the data that needs to be split.
-     * @param delimiters the delimiters that indicate when the string needs to be split.
+     * @param data             the data that needs to be split.
+     * @param delimiters       the delimiters that indicate when the string needs to be split.
+     * @param consumePredicate the {@link SplitPredicate} to use, which will determine if the currently split value will be part of the result.
      *
      * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
+     *
+     * @throws SVGException when an error occurs during the splitting.
      */
     public static List<String> splitByDelimiters(final String data, final List<Character> delimiters, final SplitPredicate consumePredicate) throws SVGException {
 

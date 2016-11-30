@@ -118,6 +118,8 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
      * @param clazz   class to be used, must not be null
      *
      * @return an {@link Optional} containing the desired data or {@link Optional#empty()} if no such element exist.
+     *
+     * @throws SVGException if any provided parameter is null.
      */
     public final <TData extends SVGElementBase> Optional<TData> getData(final String key, final Class<TData> clazz) throws SVGException {
 

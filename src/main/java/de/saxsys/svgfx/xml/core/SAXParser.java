@@ -103,11 +103,6 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     // region Fields
 
     /**
-     * Determines whether this parser will use DTD validation and such or not. This flag can be set per parse.
-     */
-    private boolean useValidation;
-
-    /**
      * Determines the data provider to be used to supply elements with data.
      */
     private final TElementFactory elementFactory;
@@ -174,7 +169,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     // region Getter    
 
     /**
-     * Gets the {@link SAXParser#result}, which is only set after {@link SAXParser#parse(InputSource, boolean)}  has been called.
+     * Gets the {@link SAXParser#result}, which is only set after {@link SAXParser#parse(InputSource)}  has been called.
      *
      * @return {@link SAXParser#result}
      */
@@ -248,12 +243,14 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * Allows to configure the reader that will be used to parse the file.
      * NOte. it is not possible to do the following:
      * <ul>
-     *     <li>assign a new handler</li>
-     *     <li>assign a new entity resolver</li>
-     *     <li>toggling sax validation</li>
+     * <li>assign a new handler</li>
+     * <li>assign a new entity resolver</li>
+     * <li>toggling sax validation</li>
      * </ul>
      *
      * @param reader the {@link XMLReader} that is being used.
+     *
+     * @throws SAXException when an error occurs during the configuration.
      */
     protected abstract void configureReader(final XMLReader reader) throws SAXException;
 
@@ -267,9 +264,11 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     /**
      * This method will be called as soon as the parsing of the document has been finished.
      *
+     * @param element the element that is the first element in the structure of the file.
+     *
      * @return the result, which was initialized during {@link #enteringDocument()}.
      *
-     * @throws SAXException when an error occurs
+     * @throws SAXException when an error occurs.
      */
     protected abstract TResult leavingDocument(final TElement element) throws SAXException;
 
@@ -297,8 +296,8 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * @throws IllegalStateException    if this method is being called while the parser is still busy
      * @throws IOException              if the file can not be found or opened
      */
-    public final void parse(final String path, final boolean useValidation) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
-        parse(new File(path), useValidation);
+    public final void parse(final String path) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
+        parse(new File(path));
     }
 
     /**
@@ -311,14 +310,14 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * @throws IllegalStateException    if this method is being called while the parser is still busy
      * @throws IOException              if the file can not be found or opened
      */
-    public final void parse(final File file, boolean useValidation) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
+    public final void parse(final File file) throws SAXParseException, IllegalArgumentException, IllegalStateException, IOException {
         if (file == null) {
             throw new IllegalArgumentException("given file must not be null");
         }
 
         InputStream stream = new FileInputStream(file);
 
-        parse(new InputSource(stream), useValidation);
+        parse(new InputSource(stream));
 
         stream.close();
     }
@@ -332,7 +331,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * @throws IllegalArgumentException if the given data is null
      * @throws IllegalStateException    if this method is being called while the parser is still busy
      */
-    public final void parse(final InputSource data, final boolean useValidation) throws SAXParseException, IllegalArgumentException, IllegalStateException {
+    public final void parse(final InputSource data) throws SAXParseException, IllegalArgumentException, IllegalStateException {
 
         if (data == null) {
             throw new IllegalArgumentException("given data must not be null");
@@ -341,8 +340,6 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
         if (isBusy()) {
             throw new IllegalStateException("Can not attempt to parse while the parser is still working");
         }
-
-        this.useValidation = useValidation;
 
         try {
             setState(State.PREPARING);
@@ -357,7 +354,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
             reader.setContentHandler(this);
             reader.setEntityResolver(this);
-            reader.setFeature(FEATURE_VALIDATION, useValidation);
+            reader.setFeature(FEATURE_VALIDATION, false);
 
             reader.parse(data);
 
@@ -440,7 +437,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
     @Override
     public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
-        return useValidation ? null : FAKE_ENTITY_SOURCE;
+        return FAKE_ENTITY_SOURCE;
     }
 
     // endregion

@@ -147,6 +147,7 @@ public class SVGException extends Exception {
      * Creates a new instance.
      *
      * @param message the message of the exception
+     * @param reason  the {@link Reason} for this exception
      */
     public SVGException(final Reason reason, final String message) {
         this(reason, message, null);
@@ -155,7 +156,8 @@ public class SVGException extends Exception {
     /**
      * Creates a new instance.
      *
-     * @param cause the cause for this exception
+     * @param cause  the cause for this exception
+     * @param reason the {@link Reason} for this exception
      */
     public SVGException(final Reason reason, final Throwable cause) {
         this(reason, null, cause);

@@ -48,7 +48,7 @@ public final class SVGParserTest {
         assertNotNull(url);
 
         try {
-            parser.parse(url.getFile(), false);
+            parser.parse(url.getFile());
         } catch (final Exception e) {
             Assert.fail();
         }
@@ -73,7 +73,7 @@ public final class SVGParserTest {
         assertNotNull(url);
 
         try {
-            parser.parse(url.getFile(), false);
+            parser.parse(url.getFile());
         } catch (final Exception e) {
             Assert.fail();
         }
@@ -103,7 +103,7 @@ public final class SVGParserTest {
         assertNotNull(url);
 
         try {
-            parser.parse(url.getFile(), false);
+            parser.parse(url.getFile());
         } catch (final Exception e) {
             Assert.fail();
         }
