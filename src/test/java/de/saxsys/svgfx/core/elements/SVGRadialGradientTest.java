@@ -83,11 +83,11 @@ public final class SVGRadialGradientTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
         when(attributes.getValue(0)).thenReturn("0.1");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
-        when(attributes.getValue(1)).thenReturn("0.15");
+        when(attributes.getValue(1)).thenReturn("0.9");
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.FOCUS_X.getName());
-        when(attributes.getValue(2)).thenReturn("0.9");
+        when(attributes.getValue(2)).thenReturn("0.1");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
-        when(attributes.getValue(3)).thenReturn("0.95");
+        when(attributes.getValue(3)).thenReturn("0.5");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(4)).thenReturn("0.5");
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.SPREAD_METHOD.getName());
@@ -98,9 +98,9 @@ public final class SVGRadialGradientTest {
         final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, dataProvider);
 
         Assert.assertEquals(0.1d, gradient.getResult().getCenterX(), 0.01d);
-        Assert.assertEquals(0.15d, gradient.getResult().getCenterY(), 0.01d);
-        Assert.assertEquals(Math.hypot(0.9d - 0.1d, 0.95d - 0.15d), gradient.getResult().getFocusDistance(), 0.01d);
-        Assert.assertEquals(Math.atan2(0.95d - 0.15d, 0.9d - 0.1d), gradient.getResult().getFocusAngle(), 0.01d);
+        Assert.assertEquals(0.9d, gradient.getResult().getCenterY(), 0.01d);
+        Assert.assertEquals(0.8d, gradient.getResult().getFocusDistance(), 0.01d);
+        Assert.assertEquals(-90, gradient.getResult().getFocusAngle(), 0.01d);
         assertEquals(CycleMethod.REPEAT, gradient.getResult().getCycleMethod());
     }
 
@@ -233,8 +233,61 @@ public final class SVGRadialGradientTest {
 
         assertEquals(0.5d, gradient.getCenterX(), 0.01d);
         assertEquals(0.75d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.75d - 0.5d, 0.25d - 0.75d), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d), gradient.getFocusAngle(), 0.01d);
+        assertEquals(1.0, gradient.getFocusDistance(), 0.01d);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), 0.01d);
         assertEquals(0.5d, gradient.getRadius(), 0.01d);
     }
+
+    /**
+     * Ensures that the attributes are parsed correctly.
+     */
+    @Test
+    public void whenTheRadiusIsFocusDistanceIsOutOfTheRadiusItWillNotExceedTheRadius() throws SAXException {
+
+        final Attributes attributes = Mockito.mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(2);
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.OFFSET.getName());
+        when(attributes.getValue(0)).thenReturn("0.1");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
+        when(attributes.getValue(1)).thenReturn("red");
+
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+
+        final SVGElementBase elementBase = mock(SVGElementBase.class);
+
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", elementBase);
+
+        final List<SVGElementBase> stops = new ArrayList<>();
+
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
+
+        when(attributes.getValue(0)).thenReturn("0.2");
+        when(attributes.getValue(1)).thenReturn("blue");
+
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
+
+        when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
+
+        when(attributes.getLength()).thenReturn(7);
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
+        when(attributes.getValue(0)).thenReturn("0.5");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
+        when(attributes.getValue(1)).thenReturn("0.5");
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.FOCUS_X.getName());
+        when(attributes.getValue(2)).thenReturn("1.0");
+        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
+        when(attributes.getValue(3)).thenReturn("0.0");
+        when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(4)).thenReturn("0.5");
+        when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.SPREAD_METHOD.getName());
+        when(attributes.getValue(5)).thenReturn(Enumerations.CycleMethodMapping.REPEAT.getName());
+        when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(6)).thenReturn("#test");
+
+        final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, null, dataProvider);
+
+        Assert.assertEquals(1.0d, gradient.getResult().getFocusDistance(), 0.01d);
+    }
+
 }

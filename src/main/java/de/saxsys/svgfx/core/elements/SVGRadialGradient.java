@@ -49,7 +49,6 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
      * Contains the default value for the radius if it was not provided
      */
     private static final Double DEFAULT_CENTER = 0.5d;
-
     // endregion
 
     //region Constructor
@@ -87,7 +86,6 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     }
 
     // endregion
-
 
     // region Private
 
@@ -130,12 +128,11 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         double diffX = focusX.get() - centerX.get();
         double diffY = focusY.get() - centerY.get();
 
-        double distance = diffX != 0 && diffY != 0 ? Math.hypot(diffX, diffY) : 0;
+        // here we check if x is 0 then use y or if y is 0 then use x, otherwise calculate
+        double distance = diffX == 0.0d ? Math.abs(diffY) : diffY == 0.0d ? Math.abs(diffX) : Math.hypot(diffX, diffY);
 
-        double angle = diffX != 0 && diffY != 0 ? Math.atan2(diffY, diffX) : 0;
-
-        return new RadialGradient(angle,
-                                  distance,
+        return new RadialGradient(Math.toDegrees(Math.atan2(diffY, diffX)),
+                                  distance > radius.get() ? 1.0d : distance / radius.get(),
                                   centerX.get(),
                                   centerY.get(),
                                   radius.get(),
