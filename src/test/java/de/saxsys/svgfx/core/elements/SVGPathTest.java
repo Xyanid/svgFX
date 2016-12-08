@@ -1,32 +1,31 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import javafx.scene.shape.FillRule;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure that svg path elements are fully supported.
@@ -39,16 +38,16 @@ public final class SVGPathTest {
      * Ensures that the path required for a line are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void allAttributesAreParsedCorrectly() throws SAXException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.PATH_DESCRIPTION.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
+        when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals("M 100 100 L 300 100 L 200 300 z", line.getResult().getContent());
     }
@@ -57,18 +56,18 @@ public final class SVGPathTest {
      * Ensures that the fill rule is parsed correctly.
      */
     @Test
-    public void ensureFillRuleParsedCorrectly() {
+    public void fillRuleWillBeParsedCorrectly() throws SAXException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(2);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.PATH_DESCRIPTION.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGCssStyle.PresentationAttribute.FILL_RULE.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("evenodd");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
+        when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
+        when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
+        when(attributes.getValue(1)).thenReturn("evenodd");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         Assert.assertEquals(FillRule.EVEN_ODD, line.getResult().getFillRule());
     }
@@ -77,21 +76,21 @@ public final class SVGPathTest {
      * Ensures that no {@link SVGException} is thrown of one of the attributes is invalid.
      */
     @Test
-    public void ensureNoSVGExceptionIfTheContentContainsInvalidData() {
+    public void noSVGExceptionIfTheContentContainsInvalidData() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.PATH_DESCRIPTION.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("M =& 100 L 300 ?) 300 z");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
+        when(attributes.getValue(0)).thenReturn("M =& 100 L 300 ?) 300 z");
 
-        SVGPath line = new SVGPath("path", attributes, null, new SVGDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         try {
             line.getResult();
-        } catch (SVGException e) {
-            Assert.fail();
+        } catch (final SAXException e) {
+            fail("Should not throw exception if attributes are invalid");
         }
     }
 
@@ -99,18 +98,26 @@ public final class SVGPathTest {
      * Ensures that no {@link SVGException} is thrown of one of the attributes is missing.
      */
     @Test
-    public void ensureNoSVGExceptionIsThrownWhenAttributesAreMissing() {
+    public void noSVGExceptionIsThrownWhenAttributesAreMissing() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGPath path = new SVGPath("path", attributes, null, new SVGDataProvider());
+        final SVGPath path = new SVGPath(SVGPath.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
 
         try {
             path.getResult();
-        } catch (SVGException e) {
-            Assert.fail();
+        } catch (final SAXException e) {
+            fail("Should not throw exception if attributes are missing");
         }
+    }
+
+    /**
+     * The bounding rectangle described by the shape can be correctly determined.
+     */
+    @Test
+    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
+
     }
 }

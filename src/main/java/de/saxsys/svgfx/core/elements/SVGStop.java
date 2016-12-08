@@ -1,42 +1,49 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeDouble;
-import de.saxsys.svgfx.core.css.SVGCssContentTypeLength;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeDouble;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import java.util.Optional;
 
 /**
  * This class represents a stop element from svg
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("stop")
 public class SVGStop extends SVGElementBase<Stop> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "stop";
+
+    // endregion
 
     //region SVGStop
 
@@ -48,7 +55,7 @@ public class SVGStop extends SVGElementBase<Stop> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGStop(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGStop(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -56,45 +63,65 @@ public class SVGStop extends SVGElementBase<Stop> {
 
     //region SVGElementBase
 
-    /**
-     * {@inheritDoc}.
-     * This stop used both the {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_COLOR} and {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#COLOR}, however
-     * the {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_COLOR} is preferred if both are present. Furthermore if an
-     * {@link de.saxsys.svgfx.core.css.SVGCssStyle.PresentationAttribute#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
-     */
     @Override
-    protected final Stop createResult(final SVGCssStyle style) throws SVGException {
-
-        SVGCssContentTypeLength offset = new SVGCssContentTypeLength(getDataProvider());
-
-        Color color = (Color) SVGCssContentTypePaint.DEFAULT_VALUE;
-
-        if (StringUtils.isNullOrEmpty(getAttribute(CoreAttribute.OFFSET.getName()))) {
-            throw new SVGException("Stop does not provide an offset value");
-        }
-
-        offset.parseCssText(getAttribute(CoreAttribute.OFFSET.getName()));
-
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName())) {
-            color = (Color) style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_COLOR.getName(), SVGCssContentTypePaint.class).getValue();
-        } else if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.COLOR.getName())) {
-            color = (Color) style.getCssContentType(SVGCssStyle.PresentationAttribute.COLOR.getName(), SVGCssContentTypePaint.class).getValue();
-        }
-
-        if (color == null) {
-            throw new SVGException("Given color must not be null");
-        }
-
-        if (style.hasCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName())) {
-            double opacity = style.getCssContentType(SVGCssStyle.PresentationAttribute.STOP_OPACITY.getName(), SVGCssContentTypeDouble.class).getValue();
-            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-        }
-
-        return new Stop(offset.getValue(), color);
+    public boolean rememberElement() {
+        return true;
     }
 
     @Override
-    protected final void initializeResult(final javafx.scene.paint.Stop stop, final SVGCssStyle inheritanceResolver) throws SVGException {
+    public void startProcessing() throws SAXException {}
+
+    @Override
+    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    @Override
+    public void endProcessing() throws SAXException {}
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * This stop used both the {@link PresentationAttributeMapper#STOP_COLOR} and {@link PresentationAttributeMapper#COLOR}, however
+     * the {@link PresentationAttributeMapper#STOP_COLOR} is preferred if both are present. Furthermore if an
+     * {@link PresentationAttributeMapper#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
+     */
+    @Override
+    protected final Stop createResult(final StyleSupplier styleSupplier) throws SVGException {
+
+        final SVGCssStyle style = styleSupplier.get();
+
+        Color color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.STOP_COLOR.getName(), Color.class, null);
+        if (color == null) {
+            color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.COLOR.getName(), Color.class, (Color) SVGAttributeTypePaint.DEFAULT_VALUE);
+        }
+
+        if (color == null) {
+            throw new SVGException(SVGException.Reason.MISSING_COLOR, String.format("%s can not be created without a color", SVGStop.class.getSimpleName()));
+        }
+
+        final Optional<SVGAttributeTypeDouble> stopOpacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class);
+        if (stopOpacity.isPresent()) {
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), stopOpacity.get().getValue());
+        }
+
+        final SVGAttributeTypeLength offset = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.OFFSET.getName(), SVGAttributeTypeLength.class);
+        if (offset.hasUnit(SVGAttributeTypeLength.Unit.PERCENT)) {
+            return new Stop(offset.getValue() / 100.0d, color);
+        } else {
+            return new Stop(offset.getValue(), color);
+        }
+    }
+
+    @Override
+    protected final void initializeResult(final javafx.scene.paint.Stop stop, final StyleSupplier styleSupplier) throws SVGException {
     }
 
     //endregion

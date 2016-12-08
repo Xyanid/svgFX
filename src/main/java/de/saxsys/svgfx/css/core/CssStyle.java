@@ -1,42 +1,36 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2016 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.css.core;
 
 
-import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import de.saxsys.svgfx.css.definitions.Constants;
+import de.saxsys.svgfx.xml.core.AttributeHolder;
+import de.saxsys.svgfx.xml.core.AttributeWrapper;
 import javafx.util.Pair;
-import org.w3c.dom.DOMException;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This Class does not directly represent a SVG element but rather a Css element
  *
- * @param <TContentType> type of the properties of this style.
+ * @param <TAttributeHolder> type of the {@link AttributeHolder} of this style.
+ * @param <TAttributeType>   type of the {@link AttributeWrapper} of this style.
  *
  * @author Xyanid on 29.10.2015.
  */
-public abstract class CssStyle<TContentType extends CssContentTypeBase> {
+public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttributeHolder extends AttributeHolder<TAttributeType>> {
 
     // region Enumeration
 
@@ -97,16 +91,14 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      * Determines the selector of the style
      */
     private Selector selector;
-
     /**
      * The name of the style excluding the class or id selector
      */
     private String name;
-
     /**
-     * Contains all the properties provided by this style.
+     * Contains all the attributes of this {@link CssStyle}.
      */
-    protected final Map<String, TContentType> properties;
+    private final TAttributeHolder attributeHolder;
 
     //endregion
 
@@ -114,22 +106,22 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
 
     /**
      * Creates a new instance.
+     *
+     * @param attributeHolder the element that will contain the attributes of this style.
      */
-    public CssStyle() {
-        super();
-
-        properties = new HashMap<>();
+    public CssStyle(final TAttributeHolder attributeHolder) {
+        this.attributeHolder = attributeHolder;
     }
 
     /**
      * Creates a new instance.
      *
-     * @param name the name to of this style.
+     * @param name            the name to of this style.
+     * @param attributeHolder the element that will contain the attributes of this style.
      */
-    public CssStyle(final String name) {
-        this();
-
+    public CssStyle(final String name, final TAttributeHolder attributeHolder) {
         this.name = name;
+        this.attributeHolder = attributeHolder;
     }
 
     //endregion
@@ -144,12 +136,21 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
     }
 
     /**
-     * Returns the {@link CssStyle#properties} as an unmodifiable list.
+     * Return the {@link #attributeHolder}.
      *
-     * @return the {@link CssStyle#properties} as an unmodifiable list.
+     * @return the {@link #attributeHolder}.
      */
-    public final Map<String, TContentType> getProperties() {
-        return properties;
+    public final TAttributeHolder getAttributeHolder() {
+        return attributeHolder;
+    }
+
+    /**
+     * Returns the {@link #attributeHolder}s {@link AttributeHolder#getAttributes()}.
+     *
+     * @return the {@link #attributeHolder}s {@link AttributeHolder#getAttributes()}.
+     */
+    public final Map<String, TAttributeType> getProperties() {
+        return attributeHolder.getAttributes();
     }
 
     /**
@@ -158,7 +159,7 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      * @param name the name to use which might contain the selector.
      */
     private void setNameAndSelector(final String name) {
-        if (StringUtils.isNotNullOrEmpty(name)) {
+        if (StringUtil.isNotNullOrEmpty(name)) {
             if (name.startsWith(Selector.ID.getName())) {
                 selector = Selector.ID;
                 this.name = name.replace(Selector.ID.getName(), "");
@@ -176,107 +177,51 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
 
     // endregion
 
-    //region Abstract
+    // region Private
 
     /**
-     * Determines the content type from the given data.
+     * Determines the {@link TAttributeType} from the given data.
      *
      * @param data data to be used.
      *
-     * @return a new {@link Pair} containing the name of the property as the key and the content type as the value;
+     * @return a new {@link Pair} containing the name of the {@link TAttributeType} as the key and the {@link TAttributeType} as the value;
      */
-    private Pair<String, TContentType> determineContentType(final String data) throws SVGException {
-        if (StringUtils.isNullOrEmpty(data)) {
-            throw new SVGException("Given data must not be null in order to create a property from it");
+    private Pair<String, TAttributeType> determineAttributeType(final String data) throws IllegalArgumentException {
+        if (StringUtil.isNullOrEmpty(data)) {
+            throw new IllegalArgumentException("Given data must not be null in order to create a attribute type from it");
         }
 
-        String trimmedData = data.trim();
+        final String trimmedData = data.trim();
 
         int index = trimmedData.indexOf(Constants.PROPERTY_SEPARATOR);
 
         if (index == -1 || index >= trimmedData.length() - 1) {
-            throw new SVGException("Given data either does not provide a property separator or is to short");
+            throw new IllegalArgumentException("Given data either does not provide a attribute type separator separator or is to short");
         }
 
-        String name = trimmedData.substring(0, index).trim();
+        final String name = trimmedData.substring(0, index).trim();
 
-        TContentType content = createContentType(StringUtils.stripStringIndicators(name));
+        TAttributeType attribute = attributeHolder.createAttributeType(StringUtil.stripStringIndicators(name));
 
-        if (content != null) {
-
-            String cssText = StringUtils.stripStringIndicators(trimmedData.substring(index + 1).trim());
-
-            try {
-                content.parseCssText(cssText);
-            } catch (Exception e) {
-                throw new SVGException(String.format("Could not parse %s for content type %s", cssText, content.getClass().getName()), e);
-            }
+        if (attribute != null) {
+            attribute.setText(StringUtil.stripStringIndicators(trimmedData.substring(index + 1).trim()));
         }
 
-        return new Pair<>(name, content);
+        return new Pair<>(name, attribute);
     }
-
-    //endregion
-
-    // region Private
-
-    /**
-     * Creates at new {@link CssContentTypeBase} based on the given name.
-     *
-     * @param name name of the property
-     *
-     * @return a new {@link CssContentTypeBase}.
-     */
-    protected abstract TContentType createContentType(final String name);
 
     // endregion
 
     // region Public
 
     /**
-     * Returns the {@link CssContentTypeBase} in the given map of properties using the provided key or null if no such content type exist.
+     * Combines this {@link CssStyle} with the given {@link CssStyle}, new {@link AttributeWrapper}s not present in this style will be added.
      *
-     * @param name name of the property
-     *
-     * @return the {@link CssContentTypeBase} in the given map or null.
-     */
-    public final TContentType getCssContentType(final String name) {
-        return properties.get(name);
-    }
-
-    /**
-     * Determines if the given property in contain in he style.
-     *
-     * @param name name of the property to look for.
-     *
-     * @return true if a property with the name exists otherwise false.
-     */
-    public final boolean hasCssContentType(String name) {
-        return properties.containsKey(name);
-    }
-
-    /**
-     * Returns the {@link CssContentTypeBase} in the {@link #properties} as the desired type using the provided key or null if no such content type exist.
-     *
-     * @param <TContent> type of the content desired.
-     * @param name       name of the property
-     * @param clazz      class of the type of the property used for casting.
-     *
-     * @return the {@link CssContentTypeBase} or null.
-     */
-    public final <TContent extends TContentType> TContent getCssContentType(final String name, final Class<TContent> clazz) {
-        return clazz.cast(properties.get(name));
-    }
-
-    /**
-     * Combines this {@link CssStyle} with the given {@link CssStyle}, new properties not present in this style will be added.
-     *
-     * @param <TContentTypeOther> the type of the {@link CssStyle} this style will be combined with
-     * @param style               the {@link CssStyle} which is be used, must not be null.
+     * @param style the {@link CssStyle} which is be used, must not be null.
      *
      * @throws IllegalArgumentException if the given {@link CssStyle} is null.
      */
-    public final <TContentTypeOther extends TContentType> void combineWithStyle(final CssStyle<TContentTypeOther> style) {
+    public final void combineWithStyle(final CssStyle<TAttributeType, TAttributeHolder> style) {
 
         if (style == null) {
             throw new IllegalArgumentException("given style must not be null");
@@ -286,9 +231,9 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
             return;
         }
 
-        for (Map.Entry<String, TContentTypeOther> entry : style.properties.entrySet()) {
-            if (!properties.containsKey(entry.getKey())) {
-                properties.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, TAttributeType> entry : style.attributeHolder.getAttributes().entrySet()) {
+            if (!attributeHolder.getAttributes().containsKey(entry.getKey())) {
+                attributeHolder.getAttributes().put(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -298,11 +243,11 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
      *
      * @param cssText the text that is to be consumed, must not be null or empty.
      */
-    public final void parseCssText(final String cssText) throws DOMException {
+    public final void parseCssText(final String cssText) {
 
         name = null;
         selector = Selector.NONE;
-        properties.clear();
+        attributeHolder.getAttributes().clear();
 
         StringBuilder dataBuilder = new StringBuilder();
 
@@ -352,10 +297,10 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
                     // we have found the end of a property so we consume if if possible and add it
                 } else if (character == Constants.PROPERTY_END) {
 
-                    Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+                    Pair<String, TAttributeType> property = determineAttributeType(dataBuilder.toString());
 
                     if (property.getValue() != null) {
-                        properties.put(property.getKey(), property.getValue());
+                        attributeHolder.getAttributes().put(property.getKey(), property.getValue());
                     }
 
                     dataBuilder.setLength(0);
@@ -365,10 +310,10 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
                 } else if (character == Constants.DECLARATION_BLOCK_END) {
 
                     if (dataBuilder.toString().trim().length() > 0) {
-                        Pair<String, TContentType> property = determineContentType(dataBuilder.toString());
+                        Pair<String, TAttributeType> property = determineAttributeType(dataBuilder.toString());
 
                         if (property.getValue() != null) {
-                            properties.put(property.getKey(), property.getValue());
+                            attributeHolder.getAttributes().put(property.getKey(), property.getValue());
                         }
                     }
 
@@ -385,7 +330,7 @@ public abstract class CssStyle<TContentType extends CssContentTypeBase> {
         }
 
         if (isInsideDeclarationBlock) {
-            throw new SVGException("Css text not properly closed");
+            throw new IllegalArgumentException("Css text not properly closed, can not use this css data.");
         }
     }
 

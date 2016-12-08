@@ -1,27 +1,24 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.shape.Ellipse;
 import org.xml.sax.Attributes;
 
@@ -30,8 +27,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("ellipse")
 public class SVGEllipse extends SVGShapeBase<Ellipse> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "ellipse";
+
+    // endregion
 
     //region Constructor
 
@@ -43,7 +48,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -52,15 +57,29 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
     //region Override SVGElementBase
 
     @Override
-    protected final Ellipse createResult(final SVGCssStyle style) {
+    protected final Ellipse createResult(final StyleSupplier styleSupplier) throws SVGException {
 
-        String centerX = getAttribute(CoreAttribute.CENTER_X.getName());
-        String centerY = getAttribute(CoreAttribute.CENTER_Y.getName());
+        return new Ellipse(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                           getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
+                           getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class).getValue(),
+                           getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class).getValue());
+    }
 
-        return new Ellipse(StringUtils.isNullOrEmpty(centerX) ? 0.0d : Double.parseDouble(centerX),
-                           StringUtils.isNullOrEmpty(centerY) ? 0.0d : Double.parseDouble(centerY),
-                           Double.parseDouble(getAttribute(CoreAttribute.RADIUS_X.getName())),
-                           Double.parseDouble(getAttribute(CoreAttribute.RADIUS_Y.getName())));
+    @Override
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+
+        final SVGAttributeTypeLength centerX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_X.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength centerY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_Y.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength radiusX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class);
+        final SVGAttributeTypeLength radiusY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class);
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+        result.getMinX().setText(String.format("%f%s", centerX.getValue() - radiusX.getValue(), radiusX.getUnit().getName()));
+        result.getMinY().setText(String.format("%f%s", centerY.getValue() - radiusY.getValue(), radiusY.getUnit().getName()));
+        result.getMaxX().setText(String.format("%f%s", centerX.getValue() + radiusX.getValue(), radiusX.getUnit().getName()));
+        result.getMaxY().setText(String.format("%f%s", centerY.getValue() + radiusY.getValue(), radiusY.getUnit().getName()));
+
+        return result;
     }
 
     //endregion

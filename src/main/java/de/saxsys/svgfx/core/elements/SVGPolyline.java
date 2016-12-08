@@ -1,27 +1,23 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
 
-import de.saxsys.svgfx.core.SVGDataProvider;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.css.StyleSupplier;
+import javafx.scene.shape.Polyline;
 import org.xml.sax.Attributes;
 
 /**
@@ -29,8 +25,16 @@ import org.xml.sax.Attributes;
  *
  * @author Xyanid on 25.10.2015.
  */
-@SVGElementMapping("polyline")
 public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "polyline";
+
+    // endregion
 
     //region Constructor
 
@@ -42,7 +46,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -51,9 +55,9 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final javafx.scene.shape.Polyline createResult(final SVGCssStyle style) {
+    protected final Polyline createResult(final StyleSupplier styleSupplier) throws SVGException {
 
-        return new javafx.scene.shape.Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
+        return new Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }
 
     //endregion

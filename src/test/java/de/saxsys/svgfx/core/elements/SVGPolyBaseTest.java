@@ -1,31 +1,31 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.elements.mocks.SVGPolyBaseMock;
-import org.junit.Assert;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
+import javafx.scene.shape.Polygon;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure the {@link SVGPolyBase} behaves as expected.
@@ -38,113 +38,183 @@ public final class SVGPolyBaseTest {
      * Ensures Points are parsed correctly
      */
     @Test
-    public void ensurePointsAreParsedCorrectly() {
+    public void allAttributesAreParsedCorrectly() throws SVGException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
 
-        Assert.assertEquals(6, polyBase.getPoints().size());
-        Assert.assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
-        Assert.assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
-        Assert.assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
-        Assert.assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
-        Assert.assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
-        Assert.assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+        assertEquals(6, polyBase.getPoints().size());
+        assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
+        assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
+        assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
+        assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
+        assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
+        assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
     }
 
     /**
      * Ensures multiple spaces in a row will cause no problem.
      */
     @Test
-    public void ensureMultipleSpacesCaseNotProblems() {
+    public void multipleSpacesWithInThePointsSeparatorWillCauseNoProblems() throws SVGException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20    100,40    100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20    100,40    100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
 
-        Assert.assertEquals(6, polyBase.getPoints().size());
-        Assert.assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
-        Assert.assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
-        Assert.assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
-        Assert.assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
-        Assert.assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
-        Assert.assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
+
+        assertEquals(6, polyBase.getPoints().size());
+        assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
+        assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
+        assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
+        assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
+        assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
+        assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
     }
 
     /**
-     * Ensures there are no points if the {@link de.saxsys.svgfx.core.elements.SVGElementBase.CoreAttribute#POINTS} is missing.
+     * Ensures there are no points if the {@link CoreAttributeMapper#POINTS} is missing.
      */
     @Test
-    public void ensurePointsAreEmptyIfAttributeIsMissing() {
+    public void pointsAreEmptyIfAttributeIsMissing() throws SVGException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
 
-        Assert.assertEquals(0, polyBase.getPoints().size());
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
+
+        assertEquals(0, polyBase.getPoints().size());
     }
 
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
     @Test
-    public void ensureSVGExceptionIsThrownWhenAPointDoesNotProvideXAndY() {
+    public void whenAPointDoesNotProvideXAndYAnSVGExceptionIsThrownDuringTheRetrievalOfThePoints() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        final SVGPolyBase<Polygon> polyBase1 = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
 
         try {
-            polyBase.getPoints();
-            Assert.fail("Expected SVGException to be thrown");
-        } catch (SVGException ignore) {
+            polyBase1.getPoints();
+            fail("Should not be able to get points");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
         }
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,10 100");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100,10 100");
 
-        polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        final SVGPolyBase<Polygon> polyBase2 = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
 
         try {
-            polyBase.getPoints();
-            Assert.fail("Expected SVGException to be thrown");
-        } catch (SVGException ignore) {
+            polyBase2.getPoints();
+            fail("Should not be able to get points");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
         }
     }
 
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
-    @Test(expected = NumberFormatException.class)
-    public void ensureExceptionIsThrownWhenAPointContainsInvalidData() {
+    @Test
+    public void whenAPointContainsInvalidDataAnSVGExceptionWillBeThrownDuringTheRetrievalOfThePoints() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(2);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.POINTS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        SVGPolyBaseMock polyBase = new SVGPolyBaseMock("polygon", attributes, null, new SVGDataProvider());
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
 
-        polyBase.getPoints();
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
+
+        try {
+            polyBase.getPoints();
+            fail("Should not be able to get points");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        }
+    }
+
+    /**
+     * The bounding rectangle described by the shape can be correctly determined.
+     */
+    @Test
+    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
+        final Attributes attributes = Mockito.mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(1);
+
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
+        when(attributes.getValue(0)).thenReturn("20,20 100,100 10,120");
+
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+
+            @Override
+            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+                return null;
+            }
+        };
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = polyBase.createBoundingBox();
+
+        assertEquals(10.0d, boundingBox.getMinX().getValue(), 0.01d);
+        assertEquals(100.0d, boundingBox.getMaxX().getValue(), 0.01d);
+        assertEquals(20.0d, boundingBox.getMinY().getValue(), 0.01d);
+        assertEquals(120.0d, boundingBox.getMaxY().getValue(), 0.01d);
     }
 }

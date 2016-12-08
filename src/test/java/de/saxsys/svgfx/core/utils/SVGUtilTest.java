@@ -1,923 +1,177 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2016 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.utils;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssContentTypePaint;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
-import javafx.scene.paint.Color;
-import javafx.scene.transform.Affine;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Shear;
-import javafx.scene.transform.Transform;
-import javafx.scene.transform.Translate;
-import org.hamcrest.core.IsInstanceOf;
-import org.junit.Assert;
+import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
- * Test to ensure the {@link SVGUtils} work as expected.
+ * Test to ensure the {@link SVGUtil} work as expected.
  *
  * @author Xyanid on 05.10.2015.
  */
+@SuppressWarnings ({"unchecked", "OptionalGetWithoutIsPresent"})
 public final class SVGUtilTest {
 
+    //region Fields
+
+    private final SVGElementFactory factory = new SVGElementFactory();
+
+    //endregion
+
+    //region Tests
+
     /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will throw the expected exceptions when arguments are missing.
+     * Ensures that {@link SVGUtil#stripIRIIdentifiers(String)} is able to resolve the url as expected.
      */
     @Test
-    public void ensureSplitThrowsTheExpectedExceptionsWhenArgumentsAreInvalid() {
-
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        try {
-            SVGUtils.split(null, delimiters, (currentData, index) -> true);
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        try {
-            SVGUtils.split("", delimiters, (currentData, index) -> true);
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        try {
-            SVGUtils.split("Test", null, (currentData, index) -> true);
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        try {
-            SVGUtils.split("Test", new ArrayList<>(), (currentData, index) -> true);
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        try {
-            SVGUtils.split("Test", delimiters, null);
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        try {
-            SVGUtils.split("Test", delimiters, (currentData, index) -> {
-                throw new SVGException("test");
-            });
-            Assert.fail();
-        } catch (SVGException ignored) {
-        }
-
-    }
-
-    /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to split a string which contains spaces as expected.
-     */
-    @Test
-    public void ensureSplitWillSplitAStringContainingSpacesCorrectly() {
-
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        List<String> result = SVGUtils.split("  This  is a  test  ", delimiters, (currentData, index) -> true);
-
-        Assert.assertEquals(4, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals("is", result.get(1));
-        Assert.assertEquals("a", result.get(2));
-        Assert.assertEquals("test", result.get(3));
-    }
-
-    /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to split a string which contains multiple delimiters.
-     */
-    @Test
-    public void ensureSplitWillSplitAMoreThenOneDelimiter() {
-
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(';');
-        delimiters.add(',');
-        delimiters.add(' ');
-
-        List<String> result = SVGUtils.split(" This,is a;test", delimiters, (currentData, index) -> true);
-
-        Assert.assertEquals(4, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals("is", result.get(1));
-        Assert.assertEquals("a", result.get(2));
-        Assert.assertEquals("test", result.get(3));
-    }
-
-    /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will only process {@link String}s without delimiters.
-     */
-    @Test
-    public void ensureSplitWillNeverContainDelimiters() {
-
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        List<String> result = SVGUtils.split(" This , is a test ", delimiters, (currentData, index) -> {
-
-            Assert.assertFalse(currentData.contains(" "));
-
-            return true;
-        });
-
-        Assert.assertEquals(5, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals(",", result.get(1));
-        Assert.assertEquals("is", result.get(2));
-        Assert.assertEquals("a", result.get(3));
-        Assert.assertEquals("test", result.get(4));
-    }
-
-    /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} will only process {@link String}s that are not empty.
-     */
-    @Test
-    public void ensureSplitWillNeverContainEmptyStrings() {
-
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        List<String> result = SVGUtils.split(" This , is a test ", delimiters, (currentData, index) -> {
-
-            Assert.assertTrue(currentData.length() > 0);
-
-            return true;
-        });
-
-        Assert.assertEquals(5, result.size());
-        Assert.assertEquals("This", result.get(0));
-        Assert.assertEquals(",", result.get(1));
-        Assert.assertEquals("is", result.get(2));
-        Assert.assertEquals("a", result.get(3));
-        Assert.assertEquals("test", result.get(4));
-    }
-
-    /**
-     * Ensures that {@link SVGUtils#split(String, List, de.saxsys.svgfx.core.utils.SVGUtils.SplitConsumer)} is able to combine strings if the dataConsumer returns false.
-     * In this test we will use the {@link String} "1 , 2 3 , 4" and the result should be "1,2" and "3,4".
-     */
-    @Test
-    public void ensureSplitIsAbleToCombineResults() {
-
-        List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        List<String> result = SVGUtils.split(" 1 , 2 3 , 4 ", delimiters, (currentData, index) -> {
-
-            Assert.assertFalse(currentData.contains(" "));
-
-            return currentData.charAt(currentData.length() - 1) != ',' && currentData.contains(",");
-        });
-
-        Assert.assertEquals(2, result.size());
-        Assert.assertEquals("1,2", result.get(0));
-        Assert.assertEquals("3,4", result.get(1));
-    }
-
-    /**
-     * Ensures that {@link SVGUtils#stripIRIIdentifiers(String)} is able to resolve the url as expected.
-     */
-    @Test(expected = IllegalArgumentException.class)
     public void ensureStripIRIExpectedExceptions() {
 
-        SVGUtils.stripIRIIdentifiers(null);
+        try {
+            SVGUtil.stripIRIIdentifiers(null);
+            fail("Should not be able to resolve empty string");
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
+        }
     }
 
     /**
-     * Ensures that {@link SVGUtils#stripIRIIdentifiers(String)} is able to strip a string from its iri identifiers.
+     * Ensures that {@link SVGUtil#stripIRIIdentifiers(String)} is able to strip a string from its iri identifiers.
      */
     @Test
-    public void ensureSplitIRIWillStripStringFromIRIIdentifiers() {
+    public void ensureSplitIRIWillStripStringFromIRIIdentifiers() throws SVGException {
 
-        Assert.assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_IDENTIFIER + "test)"));
+        assertEquals("test", SVGUtil.stripIRIIdentifiers(Constants.IRI_IDENTIFIER + "test)"));
 
-        Assert.assertEquals("test", SVGUtils.stripIRIIdentifiers(Constants.IRI_FRAGMENT_IDENTIFIER + "test"));
+        assertEquals("test", SVGUtil.stripIRIIdentifiers(Constants.IRI_FRAGMENT_IDENTIFIER + "test"));
     }
 
     /**
-     * Ensures that {@link SVGUtils#stripIRIIdentifiers(String)} is able to strip a string from its iri identifiers.
+     * Ensures that {@link SVGUtil#stripIRIIdentifiers(String)} is able to strip a string from its iri identifiers.
      */
     @Test
-    public void ensureSplitIRIWillReturnNullIfIRIIdentifiersCanNotBeStriped() {
+    public void ensureSplitIRIWillReturnNullIfIRIIdentifiersCanNotBeStriped() throws SVGException {
 
-        Assert.assertNull(SVGUtils.stripIRIIdentifiers("test)"));
+        assertNull(SVGUtil.stripIRIIdentifiers("test)"));
 
-        Assert.assertNull(SVGUtils.stripIRIIdentifiers("(#test"));
+        assertNull(SVGUtil.stripIRIIdentifiers("(#test"));
 
-        Assert.assertNull(SVGUtils.stripIRIIdentifiers("url(#"));
+        assertNull(SVGUtil.stripIRIIdentifiers("url(#"));
 
-        Assert.assertNull(SVGUtils.stripIRIIdentifiers("#"));
+        assertNull(SVGUtil.stripIRIIdentifiers("#"));
     }
 
     /**
-     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     * Ensures that {@link SVGUtil#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
     public void ensureResolveIRICauseTheExpectedExceptions() {
 
         try {
-            SVGUtils.resolveIRI(null, new SVGDataProvider(), SVGElementBase.class);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains("data"));
+            SVGUtil.resolveIRI(null, new SVGDocumentDataProvider(), SVGElementBase.class);
+            fail();
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
         }
 
         try {
-            SVGUtils.resolveIRI("", new SVGDataProvider(), SVGElementBase.class);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains("data"));
+            SVGUtil.resolveIRI("", new SVGDocumentDataProvider(), SVGElementBase.class);
+            fail();
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
         }
 
         try {
-            SVGUtils.resolveIRI("test", null, SVGElementBase.class);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains("dataprovider"));
+            SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", new SVGDocumentDataProvider(), null);
+            fail();
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
         }
 
         try {
-            SVGUtils.resolveIRI("test", new SVGDataProvider(), null);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains("clazz"));
+            SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", new SVGDocumentDataProvider(), SVGElementBase.class);
+            fail();
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
 
         try {
-            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDataProvider(), SVGCircle.class);
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains("reference"));
-        }
-
-        try {
-            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDataProvider(), SVGCircle.class);
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains("reference"));
+            SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDocumentDataProvider(), SVGCircle.class);
+            fail();
+        } catch (final SVGException e) {
+            assertEquals(SVGException.Reason.INVALID_IRI_IDENTIFIER, e.getReason());
         }
     }
 
+
     /**
-     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     * Ensures that {@link SVGUtil#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
-    public void ensureResolveIRICanResolveReference() {
+    public void ensureResolveIRICanResolveReference() throws SVGException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
-        SVGDataProvider dataProvider = new SVGDataProvider();
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", new SVGCircle("circle", attributes, null, dataProvider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", factory.createElement("circle", attributes, null, dataProvider));
 
-        SVGCircle circle = SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
+        final SVGCircle circle = SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
 
-        Assert.assertNotNull(circle);
+        assertNotNull(circle);
 
-        circle = SVGUtils.resolveIRI(Constants.IRI_FRAGMENT_IDENTIFIER + "test", dataProvider, SVGCircle.class);
+        final SVGCircle circle1 = SVGUtil.resolveIRI(Constants.IRI_FRAGMENT_IDENTIFIER + "test", dataProvider, SVGCircle.class);
 
-        Assert.assertNotNull(circle);
+        assertNotNull(circle1);
     }
 
     /**
-     * Ensures that {@link SVGUtils#resolveIRI(String, SVGDataProvider, Class)} is able to resolve the url as expected.
+     * Ensures that {@link SVGUtil#resolveIRI(String, SVGDocumentDataProvider, Class)} is able to resolve the url as expected.
      */
     @Test
     public void ensureResolveIRICanNotResolveReference() {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(0);
+        when(attributes.getLength()).thenReturn(0);
 
         try {
-            SVGUtils.resolveIRI(Constants.IRI_IDENTIFIER + "test1)", new SVGDataProvider(), SVGCircle.class);
-            Assert.fail();
-        } catch (SVGException e) {
-            Assert.assertTrue(e.getMessage().contains(Constants.IRI_IDENTIFIER + "test1)"));
+            SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test1)", new SVGDocumentDataProvider(), SVGCircle.class);
+            fail();
+        } catch (final SVGException e) {
+            assertTrue(e.getMessage().contains(Constants.IRI_IDENTIFIER + "test1)"));
         }
     }
 
-    /**
-     * Ensures that {@link SVGUtils#combineStylesAndResolveInheritance(SVGCssStyle, SVGCssStyle)} causes the expected exceptions
-     */
-    @Test
-    public void ensureCombineAndResolveInheritanceCausesTheExpectedExceptions() {
-
-        try {
-            SVGUtils.combineStylesAndResolveInheritance(null, new SVGCssStyle(new SVGDataProvider()));
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        try {
-            SVGUtils.combineStylesAndResolveInheritance(new SVGCssStyle(new SVGDataProvider()), null);
-            Assert.fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-    }
-
-    /**
-     * Ensures that attributes of {@link SVGCssStyle} can be inherited and that the value will be retrieved from the provided {@link SVGCssStyle}.
-     */
-    @Test
-    public void ensureCombineAndResolveInheritanceUsesValuesFromOtherStyle() {
-
-        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
-
-        style.parseCssText(".st1{fill:inherit;stroke:#222222}");
-
-        SVGCssStyle style1 = new SVGCssStyle(new SVGDataProvider());
-
-        style1.parseCssText(".st1{fill:#111111;}");
-
-        SVGUtils.combineStylesAndResolveInheritance(style, style1);
-
-        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-    }
-
-    /**
-     * Ensures that attributes of {@link SVGCssStyle} of the inheritanceResolver will be added.
-     */
-    @Test
-    public void ensureCombineAndResolveInheritanceAddsValuesFromOtherStyle() {
-
-        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
-
-        style.parseCssText(".st1{fill:inherit;}");
-
-        SVGCssStyle style1 = new SVGCssStyle(new SVGDataProvider());
-
-        style1.parseCssText(".st1{fill:#111111;stroke:#222222}");
-
-        SVGUtils.combineStylesAndResolveInheritance(style, style1);
-
-        Assert.assertEquals(Color.web("#111111"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-        Assert.assertEquals(Color.web("#222222"), style.getCssContentType(SVGCssStyle.PresentationAttribute.STROKE.getName(), SVGCssContentTypePaint.class).getValue());
-    }
-
-    /**
-     * Ensures that attributes of {@link SVGCssStyle} can be inherited and that the value already set will not be overwritten.
-     */
-    @Test
-    public void ensureCombineAndResolveInheritanceDoesNotOverrideExistingValues() {
-
-        SVGCssStyle style = new SVGCssStyle(new SVGDataProvider());
-
-        style.parseCssText(".st1{fill:#333333;}");
-
-        SVGCssStyle style1 = new SVGCssStyle(new SVGDataProvider());
-
-        style1.parseCssText(".st1{fill:#111111;}");
-
-        SVGUtils.combineStylesAndResolveInheritance(style, style1);
-
-        Assert.assertEquals(Color.web("#333333"), style.getCssContentType(SVGCssStyle.PresentationAttribute.FILL.getName(), SVGCssContentTypePaint.class).getValue());
-    }
-
-    /**
-     * This test will create ensure that all types of matrix are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}}.
-     */
-    @Test
-    public void ensureMatrixIsCreatedCorrectly() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("matrix(1,2,3,4,5,6)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Affine.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 5.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 6.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("matrix(1 2 3 4 5 6)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Affine.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 5.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 6.0d, 0.01d);
-    }
-
-    /**
-     * Parsing a matrix with an invalid name will not cause an exception.
-     */
-    @Test
-    public void ensureInvalidMatrixNameWillNotCauseAnException() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("motrix(1,2,3,4,5,6)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNull(transform);
-    }
-
-    /**
-     * Ensures that matrices which are invalid cause the expected exception.
-     */
-    @Test
-    public void throwExceptionIfAnInvalidNumberOfAttributesForMatrixIsProvided() {
-
-        try {
-            SVGUtils.getTransform("matrix(1,2,3,4,5)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("matrix(1,2,3,4,5,6,7)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("matrix(1,2,3,4,5,A)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-    }
-
-    /**
-     * This test will create ensure that all types of translate are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
-     */
-    @Test
-    public void parseTranslateMatrix() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("translate(1, 2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Translate.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 2.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("translate(1 2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Translate.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 2.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("translate(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Translate.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 1.0d, 0.01d);
-    }
-
-    /**
-     * Parsing a translate with an invalid name will not cause an exception.
-     */
-    @Test
-    public void ensureInvalidTranslateNameWillNotCauseAnException() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("translata(1,2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNull(transform);
-    }
-
-    /**
-     * Ensures that matrices which are invalid cause the expected exception.
-     */
-    @Test
-    public void throwExceptionIfAnInvalidTranslateMatrixIsProvided() {
-
-        try {
-            SVGUtils.getTransform("translate(1,2,3)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("translate(1,A)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-    }
-
-    /**
-     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
-     */
-    @Test
-    public void parseScaleMatrix() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("scale(1, 2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Scale.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 0.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("scale(1 2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Scale.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 0.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("scale(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Scale.class));
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 0.0d, 0.01d);
-    }
-
-    /**
-     * That an invalid name of a scale matrix will be cause an exception
-     */
-    @Test
-    public void ensureInvalidScaleNameWillNotCauseAnExceptionMatrix() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("scdle(1,2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNull(transform);
-    }
-
-    /**
-     * Ensures that scale which are invalid cause the expected exception.
-     */
-    @Test
-    public void throwExceptionIfAnInvalidScaleMatrixIsProvided() {
-
-        try {
-            SVGUtils.getTransform("scale(1,2,3)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("scale(1,A)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-    }
-
-    /**
-     * This test will create ensure that all types of scale are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
-     */
-    @Test
-    public void parseRotateMatrix() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("rotate(1, 2, 3)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Rotate.class));
-
-        Rotate rotate = (Rotate) transform;
-
-        Assert.assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("rotate(1 2 3)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Rotate.class));
-
-        rotate = (Rotate) transform;
-
-        Assert.assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("rotate(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Rotate.class));
-
-        rotate = (Rotate) transform;
-
-        Assert.assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotX(), 0.0d, 0.01d);
-        Assert.assertEquals(rotate.getPivotY(), 0.0d, 0.01d);
-    }
-
-    /**
-     * Ensures that an invalid name of rotate matrix will not cause an exception.
-     */
-    @Test
-    public void ensureInvalidRotateNameWillNotCauseAnException() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("rosate(1,2)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNull(transform);
-    }
-
-    /**
-     * Ensures that scale which are invalid cause the expected exception.
-     */
-    @Test
-    public void throwExceptionIfAnInvalidRotateMatrixIsProvided() {
-
-        try {
-            SVGUtils.getTransform("rotate(1,2)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("rotate(1,2,3, 4)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("rotate(1,A)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-    }
-
-    /**
-     * This test will create ensure that all types of skewX are supported by {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
-     */
-    @Test
-    public void parseSkewMatrix() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("skewX(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Shear.class));
-
-        Shear shear = (Shear) transform;
-
-        Assert.assertEquals(shear.getX(), 1.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("skewY(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-        Assert.assertThat(transform, new IsInstanceOf(Shear.class));
-
-        shear = (Shear) transform;
-
-        Assert.assertEquals(shear.getY(), 1.0d, 0.01d);
-    }
-
-    /**
-     * Ensures that an invalid skew name will not cause an exception.
-     */
-    @Test
-    public void ensureInvalidSkewNameWillNotCauseAnException() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("sketX(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNull(transform);
-
-        try {
-            transform = SVGUtils.getTransform("sketY(1)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNull(transform);
-    }
-
-    /**
-     * Ensures that scale which are invalid cause the expected exception.
-     */
-    @Test
-    public void throwExceptionIfAnInvalidSkewMatrixIsProvided() {
-
-        try {
-            SVGUtils.getTransform("skewX(1,2)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("skewY(1,2)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("skewX(A)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-
-        try {
-            SVGUtils.getTransform("skewY(A)");
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertThat(e, new IsInstanceOf(SVGException.class));
-        }
-    }
-
-    /**
-     * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
-     * {@link SVGUtils#getTransform(String)} and {@link SVGUtils#getTransform(SVGElementBase.Matrix, String, boolean)}.
-     */
-    @Test
-    public void parseCombinedMatrices() {
-
-        Transform transform = null;
-
-        try {
-            transform = SVGUtils.getTransform("translate(1,2) translate(3, 4)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-
-        Assert.assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 6.0d, 0.01d);
-
-        try {
-            transform = SVGUtils.getTransform("translate(1,2) scale(3, 4)");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        Assert.assertNotNull(transform);
-
-        Assert.assertEquals(transform.getMxx(), 3.0d, 0.01d);
-        Assert.assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getTx(), 1.0d, 0.01d);
-        Assert.assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        Assert.assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        Assert.assertEquals(transform.getTy(), 2.0d, 0.01d);
-    }
+    //endregion
 }

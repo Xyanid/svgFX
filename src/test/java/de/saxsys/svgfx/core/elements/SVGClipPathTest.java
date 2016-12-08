@@ -1,74 +1,80 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import javafx.scene.shape.Circle;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import static de.saxsys.svgfx.core.utils.TestUtils.getChildren;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * This test will ensure that svg clip path elements is fully supported.
  *
  * @author Xyanid on 05.10.2015.
  */
+@SuppressWarnings ({"OptionalGetWithoutIsPresent", "unchecked"})
+@RunWith (MockitoJUnitRunner.class)
 public final class SVGClipPathTest {
 
     /**
      * Ensures that the attributes required for a clip path are parse correctly.
      */
     @Test
-    public void ensureAttributesAreParsedCorrectly() {
+    public void allAttributesAreParsedCorrectly() throws SVGException, SAXException {
 
-        Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = Mockito.mock(Attributes.class);
 
-        Mockito.when(attributes.getLength()).thenReturn(1);
+        when(attributes.getLength()).thenReturn(1);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.ID.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("test");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.ID.getName());
+        when(attributes.getValue(0)).thenReturn("test");
 
-        SVGDataProvider provider = new SVGDataProvider();
+        final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, null, provider);
+        final SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, null, provider);
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.RADIUS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("50");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(0)).thenReturn("50");
 
-        clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle("circle", attributes, clipPath, provider));
 
-        Mockito.when(attributes.getQName(0)).thenReturn(SVGElementBase.CoreAttribute.RADIUS.getName());
-        Mockito.when(attributes.getValue(0)).thenReturn("25");
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
+        when(attributes.getValue(0)).thenReturn("25");
 
-        clipPath.getChildren().add(new SVGCircle("circle", attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle("circle", attributes, clipPath, provider));
 
-        Assert.assertEquals("test", clipPath.getAttribute(SVGElementBase.CoreAttribute.ID.getName()));
+        assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).get().getValue());
         Assert.assertNotNull(clipPath.getResult());
 
-        Assert.assertEquals(2, clipPath.getResult().getChildren().size());
+        assertEquals(2, clipPath.getResult().getChildren().size());
 
-        Assert.assertEquals(Circle.class, clipPath.getResult().getChildren().get(0).getClass());
-        Assert.assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), 0.01d);
+        assertEquals(Circle.class, clipPath.getResult().getChildren().get(0).getClass());
+        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), 0.01d);
 
-        Assert.assertEquals(Circle.class, clipPath.getResult().getChildren().get(1).getClass());
-        Assert.assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), 0.01d);
+        assertEquals(Circle.class, clipPath.getResult().getChildren().get(1).getClass());
+        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), 0.01d);
     }
 }

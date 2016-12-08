@@ -1,43 +1,53 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.definitions.Enumerations;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class represents the linear gradient element from svg
  *
  * @author Xyanid on 24.10.2015.
  */
-@SVGElementMapping("linearGradient")
 public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "linearGradient";
+    /**
+     * Determines the default value to use for the end x.
+     */
+    private static final Double DEFAULT_END_X = 1.0d;
+
+    // endregion
 
     //region Constructor
 
@@ -49,7 +59,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -58,29 +68,71 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     //region Override SVGElementBase
 
     @Override
-    protected final LinearGradient createResult(final SVGCssStyle style) throws SVGException {
-
-        List<Stop> stops = getStops();
-
-        if (stops.isEmpty()) {
-            throw new SVGException("Given linear gradient does not have colors");
-        }
-
-        String startX = getAttribute(CoreAttribute.START_X.getName());
-        String startY = getAttribute(CoreAttribute.START_Y.getName());
-        String endX = getAttribute(CoreAttribute.END_X.getName());
-        String endY = getAttribute(CoreAttribute.END_Y.getName());
-
-        // TODO figure out how to apply proportional values here
-
-        return new LinearGradient(StringUtils.isNullOrEmpty(startX) ? 0.0d : Double.parseDouble(startX),
-                                  StringUtils.isNullOrEmpty(startY) ? 0.0d : Double.parseDouble(startY),
-                                  StringUtils.isNullOrEmpty(endX) ? 1.0d : Double.parseDouble(endX),
-                                  StringUtils.isNullOrEmpty(endY) ? 1.0d : Double.parseDouble(endY),
-                                  false,
-                                  CycleMethod.NO_CYCLE,
-                                  stops);
+    protected final LinearGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
+        return determineResult(null);
     }
 
     //endregion
+
+    // region Implement SVGGradientBase
+
+    @Override
+    public LinearGradient createResult(final SVGShapeBase<?> shape) throws SVGException {
+        return determineResult(shape);
+    }
+
+    // endregion
+
+    // region Private
+
+    private LinearGradient determineResult(final SVGShapeBase<?> shape) throws SVGException {
+
+        final List<Stop> stops = getStops();
+        if (stops.isEmpty()) {
+            throw new SVGException(SVGException.Reason.MISSING_STOPS);
+        }
+
+        final AtomicReference<Double> startX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
+        final AtomicReference<Double> startY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
+        final AtomicReference<Double> endX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, DEFAULT_END_X));
+        final AtomicReference<Double> endY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
+
+        final Enumerations.GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
+                                                                                              Enumerations.GradientUnit.class,
+                                                                                              Enumerations.GradientUnit.OBJECT_BOUNDING_BOX);
+
+        if (gradientUnit == Enumerations.GradientUnit.USER_SPACE_ON_USE) {
+            if (shape == null) {
+                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but the requesting shape is missing.");
+            }
+            adjustPosition(startX, startY, endX, endY, shape);
+        }
+
+
+        return new LinearGradient(startX.get(),
+                                  startY.get(),
+                                  endX.get(),
+                                  endY.get(),
+                                  true,
+                                  getAttributeHolder().getAttributeValue(CoreAttributeMapper.SPREAD_METHOD.getName(), CycleMethod.class, SVGAttributeTypeCycleMethod.DEFAULT_VALUE),
+                                  stops);
+    }
+
+    private void adjustPosition(final AtomicReference<Double> startX,
+                                final AtomicReference<Double> startY,
+                                final AtomicReference<Double> endX,
+                                final AtomicReference<Double> endY,
+                                final SVGShapeBase<?> shape) throws SVGException {
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = shape.createBoundingBox();
+        final Double width = boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue();
+        final Double height = boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue();
+
+        startX.set(Math.abs(boundingBox.getMinX().getValue() - startX.get()) / width);
+        startY.set(Math.abs(boundingBox.getMinY().getValue() - startY.get()) / height);
+        endX.set(Math.abs(boundingBox.getMinX().getValue() - endX.get()) / width);
+        endY.set(Math.abs(boundingBox.getMinY().getValue() - endY.get()) / height);
+    }
+
+    // endregion
 }

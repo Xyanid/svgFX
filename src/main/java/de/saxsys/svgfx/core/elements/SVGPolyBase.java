@@ -1,34 +1,31 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.core.utils.StringUtils;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoint;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePoints;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import javafx.scene.shape.Shape;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Base class for polygons and polyline.
@@ -68,7 +65,7 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGPolyBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    protected SVGPolyBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -81,47 +78,64 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      *
      * @return the list of points contained by the attributes
      *
-     * @throws SVGException             if any of the points in the corresponding attribute does not provide x and y position.
-     * @throws IllegalArgumentException if any of the points in the corresponding attribute does not provide x and y position.
+     * @throws SVGException if any of the points in the corresponding attribute does not provide x and y position.
      */
-    public final List<Double> getPoints() throws SVGException, IllegalArgumentException {
-        List<Double> actualPoints = new ArrayList<>();
+    public final List<Double> getPoints() throws SVGException {
+        final List<Double> actualPoints = new ArrayList<>();
 
-        String points = getAttribute(CoreAttribute.POINTS.getName());
-
-        if (StringUtils.isNullOrEmpty(points)) {
-            return actualPoints;
-        }
-
-        List<String> values = SVGUtils.split(points, Collections.singletonList(POINTS_DELIMITER), (currentData, index) -> {
-
-            // check if the required delimiter is present and that the last character is not a delimiter so the string can be split
-            boolean containsDelimiter = currentData.contains(POSITION_DELIMITER_STRING);
-            if (containsDelimiter && currentData.charAt(currentData.length() - 1) != POSITION_DELIMITER) {
-                return true;
+        final Optional<SVGAttributeTypePoints> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class);
+        if (points.isPresent()) {
+            for (final SVGAttributeTypePoint point : points.get().getValue()) {
+                actualPoints.add(point.getValue().getX().getValue());
+                actualPoints.add(point.getValue().getY().getValue());
             }
-            // in this special case we have two non delimiters characters separated by a split delimiter which is invalid e.G. "1,2 3 4,5"
-            else if (index == points.length() - 1 || points.charAt(index + 1) != POINTS_DELIMITER) {
-                throw new SVGException("Invalid points format");
-            }
-
-            return false;
-        });
-
-        for (String pointsSplit : values) {
-
-            String[] pointSplit = pointsSplit.split(POSITION_DELIMITER_STRING);
-
-            if (pointSplit.length != 2) {
-                throw new IllegalArgumentException("At least one point does not provide x and y position");
-            }
-
-            actualPoints.add(Double.parseDouble(pointSplit[0].trim()));
-            actualPoints.add(Double.parseDouble(pointSplit[1].trim()));
         }
 
         return actualPoints;
     }
 
     //endregion
+
+    // region Implement SVGShapeBase
+
+    @Override
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+
+        final AtomicBoolean isFirstRun = new AtomicBoolean(true);
+
+        final Optional<SVGAttributeTypePoints> points = getAttributeHolder().getAttribute(CoreAttributeMapper.POINTS.getName(), SVGAttributeTypePoints.class);
+        if (points.isPresent()) {
+            for (final SVGAttributeTypePoint point : points.get().getValue()) {
+                if (isFirstRun.get()
+                    || result.getMinX().getValue() > point.getValue().getX().getValue()) {
+                    result.getMinX().setText(String.format("%f%s", point.getValue().getX().getValue(), point.getValue().getX().getUnit().getName()));
+                }
+
+                if (isFirstRun.get()
+                    || result.getMinY().getValue() > point.getValue().getY().getValue()) {
+                    result.getMinY().setText(String.format("%f%s", point.getValue().getY().getValue(), point.getValue().getY().getUnit().getName()));
+                }
+
+                if (isFirstRun.get()
+                    || result.getMaxX().getValue() < point.getValue().getX().getValue()) {
+                    result.getMaxX().setText(String.format("%f%s", point.getValue().getX().getValue(), point.getValue().getX().getUnit().getName()));
+                }
+
+                if (isFirstRun.get()
+                    || result.getMaxY().getValue() < point.getValue().getY().getValue()) {
+                    result.getMaxY().setText(String.format("%f%s", point.getValue().getY().getValue(), point.getValue().getY().getUnit().getName()));
+                }
+
+                if (isFirstRun.get()) {
+                    isFirstRun.set(false);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // endregion
 }

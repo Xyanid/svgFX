@@ -1,31 +1,30 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -33,8 +32,16 @@ import java.util.Set;
  *
  * @author Xyanid on 27.10.2015.
  */
-@SVGElementMapping("style")
 public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
+
+    // region Constants
+
+    /**
+     * Contains the name of this element in an svg file, used to identify the element when parsing.
+     */
+    public static final String ELEMENT_NAME = "style";
+
+    // endregion
 
     //region Static
     /**
@@ -63,7 +70,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
      * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    public SVGStyle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) {
+    SVGStyle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -71,18 +78,53 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     //region SVGElementBase
 
+    @Override
+    public boolean rememberElement() {
+        return true;
+    }
+
+    @Override
+    public void startProcessing() throws SAXException {}
+
+    /**
+     * {@inheritDoc}
+     * Saves all characters in a StringBuilder to use them later
+     */
+    @Override
+    public void processCharacterData(final char[] ch, final int start, final int length) throws SAXException {
+        for (int i = start; i < length; i++) {
+            characters.append(ch[i]);
+        }
+    }
+
+    @Override
+    public void endProcessing() throws SAXException {
+        getDocumentDataProvider().addStyles(getResult());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return !((this.getParent() instanceof SVGClipPath) || (this.getParent() instanceof SVGGroup));
+    }
+
     /**
      * {@inheritDoc}
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResult(final SVGCssStyle style) {
+    protected final Set<SVGCssStyle> createResult(final StyleSupplier styleSupplier) throws SVGException {
 
-        Set<SVGCssStyle> result = new HashSet<>();
+        final Set<SVGCssStyle> result = new HashSet<>();
 
-        if (getAttribute(CoreAttribute.TYPE.getName()) == null || getAttribute(CoreAttribute.TYPE.getName()).equals(CSS_TYPE)) {
+        final Optional<SVGAttributeTypeString> type = getAttributeHolder().getAttribute(CoreAttributeMapper.TYPE.getName(), SVGAttributeTypeString.class);
+        if (!type.isPresent() || type.get().getValue().equals(CSS_TYPE)) {
 
-            StringBuilder builder = new StringBuilder();
+            final StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < characters.length(); i++) {
 
@@ -92,7 +134,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
                 if (character == Constants.DECLARATION_BLOCK_END) {
 
-                    SVGCssStyle styleDef = new SVGCssStyle(getDataProvider());
+                    SVGCssStyle styleDef = new SVGCssStyle(getDocumentDataProvider());
 
                     styleDef.parseCssText(builder.toString());
 
@@ -107,20 +149,8 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final SVGCssStyle style) throws SVGException {
+    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final StyleSupplier styleSupplier) throws SVGException {
 
-    }
-
-    /**
-     * {@inheritDoc}
-     * Saves all characters in a StringBuilder to use them later
-     */
-    @Override
-    public void processCharacterData(final char[] ch, final int start, final int length) {
-
-        for (int i = start; i < length; i++) {
-            characters.append(ch[i]);
-        }
     }
 
     //endregion

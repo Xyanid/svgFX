@@ -1,36 +1,32 @@
 /*
+ * Copyright 2015 - 2016 Xyanid
  *
- * ******************************************************************************
- *  * Copyright 2015 - 2015 Xyanid
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *   http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 
 package de.saxsys.svgfx.core.elements;
 
-import de.saxsys.svgfx.core.SVGDataProvider;
+import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.utils.SVGUtils;
-import de.saxsys.svgfx.core.utils.StringUtils;
-import de.saxsys.svgfx.xml.elements.ElementBase;
+import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Contains basic functionality to handle gradients of svg.
@@ -53,7 +49,8 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
      */
-    public SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDataProvider dataProvider) throws IllegalArgumentException {
+    protected SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider)
+            throws IllegalArgumentException {
         super(name, attributes, parent, dataProvider);
     }
 
@@ -65,26 +62,22 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      * Gets the stops related to this gradient.
      *
      * @return the stops which this gradient needs
+     *
+     * @throws SVGException if an error occurs during the retrieval of the stops.
      */
-    public final List<Stop> getStops() {
-        List<Stop> stops = new ArrayList<>();
+    @SuppressWarnings ("unchecked")
+    public final List<Stop> getStops() throws SVGException {
+        final List<Stop> stops = new ArrayList<>(0);
 
-        for (ElementBase element : getChildren()) {
-            if (element instanceof SVGStop) {
-                stops.add(((SVGStop) element).getResult());
-            }
-        }
+        fillStopsOrFail(stops, getUnmodifiableChildren());
 
         // own stops are preferred, now we check for stops that are on referenced elements
-        if (stops.isEmpty() && StringUtils.isNotNullOrEmpty(getAttribute(XLinkAttribute.XLINK_HREF.getName()))) {
+        if (stops.isEmpty()) {
 
-            SVGElementBase referenceElement = SVGUtils.resolveIRI(getAttribute(XLinkAttribute.XLINK_HREF.getName()), getDataProvider(), SVGElementBase.class);
+            final Optional<SVGAttributeTypeString> link = getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class);
 
-            for (Object child : referenceElement.getChildren()) {
-
-                if (child instanceof SVGStop) {
-                    stops.add(((SVGStop) child).getResult());
-                }
+            if (link.isPresent()) {
+                fillStopsOrFail(stops, SVGUtil.resolveIRI(link.get().getValue(), getDocumentDataProvider(), SVGElementBase.class).getUnmodifiableChildren());
             }
         }
 
@@ -96,10 +89,68 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     // region Override SVGElementBase
 
     @Override
-    protected final void initializeResult(final TPaint paint, final SVGCssStyle style) throws SVGException {
-
-        // TODO figure out how to apply transformation to a paint if that is possible
+    public boolean rememberElement() {
+        return true;
     }
+
+    @Override
+    public void startProcessing() throws SAXException {}
+
+    @Override
+    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    @Override
+    public void endProcessing() throws SAXException {
+        try {
+            storeElementInDocumentDataProvider();
+        } catch (final SVGException e) {
+            throw new SAXException(e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return false always.
+     */
+    @Override
+    public boolean canConsumeResult() {
+        return false;
+    }
+
+    @Override
+    protected final void initializeResult(final TPaint paint, final StyleSupplier styleSupplier) throws SVGException {}
+
+    // endregion
+
+    // region Private
+
+    private void fillStopsOrFail(final List<Stop> stops, final List<SVGElementBase<?>> children) throws SVGException {
+        for (final SVGElementBase child : children) {
+            if (child instanceof SVGStop) {
+                try {
+                    stops.add(((SVGStop) child).getResult());
+                } catch (final SAXException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not create result for stop: %s", child));
+                }
+            }
+        }
+    }
+
+    // endregion
+
+    // region Abstract
+
+    /**
+     * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
+     *
+     * @param shape the {@link SVGShapeBase} requesting this gradient.
+     *
+     * @return a new {@link TPaint}.
+     *
+     * @throws SVGException if an error occurs during the creation of the result.
+     */
+    public abstract TPaint createResult(final SVGShapeBase<?> shape) throws SVGException;
 
     // endregion
 }
