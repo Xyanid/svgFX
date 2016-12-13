@@ -1,7 +1,7 @@
 # ![svgFX](http://xyanid.de/projects/java/svgfx/svgfx.png)
 This framework allows for svg graphics to be directly converted into native javaFX object.
 
-[![Build Status](https://api.travis-ci.org/Xyanid/svgFX.svg?branch=master)](https://travis-ci.org/Xyanid/svgFX)
+[![Build Status](https://xyanid.de:8584/app/rest/builds/buildType:SvgFX_Build/statusIcon)](https://xyanid.de:8584/viewType.html?buildTypeId=SvgFX_Build&guest=1)
 
 ###[Howto](../../wiki "Howto")###
 
