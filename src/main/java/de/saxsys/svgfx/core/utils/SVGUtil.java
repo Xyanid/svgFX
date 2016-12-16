@@ -40,7 +40,8 @@ public final class SVGUtil {
      *
      * @return the data striped of its IRI identifiers or null the string does not contain any IRI identifiers.
      *
-     * @throws IllegalArgumentException if data is null or empty.
+     * @throws SVGException if data is null or empty.
+     *
      */
     public static String stripIRIIdentifiers(final String data) throws SVGException {
 

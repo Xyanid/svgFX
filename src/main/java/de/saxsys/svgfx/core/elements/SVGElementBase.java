@@ -111,6 +111,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      * Gets the elements own style and resolves its inheritance, also removed any self references.
      *
      * @return this elements own style.
+     *
+     * @throws SVGException when an error occurs during the creation of the style
      */
     public final SVGCssStyle getStyle() throws SVGException {
         return getStyleAndResolveInheritance(getParent() != null ? getParent().getStyle() : new SVGCssStyle(getDocumentDataProvider()));

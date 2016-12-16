@@ -80,7 +80,7 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     @Override
     public boolean rememberElement() {
-        return true;
+        return false;
     }
 
     @Override

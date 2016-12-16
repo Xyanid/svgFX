@@ -148,6 +148,8 @@ public abstract class SVGAttributeType<TValue, TUnit> extends AttributeWrapper {
      * Returns the {@link #valueAndUnit}.
      *
      * @return the {@link #valueAndUnit}.
+     *
+     * @throws SVGException when an error occurs during the initialization of the value
      */
     public final Pair<TValue, TUnit> getValueAndUnit() throws SVGException {
         initializeValueAndUnit();
