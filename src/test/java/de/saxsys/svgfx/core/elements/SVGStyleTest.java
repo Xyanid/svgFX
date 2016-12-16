@@ -29,7 +29,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -75,6 +77,31 @@ public final class SVGStyleTest {
                            .get()
                            .getValue(),
                      0.01d);
+    }
+
+    /**
+     * SVGStyle elements will not remain in the DOM tree since they are not needed, instead they will save all their data into the dataprovider.
+     */
+    @Test
+    public void SVGStylesWillNotBeRemembered() throws SAXException {
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+
+        final Attributes attributes = Mockito.mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(1);
+
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
+        when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
+
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, dataProvider);
+        ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px;}");
+
+        assertFalse(style.rememberElement());
+
+        style.endProcessing();
+
+        assertEquals(1, dataProvider.getUnmodifiableStyles().size());
+        assertTrue(dataProvider.getUnmodifiableStyles().containsAll(style.getResult()));
     }
 
     /**
