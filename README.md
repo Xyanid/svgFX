@@ -1,7 +1,7 @@
 # ![svgFX](http://xyanid.de/projects/java/svgfx/svgfx.png)
 This framework allows for svg graphics to be directly converted into native javaFX object.
 
-[![Build Status](https://xyanid.de:8584/app/rest/builds/buildType:SvgFX_Build/statusIcon)](https://xyanid.de:8584/viewType.html?buildTypeId=SvgFX_Build&guest=1)
+[![Build Status](https://ci.xyanid.de/app/rest/builds/buildType:SvgFX_Build/statusIcon)](https://ci.xyanid.de/viewType.html?buildTypeId=SvgFX_Build&guest=1)
 
 ###[Howto](../../wiki "Howto")###
 
@@ -27,6 +27,6 @@ Here you get new features. This release is unstable and shouldn't be used in pro
 <dependency>
 		<groupId>de.saxsys</groupId>
 		<artifactId>svgfx</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
