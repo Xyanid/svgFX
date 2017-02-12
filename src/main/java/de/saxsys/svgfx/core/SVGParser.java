@@ -54,7 +54,9 @@ public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElem
 
         if (element != null) {
             for (final SVGElementBase child : element.getUnmodifiableChildren()) {
-                result.getChildren().add((Node) child.getResult());
+                if (child.canConsumeResult()) {
+                    result.getChildren().add((Node) child.getResult());
+                }
             }
         }
 

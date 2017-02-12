@@ -18,6 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.StyleSupplier;
@@ -86,9 +87,15 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
-        // TODO figure out how to get the bounding box from a path
-        return null;
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final javafx.scene.shape.SVGPath shape) throws SVGException {
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+
+        result.getMinX().setText(String.format("%f%s", shape.getBoundsInLocal().getMinX(), SVGAttributeTypeLength.Unit.PIXEL.getName()));
+        result.getMaxX().setText(String.format("%f%s", shape.getBoundsInLocal().getMaxX(), SVGAttributeTypeLength.Unit.PIXEL.getName()));
+        result.getMinY().setText(String.format("%f%s", shape.getBoundsInLocal().getMinY(), SVGAttributeTypeLength.Unit.PIXEL.getName()));
+        result.getMaxY().setText(String.format("%f%s", shape.getBoundsInLocal().getMaxY(), SVGAttributeTypeLength.Unit.PIXEL.getName()));
+
+        return result;
     }
 
     //endregion

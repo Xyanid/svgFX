@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.core;
 
-import de.saxsys.svgfx.core.definitions.Enumerations;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 
 /**
@@ -66,15 +65,15 @@ public class SVGException extends Exception {
          */
         INVALID_COLOR_FORMAT,
         /**
-         * Meaning that the text that should represent a {@link Enumerations.GradientUnit} is not valid.
+         * Meaning that the text that should represent a {@link de.saxsys.svgfx.core.definitions.enumerations.GradientUnit} is not valid.
          */
         INVALID_GRADIENT_UNIT_FORMAT,
         /**
-         * Meaning that the text that should represent a {@link Enumerations.CycleMethodMapping} is not valid.
+         * Meaning that the text that should represent a {@link de.saxsys.svgfx.core.definitions.enumerations.CycleMethodMapping} is not valid.
          */
         INVALID_CYCLE_METHOD,
         /**
-         * Meaning that the text that should represent a {@link Enumerations.FillRuleMapping} is not valid.
+         * Meaning that the text that should represent a {@link de.saxsys.svgfx.core.definitions.enumerations.FillRuleMapping} is not valid.
          */
         INVALID_FILL_RULE,
         /**

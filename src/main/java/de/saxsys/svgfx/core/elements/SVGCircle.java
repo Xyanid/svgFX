@@ -65,7 +65,7 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Circle shape) throws SVGException {
 
         final SVGAttributeTypeLength centerX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_X.getName(), SVGAttributeTypeLength.class);
         final SVGAttributeTypeLength centerY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_Y.getName(), SVGAttributeTypeLength.class);

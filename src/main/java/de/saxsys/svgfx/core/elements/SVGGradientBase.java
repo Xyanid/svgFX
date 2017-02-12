@@ -16,17 +16,22 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Contains basic functionality to handle gradients of svg.
@@ -56,41 +61,11 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     //endregion
 
-    //region Public
-
-    /**
-     * Gets the stops related to this gradient.
-     *
-     * @return the stops which this gradient needs
-     *
-     * @throws SVGException if an error occurs during the retrieval of the stops.
-     */
-    @SuppressWarnings ("unchecked")
-    public final List<Stop> getStops() throws SVGException {
-        final List<Stop> stops = new ArrayList<>(0);
-
-        fillStopsOrFail(stops, getUnmodifiableChildren());
-
-        // own stops are preferred, now we check for stops that are on referenced elements
-        if (stops.isEmpty()) {
-
-            final Optional<SVGAttributeTypeString> link = getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class);
-
-            if (link.isPresent()) {
-                fillStopsOrFail(stops, SVGUtil.resolveIRI(link.get().getValue(), getDocumentDataProvider(), SVGElementBase.class).getUnmodifiableChildren());
-            }
-        }
-
-        return stops;
-    }
-
-    //endregion
-
     // region Override SVGElementBase
 
     @Override
     public boolean rememberElement() {
-        return true;
+        return false;
     }
 
     @Override
@@ -98,15 +73,6 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
-
-    @Override
-    public void endProcessing() throws SAXException {
-        try {
-            storeElementInDocumentDataProvider();
-        } catch (final SVGException e) {
-            throw new SAXException(e);
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -139,18 +105,59 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     // endregion
 
+    //region Public
+
+    /**
+     * Gets the stops related to this gradient.
+     *
+     * @return the stops which this gradient needs
+     *
+     * @throws SVGException if an error occurs during the retrieval of the stops.
+     */
+    @SuppressWarnings ("unchecked")
+    public final List<Stop> getStops() throws SVGException {
+        final List<Stop> stops = new ArrayList<>(0);
+
+        fillStopsOrFail(stops, getUnmodifiableChildren());
+
+        // own stops are preferred, now we check for stops that are on referenced elements
+        if (stops.isEmpty()) {
+
+            final Optional<SVGAttributeTypeString> link = getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class);
+
+            if (link.isPresent()) {
+                fillStopsOrFail(stops, SVGUtil.resolveIRI(link.get().getValue(), getDocumentDataProvider(), SVGElementBase.class).getUnmodifiableChildren());
+            }
+        }
+
+        return stops;
+    }
+
+    //endregion
+
+    //region Protected
+
+    protected void transformPosition(final AtomicReference<Double> x, final AtomicReference<Double> y, final Transform transform) {
+        final Point2D start = transform.transform(x.get(), y.get());
+        x.set(start.getX());
+        y.set(start.getY());
+    }
+
+
+    //endregion
+
     // region Abstract
 
     /**
      * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
      *
-     * @param shape the {@link SVGShapeBase} requesting this gradient.
+     * @param boundingBox the supplier used to get the bounding box of the shape.
      *
      * @return a new {@link TPaint}.
      *
      * @throws SVGException if an error occurs during the creation of the result.
      */
-    public abstract TPaint createResult(final SVGShapeBase<?> shape) throws SVGException;
+    public abstract TPaint createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException;
 
     // endregion
 }

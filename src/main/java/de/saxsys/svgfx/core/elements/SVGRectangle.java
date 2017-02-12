@@ -88,7 +88,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
 
         final SVGAttributeTypeLength posX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class);
         final SVGAttributeTypeLength posY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class);

@@ -66,7 +66,7 @@ public class SVGLine extends SVGShapeBase<Line> {
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Line shape) throws SVGException {
 
         final SVGAttributeTypeLength startX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_X.getName(), SVGAttributeTypeLength.class);
         final SVGAttributeTypeLength startY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_Y.getName(), SVGAttributeTypeLength.class);

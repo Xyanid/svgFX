@@ -66,12 +66,6 @@ public class SVGDefinitions extends SVGElementBase<Node> {
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
     /**
-     * {@inheritDoc}This implementation will use the id of each child and add it
-     */
-    @Override
-    public void endProcessing() throws SAXException {}
-
-    /**
      * {@inheritDoc}
      *
      * @return false always

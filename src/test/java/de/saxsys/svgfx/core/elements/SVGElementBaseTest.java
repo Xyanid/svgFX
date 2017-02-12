@@ -24,7 +24,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeStrokeLineCap;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.FillRuleMapping;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
@@ -137,7 +137,7 @@ public class SVGElementBaseTest {
             String value = "1.0";
 
             if (attribute == PresentationAttributeMapper.FILL_RULE) {
-                value = Enumerations.FillRuleMapping.EVEN_ODD.getName();
+                value = FillRuleMapping.EVEN_ODD.getName();
             } else if (attribute == PresentationAttributeMapper.FILL ||
                        attribute == PresentationAttributeMapper.STROKE ||
                        attribute == PresentationAttributeMapper.STOP_COLOR ||
@@ -168,7 +168,7 @@ public class SVGElementBaseTest {
             if (attribute == PresentationAttributeMapper.CLIP_PATH || attribute == PresentationAttributeMapper.CLIP_RULE) {
                 value = "1.0";
             } else if (attribute == PresentationAttributeMapper.FILL_RULE) {
-                value = Enumerations.FillRuleMapping.EVEN_ODD.getRule();
+                value = FillRuleMapping.EVEN_ODD.getRule();
             } else if (attribute == PresentationAttributeMapper.FILL ||
                        attribute == PresentationAttributeMapper.STROKE ||
                        attribute == PresentationAttributeMapper.STOP_COLOR ||

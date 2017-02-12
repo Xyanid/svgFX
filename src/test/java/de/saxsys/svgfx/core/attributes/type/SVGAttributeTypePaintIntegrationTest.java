@@ -17,7 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
-import de.saxsys.svgfx.core.elements.SVGShapeBase;
+import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.junit.Before;
@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -156,7 +157,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         cut.setText("url(#test)");
 
         try {
-            cut.getValue(mock(SVGShapeBase.class));
+            cut.getValue(mock(SVGSupplier.class));
         } catch (final SVGException e) {
             assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
@@ -174,7 +175,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         cut.setText("url(#test)");
 
         try {
-            cut.getValue(mock(SVGShapeBase.class));
+            cut.getValue(mock(SVGSupplier.class));
         } catch (final SVGException e) {
             assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
@@ -186,21 +187,21 @@ public class SVGAttributeTypePaintIntegrationTest {
     @Test
     public void whenTheTextIsAReferenceToAnExistingGradientThePaintDescribedByTheGradientWillBeUsed() throws SVGException {
 
-        final SVGShapeBase shape = mock(SVGShapeBase.class);
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = mock(SVGAttributeTypeRectangle.SVGTypeRectangle.class);
 
         final Paint expectedPaint = mock(Paint.class);
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
-        when(gradientBase.createResult(shape)).thenReturn(expectedPaint);
+        when(gradientBase.createResult(any(SVGSupplier.class))).thenReturn(expectedPaint);
 
         dataProvider.storeData("test", gradientBase);
 
         cut.setText("url(#test)");
 
-        final Paint result = cut.getValue(shape);
+        final Paint result = cut.getValue(() -> boundingBox);
 
         assertSame(expectedPaint, result);
-        verify(gradientBase, times(1)).createResult(shape);
+        verify(gradientBase, times(1)).createResult(any(SVGSupplier.class));
     }
 
     //endregion

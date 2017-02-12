@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.Matrix;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -96,12 +96,12 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
 
         Transform result = null;
 
-        EnumSet<Enumerations.Matrix> allMatrices = EnumSet.allOf(Enumerations.Matrix.class);
-        allMatrices.remove(Enumerations.Matrix.NONE);
+        EnumSet<Matrix> allMatrices = EnumSet.allOf(Matrix.class);
+        allMatrices.remove(Matrix.NONE);
 
         for (int i = 0; i < data.length(); i++) {
 
-            for (Enumerations.Matrix matrix : allMatrices) {
+            for (Matrix matrix : allMatrices) {
                 if (data.startsWith(matrix.getName(), i)) {
 
                     // getting the start and end of the new substring, which contains the data in the braces
@@ -126,25 +126,25 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
 
     /**
      * Gets the {@link Transform} that is represented by the given data. The data must meet the following requirements.
-     * Data can start with the name of the provide {@link Enumerations.Matrix}, in which case checkIfStartWithMatrix must be true,
+     * Data can start with the name of the provide {@link Matrix}, in which case checkIfStartWithMatrix must be true,
      * otherwise an exception will occur when the actual data is processed.
      * Data must contain the values separated with a coma (e.g. 1,2,3). Optionally the values can be embraces with ().
      *
      * @param matrix                 the matrix to use
-     * @param data                   the data to be used, must not be null or empty or {@link Enumerations.Matrix#NONE}.
-     * @param checkIfStartWithMatrix determines if the given data is to be checked if it starts with the {@link Enumerations.Matrix#name}
+     * @param data                   the data to be used, must not be null or empty or {@link Matrix#NONE}.
+     * @param checkIfStartWithMatrix determines if the given data is to be checked if it starts with the {@link Matrix#name}
      *
      * @return a new {@link Transform} which contains the transformation represented by the data.
      *
-     * @throws IllegalArgumentException if the given data is empty or matrix is {@link Enumerations.Matrix#NONE}.
+     * @throws IllegalArgumentException if the given data is empty or matrix is {@link Matrix#NONE}.
      * @throws SVGException             if there is an error in the transformation data of the given string.
      */
-    private Transform getTransform(final Enumerations.Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
+    private Transform getTransform(final Matrix matrix, final String data, final boolean checkIfStartWithMatrix) throws SVGException {
         if (StringUtil.isNullOrEmpty(data)) {
             throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given data must not be null or empty");
         }
 
-        if (matrix == Enumerations.Matrix.NONE) {
+        if (matrix == Matrix.NONE) {
             throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given matrix must not be NONE");
         }
 
@@ -209,7 +209,7 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
                     double x = Double.parseDouble(values.get(0).trim());
                     double y = values.size() == 2 ? Double.parseDouble(values.get(1).trim()) : x;
 
-                    if (matrix == Enumerations.Matrix.TRANSLATE) {
+                    if (matrix == Matrix.TRANSLATE) {
                         result = new Translate(x, y);
                     } else {
                         result = new Scale(x, y);
@@ -259,7 +259,7 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
                     throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
                 }
 
-                if (matrix == Enumerations.Matrix.SKEW_X) {
+                if (matrix == Matrix.SKEW_X) {
                     result = new Shear(shearing, 0.0d);
                 } else {
                     result = new Shear(0.0d, shearing);

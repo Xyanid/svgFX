@@ -66,7 +66,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Ellipse shape) throws SVGException {
 
         final SVGAttributeTypeLength centerX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_X.getName(), SVGAttributeTypeLength.class);
         final SVGAttributeTypeLength centerY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.CENTER_Y.getName(), SVGAttributeTypeLength.class);

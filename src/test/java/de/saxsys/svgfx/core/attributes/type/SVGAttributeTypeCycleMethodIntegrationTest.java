@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.CycleMethodMapping;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,7 +67,7 @@ public class SVGAttributeTypeCycleMethodIntegrationTest {
      */
     @Test
     public void allCycleMethodsAreCorrectlyParsed() throws SVGException {
-        for (final Enumerations.CycleMethodMapping value : Enumerations.CycleMethodMapping.values()) {
+        for (final CycleMethodMapping value : CycleMethodMapping.values()) {
             cut.setText(value.getName());
             assertEquals(value.getMethod(), cut.getValue());
             assertNull(cut.getUnit());

@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.FillRuleMapping;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,7 +67,7 @@ public class SVGAttributeTypeFillRuleIntegrationTest {
      */
     @Test
     public void allFillRulesAreCorrectlyParsed() throws SVGException {
-        for (final Enumerations.FillRuleMapping value : Enumerations.FillRuleMapping.values()) {
+        for (final FillRuleMapping value : FillRuleMapping.values()) {
             cut.setText(value.getName());
             assertEquals(value.getRule(), cut.getValue());
             assertNull(cut.getUnit());

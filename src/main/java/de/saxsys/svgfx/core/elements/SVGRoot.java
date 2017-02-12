@@ -77,13 +77,6 @@ public class SVGRoot extends SVGElementBase<Group> {
     public void processCharacterData(final char[] ch, final int start, final int length) throws SAXException {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void endProcessing() throws SAXException {
-    }
-
     @Override
     public boolean canConsumeResult() {
         return false;

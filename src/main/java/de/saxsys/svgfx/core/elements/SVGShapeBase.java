@@ -99,8 +99,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         // apply fill
         final Optional<SVGAttributeTypePaint> fill = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class);
         if (fill.isPresent()) {
-
-            Paint paint = fill.get().getValue(this);
+            Paint paint = fill.get().getValue(() -> createBoundingBox(shape));
 
             final Optional<SVGAttributeTypeDouble> opacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class);
             if (opacity.isPresent()) {
@@ -113,7 +112,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         // apply stroke
         final Optional<SVGAttributeTypePaint> stroke = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class);
         if (stroke.isPresent()) {
-            Paint paint = stroke.get().getValue(this);
+            Paint paint = stroke.get().getValue(() -> createBoundingBox(shape));
 
             final Optional<SVGAttributeTypeDouble> opacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_OPACITY.getName(), SVGAttributeTypeDouble.class);
             if (opacity.isPresent()) {
@@ -123,17 +122,18 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
             shape.setStroke(paint);
         }
 
+        // apply stroke width
+        final Optional<SVGAttributeTypeLength> strokeWidth = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class);
+        if (strokeWidth.isPresent()) {
+            shape.setStrokeWidth(strokeWidth.get().getValue());
+        }
+
         // apply stroke type
         final Optional<SVGAttributeTypeStrokeType> strokeType = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_TYPE.getName(), SVGAttributeTypeStrokeType.class);
         if (strokeType.isPresent()) {
             shape.setStrokeType(strokeType.get().getValue());
         }
 
-        // apply stroke width
-        final Optional<SVGAttributeTypeLength> strokeWidth = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class);
-        if (strokeWidth.isPresent()) {
-            shape.setStrokeWidth(strokeWidth.get().getValue());
-        }
 
         // apply stroke dash array
         final Optional<SVGAttributeTypeStrokeDashArray> strokeDashArray = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_DASHARRAY.getName(),
@@ -219,18 +219,14 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         return paint;
     }
 
-    // endregion
-
-    // region Abstract
-
     /**
-     * Returns this elements bounding rectangle, which contains the entire shape.
+     * Returns the bounding box of the given shape
      *
-     * @return this elements bounding box.
+     * @param shape the {@link Shape} to use.
      *
-     * @throws SVGException when an error occurs during the creation of the bounding box.
+     * @return a new {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle.SVGTypeRectangle}.
      */
-    public abstract SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException;
+    protected abstract SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final TShape shape) throws SVGException;
 
     // endregion
 }

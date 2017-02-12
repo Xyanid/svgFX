@@ -16,11 +16,13 @@ package de.saxsys.svgfx.core.attributes.type;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
-import de.saxsys.svgfx.core.elements.SVGShapeBase;
+import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Pair;
+
+import java.util.function.Supplier;
 
 /**
  * Represents a {@link Paint} used to color fill and strokes, the default value is {@link Color#TRANSPARENT}.
@@ -103,7 +105,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF) or a reference which can be resolved into a {@link SVGGradientBase}.
      *
-     * @param shape the element for which this paint is
+     * @param boundingBox the {@link Supplier} to use when the bounding box of the shape isn needed by the paint.
      *
      * @return {@link Paint} which represents the color
      *
@@ -112,11 +114,11 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
      *                      </ul>
      */
     @SuppressWarnings ("unchecked")
-    public Paint getValue(final SVGShapeBase<?> shape) throws SVGException {
+    public Paint getValue(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
 
         // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
         if (getText().startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
-            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(shape);
+            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(boundingBox);
         }
 
         return getValue();

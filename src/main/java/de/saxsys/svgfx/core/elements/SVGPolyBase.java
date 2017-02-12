@@ -99,7 +99,7 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     // region Implement SVGShapeBase
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final TShape shape) throws SVGException {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
 

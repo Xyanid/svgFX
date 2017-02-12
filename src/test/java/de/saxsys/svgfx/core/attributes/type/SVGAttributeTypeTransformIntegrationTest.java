@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.Matrix;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -61,7 +61,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of matrix are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}}.
      */
     @Test
     public void aMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -143,7 +143,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of translate are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
      */
     @Test
     public void aTranslateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -232,7 +232,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of scale are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
      */
     @Test
     public void aScaleMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -322,7 +322,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of scale are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
      */
     @Test
     public void aRotateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -418,7 +418,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of skewX are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
      */
     @Test
     public void aSkewMatrixCanBeParsedForXOrYDirection() throws SVGException {
@@ -510,7 +510,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
      */
     @Test
     public void multipleTransformMatricesWillBeCombined() throws SVGException {

@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.CycleMethodMapping;
 import javafx.scene.paint.CycleMethod;
 import javafx.util.Pair;
 
@@ -58,7 +58,7 @@ public class SVGAttributeTypeCycleMethod extends SVGAttributeType<CycleMethod, V
 
         CycleMethod result = null;
 
-        for (final Enumerations.CycleMethodMapping cycleMethod : Enumerations.CycleMethodMapping.values()) {
+        for (final CycleMethodMapping cycleMethod : CycleMethodMapping.values()) {
             if (cycleMethod.getName().equals(cssText)) {
                 result = cycleMethod.getMethod();
                 break;

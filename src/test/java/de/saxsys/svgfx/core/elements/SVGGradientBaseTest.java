@@ -18,7 +18,9 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import org.junit.Test;
@@ -87,7 +89,7 @@ public final class SVGGradientBaseTest {
             }
 
             @Override
-            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
+            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
                 return null;
             }
         };
@@ -147,7 +149,7 @@ public final class SVGGradientBaseTest {
             }
 
             @Override
-            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
+            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
                 return null;
             }
         };
@@ -199,7 +201,7 @@ public final class SVGGradientBaseTest {
             }
 
             @Override
-            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
+            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
                 return null;
             }
         };

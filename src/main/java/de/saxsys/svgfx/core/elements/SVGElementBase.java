@@ -87,6 +87,15 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         return result;
     }
 
+    @Override
+    public void endProcessing() throws SAXException {
+        try {
+            storeElementInDocumentDataProvider();
+        } catch (final SVGException e) {
+            throw new SAXException(e);
+        }
+    }
+
     // endregion
 
     // region Public
@@ -181,16 +190,14 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     }
 
     /**
-     * Checks if the element is inside a {@link SVGDefinitions} and store it inside the {@link #documentDataProvider} if so.
+     * Checks if the element has an {@link CoreAttributeMapper#ID} and stores the element in the {@link #documentDataProvider} if so.
      *
      * @throws SVGException if an error occurs during the retrieval of the id.
      */
-    protected final void storeElementInDocumentDataProvider() throws SVGException {
-        if (getParent() instanceof SVGDefinitions) {
-            final Optional<SVGAttributeTypeString> id = getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class);
-            if (id.isPresent()) {
-                getDocumentDataProvider().storeData(id.get().getValue(), this);
-            }
+    private void storeElementInDocumentDataProvider() throws SVGException {
+        final Optional<SVGAttributeTypeString> id = getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class);
+        if (id.isPresent()) {
+            getDocumentDataProvider().storeData(id.get().getValue(), this);
         }
     }
 

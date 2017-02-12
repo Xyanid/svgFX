@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.FillRuleMapping;
 import javafx.scene.shape.FillRule;
 import javafx.util.Pair;
 
@@ -55,7 +55,7 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
 
         FillRule result = null;
 
-        for (final Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
+        for (final FillRuleMapping mapping : FillRuleMapping.values()) {
             if (mapping.getName().equals(cssText)) {
                 result = mapping.getRule();
                 break;

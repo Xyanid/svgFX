@@ -59,15 +59,6 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
     @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
-    @Override
-    public void endProcessing() throws SAXException {
-        try {
-            storeElementInDocumentDataProvider();
-        } catch (SVGException e) {
-            throw new SAXException(e);
-        }
-    }
-
     /**
      * {@inheritDoc}
      *

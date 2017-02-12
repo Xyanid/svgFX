@@ -48,7 +48,7 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProv
     /**
      * Determines the gradient transformation of a gradient.
      */
-    public static final CoreAttributeMapper GRADIENT_TRANSFORM = new CoreAttributeMapper("gradientUnits", SVGAttributeTypeTransform::new);
+    public static final CoreAttributeMapper GRADIENT_TRANSFORM = new CoreAttributeMapper("gradientTransform", SVGAttributeTypeTransform::new);
     /**
      * Determines the spread method used in a gradient.
      */

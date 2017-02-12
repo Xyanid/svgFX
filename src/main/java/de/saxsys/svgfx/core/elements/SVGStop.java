@@ -74,9 +74,6 @@ public class SVGStop extends SVGElementBase<Stop> {
     @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
-    @Override
-    public void endProcessing() throws SAXException {}
-
     /**
      * {@inheritDoc}
      *
