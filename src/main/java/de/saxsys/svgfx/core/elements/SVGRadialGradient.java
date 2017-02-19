@@ -112,7 +112,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         double diffY = focusY.get() - centerY.get();
 
         // here we check if x is 0 then use y or if y is 0 then use x, otherwise calculate
-        double distance = diffX == 0.0d ? Math.abs(diffY) : diffY == 0.0d ? Math.abs(diffX) : Math.hypot(diffX, diffY);
+        double distance = getDistance(diffX, diffY);
 
         return new RadialGradient(Math.toDegrees(Math.atan2(diffY, diffX)),
                                   distance > radius.get() ? 1.0d : distance / radius.get(),
@@ -160,11 +160,17 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                    final AtomicReference<Double> focusY,
                                    final AtomicReference<Double> radius,
                                    final Transform transform) {
+
+        final AtomicReference<Double> radiusX = new AtomicReference<>(centerX.get() + radius.get());
+        final AtomicReference<Double> radiusY = new AtomicReference<>(centerY.get() + radius.get());
+
         transformPosition(centerX, centerY, transform);
         transformPosition(focusX, focusY, transform);
-
-        //TODO apply transform to radius, only can stretch it though
-
+        transformPosition(radiusX, radiusY, transform);
+        // for radius we take a point on the circle apply transform then measure the new distance which is the radius
+        final double radiusXTmp = radiusX.get() - centerX.get();
+        final double radiusYTmp = radiusY.get() - centerY.get();
+        radius.set(radiusXTmp > radiusYTmp ? radiusXTmp : radiusYTmp);
     }
 
     private void convertToObjectBoundingBox(final AtomicReference<Double> centerX,
@@ -185,7 +191,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         centerY.set(Math.abs(boundingBox.getMinY().getValue() - centerY.get()) / height);
         focusX.set(Math.abs(boundingBox.getMinX().getValue() - focusX.get()) / width);
         focusY.set(Math.abs(boundingBox.getMinY().getValue() - focusY.get()) / height);
-        radius.set(radius.get() / height);
+        radius.set(radius.get() / (height > width ? height : width));
     }
 
     private void convertFromObjectBoundingBox(final AtomicReference<Double> centerX,
@@ -206,7 +212,11 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         centerY.set(boundingBox.getMinY().getValue() + centerY.get() * height);
         focusX.set(boundingBox.getMinX().getValue() + focusX.get() * width);
         focusY.set(boundingBox.getMinY().getValue() + focusY.get() * height);
-        radius.set(radius.get() * height);
+        radius.set(radius.get() * (height > width ? height : width));
+    }
+
+    private double getDistance(final double diffX, final double diffY) {
+        return diffX == 0.0d ? Math.abs(diffY) : diffY == 0.0d ? Math.abs(diffX) : Math.hypot(diffX, diffY);
     }
 
     // endregion
