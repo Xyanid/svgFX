@@ -72,18 +72,18 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * Applies the corner radius if any.
      */
     @Override
-    protected void initializeResult(final Rectangle rect, final StyleSupplier styleSupplier) throws SVGException {
-        super.initializeResult(rect, styleSupplier);
+    protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+        super.initializeResult(result, styleSupplier);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
         final Optional<SVGAttributeTypeLength> radiusX = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class);
         if (radiusX.isPresent()) {
-            rect.setArcWidth(radiusX.get().getValue() * 2.0d);
+            result.setArcWidth(radiusX.get().getValue() * 2.0d);
         }
 
         final Optional<SVGAttributeTypeLength> radiusY = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class);
         if (radiusY.isPresent()) {
-            rect.setArcHeight(radiusY.get().getValue() * 2.0d);
+            result.setArcHeight(radiusY.get().getValue() * 2.0d);
         }
     }
 

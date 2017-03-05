@@ -15,9 +15,11 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
@@ -137,12 +139,46 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     //region Protected
 
+    /**
+     * Uses the given x and y and applies the given {@link Transform}. After the call the x and y values will have been adjusted.
+     *
+     * @param x         the x to use.
+     * @param y         the y to use.
+     * @param transform the {@link Transform} to use.
+     */
     protected void transformPosition(final AtomicReference<Double> x, final AtomicReference<Double> y, final Transform transform) {
         final Point2D start = transform.transform(x.get(), y.get());
         x.set(start.getX());
         y.set(start.getY());
     }
 
+    /**
+     * Will be used to get the correct transformation for the gradient if any.
+     *
+     * @param elementTransform the {@link SVGAttributeTypeTransform} supplied by the element that uses this gradient.
+     *
+     * @return a new {@link Optional} with the correct {@link Transform} or {@link Optional#empty()} if there is no transform.
+     *
+     * @throws SVGException if there is a problem when the transformation is requested.
+     */
+    protected Optional<Transform> getTransform(final SVGAttributeTypeTransform elementTransform) throws SVGException {
+        final Optional<SVGAttributeTypeTransform> ownTransform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
+        final Optional<Transform> usedTransform;
+
+        if (elementTransform != null) {
+            if (ownTransform.isPresent()) {
+                usedTransform = Optional.of(elementTransform.getValue().createConcatenation(ownTransform.get().getValue()));
+            } else {
+                usedTransform = Optional.of(elementTransform.getValue());
+            }
+        } else if (ownTransform.isPresent()) {
+            usedTransform = Optional.of(ownTransform.get().getValue());
+        } else {
+            usedTransform = Optional.empty();
+        }
+
+        return usedTransform;
+    }
 
     //endregion
 
@@ -157,7 +193,7 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @throws SVGException if an error occurs during the creation of the result.
      */
-    public abstract TPaint createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException;
+    public abstract TPaint createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException;
 
     // endregion
 }

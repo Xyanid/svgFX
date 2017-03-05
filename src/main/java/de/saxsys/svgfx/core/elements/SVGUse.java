@@ -81,7 +81,7 @@ public class SVGUse extends SVGNodeBase<Group> {
     }
 
     @Override
-    protected void initializeResult(final Group node, final StyleSupplier styleSupplier) throws SVGException {
+    protected void initializeResult(final Group result, final StyleSupplier styleSupplier) throws SVGException {
     }
 
     //endregion

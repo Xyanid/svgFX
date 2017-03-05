@@ -82,8 +82,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 
@@ -116,8 +116,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 
@@ -162,8 +162,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 
@@ -209,8 +209,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 
@@ -243,8 +243,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 
@@ -289,8 +289,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 
@@ -336,8 +336,8 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected void initializeResult(final Rectangle rectangle, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(rectangle, styleSupplier);
+            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
+                super.initializeResult(result, styleSupplier);
             }
         };
 

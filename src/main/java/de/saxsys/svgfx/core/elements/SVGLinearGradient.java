@@ -73,7 +73,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
     @Override
     protected final LinearGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
-        return determineResult(null);
+        return determineResult(null, null);
     }
 
     //endregion
@@ -81,15 +81,16 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     // region Implement SVGGradientBase
 
     @Override
-    public LinearGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
-        return determineResult(boundingBox);
+    public LinearGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException {
+        return determineResult(boundingBox, elementTransform);
     }
 
     // endregion
 
     // region Private
 
-    private LinearGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
+    private LinearGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox, final SVGAttributeTypeTransform elementTransform)
+            throws SVGException {
 
         final List<Stop> stops = getStops();
         if (stops.isEmpty()) {
@@ -101,7 +102,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
         final AtomicReference<Double> endX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, DEFAULT_END_X));
         final AtomicReference<Double> endY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
 
-        convertToObjectBoundingBox(startX, startY, endX, endY, boundingBox);
+        convertToObjectBoundingBox(startX, startY, endX, endY, elementBoundingBox, elementTransform);
 
         return new LinearGradient(startX.get(),
                                   startY.get(),
@@ -116,8 +117,10 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
                                             final AtomicReference<Double> startY,
                                             final AtomicReference<Double> endX,
                                             final AtomicReference<Double> endY,
-                                            final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
-        final Optional<SVGAttributeTypeTransform> transform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
+                                            final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox,
+                                            final SVGAttributeTypeTransform elementTransform) throws SVGException {
+
+        final Optional<Transform> usedTransform = getTransform(elementTransform);
 
         final GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
                                                                                  GradientUnit.class,
@@ -125,18 +128,18 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
         // when being in user space we first need to transform then make the values relative
         if (gradientUnit == GradientUnit.USER_SPACE_ON_USE) {
-            if (boundingBox == null) {
+            if (elementBoundingBox == null) {
                 throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but no bounding box is provided.");
             }
 
-            if (transform.isPresent()) {
-                transformPosition(startX, startY, endX, endY, transform.get().getValue());
+            if (usedTransform.isPresent()) {
+                transformPosition(startX, startY, endX, endY, usedTransform.get());
             }
-            convertToObjectBoundingBox(startX, startY, endX, endY, boundingBox.get());
-        } else if (transform.isPresent()) {
-            final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = boundingBox.get();
+            convertToObjectBoundingBox(startX, startY, endX, endY, elementBoundingBox.get());
+        } else if (usedTransform.isPresent()) {
+            final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = elementBoundingBox.get();
             convertFromObjectBoundingBox(startX, startY, endX, endY, rectangle);
-            transformPosition(startX, startY, endX, endY, transform.get().getValue());
+            transformPosition(startX, startY, endX, endY, usedTransform.get());
             convertToObjectBoundingBox(startX, startY, endX, endY, rectangle);
         }
     }

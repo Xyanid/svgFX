@@ -77,12 +77,12 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final StyleSupplier styleSupplier) throws SVGException {
-        super.initializeResult(path, styleSupplier);
+    protected final void initializeResult(final javafx.scene.shape.SVGPath result, final StyleSupplier styleSupplier) throws SVGException {
+        super.initializeResult(result, styleSupplier);
 
         final Optional<SVGAttributeTypeFillRule> fillRule = styleSupplier.get().getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class);
         if (fillRule.isPresent()) {
-            path.setFillRule(fillRule.get().getValue());
+            result.setFillRule(fillRule.get().getValue());
         }
     }
 
