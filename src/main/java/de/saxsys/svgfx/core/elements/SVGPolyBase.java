@@ -62,11 +62,10 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    protected SVGPolyBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    protected SVGPolyBase(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion

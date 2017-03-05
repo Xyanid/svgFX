@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -44,11 +44,10 @@ public class SVGGroup extends SVGNodeBase<Group> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGGroup(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGGroup(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -56,7 +55,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
     //region SVGElementBase
 
     @Override
-    protected final Group createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Group createResult(final SVGCssStyle ownStyle) throws SVGException {
         final Group result = new Group();
 
         result.setOpacity(1.0d);
@@ -65,7 +64,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
 
             final SVGElementBase actualChild = (SVGElementBase) child;
 
-            Object childResult = actualChild.createAndInitializeResult(() -> actualChild.getStyleAndResolveInheritance(styleSupplier.get()));
+            final Object childResult = actualChild.createAndInitializeResult(ownStyle);
 
             if (childResult instanceof Node) {
                 result.getChildren().add((Node) childResult);

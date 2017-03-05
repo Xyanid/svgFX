@@ -18,7 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Rectangle;
 import org.xml.sax.Attributes;
 
@@ -47,11 +47,10 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGRectangle(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -59,7 +58,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Rectangle createResult(final SVGCssStyle ownStyle) throws SVGException {
 
         return new Rectangle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                              getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
@@ -72,8 +71,8 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * Applies the corner radius if any.
      */
     @Override
-    protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-        super.initializeResult(result, styleSupplier);
+    protected void initializeResult(final Rectangle result, final SVGCssStyle ownStyle) throws SVGException {
+        super.initializeResult(result, ownStyle);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
         final Optional<SVGAttributeTypeLength> radiusX = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class);

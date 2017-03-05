@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
 import org.xml.sax.Attributes;
 
@@ -42,11 +42,10 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGPolygon(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGPolygon(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -54,7 +53,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
     //region Override SVGElementBase
 
     @Override
-    protected final Polygon createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Polygon createResult(final SVGCssStyle ownStyle) throws SVGException {
 
         return new Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

@@ -96,7 +96,7 @@ public final class SVGStyleTest {
         final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, dataProvider);
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px;}");
 
-        assertFalse(style.rememberElement());
+        assertFalse(style.keepElement());
 
         style.endProcessing();
 

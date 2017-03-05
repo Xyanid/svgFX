@@ -65,13 +65,13 @@ public class SVGElementFactory implements IElementFactory<SVGDocumentDataProvide
     //region Implements IElementFactory
 
     @Override
-    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
+    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
 
         Constructor constructor = KNOWN_CLASSES.get(name);
 
         if (constructor != null) {
             try {
-                return (SVGElementBase<?>) constructor.newInstance(name, attributes, parent, dataProvider);
+                return (SVGElementBase<?>) constructor.newInstance(name, attributes, dataProvider);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }

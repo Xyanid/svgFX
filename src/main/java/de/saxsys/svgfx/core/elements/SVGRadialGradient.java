@@ -19,7 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import javafx.scene.paint.CycleMethod;
@@ -62,11 +62,10 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGRadialGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDocumentDataProvider> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGRadialGradient(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
 
@@ -75,8 +74,8 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     //region Override SVGGradientBase
 
     @Override
-    protected final RadialGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
-        return determineResult(null);
+    protected final RadialGradient createResult(final SVGCssStyle ownStyle) throws SVGException {
+        return determineResult(null, null);
     }
 
 
@@ -85,15 +84,15 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     // region SVGGradientBase
 
     @Override
-    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
-        return determineResult(boundingBox);
+    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException {
+        return determineResult(boundingBox, elementTransform);
     }
 
     // endregion
 
     // region Private
 
-    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
+    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException {
         final List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
@@ -106,7 +105,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         final AtomicReference<Double> focusY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_Y.getName(), Double.class, centerY.get()));
         final AtomicReference<Double> radius = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.RADIUS.getName(), Double.class, DEFAULT_RADIUS));
 
-        convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, boundingBox);
+        convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, boundingBox, elementTransform);
 
         double diffX = focusX.get() - centerX.get();
         double diffY = focusY.get() - centerY.get();
@@ -129,8 +128,10 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                             final AtomicReference<Double> focusX,
                                             final AtomicReference<Double> focusY,
                                             final AtomicReference<Double> radius,
-                                            final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox) throws SVGException {
-        final Optional<SVGAttributeTypeTransform> transform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
+                                            final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
+                                            final SVGAttributeTypeTransform elementTransform) throws SVGException {
+
+        final Optional<Transform> usedTransform = getTransform(elementTransform);
 
         final GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
                                                                                  GradientUnit.class,
@@ -142,14 +143,12 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                 throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but no bounding box is provided.");
             }
 
-            if (transform.isPresent()) {
-                transformPosition(centerX, centerY, focusX, focusY, radius, transform.get().getValue());
-            }
+            usedTransform.ifPresent(transform -> transformPosition(centerX, centerY, focusX, focusY, radius, transform));
             convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, boundingBox.get());
-        } else if (transform.isPresent()) {
+        } else if (usedTransform.isPresent()) {
             final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = boundingBox.get();
             convertFromObjectBoundingBox(centerX, centerY, focusX, focusY, radius, rectangle);
-            transformPosition(centerX, centerY, focusX, focusY, radius, transform.get().getValue());
+            transformPosition(centerX, centerY, focusX, focusY, radius, usedTransform.get());
             convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, rectangle);
         }
     }

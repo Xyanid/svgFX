@@ -20,7 +20,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import javafx.scene.paint.CycleMethod;
@@ -53,7 +53,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
     // endregion
 
-    //region Constructor
+    // region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
@@ -64,19 +64,19 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
      * @param dataProvider dataprovider to be used
      */
     SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+        super(name, attributes, dataProvider);
     }
 
-    //endregion
+    // endregion
 
-    //region Override SVGElementBase
+    // region Override SVGElementBase
 
     @Override
-    protected final LinearGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final LinearGradient createResult(final SVGCssStyle ownStyle) throws SVGException {
         return determineResult(null, null);
     }
 
-    //endregion
+    // endregion
 
     // region Implement SVGGradientBase
 
@@ -132,9 +132,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
                 throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but no bounding box is provided.");
             }
 
-            if (usedTransform.isPresent()) {
-                transformPosition(startX, startY, endX, endY, usedTransform.get());
-            }
+            usedTransform.ifPresent(transform -> transformPosition(startX, startY, endX, endY, transform));
             convertToObjectBoundingBox(startX, startY, endX, endY, elementBoundingBox.get());
         } else if (usedTransform.isPresent()) {
             final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = elementBoundingBox.get();

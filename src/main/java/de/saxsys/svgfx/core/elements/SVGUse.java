@@ -19,7 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -41,23 +41,22 @@ public class SVGUse extends SVGNodeBase<Group> {
 
     // endregion
 
-    //region Constructor
+    // region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGUse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGUse(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
-    //endregion
+    // endregion
 
-    //region SVGElementBase
+    // region SVGElementBase
 
     /**
      * {@inheritDoc} Resolves the needed reference.
@@ -65,7 +64,7 @@ public class SVGUse extends SVGNodeBase<Group> {
      * @throws SVGException if the {@link XLinkAttributeMapper#XLINK_HREF} is empty or null.
      */
     @Override
-    protected Group createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected Group createResult(final SVGCssStyle ownStyle) throws SVGException {
 
         final SVGElementBase referencedElement = SVGUtil.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
                                                                                                             SVGAttributeTypeString.class).getValue(),
@@ -75,14 +74,14 @@ public class SVGUse extends SVGNodeBase<Group> {
         final Group result = new Group();
         result.setLayoutX(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
         result.setLayoutY(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
-        result.getChildren().add((Node) referencedElement.createAndInitializeResult(() -> referencedElement.getStyleAndResolveInheritance(styleSupplier.get())));
+        result.getChildren().add((Node) referencedElement.createAndInitializeResult(ownStyle));
 
         return result;
     }
 
     @Override
-    protected void initializeResult(final Group result, final StyleSupplier styleSupplier) throws SVGException {
+    protected void initializeResult(final Group result, final SVGCssStyle styleSupplier) throws SVGException {
     }
 
-    //endregion
+    // endregion
 }

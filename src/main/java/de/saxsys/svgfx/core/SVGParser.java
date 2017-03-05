@@ -13,8 +13,13 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGDefinitions;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
+import de.saxsys.svgfx.core.elements.SVGGradientBase;
+import de.saxsys.svgfx.core.elements.SVGStop;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -54,13 +59,25 @@ public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElem
 
         if (element != null) {
             for (final SVGElementBase child : element.getUnmodifiableChildren()) {
-                if (child.canConsumeResult()) {
+                if (canConsumeElement(element)) {
                     result.getChildren().add((Node) child.getResult());
                 }
             }
         }
 
         return result;
+    }
+
+    // endregion
+
+    // region Private
+
+    private boolean canConsumeElement(final SVGElementBase element) {
+        return !SVGClipPath.class.isAssignableFrom(element.getClass())
+               && !SVGDefinitions.class.isAssignableFrom(element.getClass())
+               && !SVGGradientBase.class.isAssignableFrom(element.getClass())
+               && !SVGCssStyle.class.isAssignableFrom(element.getClass())
+               && !SVGStop.class.isAssignableFrom(element.getClass());
     }
 
     // endregion

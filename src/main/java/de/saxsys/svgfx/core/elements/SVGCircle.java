@@ -18,7 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Circle;
 import org.xml.sax.Attributes;
 
@@ -45,11 +45,10 @@ public class SVGCircle extends SVGShapeBase<Circle> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGCircle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGCircle(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -57,7 +56,7 @@ public class SVGCircle extends SVGShapeBase<Circle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Circle createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Circle createResult(final SVGCssStyle ownStyle) throws SVGException {
 
         return new Circle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                           getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),

@@ -18,7 +18,6 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
 import de.saxsys.svgfx.css.definitions.Constants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -43,43 +42,42 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     // endregion
 
-    //region Static
+    // region Static
     /**
      * Determines the string which indicates that the type is css.
      */
     public static final String CSS_TYPE = "text/css";
 
-    //endregion
+    // endregion
 
-    //region Fields
+    // region Fields
 
     /**
      * Contains the characters read by this element.
      */
     private final StringBuilder characters = new StringBuilder();
 
-    //endregion
+    // endregion
 
-    //region Constructor
+    // region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGStyle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGStyle(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
-    //endregion
+    // endregion
 
-    //region SVGElementBase
+    // region SVGElementBase
 
     @Override
-    public boolean rememberElement() {
+    public boolean keepElement() {
         return false;
     }
 
@@ -104,20 +102,10 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
 
     /**
      * {@inheritDoc}
-     *
-     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
-     */
-    @Override
-    public boolean canConsumeResult() {
-        return !((this.getParent() instanceof SVGClipPath) || (this.getParent() instanceof SVGGroup));
-    }
-
-    /**
-     * {@inheritDoc}
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Set<SVGCssStyle> createResult(final SVGCssStyle ownStyle) throws SVGException {
 
         final Set<SVGCssStyle> result = new HashSet<>();
 
@@ -149,9 +137,9 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final StyleSupplier styleSupplier) throws SVGException {
+    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final SVGCssStyle ownStyle) throws SVGException {
 
     }
 
-    //endregion
+    // endregion
 }

@@ -89,7 +89,7 @@ public class SVGElementBaseTest {
         }
 
         @Override
-        public boolean rememberElement() {
+        public boolean keepElement() {
             return false;
         }
 

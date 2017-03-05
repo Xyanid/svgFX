@@ -21,7 +21,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import org.xml.sax.Attributes;
 
 import java.util.Optional;
@@ -49,11 +49,10 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGPath(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -61,7 +60,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.SVGPath createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle ownStyle) throws SVGException {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
         final Optional<SVGAttributeTypeString> path = getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class);
@@ -77,10 +76,10 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(final javafx.scene.shape.SVGPath result, final StyleSupplier styleSupplier) throws SVGException {
-        super.initializeResult(result, styleSupplier);
+    protected final void initializeResult(final javafx.scene.shape.SVGPath result, final SVGCssStyle ownStyle) throws SVGException {
+        super.initializeResult(result, ownStyle);
 
-        final Optional<SVGAttributeTypeFillRule> fillRule = styleSupplier.get().getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class);
+        final Optional<SVGAttributeTypeFillRule> fillRule = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class);
         if (fillRule.isPresent()) {
             result.setFillRule(fillRule.get().getValue());
         }

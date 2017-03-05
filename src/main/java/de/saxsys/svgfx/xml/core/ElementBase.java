@@ -29,21 +29,16 @@ import java.util.Map;
  * @param <TAttributeHolder>      the type of the {@link AttributeHolder} to be used
  * @param <TDocumentDataProvider> the type of the {@link IDocumentDataProvider} to be used
  * @param <TResult>               the type of result provided by the element
- * @param <TParent>               the type of parent of this element
  *
  * @author Xyanid on 24.10.2015.
  */
 public abstract class ElementBase<TAttributeType extends AttributeWrapper,
         TAttributeHolder extends AttributeHolder<TAttributeType>,
         TDocumentDataProvider extends IDocumentDataProvider, TResult,
-        TParent extends ElementBase<?, ?, TDocumentDataProvider, ?, ?, ?>,
-        TChild extends ElementBase<?, ?, TDocumentDataProvider, ?, ?, ?>> {
+        TChild extends ElementBase<?, ?, TDocumentDataProvider, ?, ?>> {
 
     //region Fields
-    /**
-     * The parent element of this element if any.
-     */
-    private final TParent parent;
+
 
     /**
      * the value of the element which is also its identifier.
@@ -74,7 +69,6 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
      *
      * @param name                 value of the element, must not be null
      * @param attributes           attributes to be used
-     * @param parent               parent of the element
      * @param documentDataProvider documentDataProvider to be used, must not be null
      * @param attributeHolder      the element that will contain the attributes of this element.
      *
@@ -82,7 +76,6 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
      */
     public ElementBase(final String name,
                        final Attributes attributes,
-                       final TParent parent,
                        final TDocumentDataProvider documentDataProvider,
                        final TAttributeHolder attributeHolder) throws IllegalArgumentException {
 
@@ -122,7 +115,6 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
             }
         }
 
-        this.parent = parent;
         this.children = new ArrayList<>();
         this.documentDataProvider = documentDataProvider;
     }
@@ -147,15 +139,6 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
      */
     public final Map<String, TAttributeType> getAttributes() {
         return Collections.unmodifiableMap(this.attributeHolder.getAttributes());
-    }
-
-    /**
-     * Gets the {@link #parent}.
-     *
-     * @return the {@link #parent}
-     */
-    public TParent getParent() {
-        return parent;
     }
 
     /**
@@ -202,7 +185,7 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
      *
      * @return true if the element will be kept, otherwise false.
      */
-    public abstract boolean rememberElement();
+    public abstract boolean keepElement();
 
     /**
      * Will be called when an element is started that represents this element.
@@ -231,13 +214,6 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
     public abstract void endProcessing() throws SAXException;
 
     /**
-     * Determines whether the result of this element will be requested or not. A call to this method should be made prior to the {@link #getResult()}.
-     *
-     * @return true if the element can be consume, otherwise false.
-     */
-    public abstract boolean canConsumeResult();
-
-    /**
      * Returns the result for the current element.
      *
      * @return result for the element
@@ -257,7 +233,7 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
 
         data.append("<").append(name);
 
-        this.attributeHolder.getAttributes().entrySet().forEach(attribute -> data.append(String.format(" %s:%s", attribute.getKey(), attribute.getValue())));
+        this.attributeHolder.getAttributes().forEach((key, value) -> data.append(String.format(" %s:%s", key, value)));
 
         data.append(">");
 

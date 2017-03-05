@@ -20,7 +20,7 @@ import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.geometry.Point2D;
@@ -56,9 +56,9 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
      */
-    protected SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider)
+    protected SVGGradientBase(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider)
             throws IllegalArgumentException {
-        super(name, attributes, parent, dataProvider);
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -66,48 +66,22 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     // region Override SVGElementBase
 
     @Override
-    public boolean rememberElement() {
+    public final boolean keepElement() {
         return false;
     }
 
     @Override
-    public void startProcessing() throws SAXException {}
+    public final void startProcessing() throws SAXException {}
 
     @Override
-    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return false always.
-     */
-    @Override
-    public boolean canConsumeResult() {
-        return false;
-    }
+    public final void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
     @Override
-    protected final void initializeResult(final TPaint paint, final StyleSupplier styleSupplier) throws SVGException {}
+    protected final void initializeResult(final TPaint paint, final SVGCssStyle styleSupplier) throws SVGException {}
 
     // endregion
 
-    // region Private
-
-    private void fillStopsOrFail(final List<Stop> stops, final List<SVGElementBase<?>> children) throws SVGException {
-        for (final SVGElementBase child : children) {
-            if (child instanceof SVGStop) {
-                try {
-                    stops.add(((SVGStop) child).getResult());
-                } catch (final SAXException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not create result for stop: %s", child));
-                }
-            }
-        }
-    }
-
-    // endregion
-
-    //region Public
+    // region Public
 
     /**
      * Gets the stops related to this gradient.
@@ -135,9 +109,9 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
         return stops;
     }
 
-    //endregion
+    // endregion
 
-    //region Protected
+    // region Protected
 
     /**
      * Uses the given x and y and applies the given {@link Transform}. After the call the x and y values will have been adjusted.
@@ -180,7 +154,23 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
         return usedTransform;
     }
 
-    //endregion
+    // endregion
+
+    // region Private
+
+    private void fillStopsOrFail(final List<Stop> stops, final List<SVGElementBase<?>> children) throws SVGException {
+        for (final SVGElementBase child : children) {
+            if (child instanceof SVGStop) {
+                try {
+                    stops.add(((SVGStop) child).getResult());
+                } catch (final SAXException e) {
+                    throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not create result for stop: %s", child));
+                }
+            }
+        }
+    }
+
+    // endregion
 
     // region Abstract
 

@@ -38,7 +38,7 @@ import java.io.StringReader;
  * @param <TElementFactory>       the type of the {@link IElementFactory} @author Xyanid on 24.10.2015.
  */
 public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocumentDataProvider, TElementFactory extends IElementFactory<TDocumentDataProvider, TElement>, TElement
-        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement, TElement>>
+        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement>>
         extends DefaultHandler
         implements EntityResolver {
 
@@ -131,6 +131,11 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * Determines the amount of successful parses.
      */
     private long successfulParses;
+
+    /**
+     * The previous processed element.
+     */
+    private TElement previousElement;
 
     /**
      * The currently processed element.
@@ -388,12 +393,13 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         setState(State.PARSING_ENTERING_ELEMENT);
 
-        final TElement nextElement = elementFactory.createElement(qName, attributes, currentElement, documentDataProvider);
+        final TElement nextElement = elementFactory.createElement(qName, attributes, documentDataProvider);
         if (nextElement != null) {
             // we create a tree here if the element will be kept and we have a parent for the element
-            if (currentElement != null && nextElement.rememberElement()) {
+            if (currentElement != null && nextElement.keepElement()) {
                 currentElement.addChild(nextElement);
             }
+            previousElement = currentElement;
             currentElement = nextElement;
             currentElement.startProcessing();
         }
@@ -411,8 +417,8 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
             currentElement.endProcessing();
 
             // clear the previous element that was processed before the current one, so we can also end its processing if need be
-            if (currentElement.getParent() != null) {
-                currentElement = currentElement.getParent();
+            if (previousElement != null) {
+                currentElement = previousElement;
             }
         }
 

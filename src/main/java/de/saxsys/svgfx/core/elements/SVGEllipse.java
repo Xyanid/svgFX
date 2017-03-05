@@ -18,7 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Ellipse;
 import org.xml.sax.Attributes;
 
@@ -49,7 +49,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
      * @param dataProvider dataprovider to be used
      */
     SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -57,7 +57,7 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
     //region Override SVGElementBase
 
     @Override
-    protected final Ellipse createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Ellipse createResult(final SVGCssStyle ownStyle) throws SVGException {
 
         return new Ellipse(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                            getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
