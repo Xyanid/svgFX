@@ -45,10 +45,9 @@ public class SVGEllipse extends SVGShapeBase<Ellipse> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGEllipse(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
+    SVGEllipse(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, dataProvider);
     }
 

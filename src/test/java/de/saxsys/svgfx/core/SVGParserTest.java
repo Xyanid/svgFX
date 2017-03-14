@@ -13,6 +13,7 @@
 
 package de.saxsys.svgfx.core;
 
+import javafx.scene.Group;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Rectangle;
 import org.junit.Assert;
@@ -62,13 +63,11 @@ public final class SVGParserTest {
     @Test
     public void parsingASVGFileThatHasADefsElementThatIsNotTheFirstElementInTheTreeWillStillAllowOtherElementsToUseTheReferencedElement() {
 
-        SVGParser parser;
-
-        parser = new SVGParser();
+        final SVGParser parser = new SVGParser();
 
         assertNull(parser.getResult());
 
-        URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/defsatlastposition.svg");
+        final URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/defsatlastposition.svg");
 
         assertNotNull(url);
 
@@ -78,10 +77,9 @@ public final class SVGParserTest {
             Assert.fail();
         }
 
-        assertNotNull(parser.getResult());
-        assertThat(parser.getResult().getChildren().get(0), instanceOf(Rectangle.class));
+        assertThat(parser.getResult(), instanceOf(Group.class));
 
-        final Rectangle rectangle = Rectangle.class.cast(parser.getResult().getChildren().get(0));
+        final Rectangle rectangle = Rectangle.class.cast(Group.class.cast(parser.getResult()).getChildren().get(0));
 
         assertThat(rectangle.getFill(), instanceOf(LinearGradient.class));
     }

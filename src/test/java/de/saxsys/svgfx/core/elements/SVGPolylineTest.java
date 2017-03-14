@@ -48,7 +48,7 @@ public final class SVGPolylineTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        final SVGPolyline polyline = new SVGPolyline(SVGPolyline.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGPolyline polyline = new SVGPolyline(SVGPolyline.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(6, polyline.getResult().getPoints().size());
         assertEquals(60.0d, polyline.getResult().getPoints().get(0), 0.01d);
@@ -72,7 +72,7 @@ public final class SVGPolylineTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        assertResultFails(SVGPolyline::new, SVGPolyline.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGPolyline::new, SVGPolyline.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -80,7 +80,7 @@ public final class SVGPolylineTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        assertResultFails(SVGPolyline::new, SVGPolyline.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGPolyline::new, SVGPolyline.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -96,7 +96,7 @@ public final class SVGPolylineTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGPolyline polyline = new SVGPolyline(SVGPolyline.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGPolyline polyline = new SVGPolyline(SVGPolyline.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         try {
             assertEquals(0, polyline.getResult().getPoints().size());

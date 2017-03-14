@@ -54,17 +54,17 @@ public final class SVGClipPathTest {
 
         final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        final SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, null, provider);
+        final SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, provider);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("50");
 
-        getChildren(clipPath).add(new SVGCircle("circle", attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle("circle", attributes, provider));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("25");
 
-        getChildren(clipPath).add(new SVGCircle("circle", attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle("circle", attributes, provider));
 
         assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).get().getValue());
         Assert.assertNotNull(clipPath.getResult());

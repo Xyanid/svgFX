@@ -85,12 +85,17 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     }
 
     @Override
-    public void endProcessing() throws SAXException {
+    public void startProcessing() throws SAXException {
         try {
             storeElementInDocumentDataProvider();
         } catch (final SVGException e) {
             throw new SAXException(e);
         }
+    }
+
+    @Override
+    public void endProcessing() throws SAXException {
+
     }
 
     // endregion
@@ -126,15 +131,15 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @throws SVGException if there is a transformation which has invalid data for its matrix.
      */
-    protected final Transform getTransformation() throws SVGException {
+    protected final Optional<Transform> getTransformation() throws SVGException {
 
         final Optional<SVGAttributeTypeTransform> transform = getAttributeHolder().getAttribute(CoreAttributeMapper.TRANSFORM.getName(), SVGAttributeTypeTransform.class);
 
         if (transform.isPresent()) {
-            return transform.get().getValue();
+            return Optional.of(transform.get().getValue());
         }
 
-        return null;
+        return Optional.empty();
     }
 
     // endregion

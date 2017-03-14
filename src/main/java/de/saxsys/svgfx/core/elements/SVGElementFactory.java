@@ -38,22 +38,22 @@ public class SVGElementFactory implements IElementFactory<SVGDocumentDataProvide
 
     static {
         try {
-            KNOWN_CLASSES.put(SVGCircle.ELEMENT_NAME, SVGCircle.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGClipPath.ELEMENT_NAME, SVGClipPath.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGDefinitions.ELEMENT_NAME, SVGDefinitions.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGEllipse.ELEMENT_NAME, SVGEllipse.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGGroup.ELEMENT_NAME, SVGGroup.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGLine.ELEMENT_NAME, SVGLine.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGLinearGradient.ELEMENT_NAME, SVGLinearGradient.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGPath.ELEMENT_NAME, SVGPath.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGPolygon.ELEMENT_NAME, SVGPolygon.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGPolyline.ELEMENT_NAME, SVGPolyline.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGRadialGradient.ELEMENT_NAME, SVGRadialGradient.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGRectangle.ELEMENT_NAME, SVGRectangle.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGRoot.ELEMENT_NAME, SVGRoot.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGStop.ELEMENT_NAME, SVGStop.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGStyle.ELEMENT_NAME, SVGStyle.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGUse.ELEMENT_NAME, SVGUse.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGCircle.ELEMENT_NAME, SVGCircle.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGClipPath.ELEMENT_NAME, SVGClipPath.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGDefinitions.ELEMENT_NAME, SVGDefinitions.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGEllipse.ELEMENT_NAME, SVGEllipse.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGGroup.ELEMENT_NAME, SVGGroup.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGLine.ELEMENT_NAME, SVGLine.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGLinearGradient.ELEMENT_NAME, SVGLinearGradient.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGPath.ELEMENT_NAME, SVGPath.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGPolygon.ELEMENT_NAME, SVGPolygon.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGPolyline.ELEMENT_NAME, SVGPolyline.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGRadialGradient.ELEMENT_NAME, SVGRadialGradient.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGRectangle.ELEMENT_NAME, SVGRectangle.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGRoot.ELEMENT_NAME, SVGRoot.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGStop.ELEMENT_NAME, SVGStop.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGStyle.ELEMENT_NAME, SVGStyle.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
+            KNOWN_CLASSES.put(SVGUse.ELEMENT_NAME, SVGUse.class.getDeclaredConstructor(String.class, Attributes.class, SVGDocumentDataProvider.class));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

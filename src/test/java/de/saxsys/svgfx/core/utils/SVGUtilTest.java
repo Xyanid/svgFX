@@ -144,7 +144,7 @@ public final class SVGUtilTest {
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", factory.createElement("circle", attributes, null, dataProvider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", factory.createElement("circle", attributes, dataProvider));
 
         final SVGCircle circle = SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
 

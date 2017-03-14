@@ -23,5 +23,5 @@ import org.xml.sax.Attributes;
 @FunctionalInterface
 public interface SVGElementCreator<TResult extends SVGElementBase> {
 
-    TResult apply(final String name, final Attributes attributes, final SVGElementBase parent, final SVGDocumentDataProvider dataProvider);
+    TResult apply(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider);
 }

@@ -64,7 +64,7 @@ public final class SVGUseTest {
 
         final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, provider));
 
         when(attributes.getLength()).thenReturn(3);
 
@@ -75,7 +75,7 @@ public final class SVGUseTest {
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.POSITION_Y.getName());
         when(attributes.getValue(2)).thenReturn("2");
 
-        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
+        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, provider);
 
         assertEquals("#test", use.getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class).get().getValue());
         assertEquals(1.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class).get().getValue(), 0.01d);
@@ -114,7 +114,7 @@ public final class SVGUseTest {
 
         final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, provider));
 
         when(attributes.getLength()).thenReturn(2);
 
@@ -123,7 +123,7 @@ public final class SVGUseTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL.getName());
         when(attributes.getValue(1)).thenReturn("black");
 
-        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
+        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, provider);
 
         assertEquals(Color.BLACK, ((Circle) use.getResult().getChildren().get(0)).getFill());
     }
@@ -145,14 +145,14 @@ public final class SVGUseTest {
 
         final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, provider));
 
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(0)).thenReturn("#test");
 
-        final SVGUse use1 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
+        final SVGUse use1 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, provider);
 
-        final SVGUse use2 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
+        final SVGUse use2 = new SVGUse(SVGUse.ELEMENT_NAME, attributes, provider);
 
         assertNotNull(use1.getResult());
         assertEquals(Circle.class, use1.getResult().getChildren().get(0).getClass());
@@ -181,12 +181,12 @@ public final class SVGUseTest {
 
         final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, null, provider));
+        ((Map<String, SVGElementBase>) Whitebox.getInternalState(provider, "data")).put("test", new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, provider));
 
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(0)).thenReturn("#something");
 
-        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, null, provider);
+        final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, provider);
 
         try {
             use.getResult();

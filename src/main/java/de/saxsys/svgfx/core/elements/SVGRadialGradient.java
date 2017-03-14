@@ -18,7 +18,6 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
@@ -84,7 +83,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     // region SVGGradientBase
 
     @Override
-    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException {
+    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
         return determineResult(boundingBox, elementTransform);
     }
 
@@ -92,7 +91,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
     // region Private
 
-    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException {
+    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
         final List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
@@ -129,7 +128,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                             final AtomicReference<Double> focusY,
                                             final AtomicReference<Double> radius,
                                             final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
-                                            final SVGAttributeTypeTransform elementTransform) throws SVGException {
+                                            final Transform elementTransform) throws SVGException {
 
         final Optional<Transform> usedTransform = getTransform(elementTransform);
 

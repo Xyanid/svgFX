@@ -55,7 +55,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px;}");
 
@@ -93,7 +93,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, dataProvider);
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, dataProvider);
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px;}");
 
         assertFalse(style.keepElement());
@@ -117,7 +117,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px}");
 
@@ -156,7 +156,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         final StringBuilder builder = (StringBuilder) Whitebox.getInternalState(style, "characters");
 

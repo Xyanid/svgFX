@@ -35,10 +35,9 @@ public class TestUtils {
     public static <TElement extends SVGElementBase<?>> void assertResultFails(final SVGElementCreator<TElement> creator,
                                                                               final String name,
                                                                               final Attributes attributes,
-                                                                              final SVGElementBase parent,
                                                                               final SVGDocumentDataProvider dataProvider,
                                                                               final Consumer<SAXException> exceptionPredicate) {
-        assertResultFails(creator.apply(name, attributes, parent, dataProvider), exceptionPredicate);
+        assertResultFails(creator.apply(name, attributes, dataProvider), exceptionPredicate);
     }
 
     /**

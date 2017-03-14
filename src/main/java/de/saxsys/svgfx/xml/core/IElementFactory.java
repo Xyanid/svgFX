@@ -32,5 +32,5 @@ public interface IElementFactory<TDataProvider extends IDocumentDataProvider, TE
      *
      * @return a new instance of an {@link ElementBase}
      */
-    TElement createElement(String name, Attributes attributes, TDataProvider dataProvider);
+    TElement createElement(final String name, final Attributes attributes, final TDataProvider dataProvider);
 }

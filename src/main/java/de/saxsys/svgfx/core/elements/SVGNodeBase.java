@@ -21,7 +21,6 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.scene.Node;
-import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -59,26 +58,17 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
     }
 
     @Override
-    public void startProcessing() throws SAXException {}
-
-    @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
     /**
-     * {@inheritDoc}Will apply the transformation to the element.
+     * {@inheritDoc}Will apply the transformation to the element and add clipPath if available.
      */
     @Override
     protected void initializeResult(final TNode result, final SVGCssStyle ownStyle) throws SVGException {
 
-        final Transform transform = getTransformation();
-        if (transform != null) {
-            result.getTransforms().add(transform);
-        }
+        getTransformation().ifPresent(transform -> result.getTransforms().add(transform));
 
-        final Node clip = getClipPath(ownStyle);
-        if (clip != null) {
-            result.setClip(clip);
-        }
+        getClipPath(ownStyle).ifPresent(result::setClip);
     }
 
     // endregion
@@ -95,15 +85,21 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #documentDataProvider}.
      * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
      */
-    private Node getClipPath(final SVGCssStyle ownStyle) throws SVGException {
+    private Optional<Node> getClipPath(final SVGCssStyle ownStyle) throws SVGException {
 
         final Optional<SVGAttributeTypeString> referenceIRI = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
 
         if (referenceIRI.isPresent() && StringUtil.isNotNullOrEmpty(referenceIRI.get().getValue())) {
-            return SVGUtil.resolveIRI(referenceIRI.get().getValue(), getDocumentDataProvider(), SVGClipPath.class).createAndInitializeResult(ownStyle);
+            final SVGClipPath clipPath = SVGUtil.resolveIRI(referenceIRI.get().getValue(), getDocumentDataProvider(), SVGClipPath.class);
+
+            if (this != clipPath) {
+                return Optional.of(clipPath.createAndInitializeResult(ownStyle));
+            } else {
+                return Optional.empty();
+            }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     // region

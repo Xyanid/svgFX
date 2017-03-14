@@ -16,6 +16,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
@@ -53,7 +54,7 @@ public final class SVGLineTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         when(attributes.getValue(3)).thenReturn("35");
 
-        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(50.0d, line.getResult().getStartX(), 0.01d);
         assertEquals(100.0d, line.getResult().getStartY(), 0.01d);
@@ -81,7 +82,7 @@ public final class SVGLineTest {
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -91,7 +92,7 @@ public final class SVGLineTest {
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -101,7 +102,7 @@ public final class SVGLineTest {
         when(attributes.getValue(2)).thenReturn("A");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -111,7 +112,7 @@ public final class SVGLineTest {
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("A");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -134,7 +135,7 @@ public final class SVGLineTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
@@ -143,7 +144,7 @@ public final class SVGLineTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
@@ -152,7 +153,7 @@ public final class SVGLineTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
@@ -161,37 +162,37 @@ public final class SVGLineTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
     }
 
-    //    /**
-    //     * The bounding rectangle described by the shape can be correctly determined.
-    //     */
-    //    @Test
-    //    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
-    //        final Attributes attributes = Mockito.mock(Attributes.class);
-    //
-    //        when(attributes.getLength()).thenReturn(4);
-    //
-    //        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-    //        when(attributes.getValue(0)).thenReturn("25.0");
-    //        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-    //        when(attributes.getValue(1)).thenReturn("100.0");
-    //        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
-    //        when(attributes.getValue(2)).thenReturn("15");
-    //        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
-    //        when(attributes.getValue(3)).thenReturn("35");
-    //
-    //        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
-    //
-    //        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox();
-    //
-    //        assertEquals(15.0d, boundingBox.getMinX().getValue(), 0.01d);
-    //        assertEquals(25.0d, boundingBox.getMaxX().getValue(), 0.01d);
-    //        assertEquals(35.0d, boundingBox.getMinY().getValue(), 0.01d);
-    //        assertEquals(100.0d, boundingBox.getMaxY().getValue(), 0.01d);
-    //    }
+    /**
+     * The bounding rectangle described by the shape can be correctly determined.
+     */
+    @Test
+    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
+        final Attributes attributes = Mockito.mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(4);
+
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
+        when(attributes.getValue(0)).thenReturn("25.0");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
+        when(attributes.getValue(1)).thenReturn("100.0");
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
+        when(attributes.getValue(2)).thenReturn("15");
+        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
+        when(attributes.getValue(3)).thenReturn("35");
+
+        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox(null);
+
+        assertEquals(15.0d, boundingBox.getMinX().getValue(), 0.01d);
+        assertEquals(25.0d, boundingBox.getMaxX().getValue(), 0.01d);
+        assertEquals(35.0d, boundingBox.getMinY().getValue(), 0.01d);
+        assertEquals(100.0d, boundingBox.getMaxY().getValue(), 0.01d);
+    }
 }

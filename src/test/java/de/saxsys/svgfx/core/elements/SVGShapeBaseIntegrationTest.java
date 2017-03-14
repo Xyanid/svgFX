@@ -17,7 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -28,6 +28,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.transform.Transform;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -70,20 +71,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
         when(attributes.getValue(0)).thenReturn("fill:#FF0000;opacity:0.5;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 
@@ -104,20 +105,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
         when(attributes.getValue(0)).thenReturn("fill:url(#test);opacity:0.5;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 
@@ -130,7 +131,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(SVGSupplier.class))).thenReturn(linearGradient);
+        when(gradientBase.createResult(any(SVGSupplier.class), any(Transform.class))).thenReturn(linearGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -150,20 +151,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
         when(attributes.getValue(0)).thenReturn("fill:url(#test);opacity:0.5;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 
@@ -176,7 +177,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(SVGSupplier.class))).thenReturn(radialGradient);
+        when(gradientBase.createResult(any(SVGSupplier.class), any(Transform.class))).thenReturn(radialGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -197,20 +198,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
         when(attributes.getValue(0)).thenReturn("stroke:#FF0000;stroke-opacity:0.5;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 
@@ -231,20 +232,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
         when(attributes.getValue(0)).thenReturn("stroke:url(#test);stroke-opacity:0.5;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(10.0d, 10.0d, 100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 
@@ -257,7 +258,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(SVGSupplier.class))).thenReturn(linearGradient);
+        when(gradientBase.createResult(any(SVGSupplier.class), any(Transform.class))).thenReturn(linearGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -277,20 +278,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.STYLE.getName());
         when(attributes.getValue(0)).thenReturn("stroke:url(#test);stroke-opacity:0.5;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 
@@ -303,7 +304,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(SVGSupplier.class))).thenReturn(radialGradient);
+        when(gradientBase.createResult(any(SVGSupplier.class), any(Transform.class))).thenReturn(radialGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -324,20 +325,20 @@ public class SVGShapeBaseIntegrationTest {
         when(attributes.getValue(0)).thenReturn(
                 "fill:#FF0000;stroke:#00FF00;stroke-type:inside;stroke-width:1;stroke-dasharray:2, 3, 4, 5;stroke-dashoffset:6;stroke-linejoin:bevel;stroke-linecap:butt;stroke-miterlimit:7;");
 
-        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, null, dataProvider) {
+        final SVGShapeBase<Rectangle> cut = new SVGShapeBase<Rectangle>("Test", attributes, dataProvider) {
             @Override
             public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
                 return null;
             }
 
             @Override
-            protected Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final StyleSupplier styleSupplier) throws SVGException {
-                super.initializeResult(result, styleSupplier);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
+                super.initializeResult(result, style);
             }
         };
 

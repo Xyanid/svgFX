@@ -67,9 +67,6 @@ public class SVGStop extends SVGElementBase<Stop> {
     }
 
     @Override
-    public void startProcessing() throws SAXException {}
-
-    @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
     /**

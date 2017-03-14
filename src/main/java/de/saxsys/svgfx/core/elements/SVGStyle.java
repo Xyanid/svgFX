@@ -81,9 +81,6 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
         return false;
     }
 
-    @Override
-    public void startProcessing() throws SAXException {}
-
     /**
      * {@inheritDoc}
      * Saves all characters in a StringBuilder to use them later

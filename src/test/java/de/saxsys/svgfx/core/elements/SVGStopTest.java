@@ -52,7 +52,7 @@ public final class SVGStopTest {
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_OPACITY.getName());
         when(attributes.getValue(2)).thenReturn("0.5");
 
-        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
         assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5d), stop.getResult().getColor());
@@ -75,7 +75,7 @@ public final class SVGStopTest {
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(2)).thenReturn("blue");
 
-        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
         assertEquals(Color.BLUE, stop.getResult().getColor());
@@ -97,7 +97,7 @@ public final class SVGStopTest {
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(2)).thenReturn("#000000");
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -106,7 +106,7 @@ public final class SVGStopTest {
         when(attributes.getValue(1)).thenReturn("A");
         when(attributes.getValue(2)).thenReturn("#000000");
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -115,14 +115,14 @@ public final class SVGStopTest {
         when(attributes.getValue(1)).thenReturn("1.0");
         when(attributes.getValue(2)).thenReturn("asdsagfa");
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_COLOR_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
 
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_COLOR_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -140,7 +140,7 @@ public final class SVGStopTest {
         when(attributes.getQName(0)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(0)).thenReturn("50.0");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
@@ -160,7 +160,7 @@ public final class SVGStopTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(1)).thenReturn("blue");
 
-        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(0.5d, stop.getResult().getOffset(), 0.01d);
     }

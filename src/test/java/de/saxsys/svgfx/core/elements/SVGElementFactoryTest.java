@@ -69,7 +69,7 @@ public final class SVGElementFactoryTest {
         assertEquals(16, KNOWN_CLASSES.size());
 
         for (final Map.Entry<String, Class<? extends SVGElementBase>> entry : classesToCreate.entrySet()) {
-            final ElementBase element = cut.createElement(entry.getKey(), attributes, null, dataProvider);
+            final ElementBase element = cut.createElement(entry.getKey(), attributes, dataProvider);
             assertNotNull(String.format(creationFailMessage, entry.getKey()), element);
             assertEquals(entry.getValue(), element.getClass());
         }

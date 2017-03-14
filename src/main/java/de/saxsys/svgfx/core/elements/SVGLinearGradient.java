@@ -19,7 +19,6 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
@@ -60,10 +59,9 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
+    SVGLinearGradient(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
         super(name, attributes, dataProvider);
     }
 
@@ -81,7 +79,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     // region Implement SVGGradientBase
 
     @Override
-    public LinearGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException {
+    public final LinearGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
         return determineResult(boundingBox, elementTransform);
     }
 
@@ -89,7 +87,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
     // region Private
 
-    private LinearGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox, final SVGAttributeTypeTransform elementTransform)
+    private LinearGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox, final Transform elementTransform)
             throws SVGException {
 
         final List<Stop> stops = getStops();
@@ -118,7 +116,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
                                             final AtomicReference<Double> endX,
                                             final AtomicReference<Double> endY,
                                             final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox,
-                                            final SVGAttributeTypeTransform elementTransform) throws SVGException {
+                                            final Transform elementTransform) throws SVGException {
 
         final Optional<Transform> usedTransform = getTransform(elementTransform);
 

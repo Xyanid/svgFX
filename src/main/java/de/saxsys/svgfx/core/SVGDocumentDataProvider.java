@@ -97,7 +97,7 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
      *
      * @throws IllegalArgumentException if either key is null or empty or data is null.
      */
-    public final void storeData(final String key, SVGElementBase data) {
+    public final void storeData(final String key, final SVGElementBase data) {
 
         if (StringUtil.isNullOrEmpty(key)) {
             throw new IllegalArgumentException("given key must not be null or empty");

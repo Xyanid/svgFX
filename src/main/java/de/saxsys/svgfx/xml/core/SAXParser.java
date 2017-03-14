@@ -133,6 +133,11 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     private long successfulParses;
 
     /**
+     * The first processed element.
+     */
+    private TElement firstElement;
+
+    /**
      * The previous processed element.
      */
     private TElement previousElement;
@@ -383,7 +388,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
     @Override
     public final void endDocument() throws SAXException {
-        result = leavingDocument(currentElement);
+        result = leavingDocument(firstElement);
         setState(State.FINISHED);
         currentElement = null;
     }
@@ -395,6 +400,9 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         final TElement nextElement = elementFactory.createElement(qName, attributes, documentDataProvider);
         if (nextElement != null) {
+            if (firstElement == null) {
+                firstElement = nextElement;
+            }
             // we create a tree here if the element will be kept and we have a parent for the element
             if (currentElement != null && nextElement.keepElement()) {
                 currentElement.addChild(nextElement);
@@ -413,13 +421,12 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
         setState(State.PARSING_LEAVING_ELEMENT);
 
         if (currentElement != null && currentElement.getName().equals(qName)) {
-
             currentElement.endProcessing();
+        }
 
-            // clear the previous element that was processed before the current one, so we can also end its processing if need be
-            if (previousElement != null) {
-                currentElement = previousElement;
-            }
+        // clear the previous element that was processed before the current one, so we can also end its processing if need be
+        if (previousElement != null) {
+            currentElement = previousElement;
         }
 
         setState(State.PARSING_LEAVING_ELEMENT_FINISHED);

@@ -31,6 +31,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
     protected void initializeResult(final TShape result, final SVGCssStyle ownStyle) throws SVGException {
         super.initializeResult(result, ownStyle);
 
-        applyStyle(result, ownStyle);
+        applyStyle(result, ownStyle, getTransformation().orElse(null));
     }
 
     // endregion
@@ -85,7 +86,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      *
      * @throws SVGException when an error occurs during the applying of the style
      */
-    private void applyStyle(final TShape shape, final SVGCssStyle ownStyle)
+    private void applyStyle(final TShape shape, final SVGCssStyle ownStyle, final Transform transform)
             throws SVGException {
 
         if (shape == null) {
@@ -96,7 +97,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         // apply fill
         final Optional<SVGAttributeTypePaint> fill = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class);
         if (fill.isPresent()) {
-            Paint paint = fill.get().getValue(() -> createBoundingBox(shape));
+            Paint paint = fill.get().getValue(() -> createBoundingBox(shape), transform);
 
             final Optional<SVGAttributeTypeDouble> opacity = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class);
             if (opacity.isPresent()) {
@@ -109,7 +110,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
         // apply stroke
         final Optional<SVGAttributeTypePaint> stroke = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class);
         if (stroke.isPresent()) {
-            Paint paint = stroke.get().getValue(() -> createBoundingBox(shape));
+            Paint paint = stroke.get().getValue(() -> createBoundingBox(shape), transform);
 
             final Optional<SVGAttributeTypeDouble> opacity = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_OPACITY.getName(), SVGAttributeTypeDouble.class);
             if (opacity.isPresent()) {

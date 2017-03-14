@@ -16,6 +16,7 @@ package de.saxsys.svgfx.core.elements;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -56,7 +57,7 @@ public final class SVGEllipseTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("35");
 
-        final SVGEllipse ellipse = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGEllipse ellipse = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(50.0d, ellipse.getResult().getCenterX(), 0.01d);
         assertEquals(100.0d, ellipse.getResult().getCenterY(), 0.01d);
@@ -83,7 +84,7 @@ public final class SVGEllipseTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -93,7 +94,7 @@ public final class SVGEllipseTest {
         when(attributes.getValue(2)).thenReturn("25");
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -103,7 +104,7 @@ public final class SVGEllipseTest {
         when(attributes.getValue(2)).thenReturn("A");
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -113,7 +114,7 @@ public final class SVGEllipseTest {
         when(attributes.getValue(2)).thenReturn("25");
         when(attributes.getValue(3)).thenReturn("A");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
         });
@@ -132,43 +133,43 @@ public final class SVGEllipseTest {
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
+        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
             assertThat(exception.getCause(), instanceOf(SVGException.class));
             assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
         });
     }
 
-    //    /**
-    //     * The bounding rectangle described by the shape can be correctly determined.
-    //     */
-    //    @Test
-    //    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
-    //        final Attributes attributes = Mockito.mock(Attributes.class);
-    //
-    //        when(attributes.getLength()).thenReturn(4);
-    //        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
-    //        when(attributes.getValue(0)).thenReturn("50.0");
-    //        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
-    //        when(attributes.getValue(1)).thenReturn("100.0");
-    //        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
-    //        when(attributes.getValue(2)).thenReturn("25");
-    //        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
-    //        when(attributes.getValue(3)).thenReturn("15");
-    //
-    //        final SVGEllipse circle = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
-    //
-    //        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = circle.createBoundingBox();
-    //
-    //        assertEquals(25.0d, boundingBox.getMinX().getValue(), 0.01d);
-    //        assertEquals(75.0d, boundingBox.getMaxX().getValue(), 0.01d);
-    //        assertEquals(85.0d, boundingBox.getMinY().getValue(), 0.01d);
-    //        assertEquals(115.0d, boundingBox.getMaxY().getValue(), 0.01d);
-    //    }
+    /**
+     * The bounding rectangle described by the shape can be correctly determined.
+     */
+    @Test
+    public void theBoundingBoxCanBeDeterminedCorrectly() throws SVGException {
+        final Attributes attributes = Mockito.mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(4);
+        when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
+        when(attributes.getValue(0)).thenReturn("50.0");
+        when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
+        when(attributes.getValue(1)).thenReturn("100.0");
+        when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
+        when(attributes.getValue(2)).thenReturn("25");
+        when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
+        when(attributes.getValue(3)).thenReturn("15");
+
+        final SVGEllipse circle = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = circle.createBoundingBox(null);
+
+        assertEquals(25.0d, boundingBox.getMinX().getValue(), 0.01d);
+        assertEquals(75.0d, boundingBox.getMaxX().getValue(), 0.01d);
+        assertEquals(85.0d, boundingBox.getMinY().getValue(), 0.01d);
+        assertEquals(115.0d, boundingBox.getMaxY().getValue(), 0.01d);
+    }
 }

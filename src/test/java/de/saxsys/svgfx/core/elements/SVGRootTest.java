@@ -44,7 +44,7 @@ public final class SVGRootTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertNull(root.getResult());
     }
@@ -60,7 +60,7 @@ public final class SVGRootTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, dataProvider);
+        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, dataProvider);
 
         root.startProcessing();
 

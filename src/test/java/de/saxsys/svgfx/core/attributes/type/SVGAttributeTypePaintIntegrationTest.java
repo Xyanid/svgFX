@@ -20,6 +20,7 @@ import de.saxsys.svgfx.core.elements.SVGGradientBase;
 import de.saxsys.svgfx.core.interfaces.SVGSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.transform.Transform;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -157,7 +158,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         cut.setText("url(#test)");
 
         try {
-            cut.getValue(mock(SVGSupplier.class));
+            cut.getValue(mock(SVGSupplier.class), mock(Transform.class));
         } catch (final SVGException e) {
             assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
@@ -175,7 +176,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         cut.setText("url(#test)");
 
         try {
-            cut.getValue(mock(SVGSupplier.class));
+            cut.getValue(mock(SVGSupplier.class), mock(Transform.class));
         } catch (final SVGException e) {
             assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
@@ -192,16 +193,16 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint expectedPaint = mock(Paint.class);
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
-        when(gradientBase.createResult(any(SVGSupplier.class))).thenReturn(expectedPaint);
+        when(gradientBase.createResult(any(SVGSupplier.class), any(Transform.class))).thenReturn(expectedPaint);
 
         dataProvider.storeData("test", gradientBase);
 
         cut.setText("url(#test)");
 
-        final Paint result = cut.getValue(() -> boundingBox);
+        final Paint result = cut.getValue(() -> boundingBox, null);
 
         assertSame(expectedPaint, result);
-        verify(gradientBase, times(1)).createResult(any(SVGSupplier.class));
+        verify(gradientBase, times(1)).createResult(any(SVGSupplier.class), any(Transform.class));
     }
 
     //endregion

@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core;
 
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.elements.SVGCircle;
-import de.saxsys.svgfx.core.elements.SVGElementFactory;
+import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGRectangle;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,9 @@ import org.xml.sax.Attributes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Ensure that {@link SVGDocumentDataProvider} works as intended.
@@ -41,8 +43,6 @@ public class SVGDocumentDataProviderTest {
 
     @Mock
     private Attributes attributes;
-
-    private final SVGElementFactory factory = new SVGElementFactory();
 
     private SVGDocumentDataProvider cut;
 
@@ -67,13 +67,19 @@ public class SVGDocumentDataProviderTest {
     @Test
     public void savingTheSameDataTwiceWillOverwriteTheOldData() throws Exception {
 
-        cut.storeData("test", factory.createElement("circle", attributes, null, cut));
+        cut.storeData("test", mock(SVGElementBase.class));
 
         assertEquals(1, cut.getUnmodifiableData().size());
 
-        cut.storeData("test", factory.createElement("rect", attributes, null, cut));
+        final SVGElementBase elementFirst = cut.getUnmodifiableData().get("test");
+
+        cut.storeData("test", mock(SVGElementBase.class));
 
         assertEquals(1, cut.getUnmodifiableData().size());
+
+        final SVGElementBase elementOther = cut.getUnmodifiableData().get("test");
+
+        assertNotSame(elementFirst, elementOther);
     }
 
     /**
@@ -82,7 +88,7 @@ public class SVGDocumentDataProviderTest {
     @Test
     public void storedDataCanBeRetrievedButUnsavedDataCanNot() throws SVGException {
 
-        cut.storeData("test", factory.createElement("circle", attributes, null, cut));
+        cut.storeData("test", mock(SVGCircle.class));
 
         assertTrue(cut.getData("test", SVGCircle.class).isPresent());
 
@@ -99,7 +105,7 @@ public class SVGDocumentDataProviderTest {
     @Test
     public void stylesCanBeAddedAndWillBeClearedWhenTheDocumentDataProviderIsCleared() {
 
-        cut.addStyle(new SVGCssStyle("test", cut));
+        cut.addStyle(mock(SVGCssStyle.class));
 
         assertEquals(1, cut.getUnmodifiableStyles().size());
 
@@ -115,7 +121,7 @@ public class SVGDocumentDataProviderTest {
     public void whenTheDocumentDataProviderIsClearedStoredDataAndStylesAreLost() throws Exception {
 
         cut.addStyle(new SVGCssStyle("test", cut));
-        cut.storeData("test", factory.createElement("circle", attributes, null, cut));
+        cut.storeData("test", mock(SVGElementBase.class));
 
         assertEquals(1, cut.getUnmodifiableData().size());
         assertEquals(1, cut.getUnmodifiableStyles().size());

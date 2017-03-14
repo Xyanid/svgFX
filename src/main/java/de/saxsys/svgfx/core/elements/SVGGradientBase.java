@@ -51,7 +51,6 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
@@ -69,9 +68,6 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     public final boolean keepElement() {
         return false;
     }
-
-    @Override
-    public final void startProcessing() throws SAXException {}
 
     @Override
     public final void processCharacterData(char[] ch, int start, int length) throws SAXException {}
@@ -129,21 +125,21 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     /**
      * Will be used to get the correct transformation for the gradient if any.
      *
-     * @param elementTransform the {@link SVGAttributeTypeTransform} supplied by the element that uses this gradient.
+     * @param elementTransform the {@link Transform} supplied by the element that uses this gradient.
      *
      * @return a new {@link Optional} with the correct {@link Transform} or {@link Optional#empty()} if there is no transform.
      *
      * @throws SVGException if there is a problem when the transformation is requested.
      */
-    protected Optional<Transform> getTransform(final SVGAttributeTypeTransform elementTransform) throws SVGException {
+    protected Optional<Transform> getTransform(final Transform elementTransform) throws SVGException {
         final Optional<SVGAttributeTypeTransform> ownTransform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
         final Optional<Transform> usedTransform;
 
         if (elementTransform != null) {
             if (ownTransform.isPresent()) {
-                usedTransform = Optional.of(elementTransform.getValue().createConcatenation(ownTransform.get().getValue()));
+                usedTransform = Optional.of(elementTransform.createConcatenation(ownTransform.get().getValue()));
             } else {
-                usedTransform = Optional.of(elementTransform.getValue());
+                usedTransform = Optional.of(elementTransform);
             }
         } else if (ownTransform.isPresent()) {
             usedTransform = Optional.of(ownTransform.get().getValue());
@@ -177,13 +173,14 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     /**
      * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
      *
-     * @param boundingBox the supplier used to get the bounding box of the shape.
+     * @param boundingBox      the supplier used to get the bounding box of the shape.
+     * @param elementTransform the {@link Transform} to apply.
      *
      * @return a new {@link TPaint}.
      *
      * @throws SVGException if an error occurs during the creation of the result.
      */
-    public abstract TPaint createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final SVGAttributeTypeTransform elementTransform) throws SVGException;
+    public abstract TPaint createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException;
 
     // endregion
 }
