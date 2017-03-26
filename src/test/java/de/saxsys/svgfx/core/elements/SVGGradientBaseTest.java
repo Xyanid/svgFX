@@ -85,12 +85,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(SVGCssStyle ownStyle) throws SVGException {
+            protected Color createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
                 return null;
             }
 
             @Override
-            public Color createResult(SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, Transform elementTransform) throws SVGException {
+            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -145,12 +145,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(SVGCssStyle ownStyle) throws SVGException {
+            protected Color createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
                 return null;
             }
 
             @Override
-            public Color createResult(SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, Transform elementTransform) throws SVGException {
+            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -197,12 +197,12 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(SVGCssStyle ownStyle) throws SVGException {
+            protected Color createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
                 return null;
             }
 
             @Override
-            public Color createResult(SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, Transform elementTransform) throws SVGException {
+            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };

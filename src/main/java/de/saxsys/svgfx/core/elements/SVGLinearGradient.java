@@ -70,7 +70,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     // region Override SVGElementBase
 
     @Override
-    protected final LinearGradient createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final LinearGradient createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         return determineResult(null, null);
     }
 

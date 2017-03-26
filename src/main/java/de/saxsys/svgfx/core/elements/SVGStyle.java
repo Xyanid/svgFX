@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.css.definitions.Constants;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -102,7 +103,8 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
      * This implementation does not use the given data
      */
     @Override
-    protected final Set<SVGCssStyle> createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Set<SVGCssStyle> createResult(final SVGCssStyle ownStyle,
+                                                  final Transform ownTransform) throws SVGException {
 
         final Set<SVGCssStyle> result = new HashSet<>();
 
@@ -134,7 +136,9 @@ public class SVGStyle extends SVGElementBase<Set<SVGCssStyle>> {
     }
 
     @Override
-    protected void initializeResult(final Set<SVGCssStyle> cssStyles, final SVGCssStyle ownStyle) throws SVGException {
+    protected void initializeResult(final Set<SVGCssStyle> cssStyles,
+                                    final SVGCssStyle ownStyle,
+                                    final Transform ownTransform) throws SVGException {
 
     }
 

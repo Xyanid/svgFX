@@ -23,6 +23,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -76,7 +77,7 @@ public class SVGStop extends SVGElementBase<Stop> {
      * {@link PresentationAttributeMapper#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
-    protected final Stop createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Stop createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         Color color = ownStyle.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.STOP_COLOR.getName(), Color.class, null);
         if (color == null) {
@@ -101,7 +102,9 @@ public class SVGStop extends SVGElementBase<Stop> {
     }
 
     @Override
-    protected final void initializeResult(final javafx.scene.paint.Stop stop, final SVGCssStyle ownStyle) throws SVGException {
+    protected final void initializeResult(final javafx.scene.paint.Stop stop,
+                                          final SVGCssStyle ownStyle,
+                                          final Transform ownTransform) throws SVGException {
     }
 
     //endregion

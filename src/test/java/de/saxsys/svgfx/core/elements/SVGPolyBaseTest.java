@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Transform;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
@@ -49,7 +50,7 @@ public final class SVGPolyBaseTest {
 
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -79,7 +80,7 @@ public final class SVGPolyBaseTest {
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -106,7 +107,7 @@ public final class SVGPolyBaseTest {
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -130,7 +131,7 @@ public final class SVGPolyBaseTest {
         final SVGPolyBase<Polygon> polyBase1 = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -148,7 +149,7 @@ public final class SVGPolyBaseTest {
         final SVGPolyBase<Polygon> polyBase2 = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -177,7 +178,7 @@ public final class SVGPolyBaseTest {
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -205,7 +206,7 @@ public final class SVGPolyBaseTest {
         final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(final SVGCssStyle style) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };

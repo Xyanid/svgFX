@@ -22,6 +22,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
         final Optional<SVGAttributeTypeString> path = getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class);
@@ -76,8 +77,10 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(final javafx.scene.shape.SVGPath result, final SVGCssStyle ownStyle) throws SVGException {
-        super.initializeResult(result, ownStyle);
+    protected final void initializeResult(final javafx.scene.shape.SVGPath result,
+                                          final SVGCssStyle ownStyle,
+                                          final Transform ownTransform) throws SVGException {
+        super.initializeResult(result, ownStyle, ownTransform);
 
         final Optional<SVGAttributeTypeFillRule> fillRule = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class);
         if (fillRule.isPresent()) {

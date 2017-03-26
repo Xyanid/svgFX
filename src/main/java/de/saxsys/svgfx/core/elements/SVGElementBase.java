@@ -27,6 +27,7 @@ import de.saxsys.svgfx.core.utils.StringUtil;
 import de.saxsys.svgfx.css.definitions.Constants;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.transform.Transform;
+import javafx.scene.transform.Translate;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -75,7 +76,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     public final TResult getResult() throws SAXException {
         if (result == null) {
             try {
-                result = createAndInitializeResult(null);
+                result = createAndInitializeResult(null, null);
             } catch (final SVGException e) {
                 throw new SAXException(e);
             }
@@ -111,15 +112,17 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @throws SVGException thrown when an exception during creation occurs.
      */
-    public final TResult createAndInitializeResult(final SVGCssStyle parentStyle) throws SVGException {
+    public final TResult createAndInitializeResult(final SVGCssStyle parentStyle, final Transform parentTransform) throws SVGException {
 
         final SVGCssStyle combinedStyle = getStyleAndResolveInheritance(parentStyle);
+        final Transform combinedTransform = combineTransform(parentTransform);
 
-        final TResult result = createResult(combinedStyle);
-        initializeResult(result, combinedStyle);
+        final TResult result = createResult(combinedStyle, combinedTransform);
+
+        initializeResult(result, combinedStyle, combinedTransform);
+
         return result;
     }
-
 
     //endregion
 
@@ -156,6 +159,15 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
         if (id.isPresent()) {
             getDocumentDataProvider().storeData(id.get().getValue(), this);
         }
+    }
+
+
+    private Transform combineTransform(final Transform otherTransform) throws SVGException {
+        final Optional<Transform> transform = getTransformation();
+
+        if (transform.isPresent() && otherTransform != null) {
+            return otherTransform.createConcatenation(transform.get());
+        } else if (transform.isPresent()) { return transform.get(); } else if (otherTransform != null) { return otherTransform; } else { return new Translate(); }
     }
 
     /**
@@ -397,25 +409,28 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     /**
      * Must be overwritten in the actual implementation to create a new result for this element based on the information available.
      *
-     * @param ownStyle the {@link SVGCssStyle} to use, which represents this elements style which is already resolved of inheritance and collision.
+     * @param ownStyle     the {@link SVGCssStyle} to use, which represents this elements style which is already resolved of inheritance and collision.
+     * @param ownTransform the {@link Transform} of this element.
      *
      * @return a new instance of the result or null of no result was created
      *
      * @throws SVGException will be thrown when an error during creation occurs
      */
-    protected abstract TResult createResult(final SVGCssStyle ownStyle) throws SVGException;
+    protected abstract TResult createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException;
 
     /**
-     * This method will be called in the {@link #createAndInitializeResult(SVGCssStyle)} and allows to modify the result such as applying a style or transformations. The given inheritanceResolver
+     * This method will be called in the {@link #createAndInitializeResult(SVGCssStyle, Transform)} and allows to modify the result such as applying a style or transformations. The given
+     * inheritanceResolver
      * should be used to retrieve such data, this simply is needed because some elements can actually be referenced e.g. {@link SVGUse} and their actual parent is not the one from which the
      * inherited style attributes can be retrieved.
      *
-     * @param result   the result which should be modified.
-     * @param ownStyle the {@link SVGCssStyle} to use, which represents this elements style which is already resolved of inheritance and collision
+     * @param result       the result which should be modified.
+     * @param ownStyle     the {@link SVGCssStyle} to use, which represents this elements style which is already resolved of inheritance and collision
+     * @param ownTransform the {@link Transform} of this element.
      *
      * @throws SVGException will be thrown when an error during modification
      */
-    protected abstract void initializeResult(final TResult result, final SVGCssStyle ownStyle) throws SVGException;
+    protected abstract void initializeResult(final TResult result, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException;
 
     // endregion
 }

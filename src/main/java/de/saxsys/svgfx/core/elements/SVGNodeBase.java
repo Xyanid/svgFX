@@ -21,6 +21,7 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -64,11 +65,11 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * {@inheritDoc}Will apply the transformation to the element and add clipPath if available.
      */
     @Override
-    protected void initializeResult(final TNode result, final SVGCssStyle ownStyle) throws SVGException {
+    protected void initializeResult(final TNode result, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         getTransformation().ifPresent(transform -> result.getTransforms().add(transform));
 
-        getClipPath(ownStyle).ifPresent(result::setClip);
+        getClipPath(ownStyle, ownTransform).ifPresent(result::setClip);
     }
 
     // endregion
@@ -85,7 +86,7 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #documentDataProvider}.
      * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
      */
-    private Optional<Node> getClipPath(final SVGCssStyle ownStyle) throws SVGException {
+    private Optional<Node> getClipPath(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         final Optional<SVGAttributeTypeString> referenceIRI = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
 
@@ -93,7 +94,7 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
             final SVGClipPath clipPath = SVGUtil.resolveIRI(referenceIRI.get().getValue(), getDocumentDataProvider(), SVGClipPath.class);
 
             if (this != clipPath) {
-                return Optional.of(clipPath.createAndInitializeResult(ownStyle));
+                return Optional.of(clipPath.createAndInitializeResult(ownStyle, ownTransform));
             } else {
                 return Optional.empty();
             }

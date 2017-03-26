@@ -75,12 +75,12 @@ public class SVGElementBaseTest {
         }
 
         @Override
-        protected Object createResult(final SVGCssStyle styleSupplier) throws SVGException {
+        protected Object createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
             return null;
         }
 
         @Override
-        protected void initializeResult(final Object o, final SVGCssStyle styleSupplier) throws SVGException {
+        protected void initializeResult(final Object o, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         }
 

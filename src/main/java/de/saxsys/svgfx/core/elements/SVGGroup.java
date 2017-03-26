@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -55,7 +56,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
     //region SVGElementBase
 
     @Override
-    protected final Group createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Group createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         final Group result = new Group();
 
         result.setOpacity(1.0d);
@@ -64,7 +65,7 @@ public class SVGGroup extends SVGNodeBase<Group> {
 
             final SVGElementBase actualChild = (SVGElementBase) child;
 
-            final Object childResult = actualChild.createAndInitializeResult(ownStyle);
+            final Object childResult = actualChild.createAndInitializeResult(ownStyle, ownTransform);
 
             if (childResult instanceof Node) {
                 result.getChildren().add((Node) childResult);

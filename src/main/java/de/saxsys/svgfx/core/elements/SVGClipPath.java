@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -53,7 +54,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
     // region SVGElementBase
 
     @Override
-    protected final Group createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Group createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         final Group result = new Group();
 
@@ -64,7 +65,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
                 // instead of letting the child use the clip path as its parent, we simply tell the child that the parent style to use is the style of the element using the clip path
                 final SVGElementBase actualChild = (SVGElementBase) child;
 
-                result.getChildren().add((Node) actualChild.createAndInitializeResult(ownStyle));
+                result.getChildren().add((Node) actualChild.createAndInitializeResult(ownStyle, ownTransform));
 
             } catch (final SVGException e) {
                 throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not get result from child %d", counter), e);

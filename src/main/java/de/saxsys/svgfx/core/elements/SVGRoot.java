@@ -17,6 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Group;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -77,12 +78,12 @@ public class SVGRoot extends SVGElementBase<Group> {
     }
 
     @Override
-    protected Group createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected Group createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         return null;
     }
 
     @Override
-    protected void initializeResult(final Group group, final SVGCssStyle ownStyle) throws SVGException {
+    protected void initializeResult(final Group group, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
     }
 

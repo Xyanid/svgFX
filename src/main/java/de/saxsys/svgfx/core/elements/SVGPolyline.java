@@ -18,6 +18,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polyline;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -54,7 +55,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final Polyline createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Polyline createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         return new Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

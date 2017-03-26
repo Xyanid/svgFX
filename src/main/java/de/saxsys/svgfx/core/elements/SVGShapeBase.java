@@ -69,10 +69,10 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * Applies the css style the the element if possible.
      */
     @Override
-    protected void initializeResult(final TShape result, final SVGCssStyle ownStyle) throws SVGException {
-        super.initializeResult(result, ownStyle);
+    protected void initializeResult(final TShape result, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
+        super.initializeResult(result, ownStyle, ownTransform);
 
-        applyStyle(result, ownStyle, getTransformation().orElse(null));
+        applyStyle(result, ownStyle, ownTransform);
     }
 
     // endregion

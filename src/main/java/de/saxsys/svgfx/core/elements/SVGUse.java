@@ -23,6 +23,7 @@ import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -64,7 +65,7 @@ public class SVGUse extends SVGNodeBase<Group> {
      * @throws SVGException if the {@link XLinkAttributeMapper#XLINK_HREF} is empty or null.
      */
     @Override
-    protected Group createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected Group createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         final SVGElementBase referencedElement = SVGUtil.resolveIRI(getAttributeHolder().getAttributeOrFail(XLinkAttributeMapper.XLINK_HREF.getName(),
                                                                                                             SVGAttributeTypeString.class).getValue(),
@@ -74,13 +75,13 @@ public class SVGUse extends SVGNodeBase<Group> {
         final Group result = new Group();
         result.setLayoutX(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
         result.setLayoutY(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
-        result.getChildren().add((Node) referencedElement.createAndInitializeResult(ownStyle));
+        result.getChildren().add((Node) referencedElement.createAndInitializeResult(ownStyle, ownTransform));
 
         return result;
     }
 
     @Override
-    protected void initializeResult(final Group result, final SVGCssStyle styleSupplier) throws SVGException {
+    protected void initializeResult(final Group result, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
     }
 
     // endregion

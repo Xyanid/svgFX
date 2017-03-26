@@ -17,6 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -65,12 +66,12 @@ public class SVGDefinitions extends SVGElementBase<Node> {
     public final void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
     @Override
-    protected final Node createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Node createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         return null;
     }
 
     @Override
-    protected final void initializeResult(final Node node, final SVGCssStyle ownStyle) throws SVGException {
+    protected final void initializeResult(final Node node, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
     }
 

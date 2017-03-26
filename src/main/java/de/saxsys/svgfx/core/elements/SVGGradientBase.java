@@ -73,7 +73,7 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     public final void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
     @Override
-    protected final void initializeResult(final TPaint paint, final SVGCssStyle styleSupplier) throws SVGException {}
+    protected final void initializeResult(final TPaint paint, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {}
 
     // endregion
 

@@ -19,6 +19,7 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -50,7 +51,7 @@ public class SVGNodeBaseTest {
         }
 
         @Override
-        protected Node createResult(final SVGCssStyle ownStyle) throws SVGException {
+        protected Node createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
             return null;
         }
     }
@@ -233,18 +234,18 @@ public class SVGNodeBaseTest {
 
     // region Private
 
-    private Optional<Node> getClipPath(final SVGNodeBase element) throws SVGException {
-        return getClipPath(element, SVGElementBaseTest.getStyle(element));
+    private Optional<Node> getClipPath(final SVGNodeBase<?> element) throws SVGException {
+        return getClipPath(element, SVGElementBaseTest.getStyle(element), element.getTransformation().orElse(null));
     }
 
     @SuppressWarnings ("unchecked")
-    private Optional<Node> getClipPath(final SVGNodeBase element, final SVGCssStyle style) throws SVGException {
+    private Optional<Node> getClipPath(final SVGNodeBase element, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
         try {
-            final Method method = SVGNodeBase.class.getDeclaredMethod("getClipPath", SVGCssStyle.class);
+            final Method method = SVGNodeBase.class.getDeclaredMethod("getClipPath", SVGCssStyle.class, Transform.class);
 
             method.setAccessible(true);
 
-            return Optional.class.cast(method.invoke(element, style));
+            return Optional.class.cast(method.invoke(element, style, ownTransform));
         } catch (final IllegalAccessException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Could not get method getClipPath", e.getCause());
         } catch (final InvocationTargetException e) {

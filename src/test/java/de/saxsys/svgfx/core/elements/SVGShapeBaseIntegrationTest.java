@@ -78,13 +78,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 
@@ -112,13 +112,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 
@@ -158,13 +158,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 
@@ -205,13 +205,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 
@@ -239,13 +239,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(10.0d, 10.0d, 100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 
@@ -285,13 +285,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 
@@ -332,13 +332,13 @@ public class SVGShapeBaseIntegrationTest {
             }
 
             @Override
-            protected Rectangle createResult(final SVGCssStyle style) throws SVGException {
+            protected Rectangle createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return new Rectangle(100.0d, 100.0d);
             }
 
             @Override
-            protected void initializeResult(final Rectangle result, final SVGCssStyle style) throws SVGException {
-                super.initializeResult(result, style);
+            protected void initializeResult(final Rectangle result, final SVGCssStyle style, final Transform ownTransform) throws SVGException {
+                super.initializeResult(result, style, ownTransform);
             }
         };
 

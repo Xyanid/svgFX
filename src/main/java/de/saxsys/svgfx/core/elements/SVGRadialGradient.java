@@ -73,17 +73,17 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     //region Override SVGGradientBase
 
     @Override
-    protected final RadialGradient createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final RadialGradient createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         return determineResult(null, null);
     }
-
 
     //endregion
 
     // region SVGGradientBase
 
     @Override
-    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
+    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
+                                       final Transform elementTransform) throws SVGException {
         return determineResult(boundingBox, elementTransform);
     }
 
@@ -91,7 +91,8 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
     // region Private
 
-    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
+    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
+                                           final Transform elementTransform) throws SVGException {
         final List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
@@ -110,10 +111,11 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         double diffY = focusY.get() - centerY.get();
 
         // here we check if x is 0 then use y or if y is 0 then use x, otherwise calculate
-        double distance = getDistance(diffX, diffY);
+        double focusDistance = getDistance(diffX, diffY);
 
         return new RadialGradient(Math.toDegrees(Math.atan2(diffY, diffX)),
-                                  distance > radius.get() ? 1.0d : distance / radius.get(),
+                                  // we need to adjust the focus distance to the radius here, eg focus distance of 0.5 with a radius of 0.5 is actually 0.25
+                                  focusDistance > radius.get() ? 1.0d : focusDistance / radius.get(),
                                   centerX.get(),
                                   centerY.get(),
                                   radius.get(),

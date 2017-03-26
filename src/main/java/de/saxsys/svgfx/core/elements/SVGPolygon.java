@@ -17,6 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -53,7 +54,7 @@ public class SVGPolygon extends SVGPolyBase<Polygon> {
     //region Override SVGElementBase
 
     @Override
-    protected final Polygon createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Polygon createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         return new Polygon(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

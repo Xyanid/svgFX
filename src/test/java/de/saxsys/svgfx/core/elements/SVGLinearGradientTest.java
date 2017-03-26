@@ -23,6 +23,7 @@ import de.saxsys.svgfx.core.definitions.enumerations.CycleMethodMapping;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.transform.Translate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -39,7 +40,6 @@ import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -452,11 +452,11 @@ public final class SVGLinearGradientTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getValue(0)).thenReturn("75");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        when(attributes.getValue(1)).thenReturn("125");
+        when(attributes.getValue(1)).thenReturn("100");
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
-        when(attributes.getValue(3)).thenReturn("150");
+        when(attributes.getValue(3)).thenReturn("125");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(4)).thenReturn(GradientUnit.USER_SPACE_ON_USE.getName());
         when(attributes.getQName(5)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
@@ -468,10 +468,8 @@ public final class SVGLinearGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("150");
 
-        //TODO implement
-        fail();
 
-        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
+        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(0.0d, 25.0d));
 
         assertEquals(0.5d, gradient.getStartX(), 0.01d);
         assertEquals(0.5d, gradient.getStartY(), 0.01d);
@@ -513,17 +511,17 @@ public final class SVGLinearGradientTest {
 
         when(attributes.getLength()).thenReturn(7);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        when(attributes.getValue(0)).thenReturn("75");
+        when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        when(attributes.getValue(1)).thenReturn("150");
+        when(attributes.getValue(1)).thenReturn("125");
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
-        when(attributes.getValue(2)).thenReturn("125");
+        when(attributes.getValue(2)).thenReturn("100");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
-        when(attributes.getValue(3)).thenReturn("200");
+        when(attributes.getValue(3)).thenReturn("175");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(4)).thenReturn(GradientUnit.USER_SPACE_ON_USE.getName());
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_TRANSFORM.getName());
-        when(attributes.getValue(5)).thenReturn("rotate(-90 100 175) translate(25 25)");
+        when(attributes.getValue(5)).thenReturn("translate(12.5 12.5)");
         when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(6)).thenReturn("#test");
 
@@ -533,15 +531,12 @@ public final class SVGLinearGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("200");
 
-        //TODO implement
-        fail();
+        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 12.5d));
 
-        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
-
-        assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.75d, gradient.getStartY(), 0.01d);
-        assertEquals(1.0d, gradient.getEndX(), 0.01d);
-        assertEquals(0.25d, gradient.getEndY(), 0.01d);
+        assertEquals(0.25d, gradient.getStartX(), 0.01d);
+        assertEquals(0.5d, gradient.getStartY(), 0.01d);
+        assertEquals(0.75d, gradient.getEndX(), 0.01d);
+        assertEquals(1.0d, gradient.getEndY(), 0.01d);
     }
 
     /**
@@ -578,11 +573,11 @@ public final class SVGLinearGradientTest {
 
         when(attributes.getLength()).thenReturn(6);
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
-        when(attributes.getValue(0)).thenReturn("0.75");
+        when(attributes.getValue(0)).thenReturn("0.5");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getValue(1)).thenReturn("0.25");
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
-        when(attributes.getValue(2)).thenReturn("0.85");
+        when(attributes.getValue(2)).thenReturn("0.75");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         when(attributes.getValue(3)).thenReturn("0.5");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
@@ -596,14 +591,11 @@ public final class SVGLinearGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("150");
 
-        //TODO implement
-        fail();
-
-        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
+        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 0.0d));
 
         assertEquals(0.75d, gradient.getStartX(), 0.01d);
         assertEquals(0.25d, gradient.getStartY(), 0.01d);
-        assertEquals(0.85d, gradient.getEndX(), 0.01d);
+        assertEquals(1.0d, gradient.getEndX(), 0.01d);
         assertEquals(0.5d, gradient.getEndY(), 0.01d);
     }
 
@@ -643,15 +635,15 @@ public final class SVGLinearGradientTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getValue(0)).thenReturn("0.25");
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
-        when(attributes.getValue(1)).thenReturn("0.5");
+        when(attributes.getValue(1)).thenReturn("0.25");
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getValue(2)).thenReturn("0.75");
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
-        when(attributes.getValue(3)).thenReturn("1");
+        when(attributes.getValue(3)).thenReturn("0.5");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(4)).thenReturn(GradientUnit.OBJECT_BOUNDING_BOX.getName());
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_TRANSFORM.getName());
-        when(attributes.getValue(5)).thenReturn("rotate(-90 100 175) translate(25 25)");
+        when(attributes.getValue(5)).thenReturn("translate(12.5 0)");
         when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(6)).thenReturn("#test");
 
@@ -661,15 +653,12 @@ public final class SVGLinearGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("200");
 
-        //TODO implement
-        fail();
-
-        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
+        final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 25.0d));
 
         assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.75d, gradient.getStartY(), 0.01d);
+        assertEquals(0.5d, gradient.getStartY(), 0.01d);
         assertEquals(1.0d, gradient.getEndX(), 0.01d);
-        assertEquals(0.25d, gradient.getEndY(), 0.01d);
+        assertEquals(0.75d, gradient.getEndY(), 0.01d);
 
 
     }

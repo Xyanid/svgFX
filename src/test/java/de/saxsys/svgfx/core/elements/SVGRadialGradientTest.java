@@ -23,6 +23,7 @@ import de.saxsys.svgfx.core.definitions.enumerations.CycleMethodMapping;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
+import javafx.scene.transform.Translate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -38,7 +39,6 @@ import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -464,7 +464,7 @@ public final class SVGRadialGradientTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("125");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        when(attributes.getValue(4)).thenReturn("50");
+        when(attributes.getValue(4)).thenReturn("100");
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(5)).thenReturn(GradientUnit.USER_SPACE_ON_USE.getName());
         when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
@@ -476,16 +476,13 @@ public final class SVGRadialGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("200");
 
-        //TODO implement
-        fail();
+        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(-25.0d, -25.0d));
 
-        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
-
-        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.75d, gradient.getCenterY(), 0.01d);
-        assertEquals(1.0, gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(0.5d, gradient.getRadius(), 0.01d);
+        assertEquals(0.25d, gradient.getCenterX(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterY(), 0.01d);
+        assertEquals(Math.hypot(0.25, 0.5), gradient.getFocusDistance(), 0.01d);
+        assertEquals(Math.toDegrees(Math.atan2(0.0d - 0.5d, 0.5d - 0.25d)), gradient.getFocusAngle(), 0.01d);
+        assertEquals(1.0d, gradient.getRadius(), 0.01d);
     }
 
     /**
@@ -530,11 +527,11 @@ public final class SVGRadialGradientTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("150");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        when(attributes.getValue(4)).thenReturn("50");
+        when(attributes.getValue(4)).thenReturn("100");
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(5)).thenReturn(GradientUnit.USER_SPACE_ON_USE.getName());
         when(attributes.getQName(6)).thenReturn(CoreAttributeMapper.GRADIENT_TRANSFORM.getName());
-        when(attributes.getValue(6)).thenReturn("translate(-150 -125) matrix(2 0 0 1 0 0) translate(25 100)");
+        when(attributes.getValue(6)).thenReturn("translate(25 0)");
         when(attributes.getQName(7)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(7)).thenReturn("#test");
 
@@ -544,15 +541,12 @@ public final class SVGRadialGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("200");
 
-        //TODO implement
-        fail();
+        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(25d, 25d));
 
-        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
-
-        assertEquals(0.0d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.0d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.5, 0.25), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.5d)), gradient.getFocusAngle(), 0.01d);
+        assertEquals(0.75d, gradient.getCenterX(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterY(), 0.01d);
+        assertEquals(Math.hypot(0.25, 0.25), gradient.getFocusDistance(), 0.01d);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.25d)), gradient.getFocusAngle(), 0.01d);
         assertEquals(1.0d, gradient.getRadius(), 0.01d);
     }
 
@@ -597,23 +591,25 @@ public final class SVGRadialGradientTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("0.25");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        when(attributes.getValue(4)).thenReturn("0.5");
+        when(attributes.getValue(4)).thenReturn("1.0");
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(5)).thenReturn(GradientUnit.OBJECT_BOUNDING_BOX.getName());
         when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(6)).thenReturn("#test");
 
-        //TODO implement
-        fail();
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = new SVGAttributeTypeRectangle.SVGTypeRectangle(new SVGDocumentDataProvider());
+        boundingBox.getMinX().setText("50");
+        boundingBox.getMaxX().setText("150");
+        boundingBox.getMinY().setText("100");
+        boundingBox.getMaxY().setText("200");
 
-        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> new SVGAttributeTypeRectangle.SVGTypeRectangle(
-                dataProvider), null);
+        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(0.0d, 25.0d));
 
         assertEquals(0.5d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.75d, gradient.getCenterY(), 0.01d);
-        assertEquals(1.0, gradient.getFocusDistance(), 0.01d);
+        assertEquals(1.0d, gradient.getCenterY(), 0.01d);
+        assertEquals(Math.hypot(0.25, 0.5), gradient.getFocusDistance(), 0.01d);
         assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(0.5d, gradient.getRadius(), 0.01d);
+        assertEquals(1.0d, gradient.getRadius(), 0.01d);
     }
 
     /**
@@ -658,11 +654,11 @@ public final class SVGRadialGradientTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.FOCUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("0.5");
         when(attributes.getQName(4)).thenReturn(CoreAttributeMapper.RADIUS.getName());
-        when(attributes.getValue(4)).thenReturn("0.5");
+        when(attributes.getValue(4)).thenReturn("1.0");
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.GRADIENT_UNITS.getName());
         when(attributes.getValue(5)).thenReturn(GradientUnit.OBJECT_BOUNDING_BOX.getName());
         when(attributes.getQName(6)).thenReturn(CoreAttributeMapper.GRADIENT_TRANSFORM.getName());
-        when(attributes.getValue(6)).thenReturn("translate(-150 -125) matrix(2 0 0 1 0 0) translate(25 100)");
+        when(attributes.getValue(6)).thenReturn("translate(12.5 0)");
         when(attributes.getQName(7)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(7)).thenReturn("#test");
 
@@ -672,15 +668,12 @@ public final class SVGRadialGradientTest {
         boundingBox.getMinY().setText("100");
         boundingBox.getMaxY().setText("200");
 
-        //TODO implement
-        fail();
+        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 25.0d));
 
-        final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
-
-        assertEquals(0.0d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.0d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.5, 0.25), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.5d)), gradient.getFocusAngle(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterY(), 0.01d);
+        assertEquals(Math.hypot(0.25, 0.25), gradient.getFocusDistance(), 0.01d);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.25d)), gradient.getFocusAngle(), 0.01d);
         assertEquals(1.0d, gradient.getRadius(), 0.01d);
     }
 

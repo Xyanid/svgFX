@@ -20,6 +20,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Line;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -56,7 +57,7 @@ public class SVGLine extends SVGShapeBase<Line> {
     //region Override SVGElementBase
 
     @Override
-    protected final Line createResult(final SVGCssStyle ownStyle) throws SVGException {
+    protected final Line createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         return new Line(getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_X.getName(), SVGAttributeTypeLength.class).getValue(),
                         getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_Y.getName(), SVGAttributeTypeLength.class).getValue(),
