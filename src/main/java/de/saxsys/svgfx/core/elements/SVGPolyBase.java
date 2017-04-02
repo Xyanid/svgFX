@@ -36,25 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TShape> {
 
-    // region Static
-
-    /**
-     * Determines the delimiter that separated a pair of points.
-     */
-    private static char POINTS_DELIMITER = ' ';
-
-    /**
-     * Determines the delimiter that separated a the positions of a point.
-     */
-    private static char POSITION_DELIMITER = ',';
-
-    /**
-     * Determines the delimiter that separated a the positions of a point.
-     */
-    private static String POSITION_DELIMITER_STRING = String.valueOf(POSITION_DELIMITER);
-
-    // endregion
-
     //region Constructor
 
     /**

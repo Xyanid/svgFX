@@ -16,7 +16,11 @@ package de.saxsys.svgfx.core.attributes.type;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Constants;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.util.Pair;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class represents a svg length content type
@@ -109,15 +113,15 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
     @Override
     protected Pair<SVGTypePoint, Void> getValueAndUnit(final String text) throws SVGException {
 
-        final String[] pointSplit = text.split(Constants.POSITION_DELIMITER_STRING);
+        final List<String> pointSplit = StringUtil.splitByDelimiters(text, Arrays.asList(Constants.COMMA, Constants.WHITESPACE), StringUtil::isNotNullOrEmptyAfterTrim);
 
-        if (pointSplit.length != 2) {
+        if (pointSplit.size() != 2) {
             throw new SVGException(SVGException.Reason.INVALID_POINT_FORMAT, "point does not provide x and y position");
         }
 
         final SVGTypePoint point = new SVGTypePoint(getDocumentDataProvider());
-        point.getX().setText(pointSplit[0].trim());
-        point.getY().setText(pointSplit[1].trim());
+        point.getX().setText(pointSplit.get(0).trim());
+        point.getY().setText(pointSplit.get(1).trim());
 
         return new Pair<>(point, null);
     }

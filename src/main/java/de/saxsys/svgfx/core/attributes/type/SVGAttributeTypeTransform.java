@@ -29,8 +29,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-import static de.saxsys.svgfx.core.definitions.Constants.POINTS_DELIMITER;
-import static de.saxsys.svgfx.core.definitions.Constants.POSITION_DELIMITER;
+import static de.saxsys.svgfx.core.definitions.Constants.COMMA;
+import static de.saxsys.svgfx.core.definitions.Constants.WHITESPACE;
 
 /**
  * This class represents a svg transform content type. This means it will contains matrix transformation.
@@ -169,7 +169,9 @@ public class SVGAttributeTypeTransform extends SVGAttributeType<Transform, Void>
             actualData = actualData.substring(0, actualData.length());
         }
 
-        final List<String> values = StringUtil.splitByDelimiters(actualData, Arrays.asList(POINTS_DELIMITER, POSITION_DELIMITER));
+        final List<String> values = StringUtil.splitByDelimiters(actualData,
+                                                                 Arrays.asList(WHITESPACE, COMMA),
+                                                                 StringUtil::isNotNullOrEmptyAfterTrim);
 
         switch (matrix) {
             // a matrix will create an affine matrix and has 6 values

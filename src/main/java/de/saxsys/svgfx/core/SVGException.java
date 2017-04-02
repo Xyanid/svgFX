@@ -97,6 +97,10 @@ public class SVGException extends Exception {
          */
         INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
         /**
+         * Meaning that a path command could not be created because the number of elements in the path was not correct.
+         */
+        INVALID_PATH_COMMAND_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
+        /**
          * Meaning the value that should represent a valid {@link javafx.scene.shape.StrokeLineCap} can not be converted into it.
          */
         INVALID_STROKE_LINE_CAP,
@@ -125,7 +129,6 @@ public class SVGException extends Exception {
     // endregion
 
     // region Fields
-
 
     private final Reason reason;
 

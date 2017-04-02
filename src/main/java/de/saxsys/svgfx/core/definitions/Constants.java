@@ -35,17 +35,17 @@ public final class Constants {
     /**
      * Determines the delimiter that separated a pair of points.
      */
-    public static char POINTS_DELIMITER = ' ';
+    public static char WHITESPACE = ' ';
 
     /**
      * Determines the delimiter that separated a the positions of a point.
      */
-    public static char POSITION_DELIMITER = ',';
+    public static char COMMA = ',';
 
     /**
      * Determines the delimiter that separated a the positions of a point.
      */
-    public static String POSITION_DELIMITER_STRING = String.valueOf(POSITION_DELIMITER);
+    public static String COMMA_STRING = String.valueOf(COMMA);
 
     //endregion
 

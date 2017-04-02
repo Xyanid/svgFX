@@ -141,7 +141,9 @@ public class SVGAttributeTypeRectangle extends SVGAttributeType<SVGAttributeType
     @Override
     protected Pair<SVGTypeRectangle, Void> getValueAndUnit(final String text) throws SVGException {
 
-        final List<String> pointSplit = StringUtil.splitByDelimiters(text, Arrays.asList(Constants.POINTS_DELIMITER, Constants.POSITION_DELIMITER));
+        final List<String> pointSplit = StringUtil.splitByDelimiters(text,
+                                                                     Arrays.asList(Constants.WHITESPACE, Constants.COMMA),
+                                                                     StringUtil::isNotNullOrEmptyAfterTrim);
 
         if (pointSplit.size() != 4) {
             throw new SVGException(SVGException.Reason.INVALID_RECTANGLE_FORMAT, String.format("%s does not provide minX, minY, maxX and maxY", text));
