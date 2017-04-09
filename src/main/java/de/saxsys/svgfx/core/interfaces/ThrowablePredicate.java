@@ -13,25 +13,31 @@
 
 package de.saxsys.svgfx.core.interfaces;
 
-import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.utils.StringUtil;
-
-import java.util.List;
+import java.util.function.Predicate;
 
 /**
- * This interface is used to split an {@link String} and consume the data after each split.
- *
- * @author Xyanid on 02.04.2017.
- * @see StringUtil#splitByDelimiters(String, List, SplitConsumer)
+ * Same as {@link Predicate} but allows for checked {@link Exception}s to be thrown.
  */
 @FunctionalInterface
-public interface SplitConsumer {
+public interface ThrowablePredicate<T, E extends Exception> extends Predicate<T> {
+
+    @Override
+    default boolean test(final T data) {
+        try {
+            return testOrFail(data);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
-     * Consumes split data.
+     * Tests the given data or failes
      *
-     * @param delimiter the delimiter in front of the data.
-     * @param data      the data behind the delimiter.
+     * @param data the data to be tested.
+     *
+     * @return true if the data is what was expected otherwise false.
+     *
+     * @throws E if any error occurs.
      */
-    void consume(final Character delimiter, final String data) throws SVGException;
+    boolean testOrFail(final T data) throws E;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,16 +14,18 @@
 package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.interfaces.SplitPredicate;
+import de.saxsys.svgfx.core.interfaces.ThrowablePredicate;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This class will test all methods of the {@link StringUtil}
@@ -65,7 +67,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, SplitPredicate)} will throw the expected exceptions.
+     * Ensures that {@link StringUtil#splitByDelimiters(String, Collection, ThrowablePredicate)} will throw the expected exceptions.
      */
     @Test (expected = SVGException.class)
     public void ensureThatAnExceptionIsThrownWhenThe() throws SVGException {
@@ -75,7 +77,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, SplitPredicate)} is able to split a string which contains multiple
+     * Ensures that {@link StringUtil#splitByDelimiters(String, Collection, ThrowablePredicate)} is able to split a string which contains multiple
      * delimiters.
      */
     @Test
@@ -96,7 +98,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, SplitPredicate)} will only process {@link String}s without
+     * Ensures that {@link StringUtil#splitByDelimiters(String, Collection, ThrowablePredicate)} will only process {@link String}s without
      * delimiters.
      */
     @Test
@@ -120,5 +122,31 @@ public final class StringUtilTest {
         assertEquals("is", result.get(2));
         assertEquals("a", result.get(3));
         assertEquals("test", result.get(4));
+    }
+
+    @Test
+    public void ensureThatIsPossibleToDetermineIfStringAreEmptyOrNull() {
+        assertTrue(StringUtil.isNullOrEmpty(null));
+        assertTrue(StringUtil.isNullOrEmpty(""));
+        assertFalse(StringUtil.isNullOrEmpty(" "));
+        assertFalse(StringUtil.isNullOrEmpty("A"));
+
+        assertFalse(StringUtil.isNotNullOrEmpty(null));
+        assertFalse(StringUtil.isNotNullOrEmpty(""));
+        assertTrue(StringUtil.isNotNullOrEmpty(" "));
+        assertTrue(StringUtil.isNotNullOrEmpty("A"));
+    }
+
+    @Test
+    public void ensureThatIsPossibleToDetermineIfStringAreEmptyOrNullAfterBeingTrimmed() {
+        assertTrue(StringUtil.isNullOrEmptyAfterTrim(null));
+        assertTrue(StringUtil.isNullOrEmptyAfterTrim(""));
+        assertTrue(StringUtil.isNullOrEmptyAfterTrim(" "));
+        assertFalse(StringUtil.isNullOrEmpty("A"));
+
+        assertFalse(StringUtil.isNotNullOrEmptyAfterTrim(null));
+        assertFalse(StringUtil.isNotNullOrEmptyAfterTrim(""));
+        assertFalse(StringUtil.isNotNullOrEmptyAfterTrim(" "));
+        assertTrue(StringUtil.isNotNullOrEmpty("A"));
     }
 }

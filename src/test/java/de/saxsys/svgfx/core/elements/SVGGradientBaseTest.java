@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.interfaces.SVGSupplier;
+import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import javafx.scene.transform.Transform;
@@ -90,7 +90,7 @@ public final class SVGGradientBaseTest {
             }
 
             @Override
-            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
+            public Color createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -150,7 +150,7 @@ public final class SVGGradientBaseTest {
             }
 
             @Override
-            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
+            public Color createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -202,7 +202,7 @@ public final class SVGGradientBaseTest {
             }
 
             @Override
-            public Color createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
+            public Color createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };

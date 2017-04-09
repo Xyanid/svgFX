@@ -11,20 +11,72 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.utils;
+package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.elements.SVGPath;
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used to perform path related operation for a {@link SVGPath}.
+ * This represents a bezier curve command in a svg path which will either be a {@link CubicBezierCurveCommand}, {@link ShortCubicBezierCurveCommand}, {@link QuadraticBezierCurveCommand}
+ * or {@link ShortQuadraticBezierCurveCommand}. This class is immutable, so each instance represents a separate position.
  *
  * @author Xyanid on 01.04.2017.
  */
-public class PathUtils {
+public abstract class BezierCurveCommand extends PathCommand {
+
+    // region Constants
+
+
+    // endregion
+
+    // region Field
+
+    /**
+     * Creates a new instance and expects a {@link String} that contains desired curve data.
+     *
+     * @param data the data to be used.
+     *
+     * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
+     */
+    BezierCurveCommand(final String data) throws PathException {
+    }
+
+    // endregion
+
+    // region Implement PathCommand
+
+    @Override
+    public final Point2D getNextPosition(final Point2D position) {
+        return null;
+    }
+
+    @Override
+    public final Rectangle getBoundingBox(final Point2D position) {
+        final Point2D nextPosition = getNextPosition(position);
+
+        return null;
+    }
+
+    // endregion
+
+    // region Private
+
+    /**
+     * Parses the given data as a tuple of two numeric values separated by whitespaces and returns their values in a {@link Point2D}.
+     *
+     * @param data the data to consumeOrFail.
+     *
+     * @return a new {@link Point2D} containing the values.
+     *
+     * @throws PathException if the given data is null, the amount of values is not exactly two or the values are not numerical.
+     */
+    private Point2D consumeData(final String data) throws PathException {
+        return null;
+    }
 
     /**
      * Returns a list of values that represent the local extrema for a cubic bezier curve.
@@ -136,5 +188,6 @@ public class PathUtils {
 
         return new Point2D(x, y);
     }
+    //endregion
 
 }

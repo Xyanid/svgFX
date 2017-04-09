@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
-import de.saxsys.svgfx.core.interfaces.SVGSupplier;
+import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -79,7 +79,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
     // region Implement SVGGradientBase
 
     @Override
-    public final LinearGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox, final Transform elementTransform) throws SVGException {
+    public final LinearGradient createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
         return determineResult(boundingBox, elementTransform);
     }
 
@@ -87,7 +87,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
     // region Private
 
-    private LinearGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox, final Transform elementTransform)
+    private LinearGradient determineResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> elementBoundingBox, final Transform elementTransform)
             throws SVGException {
 
         final List<Stop> stops = getStops();
@@ -115,7 +115,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
                                             final AtomicReference<Double> startY,
                                             final AtomicReference<Double> endX,
                                             final AtomicReference<Double> endY,
-                                            final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> elementBoundingBox,
+                                            final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> elementBoundingBox,
                                             final Transform elementTransform) throws SVGException {
 
         final Optional<Transform> usedTransform = getTransform(elementTransform);
@@ -131,9 +131,9 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
             }
 
             usedTransform.ifPresent(transform -> transformPosition(startX, startY, endX, endY, transform));
-            convertToObjectBoundingBox(startX, startY, endX, endY, elementBoundingBox.get());
+            convertToObjectBoundingBox(startX, startY, endX, endY, elementBoundingBox.getOrFail());
         } else if (usedTransform.isPresent()) {
-            final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = elementBoundingBox.get();
+            final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = elementBoundingBox.getOrFail();
             convertFromObjectBoundingBox(startX, startY, endX, endY, rectangle);
             transformPosition(startX, startY, endX, endY, usedTransform.get());
             convertToObjectBoundingBox(startX, startY, endX, endY, rectangle);

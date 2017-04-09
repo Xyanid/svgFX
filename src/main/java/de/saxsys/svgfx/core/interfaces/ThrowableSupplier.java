@@ -13,15 +13,31 @@
 
 package de.saxsys.svgfx.core.interfaces;
 
-import de.saxsys.svgfx.core.SVGException;
+import java.util.function.Supplier;
 
 /**
- * Same interfaces as the {@link java.util.function.Supplier}, allows to throw {@link SVGException}s
+ * Same interfaces as the {@link Supplier}, allows to throw checked {@link Exception}s to be thrown.
  *
  * @author Xyanid on 04.02.2017.
  */
 @FunctionalInterface
-public interface SVGSupplier<T> {
+public interface ThrowableSupplier<T, E extends Exception> extends Supplier<T> {
 
-    T get() throws SVGException;
+    @Override
+    default T get() {
+        try {
+            return getOrFail();
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Gets the data or fails in the process.
+     *
+     * @return the desired data.
+     *
+     * @throws E if any exception occurs.
+     */
+    T getOrFail() throws E;
 }

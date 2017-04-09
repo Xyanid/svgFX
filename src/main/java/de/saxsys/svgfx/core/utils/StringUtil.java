@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,11 +13,11 @@
 
 package de.saxsys.svgfx.core.utils;
 
-import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.interfaces.SplitConsumer;
-import de.saxsys.svgfx.core.interfaces.SplitPredicate;
+import de.saxsys.svgfx.core.interfaces.ThrowableBiConsumer;
+import de.saxsys.svgfx.core.interfaces.ThrowablePredicate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -145,18 +145,18 @@ public final class StringUtil {
      *
      * @param data             the data that needs to be split.
      * @param delimiters       the delimiters that indicate when the string needs to be split.
-     * @param consumePredicate the {@link SplitPredicate} to use, which will determine if the currently split value will be part of the result.
+     * @param consumePredicate the {@link ThrowablePredicate} to use, which will determine if the currently split value will be part of the result.
      *
      * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters, delimiters are not present in the list.
      *
-     * @throws SVGException when an error occurs during the splitting.
+     * @throws E when an error occurs during the splitting.
      */
-    public static List<String> splitByDelimiters(final String data, final List<Character> delimiters, final SplitPredicate consumePredicate) throws SVGException {
+    public static <E extends Exception> List<String> splitByDelimiters(final String data, final Collection<Character> delimiters, final ThrowablePredicate<String, E> consumePredicate) throws E {
 
         final List<String> result = new ArrayList<>();
 
         splitByDelimiters(data, delimiters, (delimiter, split) -> {
-            if (consumePredicate.test(split)) {
+            if (consumePredicate.testOrFail(split)) {
                 result.add(split);
             }
         });
@@ -166,9 +166,10 @@ public final class StringUtil {
 
     /**
      * Parse the given data and split the string at every position that is a one of the provided delimiters.
-     * The data that has been read so far and the last know delimiter will be consumed by the {@link SplitConsumer}. Unless this function returns true, the data will be accumulated.
+     * The data that has been read so far and the last know delimiter will be consumed by the {@link ThrowableBiConsumer}. Unless this function returns true, the data will be accumulated.
      * <p>
      * Imaging the following string with T and R being the sole delimiters. The following would happen:
+     * <pre>
      * <table>
      * <tr>
      * <th>Provided data</th>
@@ -237,14 +238,15 @@ public final class StringUtil {
      * <td>null</td>
      * </tr>
      * </table>
+     * </pre>
      *
      * @param data          the data that needs to be split.
      * @param delimiters    the delimiters that indicate when the string needs to be split.
-     * @param splitConsumer the {@link SplitConsumer} which will consume each split action.
+     * @param splitConsumer the {@link ThrowableBiConsumer} which will consumeOrFail each split action.
      *
-     * @throws SVGException when an error occurs during the splitting.
+     * @throws E when an error occurs during the splitting.
      */
-    public static void splitByDelimiters(final String data, final List<Character> delimiters, final SplitConsumer splitConsumer) throws SVGException {
+    public static <E extends Exception> void splitByDelimiters(final String data, final Collection<Character> delimiters, final ThrowableBiConsumer<Character, String, E> splitConsumer) throws E {
 
         final StringBuilder builder = new StringBuilder();
 
@@ -265,9 +267,9 @@ public final class StringUtil {
                     builder.append(character);
                 }
 
-                // we only consume if there is data or we have a previous delimiter found
+                // we only consumeOrFail if there is data or we have a previous delimiter found
                 if ((lastFoundDelimiter != null || builder.length() > 0)) {
-                    splitConsumer.consume(lastFoundDelimiter, builder.toString());
+                    splitConsumer.acceptOrFail(lastFoundDelimiter, builder.toString());
                 }
 
                 // reset data
@@ -283,9 +285,9 @@ public final class StringUtil {
             }
         }
 
-        // special case in which the string is only one of the delimiters, so we consume the delimiter with null data
+        // special case in which the string is only one of the delimiters, so we consumeOrFail the delimiter with null data
         if (lastFoundDelimiter != null) {
-            splitConsumer.consume(lastFoundDelimiter, null);
+            splitConsumer.acceptOrFail(lastFoundDelimiter, null);
         }
     }
 

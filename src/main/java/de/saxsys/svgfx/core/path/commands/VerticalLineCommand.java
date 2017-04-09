@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.path;
+package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -25,7 +26,15 @@ public final class VerticalLineCommand extends PathCommand {
 
     // region Constants
 
-    private static final char NAME = 'V';
+    /**
+     * The absolute name of a vertical line command.
+     */
+    public static final char ABSOLUTE_NAME = 'V';
+
+    /**
+     * The relative name of a vertical line command.
+     */
+    public static final char RELATIVE_NAME = Character.toLowerCase(ABSOLUTE_NAME);
 
     // endregion
 
@@ -34,7 +43,7 @@ public final class VerticalLineCommand extends PathCommand {
     /**
      * Contains the x position which will be done by this command.
      */
-    private final Double x;
+    private final Double y;
 
     // endregion
 
@@ -42,18 +51,17 @@ public final class VerticalLineCommand extends PathCommand {
 
     /**
      * Creates a new instance and expects a {@link String} that contains one numeric value which determine which position is moved to.
-     * The given data may start and end with whitespaces an contain the {@link #NAME}.
+     * The given data may start and end with whitespaces and contain either the {@link #ABSOLUTE_NAME} or the {@link #RELATIVE_NAME}.
      *
      * @param data the data to be used.
      *
      * @throws PathException if the string does not contain one numeric value.
      */
     VerticalLineCommand(final String data) throws PathException {
-        super(NAME);
         try {
-            x = Double.parseDouble(stripCommandName(data).trim());
+            y = Double.parseDouble(stripCommandName(data).trim());
         } catch (final NumberFormatException e) {
-            throw new PathException(PathException.Reason.INVALID_NUMBER_FORMAT, String.format("Can not parse data: [%s] into a number", data), e);
+            throw new PathException(String.format("Can not parse data: [%s] into a number", data), e);
         }
     }
 
@@ -63,17 +71,31 @@ public final class VerticalLineCommand extends PathCommand {
 
     @Override
     public final Point2D getNextPosition(final Point2D position) {
-        return position.add(x, 0.0d);
+        return position.add(0.0d, y);
     }
 
     @Override
     public final Rectangle getBoundingBox(final Point2D position) {
         final Point2D nextPosition = getNextPosition(position);
 
-        return new Rectangle(Math.min(position.getX(), nextPosition.getX()),
-                             position.getY(),
-                             Math.abs(x),
-                             0.0d);
+        return new Rectangle(position.getX(),
+                             Math.min(position.getY(), nextPosition.getY()),
+                             0.0d,
+                             Math.abs(y));
+    }
+
+    // endregion
+
+    // region Implement PathCommand
+
+    @Override
+    public char getAbsoluteName() {
+        return ABSOLUTE_NAME;
+    }
+
+    @Override
+    public char getRelativeName() {
+        return RELATIVE_NAME;
     }
 
     // endregion

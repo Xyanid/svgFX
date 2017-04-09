@@ -11,7 +11,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.path;
+package de.saxsys.svgfx.core.path.commands;
+
+import de.saxsys.svgfx.core.path.PathException;
 
 /**
  * This represents a line command in a svg path. This class is immutable, so each instance represents a separate position.
@@ -22,22 +24,45 @@ public final class LineCommand extends PositionCommand {
 
     // region Constants
 
-    private static final char NAME = 'L';
+    /**
+     * The absolute name of a line command.
+     */
+    public static final char ABSOLUTE_NAME = 'L';
+
+    /**
+     * The relative name of a line command.
+     */
+    public static final char RELATIVE_NAME = Character.toLowerCase(ABSOLUTE_NAME);
 
     // endregion
 
     // region Field
 
     /**
-     * Creates a new instance and expects a {@link String} that contains two numeric values separated by a whitespaces which determine which position is moved to.
-     * The given data may start and end with whitespaces and may have as many whitespaces as desired between the two numeric values.
+     * Creates a new instance and expects a {@link String} that contains two numeric values separated by whitespaces or one comma which determine which position is moved to.
+     * The given data may start and end with whitespaces and contain the either the {@link #ABSOLUTE_NAME} or the {@link #RELATIVE_NAME} followed by two numeric values
+     * separated with as many whitespaces as desired or one comma.
      *
      * @param data the data to be used.
      *
      * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
      */
     LineCommand(final String data) throws PathException {
-        super(NAME, data);
+        super(data);
+    }
+
+    // endregion
+
+    // region Implement PathCommand
+
+    @Override
+    public char getAbsoluteName() {
+        return ABSOLUTE_NAME;
+    }
+
+    @Override
+    public char getRelativeName() {
+        return RELATIVE_NAME;
     }
 
     // endregion

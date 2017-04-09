@@ -11,16 +11,17 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.path;
+package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.path.PathException;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
+import static de.saxsys.svgfx.core.definitions.Constants.COMMA;
 import static de.saxsys.svgfx.core.definitions.Constants.WHITESPACE;
 
 /**
@@ -30,7 +31,7 @@ import static de.saxsys.svgfx.core.definitions.Constants.WHITESPACE;
  */
 public abstract class PositionCommand extends PathCommand {
 
-    // region fields
+    // region Fields
 
     /**
      * Contains the position which will be done by this command.
@@ -43,15 +44,13 @@ public abstract class PositionCommand extends PathCommand {
 
     /**
      * Creates a new instance and expects a {@link String} that contains two numeric values separated by a whitespaces which determine which position is moved to.
-     * The given data may start with whitespaces and may have as many whitespaces as desired between the two numeric values.
+     * The given data may start with whitespaces and may have as many whitespaces or one comma as desired between the two numeric values.
      *
-     * @param name the name of the command.
      * @param data the data to be used.
      *
      * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
      */
-    PositionCommand(final char name, final String data) throws PathException {
-        super(name);
+    PositionCommand(final String data) throws PathException {
         position = consumeData(stripCommandName(data));
     }
 
@@ -81,7 +80,7 @@ public abstract class PositionCommand extends PathCommand {
     /**
      * Parses the given data as a tuple of two numeric values separated by whitespaces and returns their values in a {@link Point2D}.
      *
-     * @param data the data to consume.
+     * @param data the data to consumeOrFail.
      *
      * @return a new {@link Point2D} containing the values.
      *
@@ -89,22 +88,18 @@ public abstract class PositionCommand extends PathCommand {
      */
     private Point2D consumeData(final String data) throws PathException {
         if (StringUtil.isNullOrEmpty(data)) {
-            throw new PathException(PathException.Reason.NULL_ARGUMENT,
-                                    String.format("Given data: [%s] can not be used to create a move command", data));
+            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data));
         }
 
         final List<String> split;
         try {
-            split = StringUtil.splitByDelimiters(data, Collections.singletonList(WHITESPACE), StringUtil::isNotNullOrEmptyAfterTrim);
-        } catch (final SVGException e) {
-            throw new PathException(PathException.Reason.FAILED_TO_SPLIT_DATA,
-                                    String.format("Given data: [%s] can not be used to create a move command", data),
-                                    e);
+            split = StringUtil.splitByDelimiters(data, Arrays.asList(WHITESPACE, COMMA), StringUtil::isNotNullOrEmptyAfterTrim);
+        } catch (final Exception e) {
+            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data), e);
         }
 
         if (split.size() != 2) {
-            throw new PathException(PathException.Reason.INVALID_PATH_COMMAND_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH,
-                                    String.format("Given data: [%s] can not be used to create a move command", data));
+            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data));
         }
 
         final Double x;
@@ -114,9 +109,7 @@ public abstract class PositionCommand extends PathCommand {
             x = Double.parseDouble(split.get(0).trim());
             y = Double.parseDouble(split.get(1).trim());
         } catch (final NumberFormatException e) {
-            throw new PathException(PathException.Reason.INVALID_NUMBER_FORMAT,
-                                    String.format("Given data: [%s] can not be used to create a move command", data),
-                                    e);
+            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data), e);
         }
 
         return new Point2D(x, y);

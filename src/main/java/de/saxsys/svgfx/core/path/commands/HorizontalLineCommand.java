@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.path;
+package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -25,7 +26,15 @@ public final class HorizontalLineCommand extends PathCommand {
 
     // region Constants
 
-    private static final char NAME = 'H';
+    /**
+     * The absolute name of a cubic bezier curve command.
+     */
+    public static final char ABSOLUTE_NAME = 'H';
+
+    /**
+     * The relative name of a cubic bezier curve command.
+     */
+    public static final char RELATIVE_NAME = Character.toLowerCase(ABSOLUTE_NAME);
 
     // endregion
 
@@ -42,18 +51,17 @@ public final class HorizontalLineCommand extends PathCommand {
 
     /**
      * Creates a new instance and expects a {@link String} that contains one numeric value which determine which position is moved to.
-     * The given data may start and end with whitespaces an contain the {@link #NAME}.
+     * The given data may start and end with whitespaces and contain the either the {@link #ABSOLUTE_NAME} or the {@link #RELATIVE_NAME} and after that one numeric value.
      *
      * @param data the data to be used.
      *
      * @throws PathException if the string does not contain one numeric value.
      */
     HorizontalLineCommand(final String data) throws PathException {
-        super(NAME);
         try {
             x = Double.parseDouble(stripCommandName(data).trim());
         } catch (final NumberFormatException e) {
-            throw new PathException(PathException.Reason.INVALID_NUMBER_FORMAT, String.format("Can not parse data: [%s] into a number", data), e);
+            throw new PathException(String.format("Can not parse data: [%s] into a number", data), e);
         }
     }
 
@@ -74,6 +82,20 @@ public final class HorizontalLineCommand extends PathCommand {
                              position.getY(),
                              Math.abs(x),
                              0.0d);
+    }
+
+    // endregion
+
+    // region Implement PathCommand
+
+    @Override
+    public char getAbsoluteName() {
+        return ABSOLUTE_NAME;
+    }
+
+    @Override
+    public char getRelativeName() {
+        return RELATIVE_NAME;
     }
 
     // endregion

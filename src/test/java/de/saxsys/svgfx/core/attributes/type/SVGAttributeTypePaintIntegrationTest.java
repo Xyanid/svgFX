@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
-import de.saxsys.svgfx.core.interfaces.SVGSupplier;
+import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Transform;
@@ -158,7 +158,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         cut.setText("url(#test)");
 
         try {
-            cut.getValue(mock(SVGSupplier.class), mock(Transform.class));
+            cut.getValue(mock(ThrowableSupplier.class), mock(Transform.class));
         } catch (final SVGException e) {
             assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
@@ -176,7 +176,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         cut.setText("url(#test)");
 
         try {
-            cut.getValue(mock(SVGSupplier.class), mock(Transform.class));
+            cut.getValue(mock(ThrowableSupplier.class), mock(Transform.class));
         } catch (final SVGException e) {
             assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
         }
@@ -193,7 +193,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint expectedPaint = mock(Paint.class);
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
-        when(gradientBase.createResult(any(SVGSupplier.class), any(Transform.class))).thenReturn(expectedPaint);
+        when(gradientBase.createResult(any(ThrowableSupplier.class), any(Transform.class))).thenReturn(expectedPaint);
 
         dataProvider.storeData("test", gradientBase);
 
@@ -202,7 +202,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint result = cut.getValue(() -> boundingBox, null);
 
         assertSame(expectedPaint, result);
-        verify(gradientBase, times(1)).createResult(any(SVGSupplier.class), any(Transform.class));
+        verify(gradientBase, times(1)).createResult(any(ThrowableSupplier.class), any(Transform.class));
     }
 
     //endregion

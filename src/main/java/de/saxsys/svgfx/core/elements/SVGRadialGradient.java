@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
-import de.saxsys.svgfx.core.interfaces.SVGSupplier;
+import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
@@ -82,7 +82,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     // region SVGGradientBase
 
     @Override
-    public RadialGradient createResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
+    public RadialGradient createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox,
                                        final Transform elementTransform) throws SVGException {
         return determineResult(boundingBox, elementTransform);
     }
@@ -91,7 +91,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
     // region Private
 
-    private RadialGradient determineResult(final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
+    private RadialGradient determineResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox,
                                            final Transform elementTransform) throws SVGException {
         final List<Stop> stops = getStops();
 
@@ -129,7 +129,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
                                             final AtomicReference<Double> focusX,
                                             final AtomicReference<Double> focusY,
                                             final AtomicReference<Double> radius,
-                                            final SVGSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle> boundingBox,
+                                            final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox,
                                             final Transform elementTransform) throws SVGException {
 
         final Optional<Transform> usedTransform = getTransform(elementTransform);
@@ -145,9 +145,9 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
             }
 
             usedTransform.ifPresent(transform -> transformPosition(centerX, centerY, focusX, focusY, radius, transform));
-            convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, boundingBox.get());
+            convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, boundingBox.getOrFail());
         } else if (usedTransform.isPresent()) {
-            final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = boundingBox.get();
+            final SVGAttributeTypeRectangle.SVGTypeRectangle rectangle = boundingBox.getOrFail();
             convertFromObjectBoundingBox(centerX, centerY, focusX, focusY, radius, rectangle);
             transformPosition(centerX, centerY, focusX, focusY, radius, usedTransform.get());
             convertToObjectBoundingBox(centerX, centerY, focusX, focusY, radius, rectangle);

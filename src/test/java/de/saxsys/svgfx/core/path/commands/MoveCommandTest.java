@@ -11,10 +11,27 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.path;
+package de.saxsys.svgfx.core.path.commands;
+
+import de.saxsys.svgfx.core.path.PathException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * @author Xyanid on 01.04.2017.
  */
-public class PathBuilder {
+public class MoveCommandTest {
+
+    @Test
+    public void aMoveCommandWillHaveTheExpectedNames() throws PathException {
+
+        final MoveCommand cut = new MoveCommand("10 10");
+
+        assertEquals('M', cut.getAbsoluteName());
+        assertEquals('m', cut.getRelativeName());
+        assertNotEquals('X', cut.getRelativeName());
+        assertNotEquals('x', cut.getRelativeName());
+    }
 }
