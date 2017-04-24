@@ -102,33 +102,23 @@ public class PathCommandParser {
                                          final PathCommand previousCommand,
                                          final Point2D startingPoint) throws PathException {
         if (MoveCommand.ABSOLUTE_NAME == delimiter || MoveCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createMoveCommand(data);
+            return CommandFactory.INSTANCE.createMoveCommand(delimiter, data);
         } else if (LineCommand.ABSOLUTE_NAME == delimiter || LineCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createLineCommand(data);
+            return CommandFactory.INSTANCE.createLineCommand(delimiter, data);
         } else if (HorizontalLineCommand.ABSOLUTE_NAME == delimiter || HorizontalLineCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createHorizontalLineCommand(data);
+            return CommandFactory.INSTANCE.createHorizontalLineCommand(delimiter, data);
         } else if (VerticalLineCommand.ABSOLUTE_NAME == delimiter || VerticalLineCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createVerticalLineCommand(data);
+            return CommandFactory.INSTANCE.createVerticalLineCommand(delimiter, data);
         } else if (CloseCommand.ABSOLUTE_NAME == delimiter || CloseCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createCloseCommand(startingPoint);
+            return CommandFactory.INSTANCE.createCloseCommand(delimiter, startingPoint);
         } else if (CubicBezierCurveCommand.ABSOLUTE_NAME == delimiter || CubicBezierCurveCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createCubicBezierCurveCommand(data);
+            return CommandFactory.INSTANCE.createCubicBezierCurveCommand(delimiter, data);
         } else if (ShortCubicBezierCurveCommand.ABSOLUTE_NAME == delimiter || ShortCubicBezierCurveCommand.RELATIVE_NAME == delimiter) {
-            if (!CubicBezierCurveCommand.class.isAssignableFrom(previousCommand.getClass())) {
-                throw new PathException(String.format("Expected [%s] to be the previous command but was [%s]",
-                                                      CubicBezierCurveCommand.class.getSimpleName(),
-                                                      previousCommand.getClass().getSimpleName()));
-            }
-            return CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(data);
+            return CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(delimiter, data, previousCommand);
         } else if (QuadraticBezierCurveCommand.ABSOLUTE_NAME == delimiter || QuadraticBezierCurveCommand.RELATIVE_NAME == delimiter) {
-            return CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(data);
+            return CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(delimiter, data);
         } else if (ShortQuadraticBezierCurveCommand.ABSOLUTE_NAME == delimiter || ShortQuadraticBezierCurveCommand.RELATIVE_NAME == delimiter) {
-            if (!QuadraticBezierCurveCommand.class.isAssignableFrom(previousCommand.getClass())) {
-                throw new PathException(String.format("Expected [%s] to be the previous command but was [%s]",
-                                                      QuadraticBezierCurveCommand.class.getSimpleName(),
-                                                      previousCommand.getClass().getSimpleName()));
-            }
-            return CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(data);
+            return CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(delimiter, data, previousCommand);
         } else {
             throw new PathException(String.format("Could not use delimiter: [%s] must be one of the know delimiters", delimiter));
         }
@@ -141,6 +131,7 @@ public class PathCommandParser {
     private Point2D getNextPosition(final PathCommand command, final Wrapper<Point2D> previousPosition) {
         return null;
     }
+
 
     // endregion
 }

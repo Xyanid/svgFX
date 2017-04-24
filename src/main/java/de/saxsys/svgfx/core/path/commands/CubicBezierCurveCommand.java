@@ -38,29 +38,8 @@ public final class CubicBezierCurveCommand extends BezierCurveCommand {
 
     // region Field
 
-    /**
-     * Creates a new instance and expects a {@link String} that contains desired curve data.
-     *
-     * @param data the data to be used.
-     *
-     * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
-     */
-    CubicBezierCurveCommand(final String data) throws PathException {
-        super(data);
-    }
-
-    // endregion
-
-    // region Implement PathCommand
-
-    @Override
-    public char getAbsoluteName() {
-        return ABSOLUTE_NAME;
-    }
-
-    @Override
-    public char getRelativeName() {
-        return RELATIVE_NAME;
+    CubicBezierCurveCommand(final boolean isAbsolute) throws PathException {
+        super(isAbsolute);
     }
 
     // endregion

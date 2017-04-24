@@ -13,7 +13,7 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.path.PathException;
+import javafx.geometry.Point2D;
 
 /**
  * This represents a move command in a svg path. This class is immutable, so each instance represents a separate movement.
@@ -38,31 +38,8 @@ public final class MoveCommand extends PositionCommand {
 
     // region Field
 
-    /**
-     * Creates a new instance and expects a {@link String} that contains two numeric values separated by whitespaces or one comma which determine which position is moved to.
-     * The given data may start and end with whitespaces and contain the either the {@link #ABSOLUTE_NAME} or the {@link #RELATIVE_NAME} followed by two numeric values
-     * separated with as many whitespaces as desired or one comma.
-     *
-     * @param data the data to be used.
-     *
-     * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
-     */
-    MoveCommand(final String data) throws PathException {
-        super(data);
-    }
-
-    // endregion
-
-    // region Implement PathCommand
-
-    @Override
-    public char getAbsoluteName() {
-        return ABSOLUTE_NAME;
-    }
-
-    @Override
-    public char getRelativeName() {
-        return RELATIVE_NAME;
+    MoveCommand(final boolean isAbsolute, final Point2D position) {
+        super(isAbsolute, position);
     }
 
     // endregion

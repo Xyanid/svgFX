@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -52,11 +51,12 @@ public class CloseCommand extends PathCommand {
     /**
      * Creates a new instance and expects a {@link Point2D}, which is the first position that has been moved to in a path command.
      *
+     * @param isAbsolute determines if the command is absolute or not.
      * @param startPoint the start point.
      *
-     * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
      */
-    CloseCommand(final Point2D startPoint) throws PathException {
+    CloseCommand(final boolean isAbsolute, final Point2D startPoint) {
+        super(isAbsolute);
         this.startPoint = startPoint;
     }
 
@@ -75,20 +75,6 @@ public class CloseCommand extends PathCommand {
                              Math.min(position.getY(), startPoint.getY()),
                              Math.abs(position.getX() - startPoint.getX()),
                              Math.abs(position.getY() - startPoint.getY()));
-    }
-
-    // endregion
-
-    // region Implement PathCommand
-
-    @Override
-    public char getAbsoluteName() {
-        return ABSOLUTE_NAME;
-    }
-
-    @Override
-    public char getRelativeName() {
-        return RELATIVE_NAME;
     }
 
     // endregion

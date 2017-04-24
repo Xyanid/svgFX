@@ -16,8 +16,6 @@ package de.saxsys.svgfx.core.path.commands;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
-import java.util.Optional;
-
 /**
  * This represents a basic path command. All literal operation in this class are supposed to be case insensitive.
  *
@@ -25,82 +23,48 @@ import java.util.Optional;
  */
 public abstract class PathCommand {
 
-    // region Public
+    // region Field
 
     /**
-     * Determines if the given command name is equals to the {@link #getAbsoluteName()} or {@link #getRelativeName()},
-     * which is the case when then given name is the same but regardless of casing.
-     *
-     * @param name the name to compare to.
-     *
-     * @return true if the given name is the same as the {@link #getAbsoluteName()} or {@link #getRelativeName()}, otherwise false.
+     * Determine if this command is an absolute command or not. An absolute command has it coordinates as world coordinates.
      */
-    public final boolean isCommand(final char name) {
-        return getAbsoluteName() == name || getRelativeName() == name;
-    }
+    private final boolean isAbsolute;
+
+    // endregion
+
+    // region Constructor
 
     /**
-     * Determines if the given name is a absolute command name or not.
+     * Creates a new instance.
      *
-     * @param name the name to check.
-     *
-     * @return a new {@link Optional} with true if the name is the absolute name, false if the name is the relative name or {@link Optional#empty()} if the name is neither.
+     * @param isAbsolute determines if the command is absolute or not.
      */
-    public Optional<Boolean> isAbsoluteCommand(final char name) {
-        return isAbsoluteOrRelativeCommand(name, true);
-    }
-
-    /**
-     * Determines if the given name is a relative command name or not.
-     *
-     * @param name the name to check.
-     *
-     * @return a new {@link Optional} with true if the name is the relative name, false if the name is the absolute name or {@link Optional#empty()} if the name is neither.
-     */
-    public Optional<Boolean> isRelativeCommand(final char name) {
-        return isAbsoluteOrRelativeCommand(name, false);
+    protected PathCommand(final boolean isAbsolute) {
+        this.isAbsolute = isAbsolute;
     }
 
     // endregion
 
-    // region Protected
+    // region Getter
 
     /**
-     * Takes the given {@link String} and returns only the elements beyond the first occurrence of the {@link #getAbsoluteName()} or {@link #getRelativeName()}.
+     * Returns {@link #isAbsolute}.
      *
-     * @param data the command to be parsed.
-     *
-     * @return a new {@link String} containing the data beyond the first occurrence of the {@link #getAbsoluteName()} or {@link #getRelativeName()}
-     * or the given data if the {@link #getAbsoluteName()} or {@link #getRelativeName()} was not found.
+     * @return {@link #isAbsolute}.
      */
-    protected final String stripCommandName(final String data) {
-        for (int i = 0; i < data.length(); i++) {
-            final char dataChar = data.charAt(i);
-            if (getAbsoluteName() == dataChar || getRelativeName() == dataChar) {
-                return data.substring(i + 1, data.length());
-            }
-        }
-
-        return data;
+    public boolean isAbsolute() {
+        return isAbsolute;
     }
 
     // endregion
+
+    //    // region Protected
+    //
+
+    //
+    //    // endregion
 
     // region Abstract
-
-    /**
-     * Returns the absolute name of this command.
-     *
-     * @return the absolute name of this command.
-     */
-    public abstract char getAbsoluteName();
-
-    /**
-     * Returns the relative name of this command.
-     *
-     * @return the relative name of this command.
-     */
-    public abstract char getRelativeName();
 
     /**
      * Gets the next possible position based on the internal state of the command and the provided position.
@@ -119,20 +83,6 @@ public abstract class PathCommand {
      * @return a new  {@link Rectangle} describing the resulting bounding box.
      */
     public abstract Rectangle getBoundingBox(final Point2D position);
-
-    // endregion
-
-    // region Private
-
-    private Optional<Boolean> isAbsoluteOrRelativeCommand(final char name, final boolean checkForAbsolute) {
-        if (getAbsoluteName() == name) {
-            return Optional.of(checkForAbsolute);
-        } else if (getRelativeName() == name) {
-            return Optional.of(!checkForAbsolute);
-        } else {
-            return Optional.empty();
-        }
-    }
 
     // endregion
 }

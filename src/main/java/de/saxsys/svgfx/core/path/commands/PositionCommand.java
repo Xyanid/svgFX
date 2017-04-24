@@ -13,16 +13,8 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.path.PathException;
-import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static de.saxsys.svgfx.core.definitions.Constants.COMMA;
-import static de.saxsys.svgfx.core.definitions.Constants.WHITESPACE;
 
 /**
  * This represents a position command in a svg path which will either be a {@link MoveCommand} or a {@link LineCommand}. This class is immutable, so each instance represents a separate position.
@@ -43,15 +35,14 @@ public abstract class PositionCommand extends PathCommand {
     // region Field
 
     /**
-     * Creates a new instance and expects a {@link String} that contains two numeric values separated by a whitespaces which determine which position is moved to.
-     * The given data may start with whitespaces and may have as many whitespaces or one comma as desired between the two numeric values.
+     * Creates a new instance.
      *
-     * @param data the data to be used.
-     *
-     * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
+     * @param isAbsolute determines if the command is an absolute command or not.
+     * @param position   the position to be used.
      */
-    PositionCommand(final String data) throws PathException {
-        position = consumeData(stripCommandName(data));
+    PositionCommand(final boolean isAbsolute, final Point2D position) {
+        super(isAbsolute);
+        this.position = position;
     }
 
     // endregion
@@ -74,47 +65,4 @@ public abstract class PositionCommand extends PathCommand {
     }
 
     // endregion
-
-    // region Private
-
-    /**
-     * Parses the given data as a tuple of two numeric values separated by whitespaces and returns their values in a {@link Point2D}.
-     *
-     * @param data the data to consumeOrFail.
-     *
-     * @return a new {@link Point2D} containing the values.
-     *
-     * @throws PathException if the given data is null, the amount of values is not exactly two or the values are not numerical.
-     */
-    private Point2D consumeData(final String data) throws PathException {
-        if (StringUtil.isNullOrEmpty(data)) {
-            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data));
-        }
-
-        final List<String> split;
-        try {
-            split = StringUtil.splitByDelimiters(data, Arrays.asList(WHITESPACE, COMMA), StringUtil::isNotNullOrEmptyAfterTrim);
-        } catch (final Exception e) {
-            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data), e);
-        }
-
-        if (split.size() != 2) {
-            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data));
-        }
-
-        final Double x;
-        final Double y;
-
-        try {
-            x = Double.parseDouble(split.get(0).trim());
-            y = Double.parseDouble(split.get(1).trim());
-        } catch (final NumberFormatException e) {
-            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data), e);
-        }
-
-        return new Point2D(x, y);
-    }
-
-    // endregion
-
 }

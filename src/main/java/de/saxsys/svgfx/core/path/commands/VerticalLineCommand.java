@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -41,9 +40,9 @@ public final class VerticalLineCommand extends PathCommand {
     // region fields
 
     /**
-     * Contains the x position which will be done by this command.
+     * Contains the distance which will be travelled by this command.
      */
-    private final Double y;
+    private final Double distance;
 
     // endregion
 
@@ -51,18 +50,14 @@ public final class VerticalLineCommand extends PathCommand {
 
     /**
      * Creates a new instance and expects a {@link String} that contains one numeric value which determine which position is moved to.
-     * The given data may start and end with whitespaces and contain either the {@link #ABSOLUTE_NAME} or the {@link #RELATIVE_NAME}.
+     * The given data may start and end with whitespaces.
      *
-     * @param data the data to be used.
-     *
-     * @throws PathException if the string does not contain one numeric value.
+     * @param isAbsolute determines if this command is absolute or not.
+     * @param distance   the amount of vertical space this command will travel.
      */
-    VerticalLineCommand(final String data) throws PathException {
-        try {
-            y = Double.parseDouble(stripCommandName(data).trim());
-        } catch (final NumberFormatException e) {
-            throw new PathException(String.format("Can not parse data: [%s] into a number", data), e);
-        }
+    VerticalLineCommand(final boolean isAbsolute, final double distance) {
+        super(isAbsolute);
+        this.distance = distance;
     }
 
     // endregion
@@ -71,7 +66,7 @@ public final class VerticalLineCommand extends PathCommand {
 
     @Override
     public final Point2D getNextPosition(final Point2D position) {
-        return position.add(0.0d, y);
+        return position.add(0.0d, distance);
     }
 
     @Override
@@ -81,21 +76,7 @@ public final class VerticalLineCommand extends PathCommand {
         return new Rectangle(position.getX(),
                              Math.min(position.getY(), nextPosition.getY()),
                              0.0d,
-                             Math.abs(y));
-    }
-
-    // endregion
-
-    // region Implement PathCommand
-
-    @Override
-    public char getAbsoluteName() {
-        return ABSOLUTE_NAME;
-    }
-
-    @Override
-    public char getRelativeName() {
-        return RELATIVE_NAME;
+                             Math.abs(distance));
     }
 
     // endregion

@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -41,28 +40,23 @@ public final class HorizontalLineCommand extends PathCommand {
     // region fields
 
     /**
-     * Contains the x position which will be done by this command.
+     * Contains the horizontal distance which will be travelled by this command.
      */
-    private final Double x;
+    private final Double distance;
 
     // endregion
 
     // region Field
 
     /**
-     * Creates a new instance and expects a {@link String} that contains one numeric value which determine which position is moved to.
-     * The given data may start and end with whitespaces and contain the either the {@link #ABSOLUTE_NAME} or the {@link #RELATIVE_NAME} and after that one numeric value.
+     * Creates a new instance.
      *
-     * @param data the data to be used.
-     *
-     * @throws PathException if the string does not contain one numeric value.
+     * @param isAbsolute determines if this command is absolute or not.
+     * @param distance   the amount of horizontal space this command will travel.
      */
-    HorizontalLineCommand(final String data) throws PathException {
-        try {
-            x = Double.parseDouble(stripCommandName(data).trim());
-        } catch (final NumberFormatException e) {
-            throw new PathException(String.format("Can not parse data: [%s] into a number", data), e);
-        }
+    HorizontalLineCommand(final boolean isAbsolute, final double distance) {
+        super(isAbsolute);
+        this.distance = distance;
     }
 
     // endregion
@@ -71,7 +65,7 @@ public final class HorizontalLineCommand extends PathCommand {
 
     @Override
     public final Point2D getNextPosition(final Point2D position) {
-        return position.add(x, 0.0d);
+        return position.add(distance, 0.0d);
     }
 
     @Override
@@ -80,22 +74,8 @@ public final class HorizontalLineCommand extends PathCommand {
 
         return new Rectangle(Math.min(position.getX(), nextPosition.getX()),
                              position.getY(),
-                             Math.abs(x),
+                             Math.abs(distance),
                              0.0d);
-    }
-
-    // endregion
-
-    // region Implement PathCommand
-
-    @Override
-    public char getAbsoluteName() {
-        return ABSOLUTE_NAME;
-    }
-
-    @Override
-    public char getRelativeName() {
-        return RELATIVE_NAME;
     }
 
     // endregion

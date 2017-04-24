@@ -13,7 +13,6 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
-import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -36,13 +35,12 @@ public abstract class BezierCurveCommand extends PathCommand {
     // region Field
 
     /**
-     * Creates a new instance and expects a {@link String} that contains desired curve data.
+     * Creates a new instance.
      *
-     * @param data the data to be used.
-     *
-     * @throws PathException if the string does not contain two numeric values separated by a whitespaces.
+     * @param isAbsolute determines if the command is absolute or not.
      */
-    BezierCurveCommand(final String data) throws PathException {
+    BezierCurveCommand(final boolean isAbsolute) {
+        super(isAbsolute);
     }
 
     // endregion
@@ -66,19 +64,6 @@ public abstract class BezierCurveCommand extends PathCommand {
     // region Private
 
     /**
-     * Parses the given data as a tuple of two numeric values separated by whitespaces and returns their values in a {@link Point2D}.
-     *
-     * @param data the data to consumeOrFail.
-     *
-     * @return a new {@link Point2D} containing the values.
-     *
-     * @throws PathException if the given data is null, the amount of values is not exactly two or the values are not numerical.
-     */
-    private Point2D consumeData(final String data) throws PathException {
-        return null;
-    }
-
-    /**
      * Returns a list of values that represent the local extrema for a cubic bezier curve.
      *
      * @param startX        the x coordinate of the start point
@@ -92,14 +77,14 @@ public abstract class BezierCurveCommand extends PathCommand {
      *
      * @return a new {@link List} containing the calculated local extrema.
      */
-    private static List<Double> getLocalExtremaForCubicCurve(final Double startX,
-                                                             final Double startY,
-                                                             final Double startControlX,
-                                                             final Double startControlY,
-                                                             final Double endControlX,
-                                                             final Double endControlY,
-                                                             final Double endX,
-                                                             final Double endY) {
+    protected List<Double> getLocalExtremaForCubicCurve(final Double startX,
+                                                        final Double startY,
+                                                        final Double startControlX,
+                                                        final Double startControlY,
+                                                        final Double endControlX,
+                                                        final Double endControlY,
+                                                        final Double endX,
+                                                        final Double endY) {
         final List<Double> tValues = new ArrayList<>(0);
 
         Double a;
@@ -166,15 +151,15 @@ public abstract class BezierCurveCommand extends PathCommand {
      *
      * @return a new {@link Point2D} containing the calculated bezier curve position.
      */
-    private static Point2D getCubicBezierCurvePoint(final Double t,
-                                                    final Double startX,
-                                                    final Double startY,
-                                                    final Double startControlX,
-                                                    final Double startControlY,
-                                                    final Double endControlX,
-                                                    final Double endControlY,
-                                                    final Double endX,
-                                                    final Double endY) {
+    protected Point2D getCubicBezierCurvePoint(final Double t,
+                                               final Double startX,
+                                               final Double startY,
+                                               final Double startControlX,
+                                               final Double startControlY,
+                                               final Double endControlX,
+                                               final Double endControlY,
+                                               final Double endX,
+                                               final Double endY) {
         final Double mt = 1.0d - t;
 
         final Double tEnd = Math.pow(t, 3);

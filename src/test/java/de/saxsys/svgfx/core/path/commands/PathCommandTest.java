@@ -13,12 +13,11 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -27,28 +26,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class PathCommandTest {
 
-    // region Fields
+    // region Tests
 
-    private PathCommand cut;
+    @Test
+    public void itIsPossibleToDetermineIfTheCommandIsAbsolute() throws PathException {
 
-    // endregion
-
-    // region Setup
-
-    @Before
-    public void setUp() throws Exception {
-
-        cut = new PathCommand() {
-            @Override
-            public char getAbsoluteName() {
-                return 'M';
-            }
-
-            @Override
-            public char getRelativeName() {
-                return 'm';
-            }
-
+        final PathCommand cut = new PathCommand(true) {
             @Override
             public Point2D getNextPosition(Point2D position) {
                 return null;
@@ -59,42 +42,26 @@ public class PathCommandTest {
                 return null;
             }
         };
-    }
 
-    // endregion
-
-    // region Tests
-
-    @Test
-    public void itIsPossibleToDetermineIfAGivenCharacterResemblesTheAbsoluteCommandName() {
-        assertTrue(cut.isAbsoluteCommand('M').isPresent());
-        assertTrue(cut.isAbsoluteCommand('M').get());
-        assertTrue(cut.isAbsoluteCommand('m').isPresent());
-        assertFalse(cut.isAbsoluteCommand('m').get());
-        assertFalse(cut.isAbsoluteCommand('T').isPresent());
+        assertTrue(cut.isAbsolute());
     }
 
     @Test
-    public void itIsPossibleToDetermineIfAGivenCharacterResemblesTheRelativeCommandName() {
-        assertTrue(cut.isRelativeCommand('M').isPresent());
-        assertFalse(cut.isRelativeCommand('M').get());
-        assertTrue(cut.isRelativeCommand('m').isPresent());
-        assertTrue(cut.isRelativeCommand('m').get());
-        assertFalse(cut.isRelativeCommand('T').isPresent());
-    }
+    public void itIsPossibleToDetermineIfTheCommandIsRelative() throws PathException {
 
-    @Test
-    public void itIsPossibleToDetermineIfAGivenCharacterResemblesTheCommandName() {
-        assertTrue(cut.isCommand('m'));
-        assertTrue(cut.isCommand('M'));
-        assertFalse(cut.isCommand('T'));
-    }
+        final PathCommand cut = new PathCommand(false) {
+            @Override
+            public Point2D getNextPosition(Point2D position) {
+                return null;
+            }
 
-    @Test
-    public void aStringCanBeStrippedAtFirstOccurrenceOfTheCommandNameRegardlessOfItsCase() {
-        assertEquals("20 ", cut.stripCommandName("10 10m20 "));
-        assertEquals(" 30 ", cut.stripCommandName("10 20M 30 "));
-        assertEquals("10 20T 30 ", cut.stripCommandName("10 20T 30 "));
+            @Override
+            public Rectangle getBoundingBox(Point2D position) {
+                return null;
+            }
+        };
+
+        assertFalse(cut.isAbsolute());
     }
 
     // endregion
