@@ -13,6 +13,7 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.CommandName;
 import de.saxsys.svgfx.core.path.PathException;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.geometry.Point2D;
@@ -22,6 +23,15 @@ import java.util.List;
 
 import static de.saxsys.svgfx.core.definitions.Constants.COMMA;
 import static de.saxsys.svgfx.core.definitions.Constants.WHITESPACE;
+import static de.saxsys.svgfx.core.path.CommandName.CLOSE;
+import static de.saxsys.svgfx.core.path.CommandName.CUBIC_BEZIER_CURVE;
+import static de.saxsys.svgfx.core.path.CommandName.HORIZONTAL_LINE;
+import static de.saxsys.svgfx.core.path.CommandName.LINE;
+import static de.saxsys.svgfx.core.path.CommandName.MOVE;
+import static de.saxsys.svgfx.core.path.CommandName.QUADRATIC_BEZIER_CURVE;
+import static de.saxsys.svgfx.core.path.CommandName.SHORT_CUBIC_BEZIER_CURVE;
+import static de.saxsys.svgfx.core.path.CommandName.SHORT_QUADRATIC_BEZIER_CURVE;
+import static de.saxsys.svgfx.core.path.CommandName.VERTICAL_LINE;
 
 
 /**
@@ -48,24 +58,32 @@ public final class CommandFactory {
 
     // region Public
 
-    /**
-     * Creates a new {@link MoveCommand} using the given data, which needs to be two numeric values separated by whitespaces or one comma
-     * which determines which position is moved to.
-     *
-     * @param commandName the name of the command.
-     * @param data        the data describing the command.
-     *
-     * @return a new {@link MoveCommand}.
-     *
-     * @throws PathException if the commandName is not {@link MoveCommand#ABSOLUTE_NAME} or {@link MoveCommand#RELATIVE_NAME}
-     *                       or the data does not contain two numeric values separated be whitespaces or one comma.
-     */
-    public MoveCommand createMoveCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName, MoveCommand.ABSOLUTE_NAME, MoveCommand.RELATIVE_NAME, MoveCommand.class);
-
-        final Point2D position = createPoint(data.trim());
-
-        return new MoveCommand(commandName == MoveCommand.ABSOLUTE_NAME, position);
+    public PathCommand createCommandOrFail(final Character delimiter,
+                                           final String data,
+                                           final PathCommand previousCommand,
+                                           final Point2D previousPosition,
+                                           final Point2D startingPoint) throws PathException {
+        if (MOVE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createMoveCommand(delimiter, data);
+        } else if (LINE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createLineCommand(delimiter, data);
+        } else if (HORIZONTAL_LINE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createHorizontalLineCommand(delimiter, data, previousPosition);
+        } else if (VERTICAL_LINE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createVerticalLineCommand(delimiter, data, previousPosition);
+        } else if (CLOSE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createCloseCommand(delimiter, startingPoint);
+        } else if (CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createCubicBezierCurveCommand(delimiter, data);
+        } else if (SHORT_CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(delimiter, data, previousCommand);
+        } else if (QUADRATIC_BEZIER_CURVE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(delimiter, data);
+        } else if (SHORT_QUADRATIC_BEZIER_CURVE.isCommandName(delimiter)) {
+            return CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(delimiter, data, previousCommand);
+        } else {
+            throw new PathException(String.format("Could not use delimiter: [%s] must be one of the know delimiters", delimiter));
+        }
     }
 
     /**
@@ -77,30 +95,50 @@ public final class CommandFactory {
      *
      * @return a new {@link LineCommand}.
      *
-     * @throws PathException if the commandName is not {@link LineCommand#ABSOLUTE_NAME} or {@link LineCommand#RELATIVE_NAME}
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#MOVE}
      *                       or the data does not contain two numeric values separated be whitespaces or one comma.
      */
-    public LineCommand createLineCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName, LineCommand.ABSOLUTE_NAME, LineCommand.RELATIVE_NAME, LineCommand.class);
+    public LineCommand createMoveCommand(final char commandName, final String data) throws PathException {
+        checkCommandNameOrFail(commandName, MOVE, LineCommand.class);
 
         final Point2D position = createPoint(data.trim());
 
-        return new LineCommand(commandName == LineCommand.ABSOLUTE_NAME, position);
+        return new LineCommand(commandName == MOVE.getAbsoluteName(), position);
     }
 
     /**
-     * Creates a new {@link HorizontalLineCommand} using the given data, which need to contain the command name followed by one numeric value
+     * Creates a new {@link LineCommand} using the given data, which needs to be two numeric values separated by whitespaces or one comma
+     * which determines which position is moved to.
+     *
+     * @param commandName the name of the command.
+     * @param data        the data describing the command.
+     *
+     * @return a new {@link LineCommand}.
+     *
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#LINE}
+     *                       or the data does not contain two numeric values separated be whitespaces or one comma.
+     */
+    public LineCommand createLineCommand(final char commandName, final String data) throws PathException {
+        checkCommandNameOrFail(commandName, LINE, LineCommand.class);
+
+        final Point2D position = createPoint(data.trim());
+
+        return new LineCommand(commandName == LINE.getAbsoluteName(), position);
+    }
+
+    /**
+     * Creates a new {@link LineCommand} using the given data, which need to contain the command name followed by one numeric value
      * which determine which position is moved to.
      *
      * @param data the data describing the command.
      *
-     * @return a new {@link HorizontalLineCommand}.
+     * @return a new {@link LineCommand}.
      *
-     * @throws PathException if the commandName is not {@link HorizontalLineCommand#ABSOLUTE_NAME} or {@link HorizontalLineCommand#RELATIVE_NAME}
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#HORIZONTAL_LINE}
      *                       or if the given data is not a number.
      */
-    public HorizontalLineCommand createHorizontalLineCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName, HorizontalLineCommand.ABSOLUTE_NAME, HorizontalLineCommand.RELATIVE_NAME, HorizontalLineCommand.class);
+    public LineCommand createHorizontalLineCommand(final char commandName, final String data, final Point2D previousPoint) throws PathException {
+        checkCommandNameOrFail(commandName, HORIZONTAL_LINE, LineCommand.class);
 
         final double distance;
         try {
@@ -109,22 +147,22 @@ public final class CommandFactory {
             throw new PathException(String.format(INVALID_NUMBER_FORMAT, data), e);
         }
 
-        return new HorizontalLineCommand(commandName == HorizontalLineCommand.ABSOLUTE_NAME, distance);
+        return new LineCommand(commandName == HORIZONTAL_LINE.getAbsoluteName(), new Point2D(distance, previousPoint.getY()));
     }
 
     /**
-     * Creates a new {@link VerticalLineCommand} using the given data, which need to contain the command name followed by one numeric value
+     * Creates a new {@link LineCommand} using the given data, which need to contain the command name followed by one numeric value
      * which determine which position is moved to.
      *
      * @param data the data describing the command.
      *
-     * @return a new {@link VerticalLineCommand}.
+     * @return a new {@link LineCommand}.
      *
-     * @throws PathException if the commandName is not {@link VerticalLineCommand#ABSOLUTE_NAME} or {@link VerticalLineCommand#RELATIVE_NAME}
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#VERTICAL_LINE}
      *                       or the given data is not a number.
      */
-    public VerticalLineCommand createVerticalLineCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName, VerticalLineCommand.ABSOLUTE_NAME, VerticalLineCommand.RELATIVE_NAME, VerticalLineCommand.class);
+    public LineCommand createVerticalLineCommand(final char commandName, final String data, final Point2D previousPoint) throws PathException {
+        checkCommandNameOrFail(commandName, VERTICAL_LINE, LineCommand.class);
 
         final double distance;
         try {
@@ -133,7 +171,7 @@ public final class CommandFactory {
             throw new PathException(String.format("Could not parse given data [%s] into a number", data), e);
         }
 
-        return new VerticalLineCommand(commandName == VerticalLineCommand.ABSOLUTE_NAME, distance);
+        return new LineCommand(commandName == VERTICAL_LINE.getAbsoluteName(), new Point2D(previousPoint.getX(), distance));
     }
 
     /**
@@ -144,68 +182,57 @@ public final class CommandFactory {
      *
      * @return a new {@link CloseCommand}.
      *
-     * @throws PathException if the commandName is not {@link CloseCommand#ABSOLUTE_NAME} or {@link CloseCommand#RELATIVE_NAME}.
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#CLOSE}
+     *                       or the given data is not a number.
      */
     public CloseCommand createCloseCommand(final char commandName, final Point2D startPoint) throws PathException {
-        checkCommandNameOrFail(commandName, CloseCommand.ABSOLUTE_NAME, CloseCommand.RELATIVE_NAME, CloseCommand.class);
+        checkCommandNameOrFail(commandName, CLOSE, CloseCommand.class);
 
-        return new CloseCommand(commandName == CloseCommand.ABSOLUTE_NAME, startPoint);
+        return new CloseCommand(commandName == CLOSE.getAbsoluteName(), startPoint);
     }
 
     public CubicBezierCurveCommand createCubicBezierCurveCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName,
-                               CubicBezierCurveCommand.ABSOLUTE_NAME,
-                               CubicBezierCurveCommand.RELATIVE_NAME,
-                               CubicBezierCurveCommand.class);
+        checkCommandNameOrFail(commandName, CUBIC_BEZIER_CURVE, CubicBezierCurveCommand.class);
 
-        return new CubicBezierCurveCommand(commandName == CubicBezierCurveCommand.ABSOLUTE_NAME);
+        return new CubicBezierCurveCommand(commandName == CUBIC_BEZIER_CURVE.getAbsoluteName());
     }
 
     public ShortCubicBezierCurveCommand createShortCubicBezierCurveCommand(final char commandName, final String data, final PathCommand previousCommand) throws PathException {
-        checkCommandNameOrFail(commandName,
-                               ShortCubicBezierCurveCommand.ABSOLUTE_NAME,
-                               ShortCubicBezierCurveCommand.RELATIVE_NAME,
-                               ShortCubicBezierCurveCommand.class);
+        checkCommandNameOrFail(commandName, SHORT_CUBIC_BEZIER_CURVE, ShortCubicBezierCurveCommand.class);
 
         checkPreviousCommandOrFail(previousCommand, CubicBezierCurveCommand.class);
 
-        return new ShortCubicBezierCurveCommand(commandName == ShortCubicBezierCurveCommand.ABSOLUTE_NAME);
+        return new ShortCubicBezierCurveCommand(commandName == SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName());
     }
 
 
     public QuadraticBezierCurveCommand createQuadraticBezierCurveCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName,
-                               QuadraticBezierCurveCommand.ABSOLUTE_NAME,
-                               QuadraticBezierCurveCommand.RELATIVE_NAME,
-                               QuadraticBezierCurveCommand.class);
+        checkCommandNameOrFail(commandName, QUADRATIC_BEZIER_CURVE, QuadraticBezierCurveCommand.class);
 
-        return new QuadraticBezierCurveCommand(commandName == QuadraticBezierCurveCommand.ABSOLUTE_NAME);
+        return new QuadraticBezierCurveCommand(commandName == QUADRATIC_BEZIER_CURVE.getAbsoluteName());
     }
 
     public ShortQuadraticBezierCurveCommand createShortQuadraticBezierCurveCommand(final char commandName,
                                                                                    final String data,
                                                                                    final PathCommand previousCommand) throws PathException {
-        checkCommandNameOrFail(commandName,
-                               ShortQuadraticBezierCurveCommand.ABSOLUTE_NAME,
-                               ShortQuadraticBezierCurveCommand.RELATIVE_NAME,
-                               ShortQuadraticBezierCurveCommand.class);
+        checkCommandNameOrFail(commandName, SHORT_QUADRATIC_BEZIER_CURVE, ShortQuadraticBezierCurveCommand.class);
 
         checkPreviousCommandOrFail(previousCommand, QuadraticBezierCurveCommand.class);
 
-        return new ShortQuadraticBezierCurveCommand(commandName == ShortQuadraticBezierCurveCommand.ABSOLUTE_NAME);
+        return new ShortQuadraticBezierCurveCommand(commandName == SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName());
     }
 
     // endregion
 
     // region Private
 
-    private void checkCommandNameOrFail(char commandName, final char absoluteName, final char relativeName, final Class commandClass) throws PathException {
-        if (commandName != absoluteName && commandName != relativeName) {
+    private void checkCommandNameOrFail(char name, final CommandName commandName, final Class commandClass) throws PathException {
+        if (commandName.isCommandName(name)) {
             throw new PathException(String.format(INVALID_COMMAND_NAME,
                                                   commandName,
                                                   commandClass.getSimpleName(),
-                                                  absoluteName,
-                                                  relativeName));
+                                                  commandName.getAbsoluteName(),
+                                                  commandName.getRelativeName()));
         }
     }
 

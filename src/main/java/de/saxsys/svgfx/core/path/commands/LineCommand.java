@@ -13,33 +13,67 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 
 /**
- * This represents a line command in a svg path. This class is immutable, so each instance represents a separate position.
+ * This represents a position command in a svg path which will either. This class is immutable, so each instance represents a separate position.
  *
  * @author Xyanid on 01.04.2017.
  */
-public final class LineCommand extends PositionCommand {
+public class LineCommand extends PathCommand {
 
-    // region Constants
-
-    /**
-     * The absolute name of a line command.
-     */
-    public static final char ABSOLUTE_NAME = 'L';
+    // region Fields
 
     /**
-     * The relative name of a line command.
+     * Contains the position which will be done by this command.
      */
-    public static final char RELATIVE_NAME = Character.toLowerCase(ABSOLUTE_NAME);
+    private final Point2D position;
 
     // endregion
 
     // region Field
 
+    /**
+     * Creates a new instance.
+     *
+     * @param isAbsolute determines if the command is an absolute command or not.
+     * @param position   the position to be used.
+     */
     LineCommand(final boolean isAbsolute, final Point2D position) {
-        super(isAbsolute, position);
+        super(isAbsolute);
+        this.position = position;
+    }
+
+    // endregion
+
+    // region Implement PathCommand
+
+    @Override
+    public Point2D getNextPosition(final Point2D position) throws PathException {
+        final Point2D result;
+
+        if (isAbsolute()) {
+            result = this.position;
+        } else {
+            if (position == null) {
+                throw new PathException("Position of a relative command can not be determined if the position is not provided");
+            }
+            result = position.add(this.position);
+        }
+
+        return result;
+    }
+
+    @Override
+    public Rectangle getBoundingBox(final Point2D position) throws PathException {
+        final Point2D nextPosition = getNextPosition(position);
+
+        return new Rectangle(Math.min(position.getX(), nextPosition.getX()),
+                             Math.min(position.getY(), nextPosition.getY()),
+                             Math.abs(isAbsolute() ? nextPosition.getX() - position.getX() : this.position.getX()),
+                             Math.abs(isAbsolute() ? nextPosition.getY() - position.getY() : this.position.getY()));
     }
 
     // endregion

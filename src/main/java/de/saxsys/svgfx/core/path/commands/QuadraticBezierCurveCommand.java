@@ -20,21 +20,7 @@ import de.saxsys.svgfx.core.path.PathException;
  *
  * @author Xyanid on 01.04.2017.
  */
-public final class QuadraticBezierCurveCommand extends BezierCurveCommand {
-
-    // region Constants
-
-    /**
-     * The absolute name of a quadratic bezier curve command.
-     */
-    public static final char ABSOLUTE_NAME = 'Q';
-
-    /**
-     * The relative name of a quadratic bezier curve command.
-     */
-    public static final char RELATIVE_NAME = Character.toLowerCase(ABSOLUTE_NAME);
-
-    // endregion
+public class QuadraticBezierCurveCommand extends BezierCurveCommand {
 
     // region Field
 

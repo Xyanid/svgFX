@@ -46,12 +46,21 @@ public class Wrapper<T> {
     // region Getter/Setter
 
     /**
+     * Returns a {@link Optional} containing the {@link #object}.
+     *
+     * @return a new {@link Optional} containing the {@link #object}.
+     */
+    public Optional<T> getOptional() {
+        return Optional.ofNullable(object);
+    }
+
+    /**
      * Returns the {@link #object}.
      *
      * @return the {@link #object}.
      */
-    public Optional<T> get() {
-        return Optional.ofNullable(object);
+    public T get() {
+        return object;
     }
 
     /**

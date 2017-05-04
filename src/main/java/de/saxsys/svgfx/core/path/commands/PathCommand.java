@@ -13,6 +13,7 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -58,12 +59,6 @@ public abstract class PathCommand {
 
     // endregion
 
-    //    // region Protected
-    //
-
-    //
-    //    // endregion
-
     // region Abstract
 
     /**
@@ -73,7 +68,7 @@ public abstract class PathCommand {
      *
      * @return a new  {@link Point2D} describing the position that is reached after this command has been applied.
      */
-    public abstract Point2D getNextPosition(final Point2D position);
+    public abstract Point2D getNextPosition(final Point2D position) throws PathException;
 
     /**
      * Gets the bounding box which would result of using the given position as the starting point and then applying the internal state of the command.
@@ -82,7 +77,7 @@ public abstract class PathCommand {
      *
      * @return a new  {@link Rectangle} describing the resulting bounding box.
      */
-    public abstract Rectangle getBoundingBox(final Point2D position);
+    public abstract Rectangle getBoundingBox(final Point2D position) throws PathException;
 
     // endregion
 }

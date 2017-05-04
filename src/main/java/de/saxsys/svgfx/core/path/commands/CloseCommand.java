@@ -17,25 +17,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
 /**
- * This represents a position command in a svg path which will either be a {@link MoveCommand} or a {@link LineCommand}. This class is immutable, so each instance represents a separate position.
+ * This represents a command that closes the current path back to he starting point. This class is immutable, so each instance represents a separate position.
  *
  * @author Xyanid on 01.04.2017.
  */
 public class CloseCommand extends PathCommand {
-
-    // region Constants
-
-    /**
-     * The absolute name of a close command.
-     */
-    public static final char ABSOLUTE_NAME = 'Z';
-
-    /**
-     * The relative name of a close command.
-     */
-    public static final char RELATIVE_NAME = Character.toLowerCase(ABSOLUTE_NAME);
-
-    // endregion
 
     // region Fields
 
@@ -53,7 +39,6 @@ public class CloseCommand extends PathCommand {
      *
      * @param isAbsolute determines if the command is absolute or not.
      * @param startPoint the start point.
-     *
      */
     CloseCommand(final boolean isAbsolute, final Point2D startPoint) {
         super(isAbsolute);
