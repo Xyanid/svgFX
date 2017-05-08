@@ -17,6 +17,9 @@ import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 /**
  * This represents a basic path command. All literal operation in this class are supposed to be case insensitive.
  *
@@ -59,6 +62,26 @@ public abstract class PathCommand {
 
     // endregion
 
+    // region Protected
+
+    protected double getDistanceX(final Point2D first, final Point2D second) throws PathException {
+        return getDesiredValue(first, second, value -> 0.0d, (firstValue, secondValue) -> Math.abs(firstValue.getX() - secondValue.getX()));
+    }
+
+    protected double getMinX(final Point2D first, final Point2D second) throws PathException {
+        return getDesiredValue(first, second, Point2D::getX, (firstP, secondP) -> Math.min(firstP.getX(), secondP.getX()));
+    }
+
+    protected double getDistanceY(final Point2D first, final Point2D second) throws PathException {
+        return getDesiredValue(first, second, value -> 0.0d, (firstValue, secondValue) -> Math.abs(firstValue.getY() - secondValue.getY()));
+    }
+
+    protected double getMinY(final Point2D first, final Point2D second) throws PathException {
+        return getDesiredValue(first, second, Point2D::getY, (firstP, secondP) -> Math.min(firstP.getY(), secondP.getY()));
+    }
+
+    // endregion
+
     // region Abstract
 
     /**
@@ -78,6 +101,28 @@ public abstract class PathCommand {
      * @return a new  {@link Rectangle} describing the resulting bounding box.
      */
     public abstract Rectangle getBoundingBox(final Point2D position) throws PathException;
+
+    // endregion
+
+
+    // region Private
+
+    private double getDesiredValue(final Point2D first,
+                                   final Point2D second,
+                                   final Function<Point2D, Double> valueProviderIfNull,
+                                   final BiFunction<Point2D, Point2D, Double> resolver) throws PathException {
+        if (first == null) {
+            if (second == null) {
+                throw new PathException("May not determine minimum if both arguments are null");
+            } else {
+                return valueProviderIfNull.apply(second);
+            }
+        } else if (second == null) {
+            return valueProviderIfNull.apply(first);
+        } else {
+            return resolver.apply(first, second);
+        }
+    }
 
     // endregion
 }

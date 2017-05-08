@@ -63,7 +63,9 @@ public final class CommandFactory {
                                            final PathCommand previousCommand,
                                            final Point2D previousPosition,
                                            final Point2D startingPoint) throws PathException {
-        if (MOVE.isCommandName(delimiter)) {
+        if (delimiter == null) {
+            throw new PathException(String.format("Can not create command for data %s when no command delimiter was found", data));
+        } else if (MOVE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createMoveCommand(delimiter, data);
         } else if (LINE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createLineCommand(delimiter, data);
@@ -227,9 +229,9 @@ public final class CommandFactory {
     // region Private
 
     private void checkCommandNameOrFail(char name, final CommandName commandName, final Class commandClass) throws PathException {
-        if (commandName.isCommandName(name)) {
+        if (!commandName.isCommandName(name)) {
             throw new PathException(String.format(INVALID_COMMAND_NAME,
-                                                  commandName,
+                                                  name,
                                                   commandClass.getSimpleName(),
                                                   commandName.getAbsoluteName(),
                                                   commandName.getRelativeName()));

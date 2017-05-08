@@ -70,10 +70,10 @@ public class LineCommand extends PathCommand {
     public Rectangle getBoundingBox(final Point2D position) throws PathException {
         final Point2D nextPosition = getNextPosition(position);
 
-        return new Rectangle(Math.min(position.getX(), nextPosition.getX()),
-                             Math.min(position.getY(), nextPosition.getY()),
-                             Math.abs(isAbsolute() ? nextPosition.getX() - position.getX() : this.position.getX()),
-                             Math.abs(isAbsolute() ? nextPosition.getY() - position.getY() : this.position.getY()));
+        return new Rectangle(getMinX(position, nextPosition),
+                             getMinY(position, nextPosition),
+                             Math.abs(isAbsolute() ? getDistanceX(nextPosition, position) : this.position.getX()),
+                             Math.abs(isAbsolute() ? getDistanceY(nextPosition, position) : this.position.getY()));
     }
 
     // endregion

@@ -13,6 +13,7 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -55,11 +56,11 @@ public class CloseCommand extends PathCommand {
     }
 
     @Override
-    public final Rectangle getBoundingBox(final Point2D position) {
-        return new Rectangle(Math.min(position.getX(), startPoint.getX()),
-                             Math.min(position.getY(), startPoint.getY()),
-                             Math.abs(position.getX() - startPoint.getX()),
-                             Math.abs(position.getY() - startPoint.getY()));
+    public final Rectangle getBoundingBox(final Point2D position) throws PathException {
+        return new Rectangle(getMinX(position, startPoint),
+                             getMinY(position, startPoint),
+                             getDistanceX(position, startPoint),
+                             getDistanceY(position, startPoint));
     }
 
     // endregion

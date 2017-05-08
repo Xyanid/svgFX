@@ -23,6 +23,8 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static de.saxsys.svgfx.core.utils.StringUtil.isNullOrEmpty;
+
 
 /**
  * @author Xyanid on 01.04.2017.
@@ -48,7 +50,20 @@ public class CommandParser {
 
     // region Public
 
+    /**
+     * Returns the bounding box that would result from the given path command.
+     *
+     * @param path a {@link String} which represents an svg path command chain.
+     *
+     * @return a new {@link Rectangle} determining the bounding box.
+     *
+     * @throws PathException if any error occurrs during the creation of the bounding box.
+     */
     public Rectangle getBoundingBox(final String path) throws PathException {
+
+        if (isNullOrEmpty(path)) {
+            throw new PathException("Can not get bounding box from empty path command");
+        }
 
         final Wrapper<PathCommand> previousCommand = new Wrapper<>();
         final Wrapper<Point2D> startPosition = new Wrapper<>();
@@ -57,7 +72,7 @@ public class CommandParser {
 
         StringUtil.splitByDelimiters(path, COMMAND_NAMES, (delimiter, data) -> {
             final PathCommand nextCommand = CommandFactory.INSTANCE.createCommandOrFail(delimiter,
-                                                                                        path,
+                                                                                        data,
                                                                                         previousCommand.get(),
                                                                                         previousPosition.get(),
                                                                                         startPosition.get());
@@ -83,7 +98,7 @@ public class CommandParser {
 
         final Rectangle commandBoundingBox = command.getBoundingBox(previousPoint.get());
 
-        if (!previousBoundingBox.getOptional().isPresent()) {
+        if (previousBoundingBox.getOptional().isPresent()) {
             result = combineBoundingBoxes(commandBoundingBox, previousBoundingBox.get());
         } else {
             result = commandBoundingBox;
@@ -94,7 +109,12 @@ public class CommandParser {
 
 
     private Rectangle combineBoundingBoxes(final Rectangle first, final Rectangle second) {
+        final double minX = Math.min(first.getX(), second.getX());
+        final double minY = Math.min(first.getY(), second.getY());
+        final double maxX = Math.max(first.getX() + first.getWidth(), second.getX() + second.getWidth());
+        final double maxY = Math.max(first.getY() + first.getHeight(), second.getY() + second.getHeight());
 
+        return new Rectangle(minX, minY, Math.abs(minX - maxX), Math.abs(minY - maxY));
     }
 
     // endregion
