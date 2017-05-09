@@ -26,7 +26,7 @@ public enum CommandName {
     LINE('L'),
     CLOSE('Z'),
     HORIZONTAL_LINE('H'),
-    VERTICAL_LINE('L'),
+    VERTICAL_LINE('V'),
     CUBIC_BEZIER_CURVE('C'),
     SHORT_CUBIC_BEZIER_CURVE('S'),
     QUADRATIC_BEZIER_CURVE('Q'),

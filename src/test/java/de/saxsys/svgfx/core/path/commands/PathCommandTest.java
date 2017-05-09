@@ -19,6 +19,8 @@ import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -45,8 +47,8 @@ public class PathCommandTest {
             }
 
             @Override
-            public Rectangle getBoundingBox(Point2D position) {
-                return null;
+            public Optional<Rectangle> getBoundingBox(Point2D position) {
+                return Optional.empty();
             }
         };
     }
@@ -65,8 +67,8 @@ public class PathCommandTest {
             }
 
             @Override
-            public Rectangle getBoundingBox(Point2D position) {
-                return null;
+            public Optional<Rectangle> getBoundingBox(Point2D position) {
+                return Optional.empty();
             }
         };
 

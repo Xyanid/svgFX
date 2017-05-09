@@ -24,14 +24,14 @@ import java.util.Optional;
  *
  * @author Xyanid on 01.04.2017.
  */
-public class LineCommand extends PathCommand {
+public class VerticalLineCommand extends PathCommand {
 
     // region Fields
 
     /**
-     * Contains the position which will be done by this command.
+     * Determines either the distance to travel if the command is relative or the y coordinate if the command is absolte.
      */
-    protected final Point2D position;
+    private final double distance;
 
     // endregion
 
@@ -41,11 +41,11 @@ public class LineCommand extends PathCommand {
      * Creates a new instance.
      *
      * @param isAbsolute determines if the command is an absolute command or not.
-     * @param position   the position to be used.
+     * @param distance   the distance to be used.
      */
-    LineCommand(final boolean isAbsolute, final Point2D position) {
+    VerticalLineCommand(final boolean isAbsolute, final double distance) {
         super(isAbsolute);
-        this.position = position;
+        this.distance = distance;
     }
 
     // endregion
@@ -54,28 +54,25 @@ public class LineCommand extends PathCommand {
 
     @Override
     public Point2D getNextPosition(final Point2D position) throws PathException {
-        final Point2D result;
-
-        if (isAbsolute()) {
-            result = this.position;
-        } else {
-            if (position == null) {
-                throw new PathException("Position of a relative command can not be determined if the position is not provided");
-            }
-            result = position.add(this.position);
+        if (position == null) {
+            throw new PathException("May not create a new position when there is no position to relate to");
         }
 
-        return result;
+        if (isAbsolute()) {
+            return new Point2D(position.getX(), distance);
+        } else {
+            return new Point2D(position.getX(), position.getY() + distance);
+        }
     }
 
     @Override
     public Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
         final Point2D nextPosition = getNextPosition(position);
 
-        return Optional.of(new Rectangle(getMinX(position, nextPosition),
+        return Optional.of(new Rectangle(position.getX(),
                                          getMinY(position, nextPosition),
-                                         isAbsolute() ? getDistanceX(nextPosition, position) : Math.abs(this.position.getX()),
-                                         isAbsolute() ? getDistanceY(nextPosition, position) : Math.abs(this.position.getY())));
+                                         0.0d,
+                                         isAbsolute() ? getDistanceY(nextPosition, position) : Math.abs(distance)));
     }
 
     // endregion

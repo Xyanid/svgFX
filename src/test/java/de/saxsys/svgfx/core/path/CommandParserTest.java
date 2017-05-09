@@ -62,5 +62,25 @@ public class CommandParserTest {
         assertEquals(15.0d, result.getHeight(), 0.01d);
     }
 
+    @Test
+    public void relativeAndAbsoluteCommandCanBeUsedInAPath() throws PathException {
+        final Rectangle result = cut.getBoundingBox("M 10 5 l 30 20 V 50 h -20 L 10 5");
+
+        assertEquals(10.0d, result.getX(), 0.01d);
+        assertEquals(5.0d, result.getY(), 0.01d);
+        assertEquals(30.0d, result.getWidth(), 0.01d);
+        assertEquals(45.0d, result.getHeight(), 0.01d);
+    }
+
+    @Test
+    public void onlyNonMoveCommandsWillAffectTheBoundingBox() throws PathException {
+        final Rectangle result = cut.getBoundingBox("M 10 5 M 50 5 L 75 10");
+
+        assertEquals(50.0d, result.getX(), 0.01d);
+        assertEquals(5.0d, result.getY(), 0.01d);
+        assertEquals(25.0d, result.getWidth(), 0.01d);
+        assertEquals(5.0d, result.getHeight(), 0.01d);
+    }
+
     // endregion
 }

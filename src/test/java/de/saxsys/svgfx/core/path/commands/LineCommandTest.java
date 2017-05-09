@@ -18,11 +18,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 
 /**
  * @author Xyanid on 08.04.2017.
  */
+@SuppressWarnings ("ConstantConditions")
 public class LineCommandTest {
 
     // region Test
@@ -113,69 +116,68 @@ public class LineCommandTest {
     @Test
     public void dependingOnTheDataTheBoundingBoxWillBeCorrectlyCalculatedIfTheCommandIsRelative() throws Exception {
 
-        final Rectangle boundingBox1 = new LineCommand(false, new Point2D(10.0d, 20.0d)) {}.getBoundingBox(new Point2D(0, 0));
+        final Optional<Rectangle> boundingBox1 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getBoundingBox(new Point2D(0, 0));
 
-        assertEquals(0.0d, boundingBox1.getX(), 0.01d);
-        assertEquals(0.0d, boundingBox1.getY(), 0.01d);
-        assertEquals(10.0d, boundingBox1.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox1.getHeight(), 0.01d);
+        assertEquals(0.0d, boundingBox1.get().getX(), 0.01d);
+        assertEquals(0.0d, boundingBox1.get().getY(), 0.01d);
+        assertEquals(10.0d, boundingBox1.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox1.get().getHeight(), 0.01d);
 
 
-        final Rectangle boundingBox2 = new LineCommand(false, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(0, 0));
+        final Optional<Rectangle> boundingBox2 = new LineCommand(false, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(0, 0));
 
-        assertEquals(-10.0d, boundingBox2.getX(), 0.01d);
-        assertEquals(-20.0d, boundingBox2.getY(), 0.01d);
-        assertEquals(10.0d, boundingBox2.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox2.getHeight(), 0.01d);
+        assertEquals(-10.0d, boundingBox2.get().getX(), 0.01d);
+        assertEquals(-20.0d, boundingBox2.get().getY(), 0.01d);
+        assertEquals(10.0d, boundingBox2.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox2.get().getHeight(), 0.01d);
 
-        final Rectangle boundingBox3 = new LineCommand(false, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(-10, -20));
+        final Optional<Rectangle> boundingBox3 = new LineCommand(false, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(-10, -20));
 
-        assertEquals(-20.0d, boundingBox3.getX(), 0.01d);
-        assertEquals(-40.0d, boundingBox3.getY(), 0.01d);
-        assertEquals(10.0d, boundingBox3.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox3.getHeight(), 0.01d);
+        assertEquals(-20.0d, boundingBox3.get().getX(), 0.01d);
+        assertEquals(-40.0d, boundingBox3.get().getY(), 0.01d);
+        assertEquals(10.0d, boundingBox3.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox3.get().getHeight(), 0.01d);
 
-        final Rectangle boundingBox4 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getBoundingBox(new Point2D(-10, -20));
+        final Optional<Rectangle> boundingBox4 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getBoundingBox(new Point2D(-10, -20));
 
-        assertEquals(-10.0d, boundingBox4.getX(), 0.01d);
-        assertEquals(-20.0d, boundingBox4.getY(), 0.01d);
-        assertEquals(10.0d, boundingBox4.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox4.getHeight(), 0.01d);
+        assertEquals(-10.0d, boundingBox4.get().getX(), 0.01d);
+        assertEquals(-20.0d, boundingBox4.get().getY(), 0.01d);
+        assertEquals(10.0d, boundingBox4.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox4.get().getHeight(), 0.01d);
     }
 
     @Test
     public void dependingOnTheDataTheBoundingBoxWillBeCorrectlyCalculatedIfTheCommandIsAbsolute() throws Exception {
 
-        final Rectangle boundingBox1 = new LineCommand(true, new Point2D(10.0d, 20.0d)) {}.getBoundingBox(new Point2D(0, 0));
+        final Optional<Rectangle> boundingBox1 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getBoundingBox(new Point2D(0, 0));
 
-        assertEquals(0.0d, boundingBox1.getX(), 0.01d);
-        assertEquals(0.0d, boundingBox1.getY(), 0.01d);
-        assertEquals(10.0d, boundingBox1.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox1.getHeight(), 0.01d);
+        assertEquals(0.0d, boundingBox1.get().getX(), 0.01d);
+        assertEquals(0.0d, boundingBox1.get().getY(), 0.01d);
+        assertEquals(10.0d, boundingBox1.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox1.get().getHeight(), 0.01d);
 
 
-        final Rectangle boundingBox2 = new LineCommand(true, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(0, 0));
+        final Optional<Rectangle> boundingBox2 = new LineCommand(true, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(0, 0));
 
-        assertEquals(-10.0d, boundingBox2.getX(), 0.01d);
-        assertEquals(-20.0d, boundingBox2.getY(), 0.01d);
-        assertEquals(10.0d, boundingBox2.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox2.getHeight(), 0.01d);
+        assertEquals(-10.0d, boundingBox2.get().getX(), 0.01d);
+        assertEquals(-20.0d, boundingBox2.get().getY(), 0.01d);
+        assertEquals(10.0d, boundingBox2.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox2.get().getHeight(), 0.01d);
 
-        final Rectangle boundingBox3 = new LineCommand(true, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(-10, -40));
+        final Optional<Rectangle> boundingBox3 = new LineCommand(true, new Point2D(-10.0d, -20.0d)).getBoundingBox(new Point2D(-10, -40));
 
-        assertEquals(-10.0d, boundingBox3.getX(), 0.01d);
-        assertEquals(-40.0d, boundingBox3.getY(), 0.01d);
-        assertEquals(0.0d, boundingBox3.getWidth(), 0.01d);
-        assertEquals(20.0d, boundingBox3.getHeight(), 0.01d);
+        assertEquals(-10.0d, boundingBox3.get().getX(), 0.01d);
+        assertEquals(-40.0d, boundingBox3.get().getY(), 0.01d);
+        assertEquals(0.0d, boundingBox3.get().getWidth(), 0.01d);
+        assertEquals(20.0d, boundingBox3.get().getHeight(), 0.01d);
 
-        final Rectangle boundingBox4 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getBoundingBox(new Point2D(-10, -20));
+        final Optional<Rectangle> boundingBox4 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getBoundingBox(new Point2D(-10, -20));
 
-        assertEquals(-10.0d, boundingBox4.getX(), 0.01d);
-        assertEquals(-20.0d, boundingBox4.getY(), 0.01d);
-        assertEquals(20.0d, boundingBox4.getWidth(), 0.01d);
-        assertEquals(40.0d, boundingBox4.getHeight(), 0.01d);
+        assertEquals(-10.0d, boundingBox4.get().getX(), 0.01d);
+        assertEquals(-20.0d, boundingBox4.get().getY(), 0.01d);
+        assertEquals(20.0d, boundingBox4.get().getWidth(), 0.01d);
+        assertEquals(40.0d, boundingBox4.get().getHeight(), 0.01d);
     }
-
 
     // endregion
 }

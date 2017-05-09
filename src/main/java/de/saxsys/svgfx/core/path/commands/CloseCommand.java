@@ -17,6 +17,8 @@ import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Optional;
+
 /**
  * This represents a command that closes the current path back to he starting point. This class is immutable, so each instance represents a separate position.
  *
@@ -33,7 +35,7 @@ public class CloseCommand extends PathCommand {
 
     // endregion
 
-    // region Field
+    // region Constructor
 
     /**
      * Creates a new instance and expects a {@link Point2D}, which is the first position that has been moved to in a path command.
@@ -56,11 +58,11 @@ public class CloseCommand extends PathCommand {
     }
 
     @Override
-    public final Rectangle getBoundingBox(final Point2D position) throws PathException {
-        return new Rectangle(getMinX(position, startPoint),
-                             getMinY(position, startPoint),
-                             getDistanceX(position, startPoint),
-                             getDistanceY(position, startPoint));
+    public final Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
+        return Optional.of(new Rectangle(getMinX(position, startPoint),
+                                         getMinY(position, startPoint),
+                                         getDistanceX(position, startPoint),
+                                         getDistanceY(position, startPoint)));
     }
 
     // endregion

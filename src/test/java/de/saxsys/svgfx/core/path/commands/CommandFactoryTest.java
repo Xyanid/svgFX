@@ -14,7 +14,6 @@
 package de.saxsys.svgfx.core.path.commands;
 
 import de.saxsys.svgfx.core.path.PathException;
-import javafx.geometry.Point2D;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -38,8 +37,8 @@ public class CommandFactoryTest {
 
     @Test
     public void aMoveCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createMoveCommand(MOVE.getAbsoluteName(), "10 10");
-        CommandFactory.INSTANCE.createMoveCommand(MOVE.getRelativeName(), "10 10");
+        CommandFactory.INSTANCE.createMoveCommand('M', "10 10");
+        CommandFactory.INSTANCE.createMoveCommand('m', "10 10");
     }
 
     @Test
@@ -89,8 +88,8 @@ public class CommandFactoryTest {
 
     @Test
     public void aLineCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createLineCommand(LINE.getAbsoluteName(), "10 10");
-        CommandFactory.INSTANCE.createLineCommand(LINE.getRelativeName(), "10 10");
+        CommandFactory.INSTANCE.createLineCommand('L', "10 10");
+        CommandFactory.INSTANCE.createLineCommand('l', "10 10");
     }
 
     @Test
@@ -135,13 +134,13 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aVerticalLineCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createVerticalLineCommand('X', "10", Point2D.ZERO);
+        CommandFactory.INSTANCE.createVerticalLineCommand('X', "10");
     }
 
     @Test
     public void aVerticalLineCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), "10", Point2D.ZERO);
-        CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getRelativeName(), "10", Point2D.ZERO);
+        CommandFactory.INSTANCE.createVerticalLineCommand('V', "10");
+        CommandFactory.INSTANCE.createVerticalLineCommand('v', "10");
     }
 
     @Test
@@ -152,7 +151,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data, Point2D.ZERO);
+                CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -170,7 +169,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data, Point2D.ZERO);
+                CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data);
             } catch (final PathException ignore) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -179,13 +178,13 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aHorizontalLineCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createHorizontalLineCommand('X', "10", Point2D.ZERO);
+        CommandFactory.INSTANCE.createHorizontalLineCommand('X', "10");
     }
 
     @Test
     public void aHorizontalLineCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), "10", Point2D.ZERO);
-        CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getRelativeName(), "10", Point2D.ZERO);
+        CommandFactory.INSTANCE.createHorizontalLineCommand('H', "10");
+        CommandFactory.INSTANCE.createHorizontalLineCommand('h', "10");
     }
 
     @Test
@@ -198,7 +197,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data, Point2D.ZERO);
+                CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -216,7 +215,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data, Point2D.ZERO);
+                CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }

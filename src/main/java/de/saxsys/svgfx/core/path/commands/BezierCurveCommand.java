@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This represents a bezier curve command in a svg path which will either be a {@link CubicBezierCurveCommand}, {@link ShortCubicBezierCurveCommand}, {@link QuadraticBezierCurveCommand}
@@ -32,7 +33,7 @@ public abstract class BezierCurveCommand extends PathCommand {
 
     // endregion
 
-    // region Field
+    // region Constructor
 
     /**
      * Creates a new instance.
@@ -53,10 +54,10 @@ public abstract class BezierCurveCommand extends PathCommand {
     }
 
     @Override
-    public final Rectangle getBoundingBox(final Point2D position) {
+    public final Optional<Rectangle> getBoundingBox(final Point2D position) {
         final Point2D nextPosition = getNextPosition(position);
 
-        return null;
+        return Optional.empty();
     }
 
     // endregion

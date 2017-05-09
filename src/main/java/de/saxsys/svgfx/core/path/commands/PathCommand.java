@@ -17,6 +17,7 @@ import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -98,9 +99,9 @@ public abstract class PathCommand {
      *
      * @param position the position to be use as the starting point.
      *
-     * @return a new  {@link Rectangle} describing the resulting bounding box.
+     * @return a {@link Optional} describing the resulting bounding box.
      */
-    public abstract Rectangle getBoundingBox(final Point2D position) throws PathException;
+    public abstract Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException;
 
     // endregion
 

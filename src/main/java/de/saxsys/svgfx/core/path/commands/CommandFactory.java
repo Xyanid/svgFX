@@ -61,7 +61,6 @@ public final class CommandFactory {
     public PathCommand createCommandOrFail(final Character delimiter,
                                            final String data,
                                            final PathCommand previousCommand,
-                                           final Point2D previousPosition,
                                            final Point2D startingPoint) throws PathException {
         if (delimiter == null) {
             throw new PathException(String.format("Can not create command for data %s when no command delimiter was found", data));
@@ -70,9 +69,9 @@ public final class CommandFactory {
         } else if (LINE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createLineCommand(delimiter, data);
         } else if (HORIZONTAL_LINE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createHorizontalLineCommand(delimiter, data, previousPosition);
+            return CommandFactory.INSTANCE.createHorizontalLineCommand(delimiter, data);
         } else if (VERTICAL_LINE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createVerticalLineCommand(delimiter, data, previousPosition);
+            return CommandFactory.INSTANCE.createVerticalLineCommand(delimiter, data);
         } else if (CLOSE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createCloseCommand(delimiter, startingPoint);
         } else if (CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
@@ -100,12 +99,12 @@ public final class CommandFactory {
      * @throws PathException if the commandName is not absolute or relative {@link CommandName#MOVE}
      *                       or the data does not contain two numeric values separated be whitespaces or one comma.
      */
-    public LineCommand createMoveCommand(final char commandName, final String data) throws PathException {
-        checkCommandNameOrFail(commandName, MOVE, LineCommand.class);
+    public MoveCommand createMoveCommand(final char commandName, final String data) throws PathException {
+        checkCommandNameOrFail(commandName, MOVE, MoveCommand.class);
 
         final Point2D position = createPoint(data.trim());
 
-        return new LineCommand(commandName == MOVE.getAbsoluteName(), position);
+        return new MoveCommand(commandName == MOVE.getAbsoluteName(), position);
     }
 
     /**
@@ -139,8 +138,8 @@ public final class CommandFactory {
      * @throws PathException if the commandName is not absolute or relative {@link CommandName#HORIZONTAL_LINE}
      *                       or if the given data is not a number.
      */
-    public LineCommand createHorizontalLineCommand(final char commandName, final String data, final Point2D previousPoint) throws PathException {
-        checkCommandNameOrFail(commandName, HORIZONTAL_LINE, LineCommand.class);
+    public HorizontalLineCommand createHorizontalLineCommand(final char commandName, final String data) throws PathException {
+        checkCommandNameOrFail(commandName, HORIZONTAL_LINE, HorizontalLineCommand.class);
 
         final double distance;
         try {
@@ -149,7 +148,7 @@ public final class CommandFactory {
             throw new PathException(String.format(INVALID_NUMBER_FORMAT, data), e);
         }
 
-        return new LineCommand(commandName == HORIZONTAL_LINE.getAbsoluteName(), new Point2D(distance, previousPoint.getY()));
+        return new HorizontalLineCommand(commandName == HORIZONTAL_LINE.getAbsoluteName(), distance);
     }
 
     /**
@@ -163,8 +162,8 @@ public final class CommandFactory {
      * @throws PathException if the commandName is not absolute or relative {@link CommandName#VERTICAL_LINE}
      *                       or the given data is not a number.
      */
-    public LineCommand createVerticalLineCommand(final char commandName, final String data, final Point2D previousPoint) throws PathException {
-        checkCommandNameOrFail(commandName, VERTICAL_LINE, LineCommand.class);
+    public VerticalLineCommand createVerticalLineCommand(final char commandName, final String data) throws PathException {
+        checkCommandNameOrFail(commandName, VERTICAL_LINE, VerticalLineCommand.class);
 
         final double distance;
         try {
@@ -173,7 +172,7 @@ public final class CommandFactory {
             throw new PathException(String.format("Could not parse given data [%s] into a number", data), e);
         }
 
-        return new LineCommand(commandName == VERTICAL_LINE.getAbsoluteName(), new Point2D(previousPoint.getX(), distance));
+        return new VerticalLineCommand(commandName == VERTICAL_LINE.getAbsoluteName(), distance);
     }
 
     /**

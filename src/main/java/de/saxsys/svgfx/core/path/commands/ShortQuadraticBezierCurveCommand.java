@@ -22,7 +22,7 @@ import de.saxsys.svgfx.core.path.PathException;
  */
 public class ShortQuadraticBezierCurveCommand extends BezierCurveCommand {
 
-    // region Field
+    // region Constructor
 
     ShortQuadraticBezierCurveCommand(final boolean isAbsolute) throws PathException {
         super(isAbsolute);

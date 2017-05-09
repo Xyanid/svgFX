@@ -24,16 +24,8 @@ import java.util.Optional;
  *
  * @author Xyanid on 01.04.2017.
  */
-public class LineCommand extends PathCommand {
+public class MoveCommand extends LineCommand {
 
-    // region Fields
-
-    /**
-     * Contains the position which will be done by this command.
-     */
-    protected final Point2D position;
-
-    // endregion
 
     // region Constructor
 
@@ -43,39 +35,26 @@ public class LineCommand extends PathCommand {
      * @param isAbsolute determines if the command is an absolute command or not.
      * @param position   the position to be used.
      */
-    LineCommand(final boolean isAbsolute, final Point2D position) {
-        super(isAbsolute);
-        this.position = position;
+    MoveCommand(final boolean isAbsolute, final Point2D position) {
+        super(isAbsolute, position);
     }
 
     // endregion
 
-    // region Implement PathCommand
+    // region Implement LineCommand
 
-    @Override
-    public Point2D getNextPosition(final Point2D position) throws PathException {
-        final Point2D result;
-
-        if (isAbsolute()) {
-            result = this.position;
-        } else {
-            if (position == null) {
-                throw new PathException("Position of a relative command can not be determined if the position is not provided");
-            }
-            result = position.add(this.position);
-        }
-
-        return result;
-    }
-
+    /**
+     * Returns {@link Optional#empty()}.
+     *
+     * @param position value is irrelevant
+     *
+     * @return {@link Optional#empty()}.
+     *
+     * @throws PathException never.
+     */
     @Override
     public Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
-        final Point2D nextPosition = getNextPosition(position);
-
-        return Optional.of(new Rectangle(getMinX(position, nextPosition),
-                                         getMinY(position, nextPosition),
-                                         isAbsolute() ? getDistanceX(nextPosition, position) : Math.abs(this.position.getX()),
-                                         isAbsolute() ? getDistanceY(nextPosition, position) : Math.abs(this.position.getY())));
+        return Optional.empty();
     }
 
     // endregion

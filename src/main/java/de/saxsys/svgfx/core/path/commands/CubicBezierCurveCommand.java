@@ -22,7 +22,7 @@ import de.saxsys.svgfx.core.path.PathException;
  */
 public class CubicBezierCurveCommand extends BezierCurveCommand {
 
-    // region Field
+    // region Constructor
 
     CubicBezierCurveCommand(final boolean isAbsolute) throws PathException {
         super(isAbsolute);

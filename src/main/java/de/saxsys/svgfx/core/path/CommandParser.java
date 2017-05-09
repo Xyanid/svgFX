@@ -14,6 +14,7 @@
 package de.saxsys.svgfx.core.path;
 
 import de.saxsys.svgfx.core.path.commands.CommandFactory;
+import de.saxsys.svgfx.core.path.commands.MoveCommand;
 import de.saxsys.svgfx.core.path.commands.PathCommand;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import de.saxsys.svgfx.core.utils.Wrapper;
@@ -22,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import static de.saxsys.svgfx.core.utils.StringUtil.isNullOrEmpty;
 
@@ -65,25 +67,29 @@ public class CommandParser {
             throw new PathException("Can not get bounding box from empty path command");
         }
 
-        final Wrapper<PathCommand> previousCommand = new Wrapper<>();
         final Wrapper<Point2D> startPosition = new Wrapper<>();
         final Wrapper<Point2D> previousPosition = new Wrapper<>();
+        final Wrapper<PathCommand> previousCommand = new Wrapper<>();
         final Wrapper<Rectangle> previousBoundingBox = new Wrapper<>();
 
         StringUtil.splitByDelimiters(path, COMMAND_NAMES, (delimiter, data) -> {
             final PathCommand nextCommand = CommandFactory.INSTANCE.createCommandOrFail(delimiter,
                                                                                         data,
                                                                                         previousCommand.get(),
-                                                                                        previousPosition.get(),
-                                                                                        startPosition.get());
+                                                                                        startPosition.getOptional().orElse(Point2D.ZERO));
 
-            previousBoundingBox.set(getNextBoundingBox(nextCommand, previousPosition, previousBoundingBox));
+            final Optional<Rectangle> nextBoundingBox = getNextBoundingBox(nextCommand,
+                                                                           previousPosition.getOptional().orElse(Point2D.ZERO),
+                                                                           previousCommand,
+                                                                           previousBoundingBox);
+            nextBoundingBox.ifPresent(previousBoundingBox::set);
 
-            previousPosition.set(nextCommand.getNextPosition(previousPosition.get()));
-
-            if (!startPosition.getOptional().isPresent() && previousPosition.getOptional().isPresent()) {
+            if (!startPosition.getOptional().isPresent() && previousPosition.getOptional().isPresent()
+                && !MoveCommand.class.isAssignableFrom(nextCommand.getClass())) {
                 startPosition.set(previousPosition.get());
             }
+
+            previousPosition.set(nextCommand.getNextPosition(previousPosition.get()));
         });
 
         return previousBoundingBox.getOptional().orElseThrow(() -> new PathException(String.format("Could not get bounding box from data [%s]", path)));
@@ -93,15 +99,21 @@ public class CommandParser {
 
     // region Private
 
-    private Rectangle getNextBoundingBox(final PathCommand command, final Wrapper<Point2D> previousPoint, final Wrapper<Rectangle> previousBoundingBox) throws PathException {
-        final Rectangle result;
+    private Optional<Rectangle> getNextBoundingBox(final PathCommand currentCommand,
+                                                   final Point2D previousPoint,
+                                                   final Wrapper<PathCommand> previousCommand,
+                                                   final Wrapper<Rectangle> previousBoundingBox) throws PathException {
+        final Optional<Rectangle> result;
 
-        final Rectangle commandBoundingBox = command.getBoundingBox(previousPoint.get());
-
-        if (previousBoundingBox.getOptional().isPresent()) {
-            result = combineBoundingBoxes(commandBoundingBox, previousBoundingBox.get());
-        } else {
+        final Optional<Rectangle> commandBoundingBox = currentCommand.getBoundingBox(previousPoint);
+        if (commandBoundingBox.isPresent() && previousBoundingBox.getOptional().isPresent()) {
+            result = Optional.of(combineBoundingBoxes(commandBoundingBox.get(), previousBoundingBox.get()));
+        } else if (commandBoundingBox.isPresent()) {
             result = commandBoundingBox;
+        } else if (previousBoundingBox.getOptional().isPresent()) {
+            result = previousBoundingBox.getOptional();
+        } else {
+            result = Optional.empty();
         }
 
         return result;
