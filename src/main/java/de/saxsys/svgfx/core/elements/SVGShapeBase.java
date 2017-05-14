@@ -223,6 +223,8 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
      * @param shape the {@link Shape} to use.
      *
      * @return a new {@link de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle.SVGTypeRectangle}.
+     *
+     * @throws SVGException if an error occurs during creation of the bounding box.
      */
     protected abstract SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final TShape shape) throws SVGException;
 

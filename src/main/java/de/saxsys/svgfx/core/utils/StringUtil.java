@@ -146,6 +146,7 @@ public final class StringUtil {
      * @param data             the data that needs to be split.
      * @param delimiters       the delimiters that indicate when the string needs to be split.
      * @param consumePredicate the {@link ThrowablePredicate} to use, which will determine if the currently split value will be part of the result.
+     * @param <E>              the type of exception to throw.
      *
      * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters, delimiters are not present in the list.
      *
@@ -169,8 +170,7 @@ public final class StringUtil {
      * The data that has been read so far and the last know delimiter will be consumed by the {@link ThrowableBiConsumer}. Unless this function returns true, the data will be accumulated.
      * <p>
      * Imaging the following string with T and R being the sole delimiters. The following would happen:
-     * <pre>
-     * <table>
+     * <table summary="describes behavior">
      * <tr>
      * <th>Provided data</th>
      * <th>Consumption</th>
@@ -238,11 +238,11 @@ public final class StringUtil {
      * <td>null</td>
      * </tr>
      * </table>
-     * </pre>
      *
      * @param data          the data that needs to be split.
      * @param delimiters    the delimiters that indicate when the string needs to be split.
      * @param splitConsumer the {@link ThrowableBiConsumer} which will consumeOrFail each split action.
+     * @param <E>           the type of exception to throw.
      *
      * @throws E when an error occurs during the splitting.
      */

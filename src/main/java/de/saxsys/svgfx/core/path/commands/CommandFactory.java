@@ -131,7 +131,8 @@ public final class CommandFactory {
      * Creates a new {@link LineCommand} using the given data, which need to contain the command name followed by one numeric value
      * which determine which position is moved to.
      *
-     * @param data the data describing the command.
+     * @param commandName the name of the command.
+     * @param data        the data describing the command.
      *
      * @return a new {@link LineCommand}.
      *
@@ -155,7 +156,8 @@ public final class CommandFactory {
      * Creates a new {@link LineCommand} using the given data, which need to contain the command name followed by one numeric value
      * which determine which position is moved to.
      *
-     * @param data the data describing the command.
+     * @param commandName the name of the command.
+     * @param data        the data describing the command.
      *
      * @return a new {@link LineCommand}.
      *

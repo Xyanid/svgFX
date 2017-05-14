@@ -106,7 +106,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
     /**
      * Creates a result represented by this element and uses the given supplier in order to fetch data needed to initialize the result
      *
-     * @param parentStyle the {@link SVGCssStyle} to use, which is the parent style of this element. May be null if this element does not have a parent.
+     * @param parentStyle     the {@link SVGCssStyle} to use, which is the parent style of this element. May be null if this element does not have a parent.
+     * @param parentTransform the transform of the parent of this element.
      *
      * @return the result produced by this element.
      *

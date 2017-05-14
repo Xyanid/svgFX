@@ -91,6 +91,8 @@ public abstract class PathCommand {
      * @param position the position from which to start.
      *
      * @return a new  {@link Point2D} describing the position that is reached after this command has been applied.
+     *
+     * @throws PathException if the next position can not be determined.
      */
     public abstract Point2D getNextPosition(final Point2D position) throws PathException;
 
@@ -100,6 +102,8 @@ public abstract class PathCommand {
      * @param position the position to be use as the starting point.
      *
      * @return a {@link Optional} describing the resulting bounding box.
+     *
+     * @throws PathException if the bounding box can not be determined.
      */
     public abstract Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException;
 

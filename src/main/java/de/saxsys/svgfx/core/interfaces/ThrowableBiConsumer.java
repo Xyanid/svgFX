@@ -41,6 +41,8 @@ public interface ThrowableBiConsumer<T, U, E extends Exception> extends BiConsum
      *
      * @param first  the first element to be consumed.
      * @param second the second element to be consumed.
+     *
+     * @throws E if an error occurs.
      */
     void acceptOrFail(final T first, final U second) throws E;
 }
