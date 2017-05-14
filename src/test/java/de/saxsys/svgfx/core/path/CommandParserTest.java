@@ -82,5 +82,25 @@ public class CommandParserTest {
         assertEquals(5.0d, result.getHeight(), 0.01d);
     }
 
+    @Test
+    public void aCloseCommandWillNotUseThePositionsDefinedByMoveCommands() throws PathException {
+        final Rectangle result = cut.getBoundingBox("M 60 5 L 75 10 V 20 Z");
+
+        assertEquals(60.0d, result.getX(), 0.01d);
+        assertEquals(5.0d, result.getY(), 0.01d);
+        assertEquals(15.0d, result.getWidth(), 0.01d);
+        assertEquals(15.0d, result.getHeight(), 0.01d);
+    }
+
+    @Test
+    public void aCloseCommandAtTheStartWillNotAffectTheBoundingBox() throws PathException {
+        final Rectangle result = cut.getBoundingBox("Z M 5 10 L 15 30");
+
+        assertEquals(5.0d, result.getX(), 0.01d);
+        assertEquals(10.0d, result.getY(), 0.01d);
+        assertEquals(10.0d, result.getWidth(), 0.01d);
+        assertEquals(20.0d, result.getHeight(), 0.01d);
+    }
+
     // endregion
 }

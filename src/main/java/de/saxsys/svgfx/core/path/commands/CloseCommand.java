@@ -59,10 +59,7 @@ public class CloseCommand extends PathCommand {
 
     @Override
     public final Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
-        return Optional.of(new Rectangle(getMinX(position, startPoint),
-                                         getMinY(position, startPoint),
-                                         getDistanceX(position, startPoint),
-                                         getDistanceY(position, startPoint)));
+        return Optional.empty();
     }
 
     // endregion

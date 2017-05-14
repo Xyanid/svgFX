@@ -80,14 +80,10 @@ public class CommandParser {
 
             final Optional<Rectangle> nextBoundingBox = getNextBoundingBox(nextCommand,
                                                                            previousPosition.getOptional().orElse(Point2D.ZERO),
-                                                                           previousCommand,
                                                                            previousBoundingBox);
             nextBoundingBox.ifPresent(previousBoundingBox::set);
 
-            if (!startPosition.getOptional().isPresent() && previousPosition.getOptional().isPresent()
-                && !MoveCommand.class.isAssignableFrom(nextCommand.getClass())) {
-                startPosition.set(previousPosition.get());
-            }
+            setStartPosition(startPosition, previousPosition, nextCommand);
 
             previousPosition.set(nextCommand.getNextPosition(previousPosition.get()));
         });
@@ -101,7 +97,6 @@ public class CommandParser {
 
     private Optional<Rectangle> getNextBoundingBox(final PathCommand currentCommand,
                                                    final Point2D previousPoint,
-                                                   final Wrapper<PathCommand> previousCommand,
                                                    final Wrapper<Rectangle> previousBoundingBox) throws PathException {
         final Optional<Rectangle> result;
 
@@ -119,7 +114,6 @@ public class CommandParser {
         return result;
     }
 
-
     private Rectangle combineBoundingBoxes(final Rectangle first, final Rectangle second) {
         final double minX = Math.min(first.getX(), second.getX());
         final double minY = Math.min(first.getY(), second.getY());
@@ -127,6 +121,14 @@ public class CommandParser {
         final double maxY = Math.max(first.getY() + first.getHeight(), second.getY() + second.getHeight());
 
         return new Rectangle(minX, minY, Math.abs(minX - maxX), Math.abs(minY - maxY));
+    }
+
+    private void setStartPosition(final Wrapper<Point2D> startPosition, final Wrapper<Point2D> previousPosition, final PathCommand command) {
+        if (!startPosition.getOptional().isPresent()
+            && previousPosition.getOptional().isPresent()
+            && !MoveCommand.class.isAssignableFrom(command.getClass())) {
+            startPosition.set(previousPosition.get());
+        }
     }
 
     // endregion
