@@ -32,28 +32,28 @@ public class HorizontalLineCommandTest {
 
     @Test (expected = PathException.class)
     public void anExceptionWillBeThrownWhenRequestingTheNextPositionAndProvidingNoPoint() throws Exception {
-        new HorizontalLineCommand(false, 0.0d).getNextPosition(null);
+        new HorizontalLineCommand(false, 0.0d).getAbsoluteEndPoint(null);
     }
 
     @Test
     public void dependingOnTheDataTheNextPositionWillBeCorrectlyCalculatedIfTheCommandIsRelative() throws Exception {
 
-        final Point2D position1 = new HorizontalLineCommand(false, 10.0d).getNextPosition(new Point2D(10, 10));
+        final Point2D position1 = new HorizontalLineCommand(false, 10.0d).getAbsoluteEndPoint(new Point2D(10, 10));
 
         assertEquals(20.0d, position1.getX(), 0.01d);
         assertEquals(10.0d, position1.getY(), 0.01d);
 
-        final Point2D position2 = new HorizontalLineCommand(false, -10.0d).getNextPosition(new Point2D(20, 20));
+        final Point2D position2 = new HorizontalLineCommand(false, -10.0d).getAbsoluteEndPoint(new Point2D(20, 20));
 
         assertEquals(10.0d, position2.getX(), 0.01d);
         assertEquals(20.0d, position2.getY(), 0.01d);
 
-        final Point2D position3 = new HorizontalLineCommand(false, 10.0d).getNextPosition(new Point2D(-20, 30));
+        final Point2D position3 = new HorizontalLineCommand(false, 10.0d).getAbsoluteEndPoint(new Point2D(-20, 30));
 
         assertEquals(-10.0d, position3.getX(), 0.01d);
         assertEquals(30.0d, position3.getY(), 0.01d);
 
-        final Point2D position4 = new HorizontalLineCommand(false, -10.0d).getNextPosition(new Point2D(-10, 40));
+        final Point2D position4 = new HorizontalLineCommand(false, -10.0d).getAbsoluteEndPoint(new Point2D(-10, 40));
 
         assertEquals(-20.0d, position4.getX(), 0.01d);
         assertEquals(40.0d, position4.getY(), 0.01d);
@@ -62,22 +62,22 @@ public class HorizontalLineCommandTest {
     @Test
     public void dependingOnTheDataTheNextPositionWillBeCorrectlyCalculatedIfTheCommandIsAbsolute() throws Exception {
 
-        final Point2D position1 = new HorizontalLineCommand(true, 10.0d).getNextPosition(new Point2D(10, 10));
+        final Point2D position1 = new HorizontalLineCommand(true, 10.0d).getAbsoluteEndPoint(new Point2D(10, 10));
 
         assertEquals(10.0d, position1.getX(), 0.01d);
         assertEquals(10.0d, position1.getY(), 0.01d);
 
-        final Point2D position2 = new HorizontalLineCommand(true, -10.0d).getNextPosition(new Point2D(20, 20));
+        final Point2D position2 = new HorizontalLineCommand(true, -10.0d).getAbsoluteEndPoint(new Point2D(20, 20));
 
         assertEquals(-10.0d, position2.getX(), 0.01d);
         assertEquals(20.0d, position2.getY(), 0.01d);
 
-        final Point2D position3 = new HorizontalLineCommand(true, 10.0d).getNextPosition(new Point2D(-20, 30));
+        final Point2D position3 = new HorizontalLineCommand(true, 10.0d).getAbsoluteEndPoint(new Point2D(-20, 30));
 
         assertEquals(10.0d, position3.getX(), 0.01d);
         assertEquals(30.0d, position3.getY(), 0.01d);
 
-        final Point2D position4 = new HorizontalLineCommand(true, -10.0d).getNextPosition(new Point2D(-10, 40));
+        final Point2D position4 = new HorizontalLineCommand(true, -10.0d).getAbsoluteEndPoint(new Point2D(-10, 40));
 
         assertEquals(-10.0d, position4.getX(), 0.01d);
         assertEquals(40.0d, position4.getY(), 0.01d);

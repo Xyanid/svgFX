@@ -35,7 +35,7 @@ public class CloseCommandTest {
         for (int i = 0; i < 20; ++i) {
             final Point2D expected = new Point2D(Math.random() * multiplier, Math.random() * multiplier);
 
-            assertEquals(expected, new CloseCommand(false, expected).getNextPosition(new Point2D(Math.random() * multiplier, Math.random() * multiplier)));
+            assertEquals(expected, new CloseCommand(false, expected).getAbsoluteEndPoint(new Point2D(Math.random() * multiplier, Math.random() * multiplier)));
         }
     }
 

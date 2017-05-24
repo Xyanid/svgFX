@@ -11,22 +11,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package de.saxsys.svgfx.core.path.commands;
-
-import de.saxsys.svgfx.core.path.PathException;
+package de.saxsys.svgfx.core;
 
 /**
- * This represents a short quadratic bezier curve command in a svg path. This class is immutable, so each instance represents a separate position.
- *
- * @author Xyanid on 01.04.2017.
+ * @author Xyanid on 22.05.2017.
  */
-public class ShortQuadraticBezierCurveCommand extends BezierCurveCommand {
+public class TestUtil {
 
-    // region Constructor
+    public static final double MINIMUM_DEVIATION = 0.01d;
 
-    ShortQuadraticBezierCurveCommand(final boolean isAbsolute) throws PathException {
-        super(isAbsolute);
-    }
-
-    // endregion
+    public static final double NORMAL_DEVIATION = 0.1d;
 }

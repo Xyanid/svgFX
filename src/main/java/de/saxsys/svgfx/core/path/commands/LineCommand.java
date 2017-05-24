@@ -31,7 +31,7 @@ public class LineCommand extends PathCommand {
     /**
      * Contains the position which will be done by this command.
      */
-    protected final Point2D position;
+    protected final Point2D endPoint;
 
     // endregion
 
@@ -41,11 +41,24 @@ public class LineCommand extends PathCommand {
      * Creates a new instance.
      *
      * @param isAbsolute determines if the command is an absolute command or not.
-     * @param position   the position to be used.
+     * @param endPoint   the position to be used.
      */
-    LineCommand(final boolean isAbsolute, final Point2D position) {
+    LineCommand(final boolean isAbsolute, final Point2D endPoint) {
         super(isAbsolute);
-        this.position = position;
+        this.endPoint = endPoint;
+    }
+
+    // endregion
+
+    // region Getter
+
+    /**
+     * Returns the {@link #endPoint}.
+     *
+     * @return the {@link #endPoint}.
+     */
+    public Point2D getEndPoint() {
+        return endPoint;
     }
 
     // endregion
@@ -53,29 +66,18 @@ public class LineCommand extends PathCommand {
     // region Implement PathCommand
 
     @Override
-    public Point2D getNextPosition(final Point2D position) throws PathException {
-        final Point2D result;
-
-        if (isAbsolute()) {
-            result = this.position;
-        } else {
-            if (position == null) {
-                throw new PathException("Position of a relative command can not be determined if the position is not provided");
-            }
-            result = position.add(this.position);
-        }
-
-        return result;
+    public Point2D getAbsoluteEndPoint(final Point2D absoluteCurrentPoint) throws PathException {
+        return addPoints(absoluteCurrentPoint, this.endPoint);
     }
 
     @Override
-    public Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
-        final Point2D nextPosition = getNextPosition(position);
+    public Optional<Rectangle> getBoundingBox(final Point2D absoluteCurrentPoint) throws PathException {
+        final Point2D nextPosition = getAbsoluteEndPoint(absoluteCurrentPoint);
 
-        return Optional.of(new Rectangle(getMinX(position, nextPosition),
-                                         getMinY(position, nextPosition),
-                                         isAbsolute() ? getDistanceX(nextPosition, position) : Math.abs(this.position.getX()),
-                                         isAbsolute() ? getDistanceY(nextPosition, position) : Math.abs(this.position.getY())));
+        return Optional.of(new Rectangle(getMinX(absoluteCurrentPoint, nextPosition),
+                                         getMinY(absoluteCurrentPoint, nextPosition),
+                                         isAbsolute() ? getDistanceX(nextPosition, absoluteCurrentPoint) : Math.abs(this.endPoint.getX()),
+                                         isAbsolute() ? getDistanceY(nextPosition, absoluteCurrentPoint) : Math.abs(this.endPoint.getY())));
     }
 
     // endregion

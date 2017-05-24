@@ -13,11 +13,14 @@
 
 package de.saxsys.svgfx.core.path.commands;
 
+import de.saxsys.svgfx.core.definitions.Constants;
+import de.saxsys.svgfx.core.interfaces.ThrowableBiFunction;
 import de.saxsys.svgfx.core.path.CommandName;
 import de.saxsys.svgfx.core.path.PathException;
 import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.geometry.Point2D;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,9 +47,9 @@ public final class CommandFactory {
     // region Constants
 
     public static final CommandFactory INSTANCE = new CommandFactory();
-    public static final String INVALID_COMMAND_NAME = "Given command name [%s] can not be used to create a [%s] required either [%s] or [%s]";
-    public static final String INVALID_NUMBER_FORMAT = "Could not parse given data [%s] into a number";
-    public static final String INVALID_PREVIOUS_COMMAND = "Expected [%s] to be the previous command but was [%s]";
+
+    private static final String INVALID_NUMBER_FORMAT = "Could not parse given data [%s] into a number";
+    private static final String INVALID_COMMAND_NAME = "Given command name [%s] can not be used to create a [%s] required either [%s] or [%s]";
 
     // endregion
 
@@ -58,10 +61,24 @@ public final class CommandFactory {
 
     // region Public
 
+    /**
+     * Creates a new {@link PathCommand} based on the given information.
+     *
+     * @param delimiter                 the {@link Character} which determines the command.
+     * @param data                      the data present for the command.
+     * @param absolutePathStartingPoint the absolute start point of a path command.
+     * @param absoluteCurrentPoint      the absolute end point of the previous command, which is also the starting position of the created comand.
+     * @param previousCommand           the previous command.
+     *
+     * @return a new {@link PathCommand}.
+     *
+     * @throws PathException if any error occurs during the creation of a {@link PathCommand}.
+     */
     public PathCommand createCommandOrFail(final Character delimiter,
                                            final String data,
-                                           final PathCommand previousCommand,
-                                           final Point2D startingPoint) throws PathException {
+                                           final Point2D absolutePathStartingPoint,
+                                           final Point2D absoluteCurrentPoint,
+                                           final PathCommand previousCommand) throws PathException {
         if (delimiter == null) {
             throw new PathException(String.format("Can not create command for data %s when no command delimiter was found", data));
         } else if (MOVE.isCommandName(delimiter)) {
@@ -73,15 +90,15 @@ public final class CommandFactory {
         } else if (VERTICAL_LINE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createVerticalLineCommand(delimiter, data);
         } else if (CLOSE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createCloseCommand(delimiter, startingPoint);
+            return CommandFactory.INSTANCE.createCloseCommand(delimiter, absolutePathStartingPoint);
         } else if (CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createCubicBezierCurveCommand(delimiter, data);
         } else if (SHORT_CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(delimiter, data, previousCommand);
+            return CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(delimiter, data, absoluteCurrentPoint, previousCommand);
         } else if (QUADRATIC_BEZIER_CURVE.isCommandName(delimiter)) {
             return CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(delimiter, data);
         } else if (SHORT_QUADRATIC_BEZIER_CURVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(delimiter, data, previousCommand);
+            return CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(delimiter, data, absoluteCurrentPoint, previousCommand);
         } else {
             throw new PathException(String.format("Could not use delimiter: [%s] must be one of the know delimiters", delimiter));
         }
@@ -102,7 +119,7 @@ public final class CommandFactory {
     public MoveCommand createMoveCommand(final char commandName, final String data) throws PathException {
         checkCommandNameOrFail(commandName, MOVE, MoveCommand.class);
 
-        final Point2D position = createPoint(data.trim());
+        final Point2D position = createPointOrFail(data.trim());
 
         return new MoveCommand(commandName == MOVE.getAbsoluteName(), position);
     }
@@ -122,14 +139,13 @@ public final class CommandFactory {
     public LineCommand createLineCommand(final char commandName, final String data) throws PathException {
         checkCommandNameOrFail(commandName, LINE, LineCommand.class);
 
-        final Point2D position = createPoint(data.trim());
+        final Point2D position = createPointOrFail(data.trim());
 
         return new LineCommand(commandName == LINE.getAbsoluteName(), position);
     }
 
     /**
-     * Creates a new {@link LineCommand} using the given data, which need to contain the command name followed by one numeric value
-     * which determine which position is moved to.
+     * Creates a new {@link LineCommand} using the given data, which need to contain one numeric value which determines which position is moved to.
      *
      * @param commandName the name of the command.
      * @param data        the data describing the command.
@@ -153,8 +169,7 @@ public final class CommandFactory {
     }
 
     /**
-     * Creates a new {@link LineCommand} using the given data, which need to contain the command name followed by one numeric value
-     * which determine which position is moved to.
+     * Creates a new {@link LineCommand} using the given data, which need to contain one numeric value which determines which position is moved to.
      *
      * @param commandName the name of the command.
      * @param data        the data describing the command.
@@ -185,8 +200,7 @@ public final class CommandFactory {
      *
      * @return a new {@link CloseCommand}.
      *
-     * @throws PathException if the commandName is not absolute or relative {@link CommandName#CLOSE}
-     *                       or the given data is not a number.
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#CLOSE}.
      */
     public CloseCommand createCloseCommand(final char commandName, final Point2D startPoint) throws PathException {
         checkCommandNameOrFail(commandName, CLOSE, CloseCommand.class);
@@ -194,35 +208,106 @@ public final class CommandFactory {
         return new CloseCommand(commandName == CLOSE.getAbsoluteName(), startPoint);
     }
 
-    public CubicBezierCurveCommand createCubicBezierCurveCommand(final char commandName, final String data) throws PathException {
+    /**
+     * Creates a new {@link BezierCurveCommand} using the given data, which needs to contains three points.
+     *
+     * @param commandName the name of the command.
+     * @param data        the three points describing the curve.
+     *
+     * @return a new {@link BezierCurveCommand}.
+     *
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#CUBIC_BEZIER_CURVE}
+     *                       or the data does not represent three points.
+     */
+    public CubicBezierCurveCommand createCubicBezierCurveCommand(final char commandName,
+                                                                 final String data) throws PathException {
         checkCommandNameOrFail(commandName, CUBIC_BEZIER_CURVE, CubicBezierCurveCommand.class);
 
-        return new CubicBezierCurveCommand(commandName == CUBIC_BEZIER_CURVE.getAbsoluteName());
+        final List<Point2D> points = createPointsOrFail(data, 3);
+
+        return new CubicBezierCurveCommand(commandName == CUBIC_BEZIER_CURVE.getAbsoluteName(),
+                                           points.get(0),
+                                           points.get(1),
+                                           points.get(2));
     }
 
-    public ShortCubicBezierCurveCommand createShortCubicBezierCurveCommand(final char commandName, final String data, final PathCommand previousCommand) throws PathException {
-        checkCommandNameOrFail(commandName, SHORT_CUBIC_BEZIER_CURVE, ShortCubicBezierCurveCommand.class);
+    /**
+     * Creates a new {@link BezierCurveCommand} using the given data, which needs to contains three points.
+     *
+     * @param commandName          the name of the command.
+     * @param data                 the three points describing the curve.
+     * @param absoluteCurrentPoint the position of the start of the previous command, which is needed to determine the start position of the created command.
+     * @param previousCommand      the previous {@link PathCommand} which needs to be a {@link BezierCurveCommand}.
+     *
+     * @return a new {@link BezierCurveCommand}.
+     *
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#SHORT_CUBIC_BEZIER_CURVE}
+     *                       or the data does not represent three points.
+     */
+    public CubicBezierCurveCommand createShortCubicBezierCurveCommand(final char commandName,
+                                                                      final String data,
+                                                                      final Point2D absoluteCurrentPoint,
+                                                                      final PathCommand previousCommand) throws PathException {
+        checkCommandNameOrFail(commandName, SHORT_CUBIC_BEZIER_CURVE, CubicBezierCurveCommand.class);
 
-        checkPreviousCommandOrFail(previousCommand, CubicBezierCurveCommand.class);
+        final List<Point2D> points = createPointsOrFail(data, 2);
+        final boolean isAbsolute = commandName == SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName();
 
-        return new ShortCubicBezierCurveCommand(commandName == SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName());
+        return new CubicBezierCurveCommand(isAbsolute,
+                                           getAdjustedStartControlPoint(isAbsolute, absoluteCurrentPoint, previousCommand),
+                                           points.get(0),
+                                           points.get(1));
     }
 
-
-    public QuadraticBezierCurveCommand createQuadraticBezierCurveCommand(final char commandName, final String data) throws PathException {
+    /**
+     * Creates a new {@link BezierCurveCommand} using the given data, which needs to contains three points.
+     *
+     * @param commandName the name of the command.
+     * @param data        the three points describing the curve.
+     *
+     * @return a new {@link BezierCurveCommand}.
+     *
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#CUBIC_BEZIER_CURVE}
+     *                       or the data does not represent 2 points.
+     */
+    public QuadraticBezierCurveCommand createQuadraticBezierCurveCommand(final char commandName,
+                                                                         final String data) throws PathException {
         checkCommandNameOrFail(commandName, QUADRATIC_BEZIER_CURVE, QuadraticBezierCurveCommand.class);
 
-        return new QuadraticBezierCurveCommand(commandName == QUADRATIC_BEZIER_CURVE.getAbsoluteName());
+        final List<Point2D> points = createPointsOrFail(data, 2);
+
+        return new QuadraticBezierCurveCommand(commandName == QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
+                                               points.get(0),
+                                               points.get(1));
     }
 
-    public ShortQuadraticBezierCurveCommand createShortQuadraticBezierCurveCommand(final char commandName,
-                                                                                   final String data,
-                                                                                   final PathCommand previousCommand) throws PathException {
-        checkCommandNameOrFail(commandName, SHORT_QUADRATIC_BEZIER_CURVE, ShortQuadraticBezierCurveCommand.class);
+    /**
+     * Creates a new {@link BezierCurveCommand} using the given data, which needs to contains three points.
+     *
+     * @param commandName        the name of the command.
+     * @param data               the three points describing the curve.
+     * @param absoluteStartPoint the position of the start of the previous command, which is needed to determine the start position of the created command.
+     * @param previousCommand    the previous {@link PathCommand} which needs to be a {@link BezierCurveCommand}.
+     *
+     * @return a new {@link BezierCurveCommand}.
+     *
+     * @throws PathException if the commandName is not absolute or relative {@link CommandName#SHORT_CUBIC_BEZIER_CURVE}
+     *                       or the given command is not a {@link BezierCurveCommand}
+     *                       or the data does not represent a point.
+     */
+    public QuadraticBezierCurveCommand createShortQuadraticBezierCurveCommand(final char commandName,
+                                                                              final String data,
+                                                                              final Point2D absoluteStartPoint,
+                                                                              final PathCommand previousCommand) throws PathException {
+        checkCommandNameOrFail(commandName, SHORT_QUADRATIC_BEZIER_CURVE, QuadraticBezierCurveCommand.class);
 
-        checkPreviousCommandOrFail(previousCommand, QuadraticBezierCurveCommand.class);
+        final Point2D endPoint = createPointOrFail(data);
+        final boolean isAbsolute = commandName == SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName();
+        final Point2D adjustedControlPoint = getAdjustedControlPoint(isAbsolute, absoluteStartPoint, previousCommand);
 
-        return new ShortQuadraticBezierCurveCommand(commandName == SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName());
+        return new QuadraticBezierCurveCommand(isAbsolute,
+                                               adjustedControlPoint,
+                                               endPoint);
     }
 
     // endregion
@@ -239,45 +324,31 @@ public final class CommandFactory {
         }
     }
 
-    private <T extends PathCommand> void checkPreviousCommandOrFail(final PathCommand previousCommand, final Class<T> expectedCommand) throws PathException {
-        if (!expectedCommand.isAssignableFrom(previousCommand.getClass())) {
-            throw new PathException(String.format(INVALID_PREVIOUS_COMMAND, expectedCommand.getSimpleName(), previousCommand.getClass().getSimpleName()));
+    private List<Point2D> createPointsOrFail(final String data, final int numberOfPoints) throws PathException {
+        final List<String> values = StringUtil.splitByDelimiters(data, Arrays.asList(Constants.WHITESPACE, Constants.COMMA), StringUtil::isNotNullOrEmptyAfterTrim);
+
+        if (values.size() % 2 != 0) {
+            throw new PathException(String.format("Data [%s] must have an even number of points but has [%d]", data, values.size()));
         }
+
+        final List<Point2D> points = new ArrayList<>(0);
+
+        for (int i = 0; i < values.size(); i += 2) {
+            final Point2D point = createPointOrFail(values.get(i), values.get(i + 1));
+            points.add(point);
+        }
+
+        if (points.size() != numberOfPoints) {
+            throw new PathException(String.format("Could not create cubic bezier curve command from data [%s] cause the number of points is [%d] but needs to be [%d]",
+                                                  data,
+                                                  points.size(),
+                                                  numberOfPoints));
+        }
+
+        return points;
     }
 
-    //    /**
-    //     * Takes the given {@link String} and returns only the elements beyond the first occurrence of the {@code absoluteName} or {@code #relativeName}.
-    //     *
-    //     * @param data         the command to be parsed.
-    //     * @param absoluteName the absoluteName of the command.
-    //     * @param relativeName the relative name of the command.
-    //     *
-    //     * @return a new {@link Pair} which has a {@link String} containing the data beyond the first occurrence of the {@code absoluteName} or {@code relativeName},
-    //     * as well as {@link Boolean} determining if the command was absolute or relative.
-    //     *
-    //     * @throws PathException if there is no absolute or relative character found.
-    //     */
-    //    private Pair<Boolean, String> analyzeCommand(final String data, final char absoluteName, final char relativeName) throws PathException {
-    //        for (int i = 0; i < data.length(); i++) {
-    //            final char character = data.charAt(i);
-    //            if (absoluteName == character || relativeName == character) {
-    //                return new Pair<>(absoluteName == character, data.substring(i + 1, data.length()).trim());
-    //            }
-    //        }
-    //
-    //        throw new PathException(String.format("Given data [%s] does not contain either %s or %s", data, absoluteName, relativeName));
-    //    }
-
-    /**
-     * Parses the given data as a tuple of two numeric values separated by whitespaces and returns their values in a {@link Point2D}.
-     *
-     * @param data the data to consumeOrFail.
-     *
-     * @return a new {@link Point2D} containing the values.
-     *
-     * @throws PathException if the given data is null, the amount of values is not exactly two or the values are not numerical.
-     */
-    private Point2D createPoint(final String data) throws PathException {
+    private Point2D createPointOrFail(final String data) throws PathException {
         if (StringUtil.isNullOrEmpty(data)) {
             throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data));
         }
@@ -293,17 +364,72 @@ public final class CommandFactory {
             throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data));
         }
 
+        return createPointOrFail(split.get(0), split.get(1));
+    }
+
+    private Point2D createPointOrFail(final String xValue, final String yValue) throws PathException {
         final Double x;
         final Double y;
 
         try {
-            x = Double.parseDouble(split.get(0).trim());
-            y = Double.parseDouble(split.get(1).trim());
+            x = Double.parseDouble(xValue.trim());
         } catch (final NumberFormatException e) {
-            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", data), e);
+            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", xValue), e);
+        }
+
+        try {
+            y = Double.parseDouble(yValue.trim());
+        } catch (final NumberFormatException e) {
+            throw new PathException(String.format("Given data: [%s] can not be used to create a move command", yValue), e);
         }
 
         return new Point2D(x, y);
+    }
+
+    private Point2D getAdjustedStartControlPoint(final boolean isAbsolute, final Point2D absoluteCurrentPoint, final PathCommand command) throws PathException {
+        return getAdjustedPoint(isAbsolute,
+                                absoluteCurrentPoint,
+                                command,
+                                CubicBezierCurveCommand.class,
+                                CubicBezierCurveCommand::getAbsoluteEndControlPoint);
+
+    }
+
+    private Point2D getAdjustedControlPoint(final boolean isAbsolute, final Point2D absoluteCurrentPoint, final PathCommand command) throws PathException {
+        return getAdjustedPoint(isAbsolute,
+                                absoluteCurrentPoint,
+                                command,
+                                QuadraticBezierCurveCommand.class,
+                                QuadraticBezierCurveCommand::getAbsoluteControlPoint);
+    }
+
+    private <T extends BezierCurveCommand> Point2D getAdjustedPoint(final boolean isAbsolute,
+                                                                    final Point2D absoluteCurrentPoint,
+                                                                    final PathCommand command,
+                                                                    final Class<T> clazz,
+                                                                    final ThrowableBiFunction<T, Point2D, Point2D, PathException> controlPointSupplier) throws PathException {
+
+        final Point2D negativeDistance;
+        final Point2D startPoint;
+
+        if (command != null && clazz.isAssignableFrom(command.getClass())) {
+
+            final T bezierCurveCommand = clazz.cast(command);
+            final Point2D absoluteEndPoint = bezierCurveCommand.getAbsoluteEndPoint(absoluteCurrentPoint);
+            final Point2D absoluteControlPoint = controlPointSupplier.apply(bezierCurveCommand, absoluteCurrentPoint);
+
+            negativeDistance = absoluteControlPoint.subtract(absoluteEndPoint).multiply(-1);
+            startPoint = absoluteEndPoint;
+        } else {
+            negativeDistance = Point2D.ZERO;
+            startPoint = absoluteCurrentPoint;
+        }
+
+        if (isAbsolute) {
+            return startPoint.add(negativeDistance);
+        } else {
+            return negativeDistance;
+        }
     }
 
     // endregion

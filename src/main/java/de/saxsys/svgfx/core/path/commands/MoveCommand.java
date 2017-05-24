@@ -46,14 +46,14 @@ public class MoveCommand extends LineCommand {
     /**
      * Returns {@link Optional#empty()}.
      *
-     * @param position value is irrelevant
+     * @param absoluteCurrentPoint value is irrelevant
      *
      * @return {@link Optional#empty()}.
      *
      * @throws PathException never.
      */
     @Override
-    public Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
+    public Optional<Rectangle> getBoundingBox(final Point2D absoluteCurrentPoint) throws PathException {
         return Optional.empty();
     }
 

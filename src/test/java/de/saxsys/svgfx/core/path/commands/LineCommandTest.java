@@ -32,43 +32,43 @@ public class LineCommandTest {
 
     @Test (expected = PathException.class)
     public void anExceptionWillBeThrownWhenRequestingTheNextPositionForARelativeCommandAndProvidingNoPoint() throws Exception {
-        new LineCommand(false, new Point2D(10.0d, 20.0d)).getNextPosition(null);
+        new LineCommand(false, new Point2D(10.0d, 20.0d)).getAbsoluteEndPoint(null);
     }
 
     @Test
     public void dependingOnTheDataTheNextPositionWillBeCorrectlyCalculatedIfTheCommandIsRelative() throws Exception {
 
-        final Point2D position1 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getNextPosition(new Point2D(10, 30));
+        final Point2D position1 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getAbsoluteEndPoint(new Point2D(10, 30));
 
         assertEquals(20.0d, position1.getX(), 0.01d);
         assertEquals(50.0d, position1.getY(), 0.01d);
 
-        final Point2D position2 = new LineCommand(false, new Point2D(-10.0d, 20.0d)).getNextPosition(new Point2D(20, 20));
+        final Point2D position2 = new LineCommand(false, new Point2D(-10.0d, 20.0d)).getAbsoluteEndPoint(new Point2D(20, 20));
 
         assertEquals(10.0d, position2.getX(), 0.01d);
         assertEquals(40.0d, position2.getY(), 0.01d);
 
-        final Point2D position3 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getNextPosition(new Point2D(-20, 20));
+        final Point2D position3 = new LineCommand(false, new Point2D(10.0d, 20.0d)).getAbsoluteEndPoint(new Point2D(-20, 20));
 
         assertEquals(-10.0d, position3.getX(), 0.01d);
         assertEquals(40.0d, position3.getY(), 0.01d);
 
-        final Point2D position4 = new LineCommand(false, new Point2D(10.0d, -20.0d)).getNextPosition(new Point2D(10, 10));
+        final Point2D position4 = new LineCommand(false, new Point2D(10.0d, -20.0d)).getAbsoluteEndPoint(new Point2D(10, 10));
 
         assertEquals(20.0d, position4.getX(), 0.01d);
         assertEquals(-10.0d, position4.getY(), 0.01d);
 
-        final Point2D position5 = new LineCommand(false, new Point2D(10.0d, 30.0d)).getNextPosition(new Point2D(10, -20));
+        final Point2D position5 = new LineCommand(false, new Point2D(10.0d, 30.0d)).getAbsoluteEndPoint(new Point2D(10, -20));
 
         assertEquals(20.0d, position5.getX(), 0.01d);
         assertEquals(10.0d, position5.getY(), 0.01d);
 
-        final Point2D position6 = new LineCommand(false, new Point2D(-10.0d, 30.0d)).getNextPosition(new Point2D(-10, 20));
+        final Point2D position6 = new LineCommand(false, new Point2D(-10.0d, 30.0d)).getAbsoluteEndPoint(new Point2D(-10, 20));
 
         assertEquals(-20.0d, position6.getX(), 0.01d);
         assertEquals(50.0d, position6.getY(), 0.01d);
 
-        final Point2D position7 = new LineCommand(false, new Point2D(10.0d, -30.0d)).getNextPosition(new Point2D(10, -20));
+        final Point2D position7 = new LineCommand(false, new Point2D(10.0d, -30.0d)).getAbsoluteEndPoint(new Point2D(10, -20));
 
         assertEquals(20.0d, position7.getX(), 0.01d);
         assertEquals(-50.0d, position7.getY(), 0.01d);
@@ -77,37 +77,37 @@ public class LineCommandTest {
     @Test
     public void dependingOnTheDataTheNextPositionWillBeCorrectlyCalculatedIfTheCommandIsAbsolute() throws Exception {
 
-        final Point2D position1 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getNextPosition(new Point2D(10, 30));
+        final Point2D position1 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getAbsoluteEndPoint(new Point2D(10, 30));
 
         assertEquals(10.0d, position1.getX(), 0.01d);
         assertEquals(20.0d, position1.getY(), 0.01d);
 
-        final Point2D position2 = new LineCommand(true, new Point2D(-10.0d, 20.0d)).getNextPosition(new Point2D(20, 20));
+        final Point2D position2 = new LineCommand(true, new Point2D(-10.0d, 20.0d)).getAbsoluteEndPoint(new Point2D(20, 20));
 
         assertEquals(-10.0d, position2.getX(), 0.01d);
         assertEquals(20.0d, position2.getY(), 0.01d);
 
-        final Point2D position3 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getNextPosition(new Point2D(-20, 20));
+        final Point2D position3 = new LineCommand(true, new Point2D(10.0d, 20.0d)).getAbsoluteEndPoint(new Point2D(-20, 20));
 
         assertEquals(10.0d, position3.getX(), 0.01d);
         assertEquals(20.0d, position3.getY(), 0.01d);
 
-        final Point2D position4 = new LineCommand(true, new Point2D(10.0d, -20.0d)).getNextPosition(new Point2D(10, 10));
+        final Point2D position4 = new LineCommand(true, new Point2D(10.0d, -20.0d)).getAbsoluteEndPoint(new Point2D(10, 10));
 
         assertEquals(10.0d, position4.getX(), 0.01d);
         assertEquals(-20.0d, position4.getY(), 0.01d);
 
-        final Point2D position5 = new LineCommand(true, new Point2D(10.0d, 30.0d)).getNextPosition(new Point2D(10, -20));
+        final Point2D position5 = new LineCommand(true, new Point2D(10.0d, 30.0d)).getAbsoluteEndPoint(new Point2D(10, -20));
 
         assertEquals(10.0d, position5.getX(), 0.01d);
         assertEquals(30.0d, position5.getY(), 0.01d);
 
-        final Point2D position6 = new LineCommand(true, new Point2D(-10.0d, 30.0d)).getNextPosition(new Point2D(-10, 20));
+        final Point2D position6 = new LineCommand(true, new Point2D(-10.0d, 30.0d)).getAbsoluteEndPoint(new Point2D(-10, 20));
 
         assertEquals(-10.0d, position6.getX(), 0.01d);
         assertEquals(30.0d, position6.getY(), 0.01d);
 
-        final Point2D position7 = new LineCommand(true, new Point2D(10.0d, -30.0d)).getNextPosition(new Point2D(10, -20));
+        final Point2D position7 = new LineCommand(true, new Point2D(10.0d, -30.0d)).getAbsoluteEndPoint(new Point2D(10, -20));
 
         assertEquals(10.0d, position7.getX(), 0.01d);
         assertEquals(-30.0d, position7.getY(), 0.01d);

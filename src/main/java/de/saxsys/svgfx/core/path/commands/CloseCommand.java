@@ -53,12 +53,12 @@ public class CloseCommand extends PathCommand {
     // region Implement PathCommand
 
     @Override
-    public final Point2D getNextPosition(final Point2D position) {
+    public final Point2D getAbsoluteEndPoint(final Point2D absoluteCurrentPoint) {
         return startPoint;
     }
 
     @Override
-    public final Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
+    public final Optional<Rectangle> getBoundingBox(final Point2D absoluteCurrentPoint) throws PathException {
         return Optional.empty();
     }
 

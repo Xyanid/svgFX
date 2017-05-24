@@ -14,18 +14,70 @@
 package de.saxsys.svgfx.core.path.commands;
 
 import de.saxsys.svgfx.core.path.PathException;
+import javafx.geometry.Point2D;
 
 /**
- * This represents a cubic bezier curve command in a svg path. This class is immutable, so each instance represents a separate position.
+ * This represents a bezier curve command in a svg path. This class is immutable, so each instance represents a separate position.
  *
  * @author Xyanid on 01.04.2017.
  */
 public class CubicBezierCurveCommand extends BezierCurveCommand {
 
+    // region Fields
+
+    /**
+     * The start control point of the curve, which may either be relative or absolute.
+     */
+    private final Point2D startControlPoint;
+
+    /**
+     * The end control point of the curve, which may either be relative or absolute.
+     */
+    private final Point2D endControlPoint;
+
+    // endregion
+
     // region Constructor
 
-    CubicBezierCurveCommand(final boolean isAbsolute) throws PathException {
-        super(isAbsolute);
+    /**
+     * Creates a new instance.
+     *
+     * @param isAbsolute determines if the command is absolute or not.
+     */
+    CubicBezierCurveCommand(final boolean isAbsolute,
+                            final Point2D startControlPoint,
+                            final Point2D endControlPoint,
+                            final Point2D endPoint) {
+        super(isAbsolute, endPoint);
+        this.startControlPoint = startControlPoint;
+        this.endControlPoint = endControlPoint;
+    }
+
+    // endregion
+
+
+    // region Implement BezierCurveCommand
+
+    /**
+     * Returns the {@link #startControlPoint} which is in absolute coordinates.
+     *
+     * @param absoluteCurrentPoint the absolute current position of a path.
+     *
+     * @return the {@link #startControlPoint} which is in absolute coordinates.
+     */
+    public Point2D getAbsoluteStartControlPoint(final Point2D absoluteCurrentPoint) throws PathException {
+        return addPoints(absoluteCurrentPoint, startControlPoint);
+    }
+
+    /**
+     * Returns the {@link #endControlPoint} which is in absolute coordinates.
+     *
+     * @param absoluteCurrentPoint the absolute current position of a path.
+     *
+     * @return the {@link #endControlPoint} which is in absolute coordinates.
+     */
+    public Point2D getAbsoluteEndControlPoint(final Point2D absoluteCurrentPoint) throws PathException {
+        return addPoints(absoluteCurrentPoint, endControlPoint);
     }
 
     // endregion

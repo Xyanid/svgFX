@@ -42,12 +42,12 @@ public class PathCommandTest {
     public void setUp() {
         cut = new PathCommand(false) {
             @Override
-            public Point2D getNextPosition(Point2D position) {
+            public Point2D getAbsoluteEndPoint(Point2D absoluteCurrentPoint) {
                 return null;
             }
 
             @Override
-            public Optional<Rectangle> getBoundingBox(Point2D position) {
+            public Optional<Rectangle> getBoundingBox(Point2D absoluteCurrentPoint) {
                 return Optional.empty();
             }
         };
@@ -62,12 +62,12 @@ public class PathCommandTest {
 
         final PathCommand cut = new PathCommand(true) {
             @Override
-            public Point2D getNextPosition(Point2D position) {
+            public Point2D getAbsoluteEndPoint(Point2D absoluteCurrentPoint) {
                 return null;
             }
 
             @Override
-            public Optional<Rectangle> getBoundingBox(Point2D position) {
+            public Optional<Rectangle> getBoundingBox(Point2D absoluteCurrentPoint) {
                 return Optional.empty();
             }
         };
@@ -126,6 +126,22 @@ public class PathCommandTest {
         assertEquals(1.0d, cut.getMinY(new Point2D(0.0d, 1.0d), new Point2D(0.0d, 2.0d)), 0.01d);
         assertEquals(2.0d, cut.getMinY(new Point2D(0.0d, 2.0d), null), 0.01d);
         assertEquals(3.0d, cut.getMinY(null, new Point2D(0.0d, 3.0d)), 0.01d);
+    }
+
+    @Test (expected = PathException.class)
+    public void whenBothValuesAreNullWhenRequestingAValueAnExceptionWillBeThrown() throws PathException {
+        cut.getValueOrFail(null, null, null, null);
+    }
+
+    @Test
+    public void whenEitherTheFirstOrTheSecondValueIsNoNullWhenRequestingAValueTheResultProviderWillBeInvoked() throws PathException {
+        assertEquals(0.0d, cut.getValueOrFail(0.0d, null, Double::doubleValue, null), 0.01d);
+        assertEquals(0.0d, cut.getValueOrFail(null, 0.0d, Double::doubleValue, null), 0.01d);
+    }
+
+    @Test
+    public void whenBothValuesAreProvidedWhenRequestingAValueTheResolverWillBeInvoked() throws PathException {
+        assertEquals(3.0d, cut.getValueOrFail(2.0d, 1.0d, Double::doubleValue, (first, second) -> first + second), 0.01d);
     }
 
     // endregion

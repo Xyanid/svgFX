@@ -53,25 +53,25 @@ public class HorizontalLineCommand extends PathCommand {
     // region Implement PathCommand
 
     @Override
-    public Point2D getNextPosition(final Point2D position) throws PathException {
-        if (position == null) {
+    public Point2D getAbsoluteEndPoint(final Point2D absoluteCurrentPoint) throws PathException {
+        if (absoluteCurrentPoint == null) {
             throw new PathException("May not create a new position when there is no position to relate to");
         }
 
         if (isAbsolute()) {
-            return new Point2D(distance, position.getY());
+            return new Point2D(distance, absoluteCurrentPoint.getY());
         } else {
-            return new Point2D(position.getX() + distance, position.getY());
+            return new Point2D(absoluteCurrentPoint.getX() + distance, absoluteCurrentPoint.getY());
         }
     }
 
     @Override
-    public Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
-        final Point2D nextPosition = getNextPosition(position);
+    public Optional<Rectangle> getBoundingBox(final Point2D absoluteCurrentPoint) throws PathException {
+        final Point2D nextPosition = getAbsoluteEndPoint(absoluteCurrentPoint);
 
-        return Optional.of(new Rectangle(getMinX(position, nextPosition),
-                                         position.getY(),
-                                         isAbsolute() ? getDistanceX(nextPosition, position) : Math.abs(distance),
+        return Optional.of(new Rectangle(getMinX(absoluteCurrentPoint, nextPosition),
+                                         absoluteCurrentPoint.getY(),
+                                         isAbsolute() ? getDistanceX(nextPosition, absoluteCurrentPoint) : Math.abs(distance),
                                          0.0d));
     }
 

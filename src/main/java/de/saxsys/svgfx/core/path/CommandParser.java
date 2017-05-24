@@ -67,25 +67,27 @@ public class CommandParser {
             throw new PathException("Can not get bounding box from empty path command");
         }
 
-        final Wrapper<Point2D> startPosition = new Wrapper<>();
-        final Wrapper<Point2D> previousPosition = new Wrapper<>();
+        final Wrapper<Point2D> startPoint = new Wrapper<>();
+        final Wrapper<Point2D> currentPoint = new Wrapper<>();
         final Wrapper<PathCommand> previousCommand = new Wrapper<>();
         final Wrapper<Rectangle> previousBoundingBox = new Wrapper<>();
 
         StringUtil.splitByDelimiters(path, COMMAND_NAMES, (delimiter, data) -> {
             final PathCommand nextCommand = CommandFactory.INSTANCE.createCommandOrFail(delimiter,
                                                                                         data,
-                                                                                        previousCommand.get(),
-                                                                                        startPosition.getOptional().orElse(Point2D.ZERO));
+                                                                                        startPoint.getOptional().orElse(Point2D.ZERO),
+                                                                                        currentPoint.getOptional().orElse(Point2D.ZERO),
+                                                                                        previousCommand.get()
+            );
 
             final Optional<Rectangle> nextBoundingBox = getNextBoundingBox(nextCommand,
-                                                                           previousPosition.getOptional().orElse(Point2D.ZERO),
+                                                                           currentPoint.getOptional().orElse(Point2D.ZERO),
                                                                            previousBoundingBox);
             nextBoundingBox.ifPresent(previousBoundingBox::set);
 
-            setStartPosition(startPosition, previousPosition, nextCommand);
+            setStartPosition(startPoint, currentPoint, nextCommand);
 
-            previousPosition.set(nextCommand.getNextPosition(previousPosition.get()));
+            currentPoint.set(nextCommand.getAbsoluteEndPoint(currentPoint.get()));
         });
 
         return previousBoundingBox.getOptional().orElseThrow(() -> new PathException(String.format("Could not get bounding box from data [%s]", path)));

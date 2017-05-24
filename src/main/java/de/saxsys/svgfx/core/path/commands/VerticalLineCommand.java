@@ -53,26 +53,26 @@ public class VerticalLineCommand extends PathCommand {
     // region Implement PathCommand
 
     @Override
-    public Point2D getNextPosition(final Point2D position) throws PathException {
-        if (position == null) {
+    public Point2D getAbsoluteEndPoint(final Point2D absoluteCurrentPoint) throws PathException {
+        if (absoluteCurrentPoint == null) {
             throw new PathException("May not create a new position when there is no position to relate to");
         }
 
         if (isAbsolute()) {
-            return new Point2D(position.getX(), distance);
+            return new Point2D(absoluteCurrentPoint.getX(), distance);
         } else {
-            return new Point2D(position.getX(), position.getY() + distance);
+            return new Point2D(absoluteCurrentPoint.getX(), absoluteCurrentPoint.getY() + distance);
         }
     }
 
     @Override
-    public Optional<Rectangle> getBoundingBox(final Point2D position) throws PathException {
-        final Point2D nextPosition = getNextPosition(position);
+    public Optional<Rectangle> getBoundingBox(final Point2D absoluteCurrentPoint) throws PathException {
+        final Point2D nextPosition = getAbsoluteEndPoint(absoluteCurrentPoint);
 
-        return Optional.of(new Rectangle(position.getX(),
-                                         getMinY(position, nextPosition),
+        return Optional.of(new Rectangle(absoluteCurrentPoint.getX(),
+                                         getMinY(absoluteCurrentPoint, nextPosition),
                                          0.0d,
-                                         isAbsolute() ? getDistanceY(nextPosition, position) : Math.abs(distance)));
+                                         isAbsolute() ? getDistanceY(nextPosition, absoluteCurrentPoint) : Math.abs(distance)));
     }
 
     // endregion
