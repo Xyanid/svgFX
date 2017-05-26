@@ -24,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -57,9 +58,9 @@ public final class SVGCircleTest {
 
         final SVGCircle circle = new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(50.0d, circle.getResult().getCenterX(), 0.01d);
-        assertEquals(100.0d, circle.getResult().getCenterY(), 0.01d);
-        assertEquals(25.0d, circle.getResult().getRadius(), 0.01d);
+        assertEquals(50.0d, circle.getResult().getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, circle.getResult().getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, circle.getResult().getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -168,9 +169,9 @@ public final class SVGCircleTest {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = circle.createBoundingBox(null);
 
-        assertEquals(25.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(75.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(75.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(125.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(25.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(75.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(75.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(125.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }

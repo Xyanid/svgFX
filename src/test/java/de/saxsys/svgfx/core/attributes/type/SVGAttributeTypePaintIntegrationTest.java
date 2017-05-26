@@ -24,6 +24,7 @@ import javafx.scene.transform.Transform;
 import org.junit.Before;
 import org.junit.Test;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -100,10 +101,10 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint paint = cut.getValue();
 
         assertThat(paint, instanceOf(Color.class));
-        assertEquals(0.0d, ((Color) paint).getRed(), 0.01d);
-        assertEquals(1.0d, ((Color) paint).getGreen(), 0.01d);
-        assertEquals(0.0d, ((Color) paint).getBlue(), 0.01d);
-        assertEquals(1.0d, ((Color) paint).getOpacity(), 0.01d);
+        assertEquals(0.0d, ((Color) paint).getRed(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, ((Color) paint).getGreen(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, ((Color) paint).getBlue(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, ((Color) paint).getOpacity(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -117,20 +118,20 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint paint1 = cut.getValue();
 
         assertThat(paint1, instanceOf(Color.class));
-        assertEquals(1.0d, ((Color) paint1).getRed(), 0.01d);
-        assertEquals(0.5d, ((Color) paint1).getGreen(), 0.01d);
-        assertEquals(0.25d, ((Color) paint1).getBlue(), 0.01d);
-        assertEquals(1.0d, ((Color) paint1).getOpacity(), 0.01d);
+        assertEquals(1.0d, ((Color) paint1).getRed(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, ((Color) paint1).getGreen(), MINIMUM_DEVIATION);
+        assertEquals(0.25d, ((Color) paint1).getBlue(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, ((Color) paint1).getOpacity(), MINIMUM_DEVIATION);
 
         cut.setText("rgb(30%,20%,10%)");
 
         final Paint paint2 = cut.getValue();
 
         assertThat(paint2, instanceOf(Color.class));
-        assertEquals(0.3d, ((Color) paint2).getRed(), 0.01d);
-        assertEquals(0.2d, ((Color) paint2).getGreen(), 0.01d);
-        assertEquals(0.1d, ((Color) paint2).getBlue(), 0.01d);
-        assertEquals(1.0d, ((Color) paint2).getOpacity(), 0.01d);
+        assertEquals(0.3d, ((Color) paint2).getRed(), MINIMUM_DEVIATION);
+        assertEquals(0.2d, ((Color) paint2).getGreen(), MINIMUM_DEVIATION);
+        assertEquals(0.1d, ((Color) paint2).getBlue(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, ((Color) paint2).getOpacity(), MINIMUM_DEVIATION);
     }
 
 

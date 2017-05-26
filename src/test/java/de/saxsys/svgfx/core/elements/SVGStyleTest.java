@@ -28,6 +28,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -76,7 +77,7 @@ public final class SVGStyleTest {
                            .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                            .get()
                            .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -139,7 +140,7 @@ public final class SVGStyleTest {
                      result.getAttributeHolder()
                            .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                            .get().getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -196,7 +197,7 @@ public final class SVGStyleTest {
                                        .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                                        .get()
                                        .getValue(),
-                                 0.01d);
+                                 MINIMUM_DEVIATION);
                     break;
                 default:
                     Assert.fail();

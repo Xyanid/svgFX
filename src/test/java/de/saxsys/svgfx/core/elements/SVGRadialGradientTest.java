@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -99,10 +100,10 @@ public final class SVGRadialGradientTest {
 
         final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider);
 
-        Assert.assertEquals(0.1d, gradient.getResult().getCenterX(), 0.01d);
-        Assert.assertEquals(0.9d, gradient.getResult().getCenterY(), 0.01d);
-        Assert.assertEquals(0.8d, gradient.getResult().getFocusDistance(), 0.01d);
-        Assert.assertEquals(-90, gradient.getResult().getFocusAngle(), 0.01d);
+        Assert.assertEquals(0.1d, gradient.getResult().getCenterX(), MINIMUM_DEVIATION);
+        Assert.assertEquals(0.9d, gradient.getResult().getCenterY(), MINIMUM_DEVIATION);
+        Assert.assertEquals(0.8d, gradient.getResult().getFocusDistance(), MINIMUM_DEVIATION);
+        Assert.assertEquals(-90, gradient.getResult().getFocusAngle(), MINIMUM_DEVIATION);
         assertEquals(CycleMethod.REPEAT, gradient.getResult().getCycleMethod());
     }
 
@@ -181,7 +182,7 @@ public final class SVGRadialGradientTest {
      * Ensures that the values of the gradient will be affected and converted in to relative coordinates if there is no gradient transform and the values are in {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -232,18 +233,18 @@ public final class SVGRadialGradientTest {
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.75d, gradient.getCenterY(), 0.01d);
-        assertEquals(1.0, gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(0.5d, gradient.getRadius(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.75d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(1.0, gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
      * Ensures that the values of the gradient will be affected and converted in to relative coordinates if there is a gradient transform and the values are in {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -296,18 +297,18 @@ public final class SVGRadialGradientTest {
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.0d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.0d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.5, 0.25), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(1.0d, gradient.getRadius(), 0.01d);
+        assertEquals(0.0d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(Math.hypot(0.5, 0.25), gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.5d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
      * Ensure that the values of the gradient will not be affected if there is no gradient transform and the values are in {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -353,18 +354,18 @@ public final class SVGRadialGradientTest {
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> new SVGAttributeTypeRectangle.SVGTypeRectangle(
                 dataProvider), null);
 
-        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.75d, gradient.getCenterY(), 0.01d);
-        assertEquals(1.0, gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(0.5d, gradient.getRadius(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.75d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(1.0, gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
      * Ensure that the values of the gradient will not be affected if there is a gradient transform and the values are in {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -417,11 +418,11 @@ public final class SVGRadialGradientTest {
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.0d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.0d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.5, 0.25), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(1.0d, gradient.getRadius(), 0.01d);
+        assertEquals(0.0d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(Math.hypot(0.5, 0.25), gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.5d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -429,7 +430,7 @@ public final class SVGRadialGradientTest {
      * {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -473,18 +474,18 @@ public final class SVGRadialGradientTest {
         when(attributes.getValue(6)).thenReturn("#test");
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = new SVGAttributeTypeRectangle.SVGTypeRectangle(new SVGDocumentDataProvider());
-        boundingBox.getMinX().setText("50");
-        boundingBox.getMaxX().setText("150");
-        boundingBox.getMinY().setText("100");
-        boundingBox.getMaxY().setText("200");
+        boundingBox.getMinX().setText("75");
+        boundingBox.getMaxX().setText("175");
+        boundingBox.getMinY().setText("125");
+        boundingBox.getMaxY().setText("225");
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(-25.0d, -25.0d));
 
-        assertEquals(0.25d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.5d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.25, 0.5), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.0d - 0.5d, 0.5d - 0.25d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(1.0d, gradient.getRadius(), 0.01d);
+        assertEquals(0.25d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(Math.hypot(0.25, 0.5), gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.0d - 0.5d, 0.5d - 0.25d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -492,7 +493,7 @@ public final class SVGRadialGradientTest {
      * {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -538,25 +539,25 @@ public final class SVGRadialGradientTest {
         when(attributes.getValue(7)).thenReturn("#test");
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = new SVGAttributeTypeRectangle.SVGTypeRectangle(new SVGDocumentDataProvider());
-        boundingBox.getMinX().setText("50");
-        boundingBox.getMaxX().setText("150");
-        boundingBox.getMinY().setText("100");
-        boundingBox.getMaxY().setText("200");
+        boundingBox.getMinX().setText("25");
+        boundingBox.getMaxX().setText("125");
+        boundingBox.getMinY().setText("75");
+        boundingBox.getMaxY().setText("175");
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(25d, 25d));
 
-        assertEquals(0.75d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.5d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.25, 0.25), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.25d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(1.0d, gradient.getRadius(), 0.01d);
+        assertEquals(0.75d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(Math.hypot(0.25, 0.25), gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.25d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
      * Ensure that the values of the gradient will not be affected if there is no gradient transform but an element transform and the values are in {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -607,18 +608,18 @@ public final class SVGRadialGradientTest {
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(0.0d, 25.0d));
 
-        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
-        assertEquals(1.0d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.25, 0.5), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(1.0d, gradient.getRadius(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(Math.hypot(0.25, 0.5), gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d - 0.75d, 0.75d - 0.5d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
     /**
      * Ensure that the values of the gradient will not be affected if there is a gradient transform as well as an element transform and the values are in {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly()
+    public void whenGradientUnitsAreProvidedAsRelativeAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly()
             throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
@@ -672,11 +673,11 @@ public final class SVGRadialGradientTest {
 
         final RadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 25.0d));
 
-        assertEquals(0.5d, gradient.getCenterX(), 0.01d);
-        assertEquals(0.5d, gradient.getCenterY(), 0.01d);
-        assertEquals(Math.hypot(0.25, 0.25), gradient.getFocusDistance(), 0.01d);
-        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.25d)), gradient.getFocusAngle(), 0.01d);
-        assertEquals(1.0d, gradient.getRadius(), 0.01d);
+        assertEquals(0.5d, gradient.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(Math.hypot(0.25, 0.25), gradient.getFocusDistance(), MINIMUM_DEVIATION);
+        assertEquals(Math.toDegrees(Math.atan2(0.25d, 0.25d)), gradient.getFocusAngle(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getRadius(), MINIMUM_DEVIATION);
     }
 
 
@@ -729,7 +730,7 @@ public final class SVGRadialGradientTest {
 
         final SVGRadialGradient gradient = new SVGRadialGradient(SVGRadialGradient.ELEMENT_NAME, attributes, dataProvider);
 
-        Assert.assertEquals(1.0d, gradient.getResult().getFocusDistance(), 0.01d);
+        Assert.assertEquals(1.0d, gradient.getResult().getFocusDistance(), MINIMUM_DEVIATION);
     }
 
 }

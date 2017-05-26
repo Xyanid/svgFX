@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -81,12 +82,12 @@ public class SVGAttributeTypeStrokeDashArrayIntegrationTest {
             cut.setText(data.toString());
 
             for (final SVGAttributeTypeLength length : cut.getValue()) {
-                assertEquals(value, length.getValue(), 0.01d);
+                assertEquals(value, length.getValue(), MINIMUM_DEVIATION);
                 assertEquals(unit, length.getUnit());
             }
 
             for (final Double valueDouble : cut.getDashValues()) {
-                assertEquals(value, valueDouble, 0.01d);
+                assertEquals(value, valueDouble, MINIMUM_DEVIATION);
             }
         }
     }

@@ -26,6 +26,7 @@ import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -72,12 +73,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, instanceOf(Affine.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        assertEquals(transform.getTx(), 5.0d, 0.01d);
-        assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 3.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 5.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 6.0d, MINIMUM_DEVIATION);
 
         cut.setText("matrix(1 2 3 4 5 6)");
         transform = cut.getValue();
@@ -85,12 +86,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, instanceOf(Affine.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        assertEquals(transform.getTx(), 5.0d, 0.01d);
-        assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 3.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 5.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 6.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -152,12 +153,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 2.0d, MINIMUM_DEVIATION);
 
         cut.setText("translate(1 2)");
 
@@ -166,12 +167,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 2.0d, MINIMUM_DEVIATION);
 
         cut.setText("translate(1)");
 
@@ -180,12 +181,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 1.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 1.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -239,12 +240,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 0.0d, MINIMUM_DEVIATION);
 
         cut.setText("scale(1 2)");
 
@@ -253,12 +254,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 0.0d, MINIMUM_DEVIATION);
 
         cut.setText("scale(1)");
 
@@ -267,12 +268,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 0.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -329,9 +330,9 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         Rotate rotate = (Rotate) transform;
 
-        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotX(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotY(), 3.0d, MINIMUM_DEVIATION);
 
         cut.setText("rotate(1 2 3)");
 
@@ -342,9 +343,9 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         rotate = (Rotate) transform;
 
-        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotX(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotY(), 3.0d, MINIMUM_DEVIATION);
 
         cut.setText("rotate(1)");
 
@@ -355,9 +356,9 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         rotate = (Rotate) transform;
 
-        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        assertEquals(rotate.getPivotX(), 0.0d, 0.01d);
-        assertEquals(rotate.getPivotY(), 0.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotX(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotY(), 0.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -422,7 +423,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         Shear shear = (Shear) transform;
 
-        assertEquals(shear.getX(), 1.0d, 0.01d);
+        assertEquals(shear.getX(), 1.0d, MINIMUM_DEVIATION);
 
         cut.setText("skewY(1)");
 
@@ -433,7 +434,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         shear = (Shear) transform;
 
-        assertEquals(shear.getY(), 1.0d, 0.01d);
+        assertEquals(shear.getY(), 1.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -507,12 +508,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         assertNotNull(transform);
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 4.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 6.0d, MINIMUM_DEVIATION);
 
         cut.setText("translate(1,2) scale(3, 4)");
 
@@ -520,12 +521,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         assertNotNull(transform);
 
-        assertEquals(transform.getMxx(), 3.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 3.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 2.0d, MINIMUM_DEVIATION);
     }
 
     //endregion

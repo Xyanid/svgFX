@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -54,9 +55,9 @@ public final class SVGStopTest {
 
         final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
+        assertEquals(0.1d, stop.getResult().getOffset(), MINIMUM_DEVIATION);
         assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5d), stop.getResult().getColor());
-        assertEquals(0.5d, stop.getResult().getColor().getOpacity(), 0.01d);
+        assertEquals(0.5d, stop.getResult().getColor().getOpacity(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -77,7 +78,7 @@ public final class SVGStopTest {
 
         final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
+        assertEquals(0.1d, stop.getResult().getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, stop.getResult().getColor());
     }
 
@@ -167,6 +168,6 @@ public final class SVGStopTest {
 
         final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(0.5d, stop.getResult().getOffset(), 0.01d);
+        assertEquals(0.5d, stop.getResult().getOffset(), MINIMUM_DEVIATION);
     }
 }

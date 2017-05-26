@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -56,12 +57,12 @@ public final class SVGPolyBaseTest {
         };
 
         assertEquals(6, polyBase.getPoints().size());
-        assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
-        assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
-        assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
-        assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+        assertEquals(60.0d, polyBase.getPoints().get(0), MINIMUM_DEVIATION);
+        assertEquals(20.0d, polyBase.getPoints().get(1), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(2), MINIMUM_DEVIATION);
+        assertEquals(40.0d, polyBase.getPoints().get(3), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(4), MINIMUM_DEVIATION);
+        assertEquals(80.0d, polyBase.getPoints().get(5), MINIMUM_DEVIATION);
     }
 
     /**
@@ -86,12 +87,12 @@ public final class SVGPolyBaseTest {
         };
 
         assertEquals(6, polyBase.getPoints().size());
-        assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
-        assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
-        assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
-        assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+        assertEquals(60.0d, polyBase.getPoints().get(0), MINIMUM_DEVIATION);
+        assertEquals(20.0d, polyBase.getPoints().get(1), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(2), MINIMUM_DEVIATION);
+        assertEquals(40.0d, polyBase.getPoints().get(3), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(4), MINIMUM_DEVIATION);
+        assertEquals(80.0d, polyBase.getPoints().get(5), MINIMUM_DEVIATION);
     }
 
     /**
@@ -206,9 +207,9 @@ public final class SVGPolyBaseTest {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = polyBase.createBoundingBox(null);
 
-        assertEquals(10.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(20.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(120.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(10.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(20.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(120.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }

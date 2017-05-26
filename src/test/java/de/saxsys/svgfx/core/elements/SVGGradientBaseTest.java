@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -99,10 +100,10 @@ public final class SVGGradientBaseTest {
 
         assertEquals(2, actualStops.size());
 
-        assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(0.1d, actualStops.get(0).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.RED, actualStops.get(0).getColor());
 
-        assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(0.2d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, actualStops.get(1).getColor());
     }
 
@@ -173,10 +174,10 @@ public final class SVGGradientBaseTest {
 
         assertEquals(2, actualStops.size());
 
-        assertEquals(0.3d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(0.3d, actualStops.get(0).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.GREEN, actualStops.get(0).getColor());
 
-        assertEquals(0.4d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(0.4d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.YELLOW, actualStops.get(1).getColor());
     }
 
@@ -229,10 +230,10 @@ public final class SVGGradientBaseTest {
 
         assertEquals(2, actualStops.size());
 
-        assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(0.1d, actualStops.get(0).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.RED, actualStops.get(0).getColor());
 
-        assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(0.2d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, actualStops.get(1).getColor());
     }
 }

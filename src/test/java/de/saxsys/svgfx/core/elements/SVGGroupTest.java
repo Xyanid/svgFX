@@ -26,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.getChildren;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -74,9 +75,9 @@ public final class SVGGroupTest {
         assertEquals(2, clipPath.getResult().getChildren().size());
 
         assertThat(clipPath.getResult().getChildren().get(0), instanceOf(Circle.class));
-        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), 0.01d);
+        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), MINIMUM_DEVIATION);
 
         assertThat(clipPath.getResult().getChildren().get(1), instanceOf(Circle.class));
-        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), 0.01d);
+        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), MINIMUM_DEVIATION);
     }
 }

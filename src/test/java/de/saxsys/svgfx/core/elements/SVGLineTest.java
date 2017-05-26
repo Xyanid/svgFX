@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -56,10 +57,10 @@ public final class SVGLineTest {
 
         final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(50.0d, line.getResult().getStartX(), 0.01d);
-        assertEquals(100.0d, line.getResult().getStartY(), 0.01d);
-        assertEquals(25.0d, line.getResult().getEndX(), 0.01d);
-        assertEquals(35.0d, line.getResult().getEndY(), 0.01d);
+        assertEquals(50.0d, line.getResult().getStartX(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, line.getResult().getStartY(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, line.getResult().getEndX(), MINIMUM_DEVIATION);
+        assertEquals(35.0d, line.getResult().getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -198,9 +199,9 @@ public final class SVGLineTest {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox(null);
 
-        assertEquals(15.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(25.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(35.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(15.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(35.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }

@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -99,10 +100,10 @@ public final class SVGLinearGradientTest {
 
         final SVGLinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider);
 
-        assertEquals(0.1d, gradient.getResult().getStartX(), 0.01d);
-        assertEquals(0.15d, gradient.getResult().getStartY(), 0.01d);
-        assertEquals(0.9d, gradient.getResult().getEndX(), 0.01d);
-        assertEquals(0.95d, gradient.getResult().getEndY(), 0.01d);
+        assertEquals(0.1d, gradient.getResult().getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.15d, gradient.getResult().getStartY(), MINIMUM_DEVIATION);
+        assertEquals(0.9d, gradient.getResult().getEndX(), MINIMUM_DEVIATION);
+        assertEquals(0.95d, gradient.getResult().getEndY(), MINIMUM_DEVIATION);
         assertEquals(CycleMethod.REPEAT, gradient.getResult().getCycleMethod());
     }
 
@@ -180,7 +181,7 @@ public final class SVGLinearGradientTest {
      * Ensures that the values of the gradient will be affected and converted in to relative coordinates if there is no gradient transform and the values are in {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -190,11 +191,10 @@ public final class SVGLinearGradientTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("red");
 
-        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
-
         final SVGElementBase elementBase = mock(SVGElementBase.class);
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", elementBase);
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+        dataProvider.storeData("test", elementBase);
 
         final List<SVGElementBase> stops = new ArrayList<>();
 
@@ -229,17 +229,17 @@ public final class SVGLinearGradientTest {
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.5d, gradient.getStartY(), 0.01d);
-        assertEquals(0.0d, gradient.getEndX(), 0.01d);
-        assertEquals(1.0d, gradient.getEndY(), 0.01d);
+        assertEquals(0.5d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
      * Ensures that the values of the gradient will be affected and converted in to relative coordinates if there is a gradient transform and the values are in {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -290,10 +290,10 @@ public final class SVGLinearGradientTest {
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.75d, gradient.getStartY(), 0.01d);
-        assertEquals(1.0d, gradient.getEndX(), 0.01d);
-        assertEquals(0.25d, gradient.getEndY(), 0.01d);
+        assertEquals(0.5d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.75d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(0.25d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -301,7 +301,7 @@ public final class SVGLinearGradientTest {
      * {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndNoGradientTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -350,10 +350,10 @@ public final class SVGLinearGradientTest {
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.75d, gradient.getStartX(), 0.01d);
-        assertEquals(0.25d, gradient.getStartY(), 0.01d);
-        assertEquals(0.85d, gradient.getEndX(), 0.01d);
-        assertEquals(0.5d, gradient.getEndY(), 0.01d);
+        assertEquals(0.75d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.25d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(0.85d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -361,7 +361,7 @@ public final class SVGLinearGradientTest {
      * {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndAGradientTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -412,10 +412,10 @@ public final class SVGLinearGradientTest {
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, null);
 
-        assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.75d, gradient.getStartY(), 0.01d);
-        assertEquals(1.0d, gradient.getEndX(), 0.01d);
-        assertEquals(0.25d, gradient.getEndY(), 0.01d);
+        assertEquals(0.5d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.75d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(0.25d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -423,7 +423,7 @@ public final class SVGLinearGradientTest {
      * {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -467,16 +467,16 @@ public final class SVGLinearGradientTest {
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = new SVGAttributeTypeRectangle.SVGTypeRectangle(new SVGDocumentDataProvider());
         boundingBox.getMinX().setText("50");
         boundingBox.getMaxX().setText("100");
-        boundingBox.getMinY().setText("100");
-        boundingBox.getMaxY().setText("150");
+        boundingBox.getMinY().setText("75");
+        boundingBox.getMaxY().setText("125");
 
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(0.0d, 25.0d));
 
-        assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.5d, gradient.getStartY(), 0.01d);
-        assertEquals(0.0d, gradient.getEndX(), 0.01d);
-        assertEquals(1.0d, gradient.getEndY(), 0.01d);
+        assertEquals(0.5d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -484,7 +484,7 @@ public final class SVGLinearGradientTest {
      * {@link GradientUnit#USER_SPACE_ON_USE}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsUserSpaceOnUseAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsAbsoluteAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreAdjustedAccordingly() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -528,17 +528,17 @@ public final class SVGLinearGradientTest {
         when(attributes.getValue(6)).thenReturn("#test");
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = new SVGAttributeTypeRectangle.SVGTypeRectangle(new SVGDocumentDataProvider());
-        boundingBox.getMinX().setText("50");
-        boundingBox.getMaxX().setText("150");
-        boundingBox.getMinY().setText("100");
-        boundingBox.getMaxY().setText("200");
+        boundingBox.getMinX().setText("37.5");
+        boundingBox.getMaxX().setText("137.5");
+        boundingBox.getMinY().setText("87.5");
+        boundingBox.getMaxY().setText("187.5");
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 12.5d));
 
-        assertEquals(0.25d, gradient.getStartX(), 0.01d);
-        assertEquals(0.5d, gradient.getStartY(), 0.01d);
-        assertEquals(0.75d, gradient.getEndX(), 0.01d);
-        assertEquals(1.0d, gradient.getEndY(), 0.01d);
+        assertEquals(0.25d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(0.75d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -546,7 +546,7 @@ public final class SVGLinearGradientTest {
      * {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndNoGradientTransformButAnElementTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -595,10 +595,10 @@ public final class SVGLinearGradientTest {
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 0.0d));
 
-        assertEquals(0.75d, gradient.getStartX(), 0.01d);
-        assertEquals(0.25d, gradient.getStartY(), 0.01d);
-        assertEquals(1.0d, gradient.getEndX(), 0.01d);
-        assertEquals(0.5d, gradient.getEndY(), 0.01d);
+        assertEquals(0.75d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.25d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -606,7 +606,7 @@ public final class SVGLinearGradientTest {
      * {@link GradientUnit#OBJECT_BOUNDING_BOX}.
      */
     @Test
-    public void whenGradientUnitsAreProvidedAsObjectBoundingBoxAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
+    public void whenGradientUnitsAreProvidedAsRelativeAndAGradientTransformAsWellAsAnElementTransformIsSpecifiedTheValuesOfTheGradientAreNotAdjusted() throws SVGException, SAXException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -657,10 +657,10 @@ public final class SVGLinearGradientTest {
 
         final LinearGradient gradient = new SVGLinearGradient(SVGLinearGradient.ELEMENT_NAME, attributes, dataProvider).createResult(() -> boundingBox, new Translate(12.5d, 25.0d));
 
-        assertEquals(0.5d, gradient.getStartX(), 0.01d);
-        assertEquals(0.5d, gradient.getStartY(), 0.01d);
-        assertEquals(1.0d, gradient.getEndX(), 0.01d);
-        assertEquals(0.75d, gradient.getEndY(), 0.01d);
+        assertEquals(0.5d, gradient.getStartX(), MINIMUM_DEVIATION);
+        assertEquals(0.5d, gradient.getStartY(), MINIMUM_DEVIATION);
+        assertEquals(1.0d, gradient.getEndX(), MINIMUM_DEVIATION);
+        assertEquals(0.75d, gradient.getEndY(), MINIMUM_DEVIATION);
 
 
     }

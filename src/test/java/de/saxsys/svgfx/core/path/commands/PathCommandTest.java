@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -87,9 +88,9 @@ public class PathCommandTest {
 
     @Test
     public void theDistanceXCanBeDeterminedForAnyCombinationScenarioOfTwoPoints() throws PathException {
-        assertEquals(1.0d, cut.getDistanceX(new Point2D(1.0d, 0.0d), new Point2D(2.0d, 0.0d)), 0.01d);
-        assertEquals(0.0d, cut.getDistanceX(new Point2D(2.0d, 0.0d), null), 0.01d);
-        assertEquals(0.0d, cut.getDistanceX(null, new Point2D(3.0d, 0.0d)), 0.01d);
+        assertEquals(1.0d, cut.getDistanceX(new Point2D(1.0d, 0.0d), new Point2D(2.0d, 0.0d)), MINIMUM_DEVIATION);
+        assertEquals(0.0d, cut.getDistanceX(new Point2D(2.0d, 0.0d), null), MINIMUM_DEVIATION);
+        assertEquals(0.0d, cut.getDistanceX(null, new Point2D(3.0d, 0.0d)), MINIMUM_DEVIATION);
     }
 
     @Test (expected = PathException.class)
@@ -99,9 +100,9 @@ public class PathCommandTest {
 
     @Test
     public void theMinimumXCanBeDeterminedForAnyCombinationScenarioOfTwoPoints() throws PathException {
-        assertEquals(1.0d, cut.getMinX(new Point2D(1.0d, 0.0d), new Point2D(2.0d, 0.0d)), 0.01d);
-        assertEquals(2.0d, cut.getMinX(new Point2D(2.0d, 0.0d), null), 0.01d);
-        assertEquals(3.0d, cut.getMinX(null, new Point2D(3.0d, 0.0d)), 0.01d);
+        assertEquals(1.0d, cut.getMinX(new Point2D(1.0d, 0.0d), new Point2D(2.0d, 0.0d)), MINIMUM_DEVIATION);
+        assertEquals(2.0d, cut.getMinX(new Point2D(2.0d, 0.0d), null), MINIMUM_DEVIATION);
+        assertEquals(3.0d, cut.getMinX(null, new Point2D(3.0d, 0.0d)), MINIMUM_DEVIATION);
     }
 
     @Test (expected = PathException.class)
@@ -111,9 +112,9 @@ public class PathCommandTest {
 
     @Test
     public void theDistanceYCanBeDeterminedForAnyCombinationScenarioOfTwoPoints() throws PathException {
-        assertEquals(1.0d, cut.getDistanceY(new Point2D(0.0d, 1.0d), new Point2D(0.0d, 2.0d)), 0.01d);
-        assertEquals(0.0d, cut.getDistanceY(new Point2D(0.0d, 2.0d), null), 0.01d);
-        assertEquals(0.0d, cut.getDistanceY(null, new Point2D(0.0d, 3.0d)), 0.01d);
+        assertEquals(1.0d, cut.getDistanceY(new Point2D(0.0d, 1.0d), new Point2D(0.0d, 2.0d)), MINIMUM_DEVIATION);
+        assertEquals(0.0d, cut.getDistanceY(new Point2D(0.0d, 2.0d), null), MINIMUM_DEVIATION);
+        assertEquals(0.0d, cut.getDistanceY(null, new Point2D(0.0d, 3.0d)), MINIMUM_DEVIATION);
     }
 
     @Test (expected = PathException.class)
@@ -123,9 +124,9 @@ public class PathCommandTest {
 
     @Test
     public void theMinimumYCanBeDeterminedForAnyCombinationScenarioOfTwoPoints() throws PathException {
-        assertEquals(1.0d, cut.getMinY(new Point2D(0.0d, 1.0d), new Point2D(0.0d, 2.0d)), 0.01d);
-        assertEquals(2.0d, cut.getMinY(new Point2D(0.0d, 2.0d), null), 0.01d);
-        assertEquals(3.0d, cut.getMinY(null, new Point2D(0.0d, 3.0d)), 0.01d);
+        assertEquals(1.0d, cut.getMinY(new Point2D(0.0d, 1.0d), new Point2D(0.0d, 2.0d)), MINIMUM_DEVIATION);
+        assertEquals(2.0d, cut.getMinY(new Point2D(0.0d, 2.0d), null), MINIMUM_DEVIATION);
+        assertEquals(3.0d, cut.getMinY(null, new Point2D(0.0d, 3.0d)), MINIMUM_DEVIATION);
     }
 
     @Test (expected = PathException.class)
@@ -135,13 +136,13 @@ public class PathCommandTest {
 
     @Test
     public void whenEitherTheFirstOrTheSecondValueIsNoNullWhenRequestingAValueTheResultProviderWillBeInvoked() throws PathException {
-        assertEquals(0.0d, cut.getValueOrFail(0.0d, null, Double::doubleValue, null), 0.01d);
-        assertEquals(0.0d, cut.getValueOrFail(null, 0.0d, Double::doubleValue, null), 0.01d);
+        assertEquals(0.0d, cut.getValueOrFail(0.0d, null, Double::doubleValue, null), MINIMUM_DEVIATION);
+        assertEquals(0.0d, cut.getValueOrFail(null, 0.0d, Double::doubleValue, null), MINIMUM_DEVIATION);
     }
 
     @Test
     public void whenBothValuesAreProvidedWhenRequestingAValueTheResolverWillBeInvoked() throws PathException {
-        assertEquals(3.0d, cut.getValueOrFail(2.0d, 1.0d, Double::doubleValue, (first, second) -> first + second), 0.01d);
+        assertEquals(3.0d, cut.getValueOrFail(2.0d, 1.0d, Double::doubleValue, (first, second) -> first + second), MINIMUM_DEVIATION);
     }
 
     // endregion

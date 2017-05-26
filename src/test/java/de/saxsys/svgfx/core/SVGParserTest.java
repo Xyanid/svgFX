@@ -16,7 +16,6 @@ package de.saxsys.svgfx.core;
 import javafx.scene.Group;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Rectangle;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URL;
@@ -25,6 +24,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 05.10.2015.
@@ -51,7 +51,7 @@ public final class SVGParserTest {
         try {
             parser.parse(url.getFile());
         } catch (final Exception e) {
-            Assert.fail();
+            fail();
         }
 
         assertNotNull(parser.getResult());
@@ -74,7 +74,7 @@ public final class SVGParserTest {
         try {
             parser.parse(url.getFile());
         } catch (final Exception e) {
-            Assert.fail();
+            fail();
         }
 
         assertThat(parser.getResult(), instanceOf(Group.class));
@@ -103,7 +103,7 @@ public final class SVGParserTest {
         try {
             parser.parse(url.getFile());
         } catch (final Exception e) {
-            Assert.fail();
+            fail();
         }
 
         assertNotNull(parser.getResult());

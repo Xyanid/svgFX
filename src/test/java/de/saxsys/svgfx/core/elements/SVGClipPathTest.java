@@ -26,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.getChildren;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Xyanid on 05.10.2015.
  */
-@SuppressWarnings ({"OptionalGetWithoutIsPresent", "unchecked"})
+@SuppressWarnings ({"OptionalGetWithoutIsPresent", "unchecked", "ConstantConditions"})
 @RunWith (MockitoJUnitRunner.class)
 public final class SVGClipPathTest {
 
@@ -72,9 +73,9 @@ public final class SVGClipPathTest {
         assertEquals(2, clipPath.getResult().getChildren().size());
 
         assertEquals(Circle.class, clipPath.getResult().getChildren().get(0).getClass());
-        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), 0.01d);
+        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), MINIMUM_DEVIATION);
 
         assertEquals(Circle.class, clipPath.getResult().getChildren().get(1).getClass());
-        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), 0.01d);
+        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), MINIMUM_DEVIATION);
     }
 }

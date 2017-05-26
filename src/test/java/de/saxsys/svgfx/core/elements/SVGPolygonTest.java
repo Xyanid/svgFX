@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -51,12 +52,12 @@ public final class SVGPolygonTest {
         final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(6, polygon.getResult().getPoints().size());
-        assertEquals(60.0d, polygon.getResult().getPoints().get(0), 0.01d);
-        assertEquals(20.0d, polygon.getResult().getPoints().get(1), 0.01d);
-        assertEquals(100.0d, polygon.getResult().getPoints().get(2), 0.01d);
-        assertEquals(40.0d, polygon.getResult().getPoints().get(3), 0.01d);
-        assertEquals(100.0d, polygon.getResult().getPoints().get(4), 0.01d);
-        assertEquals(80.0d, polygon.getResult().getPoints().get(5), 0.01d);
+        assertEquals(60.0d, polygon.getResult().getPoints().get(0), MINIMUM_DEVIATION);
+        assertEquals(20.0d, polygon.getResult().getPoints().get(1), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polygon.getResult().getPoints().get(2), MINIMUM_DEVIATION);
+        assertEquals(40.0d, polygon.getResult().getPoints().get(3), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polygon.getResult().getPoints().get(4), MINIMUM_DEVIATION);
+        assertEquals(80.0d, polygon.getResult().getPoints().get(5), MINIMUM_DEVIATION);
     }
 
     /**

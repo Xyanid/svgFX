@@ -55,6 +55,20 @@ public class Wrapper<T> {
     }
 
     /**
+     * Returns the {@link #object} only if it is not null, otherwise an {@link IllegalStateException} will be thrown.
+     *
+     * @return the {@link #object}.
+     *
+     * @throws IllegalStateException if the {@link #object} is null.
+     */
+    public T getOrFail() {
+        if (object == null) {
+            throw new IllegalStateException("Can not request argument when it is not set");
+        }
+        return get();
+    }
+
+    /**
      * Returns the {@link #object}.
      *
      * @return the {@link #object}.

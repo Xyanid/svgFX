@@ -38,6 +38,7 @@ import org.xml.sax.SAXException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -347,16 +348,16 @@ public class SVGShapeBaseIntegrationTest {
         assertEquals(Color.web("#FF0000"), result.getFill());
         assertEquals(Color.web("#00FF00"), result.getStroke());
         assertEquals(StrokeType.INSIDE, result.getStrokeType());
-        assertEquals(1.0d, result.getStrokeWidth(), 0.01d);
+        assertEquals(1.0d, result.getStrokeWidth(), MINIMUM_DEVIATION);
         assertEquals(4, result.getStrokeDashArray().size());
-        assertEquals(2.0d, result.getStrokeDashArray().get(0), 0.01d);
-        assertEquals(3.0d, result.getStrokeDashArray().get(1), 0.01d);
-        assertEquals(4.0d, result.getStrokeDashArray().get(2), 0.01d);
-        assertEquals(5.0d, result.getStrokeDashArray().get(3), 0.01d);
-        assertEquals(6.0d, result.getStrokeDashOffset(), 0.01d);
+        assertEquals(2.0d, result.getStrokeDashArray().get(0), MINIMUM_DEVIATION);
+        assertEquals(3.0d, result.getStrokeDashArray().get(1), MINIMUM_DEVIATION);
+        assertEquals(4.0d, result.getStrokeDashArray().get(2), MINIMUM_DEVIATION);
+        assertEquals(5.0d, result.getStrokeDashArray().get(3), MINIMUM_DEVIATION);
+        assertEquals(6.0d, result.getStrokeDashOffset(), MINIMUM_DEVIATION);
         assertEquals(StrokeLineJoin.BEVEL, result.getStrokeLineJoin());
         assertEquals(StrokeLineCap.BUTT, result.getStrokeLineCap());
-        assertEquals(7.0d, result.getStrokeMiterLimit(), 0.01d);
+        assertEquals(7.0d, result.getStrokeMiterLimit(), MINIMUM_DEVIATION);
     }
 
     // endregion

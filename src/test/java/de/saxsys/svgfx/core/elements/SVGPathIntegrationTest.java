@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -143,10 +144,10 @@ public final class SVGPathIntegrationTest {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox(line.getResult());
 
-        assertEquals(100.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(300.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(-100.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(100.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(300.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(-100.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 
     // endregion

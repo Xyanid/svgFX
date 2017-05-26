@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.Test;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 
 
@@ -59,50 +60,50 @@ public class CommandParserIntegrationTest {
     public void aBoundingBoxCanBeRetrievedFromAPath() throws PathException {
         final Rectangle result = cut.getBoundingBox("M 10 5 L 30 20");
 
-        assertEquals(10.0d, result.getX(), 0.01d);
-        assertEquals(5.0d, result.getY(), 0.01d);
-        assertEquals(20.0d, result.getWidth(), 0.01d);
-        assertEquals(15.0d, result.getHeight(), 0.01d);
+        assertEquals(10.0d, result.getX(), MINIMUM_DEVIATION);
+        assertEquals(5.0d, result.getY(), MINIMUM_DEVIATION);
+        assertEquals(20.0d, result.getWidth(), MINIMUM_DEVIATION);
+        assertEquals(15.0d, result.getHeight(), MINIMUM_DEVIATION);
     }
 
     @Test
     public void relativeAndAbsoluteCommandCanBeUsedInAPath() throws PathException {
         final Rectangle result = cut.getBoundingBox("M 10 5 l 30 20 V 50 h -20 L 10 5");
 
-        assertEquals(10.0d, result.getX(), 0.01d);
-        assertEquals(5.0d, result.getY(), 0.01d);
-        assertEquals(30.0d, result.getWidth(), 0.01d);
-        assertEquals(45.0d, result.getHeight(), 0.01d);
+        assertEquals(10.0d, result.getX(), MINIMUM_DEVIATION);
+        assertEquals(5.0d, result.getY(), MINIMUM_DEVIATION);
+        assertEquals(30.0d, result.getWidth(), MINIMUM_DEVIATION);
+        assertEquals(45.0d, result.getHeight(), MINIMUM_DEVIATION);
     }
 
     @Test
     public void onlyNonMoveCommandsWillAffectTheBoundingBox() throws PathException {
         final Rectangle result = cut.getBoundingBox("M 10 5 M 50 5 L 75 10");
 
-        assertEquals(50.0d, result.getX(), 0.01d);
-        assertEquals(5.0d, result.getY(), 0.01d);
-        assertEquals(25.0d, result.getWidth(), 0.01d);
-        assertEquals(5.0d, result.getHeight(), 0.01d);
+        assertEquals(50.0d, result.getX(), MINIMUM_DEVIATION);
+        assertEquals(5.0d, result.getY(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, result.getWidth(), MINIMUM_DEVIATION);
+        assertEquals(5.0d, result.getHeight(), MINIMUM_DEVIATION);
     }
 
     @Test
     public void aCloseCommandWillNotUseThePositionsDefinedByMoveCommands() throws PathException {
         final Rectangle result = cut.getBoundingBox("M 60 5 L 75 10 V 20 Z");
 
-        assertEquals(60.0d, result.getX(), 0.01d);
-        assertEquals(5.0d, result.getY(), 0.01d);
-        assertEquals(15.0d, result.getWidth(), 0.01d);
-        assertEquals(15.0d, result.getHeight(), 0.01d);
+        assertEquals(60.0d, result.getX(), MINIMUM_DEVIATION);
+        assertEquals(5.0d, result.getY(), MINIMUM_DEVIATION);
+        assertEquals(15.0d, result.getWidth(), MINIMUM_DEVIATION);
+        assertEquals(15.0d, result.getHeight(), MINIMUM_DEVIATION);
     }
 
     @Test
     public void aCloseCommandAtTheStartWillNotAffectTheBoundingBox() throws PathException {
         final Rectangle result = cut.getBoundingBox("Z M 5 10 L 15 30");
 
-        assertEquals(5.0d, result.getX(), 0.01d);
-        assertEquals(10.0d, result.getY(), 0.01d);
-        assertEquals(10.0d, result.getWidth(), 0.01d);
-        assertEquals(20.0d, result.getHeight(), 0.01d);
+        assertEquals(5.0d, result.getX(), MINIMUM_DEVIATION);
+        assertEquals(10.0d, result.getY(), MINIMUM_DEVIATION);
+        assertEquals(10.0d, result.getWidth(), MINIMUM_DEVIATION);
+        assertEquals(20.0d, result.getHeight(), MINIMUM_DEVIATION);
     }
 
     // endregion

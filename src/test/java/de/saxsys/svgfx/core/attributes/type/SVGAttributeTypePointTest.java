@@ -18,6 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import org.junit.Before;
 import org.junit.Test;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -85,13 +86,13 @@ public class SVGAttributeTypePointTest {
 
         cut.setText(" 1 ,2 ");
 
-        assertEquals(1.0d, cut.getValue().getX().getValue(), 0.01d);
-        assertEquals(2.0d, cut.getValue().getY().getValue(), 0.01d);
+        assertEquals(1.0d, cut.getValue().getX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(2.0d, cut.getValue().getY().getValue(), MINIMUM_DEVIATION);
 
         cut.setText(" 1 2 ");
 
-        assertEquals(1.0d, cut.getValue().getX().getValue(), 0.01d);
-        assertEquals(2.0d, cut.getValue().getY().getValue(), 0.01d);
+        assertEquals(1.0d, cut.getValue().getX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(2.0d, cut.getValue().getY().getValue(), MINIMUM_DEVIATION);
     }
 
     // endregion

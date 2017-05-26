@@ -41,6 +41,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
@@ -168,8 +169,8 @@ public class SVGElementBaseTest {
             } else if (attribute == PresentationAttributeMapper.STROKE_DASHARRAY) {
                 final SVGAttributeTypeLength[] result = (SVGAttributeTypeLength[]) style.getAttributeHolder().getAttribute(attribute.getName()).get().getValue();
                 assertEquals(2, result.length);
-                assertEquals(10.0d, result[0].getValue(), 0.01d);
-                assertEquals(5.0d, result[1].getValue(), 0.01d);
+                assertEquals(10.0d, result[0].getValue(), MINIMUM_DEVIATION);
+                assertEquals(5.0d, result[1].getValue(), MINIMUM_DEVIATION);
                 continue;
             } else if (attribute == PresentationAttributeMapper.STROKE_LINECAP) {
                 value = StrokeLineCap.BUTT;
@@ -215,7 +216,7 @@ public class SVGElementBaseTest {
         assertEquals(50.0d, style.getAttributeHolder()
                                  .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                                  .get()
-                                 .getValue(), 0.01d);
+                                 .getValue(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -254,7 +255,7 @@ public class SVGElementBaseTest {
         assertEquals(50.0d, style.getAttributeHolder()
                                  .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                                  .get()
-                                 .getValue(), 0.01d);
+                                 .getValue(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -409,7 +410,7 @@ public class SVGElementBaseTest {
 
         assertEquals(Color.web("#000000"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL.getName(), SVGAttributeTypePaint.class).get().getValue());
         assertEquals(Color.web("#111111"), style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).get().getValue());
-        assertEquals(0.5d, style.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class).get().getValue(), 0.01d);
+        assertEquals(0.5d, style.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class).get().getValue(), MINIMUM_DEVIATION);
 
         final SVGCssStyle style1 = getStyle(element);
 
@@ -423,7 +424,7 @@ public class SVGElementBaseTest {
                      style1.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE.getName(), SVGAttributeTypePaint.class).get().getValue());
         assertEquals(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class).get().getValue(),
                      style1.getAttributeHolder().getAttribute(PresentationAttributeMapper.OPACITY.getName(), SVGAttributeTypeDouble.class).get().getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
 
     }
@@ -588,7 +589,7 @@ public class SVGElementBaseTest {
 
         assertTrue(transform.isPresent());
 
-        assertEquals(30.0d, transform.get().getTx(), 0.01d);
+        assertEquals(30.0d, transform.get().getTx(), MINIMUM_DEVIATION);
     }
 
     //endregion

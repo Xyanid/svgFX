@@ -23,9 +23,11 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
+import de.saxsys.svgfx.core.utils.Wrapper;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -33,7 +35,6 @@ import org.xml.sax.SAXException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Contains basic functionality to handle gradients of svg.
@@ -110,16 +111,74 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     // region Protected
 
     /**
-     * Uses the given x and y and applies the given {@link Transform}. After the call the x and y values will have been adjusted.
+     * Converts the given coordinates into relative coordinates based on the given bounding box.
      *
-     * @param x         the x to use.
-     * @param y         the y to use.
-     * @param transform the {@link Transform} to use.
+     * @param boundingBox the bounding box to be use.
+     * @param points      the points to transform.
+     *
+     * @throws SVGException if an error occurs during the transformation.
      */
-    protected void transformPosition(final AtomicReference<Double> x, final AtomicReference<Double> y, final Transform transform) {
-        final Point2D start = transform.transform(x.get(), y.get());
-        x.set(start.getX());
-        y.set(start.getY());
+    protected final void convertToRelativeCoordinates(final Rectangle boundingBox,
+                                                      final List<Wrapper<Point2D>> points) throws SVGException {
+
+        if (boundingBox.getWidth() == 0.0d || boundingBox.getHeight() == 0.0d) {
+            return;
+        }
+
+        for (final Wrapper<Point2D> point : points) {
+            point.set(new Point2D(Math.abs(boundingBox.getX() - point.getOrFail().getX()) / boundingBox.getWidth(),
+                                  Math.abs(boundingBox.getY() - point.getOrFail().getY()) / boundingBox.getHeight()));
+        }
+    }
+
+    /**
+     * Converts the given coordinates into absolute coordinates based on the given bounding box.
+     *
+     * @param boundingBox the bounding box to be use.
+     * @param points      the points to transform.
+     *
+     * @throws SVGException if an error occurs during the transformation.
+     */
+    protected final void convertToAbsoluteCoordinates(final Rectangle boundingBox,
+                                                      final List<Wrapper<Point2D>> points) throws SVGException {
+
+        if (boundingBox.getWidth() == 0.0d || boundingBox.getHeight() == 0.0d) {
+            return;
+        }
+
+        for (final Wrapper<Point2D> point : points) {
+            point.set(new Point2D(boundingBox.getX() + point.getOrFail().getX() * boundingBox.getWidth(),
+                                  boundingBox.getY() + point.getOrFail().getY() * boundingBox.getHeight()));
+        }
+    }
+
+    /**
+     * Creates an adjusted {@link Rectangle} that is the given {@link SVGAttributeTypeRectangle.SVGTypeRectangle} which has the given {@link Transform} applied.
+     *
+     * @param boundingBox the {@link SVGAttributeTypeRectangle.SVGTypeRectangle} that represents the bounding box.
+     * @param transform   the {@link Transform} the transform to apply.
+     *
+     * @return a new {@link Rectangle} representing the transformed bounding box.
+     *
+     * @throws SVGException if an error occurs during the creation.
+     */
+    protected final Rectangle transformBoundingBox(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform transform) throws SVGException {
+
+        Rectangle result = new Rectangle(boundingBox.getMinX().getValue(),
+                                         boundingBox.getMinY().getValue(),
+                                         boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue(),
+                                         boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue());
+        if (transform != null) {
+            final Point2D minimum = transform.transform(result.getX(),
+                                                        result.getY());
+            final Point2D maximum = transform.transform(result.getX() + result.getWidth(),
+                                                        result.getY() + result.getHeight());
+            result = new Rectangle(minimum.getX(),
+                                   minimum.getY(),
+                                   maximum.getX() - minimum.getX(),
+                                   maximum.getY() - minimum.getY());
+        }
+        return result;
     }
 
     /**

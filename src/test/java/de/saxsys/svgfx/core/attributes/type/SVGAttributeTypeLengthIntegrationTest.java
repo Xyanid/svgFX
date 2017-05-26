@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -67,7 +68,7 @@ public class SVGAttributeTypeLengthIntegrationTest {
             final double value = random.nextDouble();
 
             cut.setText(String.format("%f%s", value, unit.getName()));
-            assertEquals(value, cut.getValue(), 0.01d);
+            assertEquals(value, cut.getValue(), MINIMUM_DEVIATION);
             assertEquals(unit, cut.getUnit());
         }
     }

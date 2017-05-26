@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 
 import java.util.Map;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -78,21 +79,21 @@ public final class SVGUseTest {
         final SVGUse use = new SVGUse(SVGUse.ELEMENT_NAME, attributes, provider);
 
         assertEquals("#test", use.getAttributeHolder().getAttribute(XLinkAttributeMapper.XLINK_HREF.getName(), SVGAttributeTypeString.class).get().getValue());
-        assertEquals(1.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class).get().getValue(), 0.01d);
-        assertEquals(2.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class).get().getValue(), 0.01d);
+        assertEquals(1.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class).get().getValue(), MINIMUM_DEVIATION);
+        assertEquals(2.0d, use.getAttributeHolder().getAttribute(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class).get().getValue(), MINIMUM_DEVIATION);
 
         assertNotNull(use.getResult());
         assertEquals(Group.class, use.getResult().getClass());
-        assertEquals(1.0d, use.getResult().getLayoutX(), 0.01d);
-        assertEquals(2.0d, use.getResult().getLayoutY(), 0.01d);
+        assertEquals(1.0d, use.getResult().getLayoutX(), MINIMUM_DEVIATION);
+        assertEquals(2.0d, use.getResult().getLayoutY(), MINIMUM_DEVIATION);
 
         final Group group = use.getResult();
 
         final Circle circle = (Circle) group.getChildren().get(0);
 
-        assertEquals(25.0d, circle.getRadius(), 0.01d);
-        assertEquals(0.0d, circle.getCenterX(), 0.01d);
-        assertEquals(0.0d, circle.getCenterY(), 0.01d);
+        assertEquals(25.0d, circle.getRadius(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, circle.getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(0.0d, circle.getCenterY(), MINIMUM_DEVIATION);
     }
 
     /**

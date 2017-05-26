@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -59,12 +60,12 @@ public final class SVGRectangleTest {
 
         final SVGRectangle rectangle = new SVGRectangle(SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(50.0d, rectangle.getResult().getX(), 0.01d);
-        assertEquals(100.0d, rectangle.getResult().getY(), 0.01d);
-        assertEquals(25.0d, rectangle.getResult().getWidth(), 0.01d);
-        assertEquals(35.0d, rectangle.getResult().getHeight(), 0.01d);
-        assertEquals(10.0d, rectangle.getResult().getArcWidth(), 0.01d);
-        assertEquals(20.0d, rectangle.getResult().getArcHeight(), 0.01d);
+        assertEquals(50.0d, rectangle.getResult().getX(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, rectangle.getResult().getY(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, rectangle.getResult().getWidth(), MINIMUM_DEVIATION);
+        assertEquals(35.0d, rectangle.getResult().getHeight(), MINIMUM_DEVIATION);
+        assertEquals(10.0d, rectangle.getResult().getArcWidth(), MINIMUM_DEVIATION);
+        assertEquals(20.0d, rectangle.getResult().getArcHeight(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -213,9 +214,9 @@ public final class SVGRectangleTest {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = rectangle.createBoundingBox(null);
 
-        assertEquals(50.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(75.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(135.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(50.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(75.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(135.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }
