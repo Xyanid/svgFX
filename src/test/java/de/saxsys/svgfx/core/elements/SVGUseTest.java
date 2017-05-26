@@ -193,7 +193,6 @@ public final class SVGUseTest {
             fail("Should not be able to get result when referenced element is missing");
         } catch (final SAXException e) {
             assertThat(e.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ELEMENT, ((SVGException) e.getCause()).getReason());
         }
     }
 }

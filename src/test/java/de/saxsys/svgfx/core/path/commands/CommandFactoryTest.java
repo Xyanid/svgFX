@@ -15,6 +15,7 @@ package de.saxsys.svgfx.core.path.commands;
 
 import de.saxsys.svgfx.core.path.PathException;
 import javafx.geometry.Point2D;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -37,17 +38,32 @@ import static org.junit.Assert.fail;
  */
 public class CommandFactoryTest {
 
+    // region Fields
+
+    private CommandFactory cut;
+
+    // endregion
+
+    // region Setup
+
+    @Before
+    public void setUp() {
+        cut = new CommandFactory();
+    }
+
+    // endregion
+
     // region Tests
 
     @Test (expected = PathException.class)
     public void aMoveCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createMoveCommand('X', "10 10");
+        cut.createMoveCommand('X', "10 10");
     }
 
     @Test
     public void aMoveCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createMoveCommand('M', "10 10");
-        CommandFactory.INSTANCE.createMoveCommand('m', "10 10");
+        cut.createMoveCommand('M', "10 10");
+        cut.createMoveCommand('m', "10 10");
     }
 
     @Test
@@ -60,7 +76,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createMoveCommand(MOVE.getAbsoluteName(), data);
+                cut.createMoveCommand(MOVE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -83,7 +99,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createMoveCommand(MOVE.getAbsoluteName(), data);
+                cut.createMoveCommand(MOVE.getAbsoluteName(), data);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -93,13 +109,13 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aLineCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createLineCommand('X', "10 10");
+        cut.createLineCommand('X', "10 10");
     }
 
     @Test
     public void aLineCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createLineCommand('L', "10 10");
-        CommandFactory.INSTANCE.createLineCommand('l', "10 10");
+        cut.createLineCommand('L', "10 10");
+        cut.createLineCommand('l', "10 10");
     }
 
     @Test
@@ -112,7 +128,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createLineCommand(LINE.getRelativeName(), data);
+                cut.createLineCommand(LINE.getRelativeName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -135,7 +151,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createLineCommand(LINE.getRelativeName(), data);
+                cut.createLineCommand(LINE.getRelativeName(), data);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -145,13 +161,13 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aVerticalLineCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createVerticalLineCommand('X', "10");
+        cut.createVerticalLineCommand('X', "10");
     }
 
     @Test
     public void aVerticalLineCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createVerticalLineCommand('V', "10");
-        CommandFactory.INSTANCE.createVerticalLineCommand('v', "10");
+        cut.createVerticalLineCommand('V', "10");
+        cut.createVerticalLineCommand('v', "10");
     }
 
     @Test
@@ -162,7 +178,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data);
+                cut.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -180,7 +196,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data);
+                cut.createVerticalLineCommand(VERTICAL_LINE.getAbsoluteName(), data);
             } catch (final PathException ignore) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -190,13 +206,13 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aHorizontalLineCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createHorizontalLineCommand('X', "10");
+        cut.createHorizontalLineCommand('X', "10");
     }
 
     @Test
     public void aHorizontalLineCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createHorizontalLineCommand('H', "10");
-        CommandFactory.INSTANCE.createHorizontalLineCommand('h', "10");
+        cut.createHorizontalLineCommand('H', "10");
+        cut.createHorizontalLineCommand('h', "10");
     }
 
     @Test
@@ -209,7 +225,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data);
+                cut.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -227,7 +243,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data);
+                cut.createHorizontalLineCommand(HORIZONTAL_LINE.getAbsoluteName(), data);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -237,13 +253,13 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aCubicBezierCurveCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createCubicBezierCurveCommand('X', "10");
+        cut.createCubicBezierCurveCommand('X', "10");
     }
 
     @Test
     public void aCubicBezierCurveCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createCubicBezierCurveCommand('C', "10, 10 10, 10 10, 10");
-        CommandFactory.INSTANCE.createCubicBezierCurveCommand('c', "10, 10 10, 10 10, 10");
+        cut.createCubicBezierCurveCommand('C', "10, 10 10, 10 10, 10");
+        cut.createCubicBezierCurveCommand('c', "10, 10 10, 10 10, 10");
     }
 
     @Test
@@ -260,7 +276,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), data);
+                cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -282,7 +298,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), data);
+                cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), data);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -292,18 +308,18 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aShortCubicBezierCurveCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createShortCubicBezierCurveCommand('X', "10", Point2D.ZERO, null);
+        cut.createShortCubicBezierCurveCommand('X', "10", Point2D.ZERO, null);
     }
 
     @Test
     public void aShortCubicBezierCurveCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createShortCubicBezierCurveCommand('S', "10 10 10 10", Point2D.ZERO, null);
-        CommandFactory.INSTANCE.createShortCubicBezierCurveCommand('s', "10 10 10 10", Point2D.ZERO, null);
+        cut.createShortCubicBezierCurveCommand('S', "10 10 10 10", Point2D.ZERO, null);
+        cut.createShortCubicBezierCurveCommand('s', "10 10 10 10", Point2D.ZERO, null);
     }
 
     @Test
     public void aShortCubicBezierCurveCommandCanNotBeCreatedWhenTheGivenDataIsInvalid() throws PathException {
-        final PathCommand command = CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "10, 10 10, 10 10, 10");
+        final PathCommand command = cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "10, 10 10, 10 10, 10");
 
         final List<String> invalidData = Arrays.asList("10",
                                                        "10 10",
@@ -314,7 +330,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(), data, Point2D.ZERO, command);
+                cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(), data, Point2D.ZERO, command);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -323,7 +339,7 @@ public class CommandFactoryTest {
 
     @Test
     public void aShortCubicBezierCurveCommandCanBeCreatedFromAllPossibleValidDataStrings() throws PathException {
-        final PathCommand command = CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "10, 10 10, 10 10, 10");
+        final PathCommand command = cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "10, 10 10, 10 10, 10");
 
         final List<String> validData = Arrays.asList("10 10 10 10",
                                                      " 10 10 10 10",
@@ -337,7 +353,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(), data, Point2D.ZERO, command);
+                cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(), data, Point2D.ZERO, command);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -348,56 +364,68 @@ public class CommandFactoryTest {
     public void aShortCubicBezierCurveCommandWillHaveItStartControlPointSetToTheCurrentPointIfThePreviousCommandWasNoCubicBezierCurveCommand()
             throws PathException, NoSuchFieldException, IllegalAccessException {
 
-        final CubicBezierCurveCommand cut = CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(),
-                                                                                                       "10 10 10 10",
-                                                                                                       new Point2D(10.0d, 10.0d),
-                                                                                                       null);
+        final CubicBezierCurveCommand shortCubicBezierCurveCommand = cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                                            "10 10 10 10",
+                                                                                                            new Point2D(10.0d, 10.0d),
+                                                                                                            null);
 
-        assertEquals(new Point2D(10.0d, 10.0d), getStartControlPoint(cut));
+        assertEquals(new Point2D(10.0d, 10.0d), getStartControlPoint(shortCubicBezierCurveCommand));
 
-        final CubicBezierCurveCommand cut1 = CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getRelativeName(),
-                                                                                                        "10 10 10 10",
-                                                                                                        new Point2D(10.0d, 10.0d),
-                                                                                                        null);
+        final CubicBezierCurveCommand shortCubicBezierCurveCommand1 = cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getRelativeName(),
+                                                                                                             "10 10 10 10",
+                                                                                                             new Point2D(10.0d, 10.0d),
+                                                                                                             null);
 
-        assertEquals(new Point2D(0.0d, 0.0d), getStartControlPoint(cut1));
+        assertEquals(new Point2D(0.0d, 0.0d), getStartControlPoint(shortCubicBezierCurveCommand1));
     }
 
     @Test
     public void aShortCubicBezierCurveCommandWillHaveItsStartControlPointBeBasedOneThePreviousEndControlPointOfThePreviousCommand() throws PathException, NoSuchFieldException, IllegalAccessException {
         final Point2D absoluteCurrentPoint = new Point2D(10.0d, 10.0d);
 
-        final CubicBezierCurveCommand command = CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "20,20 30,20 40,10");
-        final CubicBezierCurveCommand cut = CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(), "60,20 70,10", absoluteCurrentPoint, command);
+        final CubicBezierCurveCommand command = cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "20,20 30,20 40,10");
+        final CubicBezierCurveCommand shortCubicBezierCurveCommand = cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                                            "60,20 70,10",
+                                                                                                            absoluteCurrentPoint,
+                                                                                                            command);
 
-        assertEquals(new Point2D(50.0d, 0.0d), getStartControlPoint(cut));
+        assertEquals(new Point2D(50.0d, 0.0d), getStartControlPoint(shortCubicBezierCurveCommand));
 
-        final CubicBezierCurveCommand command1 = CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getRelativeName(), "10,-10 20,-10 30,0");
-        final CubicBezierCurveCommand cut1 = CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(), "60,20 70,10", absoluteCurrentPoint, command1);
+        final CubicBezierCurveCommand command1 = cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getRelativeName(), "10,-10 20,-10 30,0");
+        final CubicBezierCurveCommand shortCubicBezierCurveCommand1 = cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                                             "60,20 70,10",
+                                                                                                             absoluteCurrentPoint,
+                                                                                                             command1);
 
-        assertEquals(new Point2D(50.0d, 20.0d), getStartControlPoint(cut1));
+        assertEquals(new Point2D(50.0d, 20.0d), getStartControlPoint(shortCubicBezierCurveCommand1));
 
-        final CubicBezierCurveCommand command2 = CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "20,0 30,0 40,10");
-        final CubicBezierCurveCommand cut2 = CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getRelativeName(), "50,10 60,00", absoluteCurrentPoint, command2);
+        final CubicBezierCurveCommand command2 = cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getAbsoluteName(), "20,0 30,0 40,10");
+        final CubicBezierCurveCommand shortCubicBezierCurveCommand2 = cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getRelativeName(),
+                                                                                                             "50,10 60,00",
+                                                                                                             absoluteCurrentPoint,
+                                                                                                             command2);
 
-        assertEquals(new Point2D(10.0d, 10.0d), getStartControlPoint(cut2));
+        assertEquals(new Point2D(10.0d, 10.0d), getStartControlPoint(shortCubicBezierCurveCommand2));
 
-        final CubicBezierCurveCommand command3 = CommandFactory.INSTANCE.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getRelativeName(), "10,-10 20,-10 30,0");
-        final CubicBezierCurveCommand cut3 = CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getRelativeName(), "50,10 60,00", absoluteCurrentPoint, command3);
+        final CubicBezierCurveCommand command3 = cut.createCubicBezierCurveCommand(CUBIC_BEZIER_CURVE.getRelativeName(), "10,-10 20,-10 30,0");
+        final CubicBezierCurveCommand shortCubicBezierCurveCommand3 = cut.createShortCubicBezierCurveCommand(SHORT_CUBIC_BEZIER_CURVE.getRelativeName(),
+                                                                                                             "50,10 60,00",
+                                                                                                             absoluteCurrentPoint,
+                                                                                                             command3);
 
-        assertEquals(new Point2D(10.0d, 10.0d), getStartControlPoint(cut3));
+        assertEquals(new Point2D(10.0d, 10.0d), getStartControlPoint(shortCubicBezierCurveCommand3));
     }
 
 
     @Test (expected = PathException.class)
     public void aQuadraticBezierCurveCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createQuadraticBezierCurveCommand('X', "10");
+        cut.createQuadraticBezierCurveCommand('X', "10");
     }
 
     @Test
     public void aQuadraticCubicBezierCurveCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createQuadraticBezierCurveCommand('Q', "10 10 10 10");
-        CommandFactory.INSTANCE.createQuadraticBezierCurveCommand('q', "10 10 10 10");
+        cut.createQuadraticBezierCurveCommand('Q', "10 10 10 10");
+        cut.createQuadraticBezierCurveCommand('q', "10 10 10 10");
     }
 
     @Test
@@ -411,7 +439,7 @@ public class CommandFactoryTest {
 
         for (final String data : invalidData) {
             try {
-                CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(), data);
+                cut.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(), data);
                 fail(String.format("Should have not been able to create instance with data %s", data));
             } catch (final PathException ignore) {
             }
@@ -432,7 +460,7 @@ public class CommandFactoryTest {
 
         for (final String data : validData) {
             try {
-                CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(), data);
+                cut.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(), data);
             } catch (PathException e) {
                 fail(String.format("Could not use data %s", data));
             }
@@ -442,32 +470,32 @@ public class CommandFactoryTest {
 
     @Test (expected = PathException.class)
     public void aShortQuadraticBezierCurveCommandCanNotBeCreatedWhenTheGivenNameIsInvalid() throws PathException {
-        CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand('X', "10", Point2D.ZERO, null);
+        cut.createShortQuadraticBezierCurveCommand('X', "10", Point2D.ZERO, null);
     }
 
     @Test
     public void aShortQuadraticCubicBezierCurveCommandCanBeCreatedWhenTheGivenNameIsValid() throws PathException {
-        CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand('T', "10 10", Point2D.ZERO, null);
-        CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand('t', "10 10", Point2D.ZERO, null);
+        cut.createShortQuadraticBezierCurveCommand('T', "10 10", Point2D.ZERO, null);
+        cut.createShortQuadraticBezierCurveCommand('t', "10 10", Point2D.ZERO, null);
     }
 
     @Test
     public void aShortQuadraticBezierCurveCommandWillHaveItControlPointSetToTheCurrentPointIfThePreviousCommandWasNoCubicBezierCurveCommand()
             throws PathException, NoSuchFieldException, IllegalAccessException {
 
-        final QuadraticBezierCurveCommand cut = CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
-                                                                                                               "20 20",
-                                                                                                               new Point2D(10.0d, 10.0d),
-                                                                                                               null);
+        final QuadraticBezierCurveCommand shortQuadraticBezierCurveCommand = cut.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                                                        "20 20",
+                                                                                                                        new Point2D(10.0d, 10.0d),
+                                                                                                                        null);
 
-        assertEquals(new Point2D(10.0d, 10.0d), getControlPoint(cut));
+        assertEquals(new Point2D(10.0d, 10.0d), getControlPoint(shortQuadraticBezierCurveCommand));
 
-        final QuadraticBezierCurveCommand cut1 = CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getRelativeName(),
-                                                                                                                "20 20",
-                                                                                                                new Point2D(10.0d, 10.0d),
-                                                                                                                null);
+        final QuadraticBezierCurveCommand shortQuadraticBezierCurveCommand1 = cut.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getRelativeName(),
+                                                                                                                         "20 20",
+                                                                                                                         new Point2D(10.0d, 10.0d),
+                                                                                                                         null);
 
-        assertEquals(new Point2D(0.0d, 0.0d), getControlPoint(cut1));
+        assertEquals(new Point2D(0.0d, 0.0d), getControlPoint(shortQuadraticBezierCurveCommand1));
     }
 
     @Test
@@ -475,41 +503,41 @@ public class CommandFactoryTest {
             throws PathException, NoSuchFieldException, IllegalAccessException {
         final Point2D absoluteCurrentPoint = new Point2D(10.0d, 20.0d);
 
-        final QuadraticBezierCurveCommand command = CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
-                                                                                                              "100,40 130,20");
-        final QuadraticBezierCurveCommand cut = CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
-                                                                                                               "200,30",
-                                                                                                               absoluteCurrentPoint,
-                                                                                                               command);
+        final QuadraticBezierCurveCommand command = cut.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                          "100,40 130,20");
+        final QuadraticBezierCurveCommand shortQuadraticBezierCurveCommand = cut.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                                                        "200,30",
+                                                                                                                        absoluteCurrentPoint,
+                                                                                                                        command);
 
-        assertEquals(new Point2D(160.0d, 0.0d), getControlPoint(cut));
+        assertEquals(new Point2D(160.0d, 0.0d), getControlPoint(shortQuadraticBezierCurveCommand));
 
-        final QuadraticBezierCurveCommand command1 = CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getRelativeName(),
-                                                                                                               "90,20 120,0");
-        final QuadraticBezierCurveCommand cut1 = CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
-                                                                                                                "200,30",
-                                                                                                                absoluteCurrentPoint,
-                                                                                                                command1);
+        final QuadraticBezierCurveCommand command1 = cut.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getRelativeName(),
+                                                                                           "90,20 120,0");
+        final QuadraticBezierCurveCommand shortQuadraticBezierCurveCommand1 = cut.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                                                         "200,30",
+                                                                                                                         absoluteCurrentPoint,
+                                                                                                                         command1);
 
-        assertEquals(new Point2D(160.0d, 0.0d), getControlPoint(cut1));
+        assertEquals(new Point2D(160.0d, 0.0d), getControlPoint(shortQuadraticBezierCurveCommand1));
 
-        final QuadraticBezierCurveCommand command2 = CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
-                                                                                                               "100,40 130,20");
-        final QuadraticBezierCurveCommand cut2 = CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getRelativeName(),
-                                                                                                                "200,30",
-                                                                                                                absoluteCurrentPoint,
-                                                                                                                command2);
+        final QuadraticBezierCurveCommand command2 = cut.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getAbsoluteName(),
+                                                                                           "100,40 130,20");
+        final QuadraticBezierCurveCommand shortQuadraticBezierCurveCommand2 = cut.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getRelativeName(),
+                                                                                                                         "200,30",
+                                                                                                                         absoluteCurrentPoint,
+                                                                                                                         command2);
 
-        assertEquals(new Point2D(30.0d, -20.0d), getControlPoint(cut2));
+        assertEquals(new Point2D(30.0d, -20.0d), getControlPoint(shortQuadraticBezierCurveCommand2));
 
-        final QuadraticBezierCurveCommand command3 = CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getRelativeName(),
-                                                                                                               "90,20 120,0");
-        final QuadraticBezierCurveCommand cut3 = CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getRelativeName(),
-                                                                                                                "200,30",
-                                                                                                                absoluteCurrentPoint,
-                                                                                                                command3);
+        final QuadraticBezierCurveCommand command3 = cut.createQuadraticBezierCurveCommand(QUADRATIC_BEZIER_CURVE.getRelativeName(),
+                                                                                           "90,20 120,0");
+        final QuadraticBezierCurveCommand shortQuadraticBezierCurveCommand3 = cut.createShortQuadraticBezierCurveCommand(SHORT_QUADRATIC_BEZIER_CURVE.getRelativeName(),
+                                                                                                                         "200,30",
+                                                                                                                         absoluteCurrentPoint,
+                                                                                                                         command3);
 
-        assertEquals(new Point2D(30.0d, -20.0d), getControlPoint(cut3));
+        assertEquals(new Point2D(30.0d, -20.0d), getControlPoint(shortQuadraticBezierCurveCommand3));
     }
 
     // endregion

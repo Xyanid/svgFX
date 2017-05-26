@@ -85,7 +85,7 @@ public class SVGStop extends SVGElementBase<Stop> {
         }
 
         if (color == null) {
-            throw new SVGException(SVGException.Reason.MISSING_COLOR, String.format("%s can not be created without a color", SVGStop.class.getSimpleName()));
+            throw new SVGException(String.format("[%s] can not be created without a color", SVGStop.class.getSimpleName()));
         }
 
         final Optional<SVGAttributeTypeDouble> stopOpacity = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class);

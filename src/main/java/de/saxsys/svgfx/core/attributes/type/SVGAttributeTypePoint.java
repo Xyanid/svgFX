@@ -111,12 +111,12 @@ public class SVGAttributeTypePoint extends SVGAttributeType<SVGAttributeTypePoin
      * @throws NumberFormatException when any value inside the array is not a valid {@link SVGAttributeTypePoint}
      */
     @Override
-    protected Pair<SVGTypePoint, Void> getValueAndUnit(final String text) throws SVGException {
+    protected Pair<SVGTypePoint, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        final List<String> pointSplit = StringUtil.splitByDelimiters(text, Arrays.asList(Constants.COMMA, Constants.WHITESPACE), StringUtil::isNotNullOrEmptyAfterTrim);
+        final List<String> pointSplit = StringUtil.splitByDelimiters(cssText, Arrays.asList(Constants.COMMA, Constants.WHITESPACE), StringUtil::isNotNullOrEmptyAfterTrim);
 
         if (pointSplit.size() != 2) {
-            throw new SVGException(SVGException.Reason.INVALID_POINT_FORMAT, "point does not provide x and y position");
+            throw new SVGException(String.format("Css text [%s] does not represent a valid point format", cssText));
         }
 
         final SVGTypePoint point = new SVGTypePoint(getDocumentDataProvider());

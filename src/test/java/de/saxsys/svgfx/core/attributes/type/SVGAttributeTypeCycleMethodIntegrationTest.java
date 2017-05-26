@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 22.11.2016.
@@ -50,16 +49,11 @@ public class SVGAttributeTypeCycleMethodIntegrationTest {
     /**
      * When the test provided is not valid, the default value will be returned.
      */
-    @Test
-    public void whenTheProvidedTextIsNotValidTheDefaultValueWillBeReturned() {
+    @Test (expected = SVGException.class)
+    public void whenTheProvidedTextIsNotValidTheDefaultValueWillBeReturned() throws SVGException {
         cut.setText("invalid");
 
-        try {
-            cut.getValue();
-            fail("Should not be able to parse invalid cycle method");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_CYCLE_METHOD, e.getReason());
-        }
+        cut.getValue();
     }
 
     /**

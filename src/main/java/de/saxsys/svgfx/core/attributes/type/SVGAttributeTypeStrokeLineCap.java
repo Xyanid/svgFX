@@ -54,7 +54,7 @@ public class SVGAttributeTypeStrokeLineCap extends SVGAttributeType<StrokeLineCa
         try {
             return new Pair<>(StrokeLineCap.valueOf(cssText.toUpperCase()), null);
         } catch (IllegalArgumentException e) {
-            throw new SVGException(SVGException.Reason.INVALID_STROKE_LINE_CAP, e);
+            throw new SVGException(String.format("Css text [%s] does not represent a valid stroke line cap", cssText), e);
         }
     }
 

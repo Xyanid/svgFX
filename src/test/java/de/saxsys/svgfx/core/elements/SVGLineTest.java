@@ -82,40 +82,44 @@ public final class SVGLineTest {
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getValue(1)).thenReturn("A");
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getValue(1)).thenReturn("75");
         when(attributes.getValue(2)).thenReturn("A");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getValue(1)).thenReturn("75");
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("A");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -135,37 +139,41 @@ public final class SVGLineTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**

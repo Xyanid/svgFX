@@ -80,28 +80,31 @@ public final class SVGCircleTest {
         when(attributes.getValue(1)).thenReturn("100.0");
         when(attributes.getValue(2)).thenReturn("25");
 
-        assertResultFails(SVGCircle::new, SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGCircle::new,
+                          SVGCircle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("10.0");
         when(attributes.getValue(1)).thenReturn("B");
         when(attributes.getValue(2)).thenReturn("25");
 
-        assertResultFails(SVGCircle::new, SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGCircle::new,
+                          SVGCircle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("10.0");
         when(attributes.getValue(1)).thenReturn("10.0");
         when(attributes.getValue(2)).thenReturn("A");
 
-        assertResultFails(SVGCircle::new, SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGCircle::new,
+                          SVGCircle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -120,26 +123,29 @@ public final class SVGCircleTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.RADIUS.getName());
 
-        assertResultFails(SVGCircle::new, SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGCircle::new,
+                          SVGCircle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.RADIUS.getName());
 
-        assertResultFails(SVGCircle::new, SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGCircle::new,
+                          SVGCircle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.CENTER_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.CENTER_Y.getName());
 
-        assertResultFails(SVGCircle::new, SVGCircle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGCircle::new,
+                          SVGCircle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**

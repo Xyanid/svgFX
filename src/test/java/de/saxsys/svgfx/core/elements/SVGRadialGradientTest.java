@@ -116,10 +116,11 @@ public final class SVGRadialGradientTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        assertResultFails(SVGRadialGradient::new, SVGRadialGradient.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_STOPS, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRadialGradient::new,
+                          SVGRadialGradient.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -169,10 +170,11 @@ public final class SVGRadialGradientTest {
         when(attributes.getQName(6)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(6)).thenReturn("#test");
 
-        assertResultFails(SVGRadialGradient::new, SVGRadialGradient.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ELEMENT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRadialGradient::new,
+                          SVGRadialGradient.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**

@@ -63,7 +63,7 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
         }
 
         if (result == null) {
-            throw new SVGException(SVGException.Reason.INVALID_FILL_RULE, String.format("Given %s can not be parsed into a fill rule", cssText));
+            throw new SVGException(String.format("Css text [%s] does not represent a valid fill rule", cssText));
         }
 
         return new Pair<>(result, null);

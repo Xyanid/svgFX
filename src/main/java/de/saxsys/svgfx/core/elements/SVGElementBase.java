@@ -225,13 +225,13 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
      *
      * @throws IllegalArgumentException if either style or inheritanceResolver are null.
      */
-    private void combineStylesAndResolveInheritance(final SVGCssStyle style, final SVGCssStyle otherStyle) throws SVGException {
+    private void combineStylesAndResolveInheritance(final SVGCssStyle style, final SVGCssStyle otherStyle) {
         if (style == null) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given style must not be null");
+            throw new IllegalArgumentException("Given style must not be null");
         }
 
         if (otherStyle == null) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given otherStyle must not be null");
+            throw new IllegalArgumentException("Given otherStyle must not be null");
         }
 
         style.combineWithStyle(otherStyle);
@@ -324,15 +324,15 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
 
             final SVGCssStyle ownStyle = new SVGCssStyle(getDocumentDataProvider());
 
-
+            final String cssText = String.format("ownStyle%s%s%s%s",
+                                                 Constants.DECLARATION_BLOCK_START,
+                                                 attribute,
+                                                 attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
+                                                 Constants.DECLARATION_BLOCK_END);
             try {
-                ownStyle.parseCssText(String.format("ownStyle%s%s%s%s",
-                                                    Constants.DECLARATION_BLOCK_START,
-                                                    attribute,
-                                                    attribute.endsWith(Constants.PROPERTY_END_STRING) ? "" : Constants.PROPERTY_END,
-                                                    Constants.DECLARATION_BLOCK_END));
-            } catch (final IllegalArgumentException e) {
-                throw new SVGException(SVGException.Reason.INVALID_CSS_STYLE, e);
+                ownStyle.parseCssText(cssText);
+            } catch (final IllegalStateException e) {
+                throw new SVGException(String.format("Created css text [%s] could not be parsed", cssText), e);
             }
 
             return ownStyle;
@@ -357,7 +357,7 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
                                             .stream()
                                             .filter(data -> data.getName().endsWith(reference))
                                             .findFirst()
-                                            .orElseThrow(() -> new SVGException(SVGException.Reason.MISSING_STYLE, String.format("Given style reference %s was not found", reference)));
+                                            .orElseThrow(() -> new SVGException(String.format("Given style reference [%s] was not found", reference)));
 
         }
         return null;
@@ -395,8 +395,8 @@ public abstract class SVGElementBase<TResult> extends ElementBase<SVGAttributeTy
 
             try {
                 result.parseCssText(cssText.toString());
-            } catch (final Exception e) {
-                throw new SVGException(SVGException.Reason.INVALID_CSS_STYLE, e);
+            } catch (final IllegalStateException e) {
+                throw new SVGException(String.format("Css text [%s] could not be parsed", cssText), e);
             }
         }
 

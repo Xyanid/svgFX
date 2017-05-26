@@ -17,7 +17,6 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.util.Pair;
-import org.w3c.dom.DOMException;
 
 /**
  * This class represents a svg transform content type. This means it will contains matrix transformation.
@@ -58,8 +57,8 @@ public class SVGAttributeTypeStyle extends SVGAttributeType<SVGCssStyle, Void> {
         final SVGCssStyle ownStyle = new SVGCssStyle(getDocumentDataProvider());
         try {
             ownStyle.parseCssText(text);
-        } catch (final DOMException e) {
-            throw new SVGException(SVGException.Reason.INVALID_IRI_IDENTIFIER, e);
+        } catch (final IllegalStateException e) {
+            throw new SVGException(String.format("Css text [%s] could not be parsed", text), e);
         }
         return new Pair<>(ownStyle, null);
     }

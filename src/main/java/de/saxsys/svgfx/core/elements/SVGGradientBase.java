@@ -160,7 +160,7 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
                 try {
                     stops.add(((SVGStop) child).getResult());
                 } catch (final SAXException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not create result for stop: %s", child));
+                    throw new SVGException(String.format("Could not create result for stop [%s]", child));
                 }
             }
         }

@@ -14,19 +14,19 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.path.CommandParser;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.saxsys.svgfx.core.elements.SVGElementFactory.KNOWN_CLASSES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Xyanid on 05.10.2015.
@@ -60,13 +60,11 @@ public final class SVGElementFactoryTest {
         classesToCreate.put(SVGStyle.ELEMENT_NAME, SVGStyle.class);
         classesToCreate.put(SVGUse.ELEMENT_NAME, SVGUse.class);
 
-        final Attributes attributes = Mockito.mock(Attributes.class);
+        final Attributes attributes = mock(Attributes.class);
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        final SVGElementFactory cut = new SVGElementFactory();
-
-        assertEquals(16, KNOWN_CLASSES.size());
+        final SVGElementFactory cut = new SVGElementFactory(mock(CommandParser.class));
 
         for (final Map.Entry<String, Class<? extends SVGElementBase>> entry : classesToCreate.entrySet()) {
             final ElementBase element = cut.createElement(entry.getKey(), attributes, dataProvider);

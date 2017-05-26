@@ -92,7 +92,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
         final List<Stop> stops = getStops();
         if (stops.isEmpty()) {
-            throw new SVGException(SVGException.Reason.MISSING_STOPS);
+            throw new SVGException("Given linear gradient does not have stop colors");
         }
 
         final AtomicReference<Double> startX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
@@ -127,7 +127,7 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
         // when being in user space we first need to transform then make the values relative
         if (gradientUnit == GradientUnit.USER_SPACE_ON_USE) {
             if (elementBoundingBox == null) {
-                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but no bounding box is provided.");
+                throw new IllegalArgumentException("Can not create linear gradient when user space is defined but no bounding box is provided.");
             }
 
             usedTransform.ifPresent(transform -> transformPosition(startX, startY, endX, endY, transform));

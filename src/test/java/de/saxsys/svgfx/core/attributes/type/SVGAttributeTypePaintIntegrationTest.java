@@ -137,37 +137,29 @@ public class SVGAttributeTypePaintIntegrationTest {
     /**
      * When the color described in the text is a reference to a {@link SVGGradientBase} but no {@link SVGElementBase} has been provided, an exception will be thrown.
      */
-    @Test
-    public void whenTheTextIsAReferenceToAnNonExistingElementAndNotShapeHasBeenProvidedAnSVGExceptionWillBeThrown() {
+    @Test (expected = SVGException.class)
+    public void whenTheTextIsAReferenceToAnNonExistingElementAndNotShapeHasBeenProvidedAnSVGExceptionWillBeThrown() throws SVGException {
 
-        cut.setText("url(#test)");
+        cut.setText(null);
 
-        try {
-            cut.getValue();
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_COLOR_FORMAT, e.getReason());
-        }
+        cut.getValue();
     }
 
     /**
      * When the color described in the text is a reference that can not be resolved into a {@link de.saxsys.svgfx.core.elements.SVGGradientBase}, an exception will be thrown.
      */
-    @Test
-    public void whenTheTextIsAReferenceToAnNonExistingElementAnSVGExceptionWillBeThrown() {
+    @Test (expected = SVGException.class)
+    public void whenTheTextIsAReferenceToAnNonExistingElementAnSVGExceptionWillBeThrown() throws SVGException {
 
         cut.setText("url(#test)");
 
-        try {
-            cut.getValue(mock(ThrowableSupplier.class), mock(Transform.class));
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
-        }
+        cut.getValue(mock(ThrowableSupplier.class), mock(Transform.class));
     }
 
     /**
      * When the color described in the text is a reference of a {@link SVGElementBase} that is not a {@link SVGGradientBase}, an exception will be thrown.
      */
-    @Test
+    @Test (expected = SVGException.class)
     public void whenTheTextIsAReferenceToAnElementThatIsNotAGradientAnSVGExceptionWillBeThrown() throws SVGException {
 
         final SVGElementBase element = mock(SVGElementBase.class);
@@ -175,11 +167,7 @@ public class SVGAttributeTypePaintIntegrationTest {
 
         cut.setText("url(#test)");
 
-        try {
-            cut.getValue(mock(ThrowableSupplier.class), mock(Transform.class));
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
-        }
+        cut.getValue(mock(ThrowableSupplier.class), mock(Transform.class));
     }
 
     /**

@@ -50,6 +50,23 @@ public class CommandParser {
 
     // endregion
 
+    // region Fields
+
+    /**
+     * The {@link CommandFactory} used to create {@link PathCommand}s.
+     */
+    private final CommandFactory commandFactory;
+
+    // endregion
+
+    // region Constructor
+
+    public CommandParser(final CommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
+    }
+
+    // endregion
+
     // region Public
 
     /**
@@ -73,11 +90,11 @@ public class CommandParser {
         final Wrapper<Rectangle> previousBoundingBox = new Wrapper<>();
 
         StringUtil.splitByDelimiters(path, COMMAND_NAMES, (delimiter, data) -> {
-            final PathCommand nextCommand = CommandFactory.INSTANCE.createCommandOrFail(delimiter,
-                                                                                        data,
-                                                                                        startPoint.getOptional().orElse(Point2D.ZERO),
-                                                                                        currentPoint.getOptional().orElse(Point2D.ZERO),
-                                                                                        previousCommand.get()
+            final PathCommand nextCommand = commandFactory.createCommandOrFail(delimiter,
+                                                                               data,
+                                                                               startPoint.getOptional().orElse(Point2D.ZERO),
+                                                                               currentPoint.getOptional().orElse(Point2D.ZERO),
+                                                                               previousCommand.get()
             );
 
             final Optional<Rectangle> nextBoundingBox = getNextBoundingBox(nextCommand,

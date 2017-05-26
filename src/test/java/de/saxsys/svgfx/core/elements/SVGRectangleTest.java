@@ -89,10 +89,11 @@ public final class SVGRectangleTest {
         when(attributes.getQName(5)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(5)).thenReturn("5");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("A");
@@ -101,10 +102,11 @@ public final class SVGRectangleTest {
         when(attributes.getValue(4)).thenReturn("15");
         when(attributes.getValue(5)).thenReturn("5");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50.0");
         when(attributes.getValue(1)).thenReturn("100.0");
@@ -113,10 +115,11 @@ public final class SVGRectangleTest {
         when(attributes.getValue(4)).thenReturn("15");
         when(attributes.getValue(5)).thenReturn("5");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50.0");
         when(attributes.getValue(1)).thenReturn("100.0");
@@ -125,10 +128,11 @@ public final class SVGRectangleTest {
         when(attributes.getValue(4)).thenReturn("15");
         when(attributes.getValue(5)).thenReturn("5");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50.0");
         when(attributes.getValue(1)).thenReturn("100.0");
@@ -137,10 +141,11 @@ public final class SVGRectangleTest {
         when(attributes.getValue(4)).thenReturn("A");
         when(attributes.getValue(5)).thenReturn("5");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50.0");
         when(attributes.getValue(1)).thenReturn("100.0");
@@ -149,10 +154,11 @@ public final class SVGRectangleTest {
         when(attributes.getValue(4)).thenReturn("15");
         when(attributes.getValue(5)).thenReturn("A");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -167,17 +173,19 @@ public final class SVGRectangleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.WIDTH.getName());
         when(attributes.getValue(0)).thenReturn("50.0");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.HEIGHT.getName());
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGRectangle::new,
+                          SVGRectangle.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**

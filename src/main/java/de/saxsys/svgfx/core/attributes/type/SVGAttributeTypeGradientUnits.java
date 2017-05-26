@@ -65,7 +65,7 @@ public class SVGAttributeTypeGradientUnits extends SVGAttributeType<GradientUnit
         }
 
         if (gradientUnit == null) {
-            throw new SVGException(SVGException.Reason.INVALID_GRADIENT_UNIT_FORMAT, String.format("Given %s can not be parsed into a gradient unit", cssText));
+            throw new SVGException(String.format("Css text [%s] does not represent a valid gradient unit", cssText));
         }
 
         return new Pair<>(gradientUnit, null);

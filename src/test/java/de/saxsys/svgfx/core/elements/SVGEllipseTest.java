@@ -84,40 +84,44 @@ public final class SVGEllipseTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("A");
         when(attributes.getValue(2)).thenReturn("25");
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("100");
         when(attributes.getValue(2)).thenReturn("A");
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("100");
         when(attributes.getValue(2)).thenReturn("25");
         when(attributes.getValue(3)).thenReturn("A");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -133,17 +137,19 @@ public final class SVGEllipseTest {
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**

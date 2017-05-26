@@ -66,7 +66,7 @@ public class SVGAttributeTypeCycleMethod extends SVGAttributeType<CycleMethod, V
         }
 
         if (result == null) {
-            throw new SVGException(SVGException.Reason.INVALID_CYCLE_METHOD, String.format("Given %s can not be parsed into a cycle method", cssText));
+            throw new SVGException(String.format("Css text [%s] does not present a valid cycle method", cssText));
         }
 
         return new Pair<>(result, null);

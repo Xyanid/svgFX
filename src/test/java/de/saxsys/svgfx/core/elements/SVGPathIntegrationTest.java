@@ -18,8 +18,9 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
+import de.saxsys.svgfx.core.path.CommandParser;
+import de.saxsys.svgfx.core.path.commands.CommandFactory;
 import javafx.scene.shape.FillRule;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
@@ -34,7 +35,17 @@ import static org.mockito.Mockito.when;
  *
  * @author Xyanid on 05.10.2015.
  */
-public final class SVGPathTest {
+public final class SVGPathIntegrationTest {
+
+    // region Fields
+
+    private final CommandFactory commandFactory = new CommandFactory();
+
+    private final CommandParser commandParser = new CommandParser(commandFactory);
+
+    // endregion
+
+    // region Tests
 
     /**
      * Ensures that the path required for a line are parse correctly.
@@ -49,9 +60,9 @@ public final class SVGPathTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
         when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 200 300 z");
 
-        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), commandParser);
 
-        Assert.assertEquals("M 100 100 L 300 100 L 200 300 z", line.getResult().getContent());
+        assertEquals("M 100 100 L 300 100 L 200 300 z", line.getResult().getContent());
     }
 
     /**
@@ -69,9 +80,9 @@ public final class SVGPathTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.FILL_RULE.getName());
         when(attributes.getValue(1)).thenReturn("evenodd");
 
-        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), commandParser);
 
-        Assert.assertEquals(FillRule.EVEN_ODD, line.getResult().getFillRule());
+        assertEquals(FillRule.EVEN_ODD, line.getResult().getFillRule());
     }
 
     /**
@@ -87,7 +98,7 @@ public final class SVGPathTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
         when(attributes.getValue(0)).thenReturn("M =& 100 L 300 ?) 300 z");
 
-        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), commandParser);
 
         try {
             line.getResult();
@@ -106,7 +117,7 @@ public final class SVGPathTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGPath path = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+        final SVGPath path = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), commandParser);
 
         try {
             path.getResult();
@@ -128,7 +139,7 @@ public final class SVGPathTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.PATH_DESCRIPTION.getName());
         when(attributes.getValue(0)).thenReturn("M 100 100 L 300 100 L 300 -100 z");
 
-        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
+        final SVGPath line = new SVGPath(SVGPath.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), commandParser);
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox(line.getResult());
 
@@ -137,4 +148,6 @@ public final class SVGPathTest {
         assertEquals(-100.0d, boundingBox.getMinY().getValue(), 0.01d);
         assertEquals(100.0d, boundingBox.getMaxY().getValue(), 0.01d);
     }
+
+    // endregion
 }

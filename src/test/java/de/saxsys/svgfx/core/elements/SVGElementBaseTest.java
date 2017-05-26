@@ -447,8 +447,7 @@ public class SVGElementBaseTest {
             try {
                 getStyle(element);
                 fail();
-            } catch (final SVGException e) {
-                assertEquals(e.getReason(), SVGException.Reason.INVALID_CSS_STYLE);
+            } catch (final IllegalArgumentException | SVGException ignored) {
             }
         }
     }
@@ -471,8 +470,7 @@ public class SVGElementBaseTest {
         try {
             getStyle(element);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(e.getReason(), SVGException.Reason.INVALID_CSS_STYLE);
+        } catch (final IllegalArgumentException | SVGException ignored) {
         }
     }
 
@@ -494,8 +492,7 @@ public class SVGElementBaseTest {
         try {
             getStyle(element);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(e.getReason(), SVGException.Reason.MISSING_STYLE);
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -617,6 +614,9 @@ public class SVGElementBaseTest {
         } catch (final InvocationTargetException e) {
             if (e.getTargetException() instanceof SVGException) {
                 throw (SVGException) e.getTargetException();
+            }
+            if (e.getTargetException() instanceof IllegalArgumentException) {
+                throw (IllegalArgumentException) e.getTargetException();
             } else {
                 throw new IllegalArgumentException("Could not invoke method getStyleAndResolveInheritance", e.getCause());
             }

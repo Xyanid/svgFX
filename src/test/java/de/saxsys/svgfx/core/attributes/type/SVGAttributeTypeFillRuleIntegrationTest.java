@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 16.10.2016.
@@ -47,19 +46,12 @@ public class SVGAttributeTypeFillRuleIntegrationTest {
 
     //region Tests
 
-    /**
-     * When the test provided is not valid, the default value will be returned.
-     */
-    @Test
-    public void whenTheProvidedTextIsNotValidTheDefaultValueWillBeReturned() {
+
+    @Test (expected = SVGException.class)
+    public void whenTheProvidedTextIsNotValidAnExceptionWillBeThrown() throws SVGException {
         cut.setText("invalid");
 
-        try {
-            cut.getValue();
-            fail("Should not be able to parse invalid fill rule");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_FILL_RULE, e.getReason());
-        }
+        cut.getValue();
     }
 
     /**

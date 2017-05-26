@@ -56,7 +56,7 @@ public class SVGAttributeTypeDouble extends SVGAttributeType<Double, Void> {
         try {
             return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
         } catch (final NumberFormatException e) {
-            throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
+            throw new SVGException(String.format("Css text [%s] is not a valid number", cssText), e);
         }
     }
 

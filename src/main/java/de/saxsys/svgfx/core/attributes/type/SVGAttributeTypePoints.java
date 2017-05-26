@@ -58,14 +58,14 @@ public class SVGAttributeTypePoints extends SVGAttributeType<List<SVGAttributeTy
      * @throws SVGException when any value inside the array is not a valid {@link SVGAttributeTypePoint}.
      */
     @Override
-    protected Pair<List<SVGAttributeTypePoint>, Void> getValueAndUnit(final String data) throws SVGException {
+    protected Pair<List<SVGAttributeTypePoint>, Void> getValueAndUnit(final String cssText) throws SVGException {
         final List<SVGAttributeTypePoint> actualPoints = new ArrayList<>();
 
-        if (StringUtil.isNotNullOrEmpty(data)) {
-            final List<String> values = StringUtil.splitByDelimiters(data, Arrays.asList(Constants.WHITESPACE, Constants.COMMA), StringUtil::isNotNullOrEmptyAfterTrim);
+        if (StringUtil.isNotNullOrEmpty(cssText)) {
+            final List<String> values = StringUtil.splitByDelimiters(cssText, Arrays.asList(Constants.WHITESPACE, Constants.COMMA), StringUtil::isNotNullOrEmptyAfterTrim);
 
             if (values.size() % 2 != 0) {
-                throw new SVGException(SVGException.Reason.INVALID_POINT_FORMAT, String.format("Must have an even number of points [%s]", data));
+                throw new SVGException(String.format("Css text [%s] must have an even number of points", cssText));
             }
 
             for (int i = 0; i < values.size(); i += 2) {

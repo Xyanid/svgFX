@@ -46,16 +46,8 @@ public final class CommandFactory {
 
     // region Constants
 
-    public static final CommandFactory INSTANCE = new CommandFactory();
-
     private static final String INVALID_NUMBER_FORMAT = "Could not parse given data [%s] into a number";
     private static final String INVALID_COMMAND_NAME = "Given command name [%s] can not be used to create a [%s] required either [%s] or [%s]";
-
-    // endregion
-
-    // region Constructor
-
-    private CommandFactory() {}
 
     // endregion
 
@@ -82,23 +74,23 @@ public final class CommandFactory {
         if (delimiter == null) {
             throw new PathException(String.format("Can not create command for data %s when no command delimiter was found", data));
         } else if (MOVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createMoveCommand(delimiter, data);
+            return createMoveCommand(delimiter, data);
         } else if (LINE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createLineCommand(delimiter, data);
+            return createLineCommand(delimiter, data);
         } else if (HORIZONTAL_LINE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createHorizontalLineCommand(delimiter, data);
+            return createHorizontalLineCommand(delimiter, data);
         } else if (VERTICAL_LINE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createVerticalLineCommand(delimiter, data);
+            return createVerticalLineCommand(delimiter, data);
         } else if (CLOSE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createCloseCommand(delimiter, absolutePathStartingPoint);
+            return createCloseCommand(delimiter, absolutePathStartingPoint);
         } else if (CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createCubicBezierCurveCommand(delimiter, data);
+            return createCubicBezierCurveCommand(delimiter, data);
         } else if (SHORT_CUBIC_BEZIER_CURVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createShortCubicBezierCurveCommand(delimiter, data, absoluteCurrentPoint, previousCommand);
+            return createShortCubicBezierCurveCommand(delimiter, data, absoluteCurrentPoint, previousCommand);
         } else if (QUADRATIC_BEZIER_CURVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createQuadraticBezierCurveCommand(delimiter, data);
+            return createQuadraticBezierCurveCommand(delimiter, data);
         } else if (SHORT_QUADRATIC_BEZIER_CURVE.isCommandName(delimiter)) {
-            return CommandFactory.INSTANCE.createShortQuadraticBezierCurveCommand(delimiter, data, absoluteCurrentPoint, previousCommand);
+            return createShortQuadraticBezierCurveCommand(delimiter, data, absoluteCurrentPoint, previousCommand);
         } else {
             throw new PathException(String.format("Could not use delimiter: [%s] must be one of the know delimiters", delimiter));
         }

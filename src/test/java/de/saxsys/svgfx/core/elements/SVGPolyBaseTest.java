@@ -139,8 +139,7 @@ public final class SVGPolyBaseTest {
         try {
             polyBase1.getPoints();
             fail("Should not be able to get points");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
@@ -157,16 +156,15 @@ public final class SVGPolyBaseTest {
         try {
             polyBase2.getPoints();
             fail("Should not be able to get points");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
-    @Test
-    public void whenAPointContainsInvalidDataAnSVGExceptionWillBeThrownDuringTheRetrievalOfThePoints() {
+    @Test (expected = SVGException.class)
+    public void whenAPointContainsInvalidDataAnSVGExceptionWillBeThrownDuringTheRetrievalOfThePoints() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -183,12 +181,7 @@ public final class SVGPolyBaseTest {
             }
         };
 
-        try {
-            polyBase.getPoints();
-            fail("Should not be able to get points");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
-        }
+        polyBase.getPoints();
     }
 
     /**

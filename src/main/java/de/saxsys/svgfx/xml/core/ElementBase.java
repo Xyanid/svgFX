@@ -105,7 +105,7 @@ public abstract class ElementBase<TAttributeType extends AttributeWrapper,
                     try {
                         contentType.setText(attributeValue);
                     } catch (final Exception e) {
-                        throw new IllegalArgumentException(String.format("Creation of element %s failed. The attribute %s is not valid, value is %s",
+                        throw new IllegalArgumentException(String.format("Creation of element [%s] failed. The attribute [%s] is not valid, value is [%s]",
                                                                          getClass().getName(),
                                                                          attributeName,
                                                                          attributeValue), e);

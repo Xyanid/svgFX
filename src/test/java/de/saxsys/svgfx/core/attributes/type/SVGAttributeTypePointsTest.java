@@ -56,8 +56,7 @@ public class SVGAttributeTypePointsTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("1T2");
@@ -65,8 +64,7 @@ public class SVGAttributeTypePointsTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("1 2 3");
@@ -74,8 +72,7 @@ public class SVGAttributeTypePointsTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("1 2 3|4");
@@ -83,8 +80,7 @@ public class SVGAttributeTypePointsTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 

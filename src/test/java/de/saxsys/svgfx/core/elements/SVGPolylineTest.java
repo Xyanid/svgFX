@@ -72,18 +72,20 @@ public final class SVGPolylineTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        assertResultFails(SVGPolyline::new, SVGPolyline.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGPolyline::new,
+                          SVGPolyline.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        assertResultFails(SVGPolyline::new, SVGPolyline.ELEMENT_NAME, attributes, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGPolyline::new,
+                          SVGPolyline.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**

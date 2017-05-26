@@ -146,7 +146,7 @@ public class SVGAttributeTypeRectangle extends SVGAttributeType<SVGAttributeType
                                                                      StringUtil::isNotNullOrEmptyAfterTrim);
 
         if (pointSplit.size() != 4) {
-            throw new SVGException(SVGException.Reason.INVALID_RECTANGLE_FORMAT, String.format("%s does not provide minX, minY, maxX and maxY", text));
+            throw new SVGException(String.format("Css text [%s] does not provide minX, minY, maxX and maxY", text));
         }
 
         final SVGTypeRectangle point = new SVGTypeRectangle(getDocumentDataProvider());

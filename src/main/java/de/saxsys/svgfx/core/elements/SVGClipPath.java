@@ -68,7 +68,7 @@ public class SVGClipPath extends SVGNodeBase<Group> {
                 result.getChildren().add((Node) actualChild.createAndInitializeResult(ownStyle, ownTransform));
 
             } catch (final SVGException e) {
-                throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not get result from child %d", counter), e);
+                throw new SVGException(String.format("Could not get result from child number [%d]", counter), e);
             }
 
             counter++;

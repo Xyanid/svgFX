@@ -242,6 +242,8 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
      * Consumes the given css text and set the style. the css text must follow the default rules of a css style.
      *
      * @param cssText the text that is to be consumed, must not be null or empty.
+     *
+     * @throws IllegalStateException if the css text is not formatted correctly.
      */
     public final void parseCssText(final String cssText) {
 
@@ -249,7 +251,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
         selector = Selector.NONE;
         attributeHolder.getAttributes().clear();
 
-        StringBuilder dataBuilder = new StringBuilder();
+        final StringBuilder dataBuilder = new StringBuilder();
 
         boolean isInsideDeclarationBlock = false;
 
@@ -330,7 +332,7 @@ public abstract class CssStyle<TAttributeType extends AttributeWrapper, TAttribu
         }
 
         if (isInsideDeclarationBlock) {
-            throw new IllegalArgumentException("Css text not properly closed, can not use this css data.");
+            throw new IllegalStateException("Css text not properly closed, can not use this css data.");
         }
     }
 

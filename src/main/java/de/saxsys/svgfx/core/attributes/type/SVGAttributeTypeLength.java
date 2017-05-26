@@ -153,7 +153,7 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
         try {
             return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length()).replaceAll(",", ".")), usedUnit);
         } catch (final NumberFormatException e) {
-            throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
+            throw new SVGException(String.format("Css text [%s] does not represent valid number", cssText), e);
         }
     }
 

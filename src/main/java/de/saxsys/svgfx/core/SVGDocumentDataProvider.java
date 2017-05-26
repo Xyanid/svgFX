@@ -124,11 +124,11 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
     public final <TData extends SVGElementBase> Optional<TData> getData(final String key, final Class<TData> clazz) throws SVGException {
 
         if (clazz == null) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given class must not be null or empty");
+            throw new IllegalArgumentException("given class must not be null or empty");
         }
 
         if (StringUtil.isNullOrEmpty(key)) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given key must not be null or empty");
+            throw new IllegalArgumentException("given key must not be null or empty");
         }
 
         final SVGElementBase data = this.data.get(key);

@@ -71,9 +71,9 @@ public final class StringUtilTest {
      */
     @Test (expected = SVGException.class)
     public void ensureThatAnExceptionIsThrownWhenThe() throws SVGException {
-        StringUtil.splitByDelimiters("Test", Collections.singletonList(' '), (currentData, index) -> {
-            throw new SVGException(SVGException.Reason.FAILED_TO_PARSE_IRI, "test");
-        });
+        StringUtil.splitByDelimiters("Test",
+                                     Collections.singletonList(' '),
+                                     (currentData, index) -> {throw new SVGException("test");});
     }
 
     /**

@@ -76,133 +76,169 @@ public class QuadraticBezierCurveCommandTest {
     public void dependingOnTheDataTheBoundingBoxWillBeCorrectlyCalculatedIfTheCommandIsRelative() throws Exception {
 
         final Optional<Rectangle> boundingBox1 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(10.0d, 10.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(10, 10));
+                                                                                 new Point2D(20.0d, 20.0d),
+                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(0.0d, 0.0d));
 
-        assertEquals(10.0d, boundingBox1.get().getX(), NORMAL_DEVIATION);
-        assertEquals(10.0d, boundingBox1.get().getY(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox1.get().getX(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox1.get().getY(), NORMAL_DEVIATION);
         assertEquals(40.0d, boundingBox1.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(7.5d, boundingBox1.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox1.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox2 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(50.0d, 10.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(70, 10));
+                                                                                 new Point2D(20.0d, 20.0d),
+                                                                                 new Point2D(60.0d, 0.0d)).getBoundingBox(new Point2D(60.0d, 0.0d));
 
-        assertEquals(68.9d, boundingBox2.get().getX(), NORMAL_DEVIATION);
-        assertEquals(10.0d, boundingBox2.get().getY(), NORMAL_DEVIATION);
-        assertEquals(42.3d, boundingBox2.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(7.5d, boundingBox2.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox2.get().getX(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox2.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox2.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox2.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox3 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(30.0d, 30.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(10, 60));
+                                                                                 new Point2D(40.0d, 20.0d),
+                                                                                 new Point2D(60.0d, 0.0d)).getBoundingBox(new Point2D(140.0d, 0.0d));
 
-        assertEquals(10.0d, boundingBox3.get().getX(), NORMAL_DEVIATION);
-        assertEquals(60.0d, boundingBox3.get().getY(), NORMAL_DEVIATION);
-        assertEquals(40.0d, boundingBox3.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox3.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(140.0d, boundingBox3.get().getX(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox3.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox3.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox3.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox4 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(50.0d, 30.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(70, 60));
+                                                                                 new Point2D(0.0d, 20.0d),
+                                                                                 new Point2D(40.0d, 20.0d)).getBoundingBox(new Point2D(0.0d, 40.0d));
 
-        assertEquals(68.9d, boundingBox4.get().getX(), NORMAL_DEVIATION);
-        assertEquals(60.0d, boundingBox4.get().getY(), NORMAL_DEVIATION);
-        assertEquals(42.3d, boundingBox4.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox4.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox4.get().getX(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox4.get().getY(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox4.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox4.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox5 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(20.0d, 30.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(10, 110));
+                                                                                 new Point2D(60.0d, 0.0d),
+                                                                                 new Point2D(60.0d, 20.0d)).getBoundingBox(new Point2D(60.0d, 40.0d));
 
-        assertEquals(10.0d, boundingBox5.get().getX(), NORMAL_DEVIATION);
-        assertEquals(110.0d, boundingBox5.get().getY(), NORMAL_DEVIATION);
-        assertEquals(40.0d, boundingBox5.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox5.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox5.get().getX(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox5.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox5.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox5.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox6 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(40.0d, -30.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(70, 110));
+                                                                                 new Point2D(0.0d, -20.0d),
+                                                                                 new Point2D(60.0d, -20.0d)).getBoundingBox(new Point2D(140.0d, 60.0d));
 
-        assertEquals(70.0d, boundingBox6.get().getX(), NORMAL_DEVIATION);
-        assertEquals(101.3d, boundingBox6.get().getY(), NORMAL_DEVIATION);
-        assertEquals(40.0d, boundingBox6.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(17.3d, boundingBox6.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(140.0d, boundingBox6.get().getX(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox6.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox6.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox6.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox7 = new QuadraticBezierCurveCommand(false,
-                                                                                 new Point2D(170.0d, 30.0d),
-                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(130, 110));
+                                                                                 new Point2D(20.0d, 20.0d),
+                                                                                 new Point2D(0.0d, 40.0d)).getBoundingBox(new Point2D(0.0d, 80.0d));
 
-        assertEquals(96.6d, boundingBox7.get().getX(), NORMAL_DEVIATION);
-        assertEquals(110.0d, boundingBox7.get().getY(), NORMAL_DEVIATION);
-        assertEquals(106.9d, boundingBox7.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox7.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox7.get().getX(), NORMAL_DEVIATION);
+        assertEquals(80.0d, boundingBox7.get().getY(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox7.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox7.get().getHeight(), NORMAL_DEVIATION);
+
+        final Optional<Rectangle> boundingBox8 = new QuadraticBezierCurveCommand(false,
+                                                                                 new Point2D(-20.0d, 20.0d),
+                                                                                 new Point2D(60.0d, 20.0d)).getBoundingBox(new Point2D(60.0d, 80.0d));
+
+        assertEquals(56.0d, boundingBox8.get().getX(), NORMAL_DEVIATION);
+        assertEquals(80.0d, boundingBox8.get().getY(), NORMAL_DEVIATION);
+        assertEquals(64.0d, boundingBox8.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox8.get().getHeight(), NORMAL_DEVIATION);
+
+        final Optional<Rectangle> boundingBox9 = new QuadraticBezierCurveCommand(false,
+                                                                                 new Point2D(80.0d, -20.0d),
+                                                                                 new Point2D(60.0d, -20.0d)).getBoundingBox(new Point2D(140.0d, 100.0d));
+
+        assertEquals(140.0d, boundingBox9.get().getX(), NORMAL_DEVIATION);
+        assertEquals(80.0d, boundingBox9.get().getY(), NORMAL_DEVIATION);
+        assertEquals(64.0d, boundingBox9.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox9.get().getHeight(), NORMAL_DEVIATION);
     }
 
     @Test
     public void dependingOnTheDataTheBoundingBoxWillBeCorrectlyCalculatedIfTheCommandIsAbsolute() throws Exception {
 
         final Optional<Rectangle> boundingBox1 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(40.0d, 20.0d),
-                                                                                 new Point2D(50.0d, 10.0d)).getBoundingBox(new Point2D(10, 10));
+                                                                                 new Point2D(20.0d, 20.0d),
+                                                                                 new Point2D(40.0d, 0.0d)).getBoundingBox(new Point2D(0.0d, 0.0d));
 
-        assertEquals(10.0d, boundingBox1.get().getX(), NORMAL_DEVIATION);
-        assertEquals(10.0d, boundingBox1.get().getY(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox1.get().getX(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox1.get().getY(), NORMAL_DEVIATION);
         assertEquals(40.0d, boundingBox1.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(7.5d, boundingBox1.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox1.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox2 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(120.0d, 20.0d),
-                                                                                 new Point2D(110.0d, 10.0d)).getBoundingBox(new Point2D(70, 10));
+                                                                                 new Point2D(80.0d, 20.0d),
+                                                                                 new Point2D(120.0d, 0.0d)).getBoundingBox(new Point2D(60.0d, 0.0d));
 
-        assertEquals(68.9d, boundingBox2.get().getX(), NORMAL_DEVIATION);
-        assertEquals(10.0d, boundingBox2.get().getY(), NORMAL_DEVIATION);
-        assertEquals(42.3d, boundingBox2.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(7.5d, boundingBox2.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox2.get().getX(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox2.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox2.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox2.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox3 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(40.0d, 90.0d),
-                                                                                 new Point2D(50.0d, 60.0d)).getBoundingBox(new Point2D(10, 60));
+                                                                                 new Point2D(180.0d, 20.0d),
+                                                                                 new Point2D(200.0d, 0.0d)).getBoundingBox(new Point2D(140.0d, 0.0d));
 
-        assertEquals(10.0d, boundingBox3.get().getX(), NORMAL_DEVIATION);
-        assertEquals(60.0d, boundingBox3.get().getY(), NORMAL_DEVIATION);
-        assertEquals(40.0d, boundingBox3.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox3.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(140.0d, boundingBox3.get().getX(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox3.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox3.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox3.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox4 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(120.0d, 90.0d),
-                                                                                 new Point2D(110.0d, 60.0d)).getBoundingBox(new Point2D(70, 60));
+                                                                                 new Point2D(0.0d, 60.0d),
+                                                                                 new Point2D(40.0d, 60.0d)).getBoundingBox(new Point2D(0.0d, 40.0d));
 
-        assertEquals(68.9d, boundingBox4.get().getX(), NORMAL_DEVIATION);
-        assertEquals(60.0d, boundingBox4.get().getY(), NORMAL_DEVIATION);
-        assertEquals(42.3d, boundingBox4.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox4.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox4.get().getX(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox4.get().getY(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox4.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox4.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox5 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(30.0d, 140.0d),
-                                                                                 new Point2D(50.0d, 110.0d)).getBoundingBox(new Point2D(10, 110));
+                                                                                 new Point2D(120.0d, 40.0d),
+                                                                                 new Point2D(120.0d, 60.0d)).getBoundingBox(new Point2D(60.0d, 40.0d));
 
-        assertEquals(10.0d, boundingBox5.get().getX(), NORMAL_DEVIATION);
-        assertEquals(110.0d, boundingBox5.get().getY(), NORMAL_DEVIATION);
-        assertEquals(40.0d, boundingBox5.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox5.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox5.get().getX(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox5.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox5.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox5.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox6 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(110.0d, 80.0d),
-                                                                                 new Point2D(110.0d, 110.0d)).getBoundingBox(new Point2D(70, 110));
+                                                                                 new Point2D(140.0d, 40.0d),
+                                                                                 new Point2D(200.0d, 40.0d)).getBoundingBox(new Point2D(140.0d, 60.0d));
 
-        assertEquals(70.0d, boundingBox6.get().getX(), NORMAL_DEVIATION);
-        assertEquals(101.3d, boundingBox6.get().getY(), NORMAL_DEVIATION);
-        assertEquals(40.0d, boundingBox6.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(17.3d, boundingBox6.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(140.0d, boundingBox6.get().getX(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox6.get().getY(), NORMAL_DEVIATION);
+        assertEquals(60.0d, boundingBox6.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox6.get().getHeight(), NORMAL_DEVIATION);
 
         final Optional<Rectangle> boundingBox7 = new QuadraticBezierCurveCommand(true,
-                                                                                 new Point2D(300.0d, 140.0d),
-                                                                                 new Point2D(170.0d, 110.0d)).getBoundingBox(new Point2D(130, 110));
+                                                                                 new Point2D(20.0d, 100.0d),
+                                                                                 new Point2D(0.0d, 120.0d)).getBoundingBox(new Point2D(0.0d, 80.0d));
 
-        assertEquals(96.6d, boundingBox7.get().getX(), NORMAL_DEVIATION);
-        assertEquals(110.0d, boundingBox7.get().getY(), NORMAL_DEVIATION);
-        assertEquals(106.9d, boundingBox7.get().getWidth(), NORMAL_DEVIATION);
-        assertEquals(22.5d, boundingBox7.get().getHeight(), NORMAL_DEVIATION);
+        assertEquals(0.0d, boundingBox7.get().getX(), NORMAL_DEVIATION);
+        assertEquals(80.0d, boundingBox7.get().getY(), NORMAL_DEVIATION);
+        assertEquals(10.0d, boundingBox7.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(40.0d, boundingBox7.get().getHeight(), NORMAL_DEVIATION);
+
+        final Optional<Rectangle> boundingBox8 = new QuadraticBezierCurveCommand(true,
+                                                                                 new Point2D(40.0d, 100.0d),
+                                                                                 new Point2D(120.0d, 100.0d)).getBoundingBox(new Point2D(60.0d, 80.0d));
+
+        assertEquals(56.0d, boundingBox8.get().getX(), NORMAL_DEVIATION);
+        assertEquals(80.0d, boundingBox8.get().getY(), NORMAL_DEVIATION);
+        assertEquals(64.0d, boundingBox8.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox8.get().getHeight(), NORMAL_DEVIATION);
+
+        final Optional<Rectangle> boundingBox9 = new QuadraticBezierCurveCommand(true,
+                                                                                 new Point2D(220.0d, 80.0d),
+                                                                                 new Point2D(200.0d, 80.0d)).getBoundingBox(new Point2D(140.0d, 100.0d));
+
+        assertEquals(140.0d, boundingBox9.get().getX(), NORMAL_DEVIATION);
+        assertEquals(80.0d, boundingBox9.get().getY(), NORMAL_DEVIATION);
+        assertEquals(64.0d, boundingBox9.get().getWidth(), NORMAL_DEVIATION);
+        assertEquals(20.0d, boundingBox9.get().getHeight(), NORMAL_DEVIATION);
     }
 }

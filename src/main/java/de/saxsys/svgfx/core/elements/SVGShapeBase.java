@@ -90,7 +90,7 @@ public abstract class SVGShapeBase<TShape extends Shape> extends SVGNodeBase<TSh
             throws SVGException {
 
         if (shape == null) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "Given shape must not be null");
+            throw new IllegalArgumentException("Given shape must not be null");
         }
 
 

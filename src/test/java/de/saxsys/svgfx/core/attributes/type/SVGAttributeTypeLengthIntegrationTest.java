@@ -21,7 +21,6 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 16.10.2016.
@@ -50,16 +49,11 @@ public class SVGAttributeTypeLengthIntegrationTest {
     /**
      * When the test provided is not valid, an {@link SVGException} will be thrown.
      */
-    @Test
-    public void whenTheProvidedTextIsValidAnSVGExceptionWillBeThrown() {
+    @Test (expected = SVGException.class)
+    public void whenTheProvidedTextIsValidAnSVGExceptionWillBeThrown() throws SVGException {
         cut.setText("invalid");
 
-        try {
-            cut.getValue();
-            fail("Should not be able to get result when input value is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
-        }
+        cut.getValue();
     }
 
     /**

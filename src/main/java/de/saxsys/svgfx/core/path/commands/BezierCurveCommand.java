@@ -101,10 +101,6 @@ public abstract class BezierCurveCommand extends PathCommand {
         final Point2D absoluteEndPoint = getAbsoluteEndPoint(absoluteCurrentPoint);
         final List<Double> localExtrema = getExtremaValues(absoluteCurrentPoint, absoluteStartControlPoint, absoluteEndControlPoint, absoluteEndPoint);
 
-        if (localExtrema.isEmpty()) {
-            throw new PathException("Could not determine local extrema");
-        }
-
         double minX = Math.min(absoluteCurrentPoint.getX(), absoluteEndPoint.getX());
         double maxX = Math.max(absoluteCurrentPoint.getX(), absoluteEndPoint.getX());
         double minY = Math.min(absoluteCurrentPoint.getY(), absoluteEndPoint.getY());

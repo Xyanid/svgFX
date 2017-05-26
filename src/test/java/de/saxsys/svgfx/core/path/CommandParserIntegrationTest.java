@@ -13,6 +13,7 @@
 
 package de.saxsys.svgfx.core.path;
 
+import de.saxsys.svgfx.core.path.commands.CommandFactory;
 import javafx.scene.shape.Rectangle;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Xyanid on 08.05.2017.
  */
-public class CommandParserTest {
+public class CommandParserIntegrationTest {
 
     // region Fields
 
@@ -35,7 +36,9 @@ public class CommandParserTest {
 
     @Before
     public void setUp() {
-        cut = new CommandParser();
+        final CommandFactory commandFactory = new CommandFactory();
+
+        cut = new CommandParser(commandFactory);
     }
 
     // endregion

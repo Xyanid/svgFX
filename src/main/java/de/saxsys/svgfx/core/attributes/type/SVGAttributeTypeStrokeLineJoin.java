@@ -54,7 +54,7 @@ public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJ
         try {
             return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
         } catch (IllegalArgumentException e) {
-            throw new SVGException(SVGException.Reason.INVALID_STROKE_LINE_JOIN, e);
+            throw new SVGException(String.format("Css text [%s] does not represent a valid stroke line join", cssText), e);
         }
     }
 

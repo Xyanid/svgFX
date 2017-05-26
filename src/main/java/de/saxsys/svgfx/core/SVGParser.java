@@ -20,6 +20,8 @@ import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
 import de.saxsys.svgfx.core.elements.SVGStop;
+import de.saxsys.svgfx.core.path.CommandParser;
+import de.saxsys.svgfx.core.path.commands.CommandFactory;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -34,13 +36,23 @@ import org.xml.sax.XMLReader;
  */
 public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElementFactory, SVGElementBase<?>> implements EntityResolver {
 
+    // region Constants
+
+    private static final CommandFactory COMMAND_FACTORY = new CommandFactory();
+
+    private static final CommandParser COMMAND_PARSER = new CommandParser(COMMAND_FACTORY);
+
+    private static final SVGElementFactory SVG_ELEMENT_FACTORY = new SVGElementFactory(COMMAND_PARSER);
+
+    // endregion
+
     // region Constructor
 
     /**
      * Creates a new instance of the parser and uses the given elementCreator.
      */
     public SVGParser() {
-        super(new SVGElementFactory(), new SVGDocumentDataProvider());
+        super(SVG_ELEMENT_FACTORY, new SVGDocumentDataProvider());
     }
 
     // endregion

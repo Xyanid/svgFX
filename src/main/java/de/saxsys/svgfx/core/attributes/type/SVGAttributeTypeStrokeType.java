@@ -54,7 +54,7 @@ public class SVGAttributeTypeStrokeType extends SVGAttributeType<StrokeType, Voi
         try {
             return new Pair<>(StrokeType.valueOf(cssText.toUpperCase()), null);
         } catch (final IllegalArgumentException e) {
-            throw new SVGException(SVGException.Reason.INVALID_STROKE_TYPE, e);
+            throw new SVGException(String.format("Css text [%s] does not represent a valid stroke type", cssText), e);
         }
     }
 

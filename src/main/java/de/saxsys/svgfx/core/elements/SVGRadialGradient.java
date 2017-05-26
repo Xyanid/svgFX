@@ -96,7 +96,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         final List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
-            throw new SVGException(SVGException.Reason.MISSING_STOPS, "Given radial gradient does not have colors");
+            throw new SVGException("Given radial gradient does not have stop colors");
         }
 
         final AtomicReference<Double> centerX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, DEFAULT_CENTER));
@@ -141,7 +141,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         // when being in user space we first need to transform then make the values relative
         if (gradientUnit == GradientUnit.USER_SPACE_ON_USE) {
             if (boundingBox == null) {
-                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but no bounding box is provided.");
+                throw new IllegalArgumentException("Can not create linear gradient when user space is defined but no bounding box is provided.");
             }
 
             usedTransform.ifPresent(transform -> transformPosition(centerX, centerY, focusX, focusY, radius, transform));

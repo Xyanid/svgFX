@@ -100,7 +100,9 @@ public abstract class AttributeHolder<TAttribute extends AttributeWrapper> {
     public final <TContent extends TAttribute> TContent getAttributeOrFail(final String name, final Class<TContent> clazz) throws SVGException {
         final TContent attribute = clazz.cast(attributes.get(name));
 
-        if (attribute == null) { throw new SVGException(SVGException.Reason.MISSING_ATTRIBUTE, String.format("Could not find attribute %s", name)); }
+        if (attribute == null) {
+            throw new SVGException(String.format("Could not find desired attribute [%s]", name));
+        }
 
         return attribute;
     }

@@ -61,7 +61,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of matrix are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}}.
      */
     @Test
     public void aMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -116,8 +116,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("matrix(1,2,3,4,5,6,7)");
@@ -125,8 +124,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("matrix(1,2,3,4,5,A)");
@@ -134,8 +132,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -143,7 +140,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of translate are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aTranslateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -214,8 +211,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("translate(1,A)");
@@ -223,8 +219,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -232,7 +227,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of scale are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aScaleMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -304,8 +299,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("scale(1,A)");
@@ -313,8 +307,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -322,7 +315,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of scale are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aRotateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -391,8 +384,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("rotate(1,2,3, 4)");
@@ -400,8 +392,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("rotate(1,2,A)");
@@ -409,8 +400,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -418,7 +408,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of skewX are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aSkewMatrixCanBeParsedForXOrYDirection() throws SVGException {
@@ -476,8 +466,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("skewY(1,2)");
@@ -485,8 +474,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("skewX(A)");
@@ -494,8 +482,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("skewY(A)");
@@ -503,14 +490,13 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
     /**
      * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void multipleTransformMatricesWillBeCombined() throws SVGException {
