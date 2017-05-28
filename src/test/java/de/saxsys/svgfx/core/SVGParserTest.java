@@ -67,7 +67,7 @@ public final class SVGParserTest {
 
         assertNull(parser.getResult());
 
-        final URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/defsatlastposition.svg");
+        final URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/defsAtLastPosition.svg");
 
         assertNotNull(url);
 
@@ -96,7 +96,7 @@ public final class SVGParserTest {
 
         assertNull(parser.getResult());
 
-        URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/documenttype.svg");
+        URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/IgnoreDocumentType.svg");
 
         assertNotNull(url);
 

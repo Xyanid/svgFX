@@ -15,6 +15,8 @@ package de.saxsys.svgfx.core;
 
 import javafx.scene.Group;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import org.junit.Test;
 import org.xml.sax.SAXParseException;
@@ -24,6 +26,7 @@ import java.net.URL;
 
 import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Xyanid on 05.10.2015.
@@ -164,19 +167,45 @@ public final class BlackBoxTest {
         assertLinearGradient(gradient);
     }
 
+    /**
+     * Ensures that when parsing the hierarchy is correctly understood, leading to th desired result.
+     */
+    @Test
+    public void theHierarchyOfAnSVGFileIsCorrectlyParsed()
+            throws SAXParseException, IOException {
+
+        final Group result = getResult("de/saxsys/svgfx/core/correctHierarchy.svg");
+
+        assertNotNull(result);
+        assertEquals(1, result.getChildren().size());
+
+        final Group group = (Group) result.getChildren().get(0);
+        assertEquals(3, group.getChildren().size());
+
+        final Rectangle rectangle = (Rectangle) group.getChildren().get(0);
+        assertNotNull(rectangle);
+        final SVGPath svgPath = (SVGPath) group.getChildren().get(1);
+        final Ellipse ellipse = (Ellipse) group.getChildren().get(2);
+
+    }
+
     // endregion
 
     // region Private
 
     private LinearGradient getLinearGradient(final String file) throws SAXParseException, IOException {
+        final Group main = (Group) getResult(file).getChildren().get(0);
+        final SVGPath path = (SVGPath) main.getChildren().get(0);
+        return (LinearGradient) path.getStroke();
+    }
+
+    private Group getResult(final String file) throws SAXParseException, IOException {
         final URL url = getClass().getClassLoader().getResource(file);
         final SVGParser parser = new SVGParser();
 
         parser.parse(url.getFile());
 
-        final Group main = (Group) parser.getResult().getChildren().get(0);
-        final SVGPath path = (SVGPath) main.getChildren().get(0);
-        return (LinearGradient) path.getStroke();
+        return parser.getResult();
     }
 
     private void assertLinearGradient(final LinearGradient gradient) {
