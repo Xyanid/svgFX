@@ -23,8 +23,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.transform.Transform;
 import javafx.util.Pair;
 
-import java.util.function.Supplier;
-
 /**
  * Represents a {@link Paint} used to color fill and strokes, the default value is {@link Color#TRANSPARENT}.
  *
@@ -106,7 +104,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF) or a reference which can be resolved into a {@link SVGGradientBase}.
      *
-     * @param boundingBox the {@link Supplier} to use when the bounding box of the shape isn needed by the paint.
+     * @param boundingBox the {@link ThrowableSupplier} to use when the bounding box of the shape isn needed by the paint.
      * @param transform   the {@link Transform} to use.
      *
      * @return {@link Paint} which represents the color
@@ -120,7 +118,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
 
         // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
         if (getText().startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
-            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(boundingBox, transform);
+            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(boundingBox.getOrFail(), transform);
         }
 
         return getValue();

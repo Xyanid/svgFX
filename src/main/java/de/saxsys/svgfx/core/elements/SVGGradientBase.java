@@ -21,7 +21,6 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import de.saxsys.svgfx.core.utils.Wrapper;
 import javafx.geometry.Point2D;
@@ -182,28 +181,36 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     }
 
     /**
+     * Returns a {@link Optional} containing the {@link CoreAttributeMapper#GRADIENT_TRANSFORM} of this gradient if present or {@link Optional#empty()}.
+     *
+     * @return a new {@link Optional} containing the {@link CoreAttributeMapper#GRADIENT_TRANSFORM} of this gradient if present or {@link Optional#empty()}.
+     *
+     * @throws SVGException if an error occurs during the retrieval of the transform cause by an incorrect matrix.
+     */
+    protected Optional<Transform> getGradientTransform() throws SVGException {
+        final Optional<SVGAttributeTypeTransform> ownTransform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
+
+        if (ownTransform.isPresent()) {
+            return Optional.of(ownTransform.get().getValue());
+        }
+
+        return Optional.empty();
+    }
+
+    /**
      * Will be used to get the correct transformation for the gradient if any.
      *
      * @param elementTransform the {@link Transform} supplied by the element that uses this gradient.
      *
      * @return a new {@link Optional} with the correct {@link Transform} or {@link Optional#empty()} if there is no transform.
      *
-     * @throws SVGException if there is a problem when the transformation is requested.
+     * @throws SVGException if an error occurs during the retrieval of the transform cause by an incorrect matrix.
      */
-    protected Optional<Transform> getTransform(final Transform elementTransform) throws SVGException {
-        final Optional<SVGAttributeTypeTransform> ownTransform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
-        final Optional<Transform> usedTransform;
+    protected Optional<Transform> getCombinedTransform(final Transform elementTransform) throws SVGException {
+        Optional<Transform> usedTransform = getGradientTransform();
 
         if (elementTransform != null) {
-            if (ownTransform.isPresent()) {
-                usedTransform = Optional.of(elementTransform.createConcatenation(ownTransform.get().getValue()));
-            } else {
-                usedTransform = Optional.of(elementTransform);
-            }
-        } else if (ownTransform.isPresent()) {
-            usedTransform = Optional.of(ownTransform.get().getValue());
-        } else {
-            usedTransform = Optional.empty();
+            usedTransform = usedTransform.map(transform -> Optional.of(elementTransform.createConcatenation(transform))).orElseGet(() -> Optional.of(elementTransform));
         }
 
         return usedTransform;
@@ -227,19 +234,28 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
 
     // endregion
 
+    // region Override SVGElementBase
+
+    @Override
+    protected final TPaint createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
+        throw new UnsupportedOperationException("May not create gradient with out an element");
+    }
+
+    // endregion
+
     // region Abstract
 
     /**
      * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
      *
-     * @param boundingBox      the supplier used to get the bounding box of the shape.
-     * @param elementTransform the {@link Transform} to apply.
+     * @param elementBoundingBox the bounding box of the element .
+     * @param elementTransform   the {@link Transform} to apply.
      *
      * @return a new {@link TPaint}.
      *
      * @throws SVGException if an error occurs during the creation of the result.
      */
-    public abstract TPaint createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException;
+    public abstract TPaint createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox, final Transform elementTransform) throws SVGException;
 
     // endregion
 }

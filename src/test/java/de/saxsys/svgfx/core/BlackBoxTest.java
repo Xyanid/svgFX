@@ -34,100 +34,132 @@ public final class BlackBoxTest {
     // region Description
 
     @Test
-    public void aGradientThatDoesNotHaveATransformAndRelativeCoordinatesAndAPathThatDoesNotHaveATransformAndAGroupThatDoesNotHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void anAbsoluteGradientWithNoTransformAPathWithNoTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-0.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-0-absolute.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesNotHaveATransformAndAGroupThatDoesNotHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void aRelativeGradientWithNoTransformAPathWithNoTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-1.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-0-relative.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesNotHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesNotHaveATransformAndAGroupThatDoesNotHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void anAbsoluteGradientWithTransformAPathWithNoTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-1-no-matrix.svg");
-
-        assertLinearGradient(gradient);
-    }
-
-
-    @Test
-    public void aGradientThatDoesNotHaveATransformAndRelativeCoordinatesAndAPathThatDoesHaveATransformAndAGroupThatDoesNotHaveATransformWillCreateTheCorrectGradientCoordinates()
-            throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-0.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-1-absolute.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesHaveATransformAndAGroupThatDoesNotHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void aRelativeGradientWithTransformAPathWithNoTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-1.svg");
-
-        assertLinearGradient(gradient);
-    }
-
-    @Test
-    public void aGradientThatDoesNotHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesHaveATransformAndAGroupThatDoesNotHaveATransformWillCreateTheCorrectGradientCoordinates()
-            throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-1-no-matrix.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-0-gradient-1-relative.svg");
 
         assertLinearGradient(gradient);
     }
 
 
     @Test
-    public void aGradientThatDoesNotHaveATransformAndRelativeCoordinatesAndAPathThatDoesNotHaveATransformAndAGroupThatDoesHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void anAbsoluteGradientWithNoTransformAPathWithTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-0.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-0-absolute.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesNotHaveATransformAndAGroupThatDoesHaveATransformPWillCreateTheCorrectGradientCoordinates()
+    public void aRelativeGradientWithNoTransformAPathWithTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-1.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-0-relative.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesNotHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesNotHaveATransformAndAGroupThatDoesHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void anAbsoluteGradientWithTransformAPathWithTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-1-no-matrix.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-1-absolute.svg");
+
+        assertLinearGradient(gradient);
+    }
+
+    @Test
+    public void aRelativeGradientWithTransformAPathWithTransformAGroupWithNoTransformWillCreateTheCorrectGradientCoordinates()
+            throws SAXParseException, IOException {
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-0-path-1-gradient-1-relative.svg");
 
         assertLinearGradient(gradient);
     }
 
 
     @Test
-    public void aGradientThatDoesNotHaveATransformAndRelativeCoordinatesAndAPathThatDoesHaveATransformAndAGroupThatDoesHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void anAbsoluteGradientWithNoTransformAPathWithNoTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-0.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-0-absolute.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesHaveATransformAndAGroupThatDoesHaveATransformPWillCreateTheCorrectGradientCoordinates()
+    public void aRelativeGradientWithNoTransformAPathWithNoTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-1.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-0-relative.svg");
 
         assertLinearGradient(gradient);
     }
 
     @Test
-    public void aGradientThatDoesNotHaveATransformAndAbsoluteCoordinatesAndAPathThatDoesHaveATransformAndAGroupThatDoesHaveATransformWillCreateTheCorrectGradientCoordinates()
+    public void anAbsoluteGradientWithTransformAPathWithNoTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
             throws SAXParseException, IOException {
-        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-1-no-matrix.svg");
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-1-absolute.svg");
+
+        assertLinearGradient(gradient);
+    }
+
+    @Test
+    public void aRelativeGradientWithTransformAPathWithNoTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
+            throws SAXParseException, IOException {
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-0-gradient-1-relative.svg");
+
+        assertLinearGradient(gradient);
+    }
+
+
+    @Test
+    public void anAbsoluteGradientWithNoTransformAPathWithTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
+            throws SAXParseException, IOException {
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-0-absolute.svg");
+
+        assertLinearGradient(gradient);
+    }
+
+    @Test
+    public void aRelativeGradientWithNoTransformAPathWithTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
+            throws SAXParseException, IOException {
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-0-relative.svg");
+
+        assertLinearGradient(gradient);
+    }
+
+    @Test
+    public void anAbsoluteGradientWithTransformAPathWithTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
+            throws SAXParseException, IOException {
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-1-absolute.svg");
+
+        assertLinearGradient(gradient);
+    }
+
+    @Test
+    public void aRelativeGradientWithTransformAPathWithTransformAGroupWithTransformWillCreateTheCorrectGradientCoordinates()
+            throws SAXParseException, IOException {
+        final LinearGradient gradient = getLinearGradient("de/saxsys/svgfx/core/parent-1-path-1-gradient-1-relative.svg");
 
         assertLinearGradient(gradient);
     }

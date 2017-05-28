@@ -19,8 +19,6 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import javafx.scene.transform.Transform;
@@ -29,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,12 +85,7 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
-                return null;
-            }
-
-            @Override
-            public Color createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -146,12 +140,7 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
-                return null;
-            }
-
-            @Override
-            public Color createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -198,12 +187,7 @@ public final class SVGGradientBaseTest {
 
         final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
-                return null;
-            }
-
-            @Override
-            public Color createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform elementTransform) throws SVGException {
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -235,5 +219,30 @@ public final class SVGGradientBaseTest {
 
         assertEquals(0.2d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, actualStops.get(1).getColor());
+    }
+
+    /**
+     * Ensures that the an {@link UnsupportedOperationException} if requesting the result.
+     */
+    @Test (expected = UnsupportedOperationException.class)
+    public void aGradientCanNotBeCreatedWithTheNormalResultMethod() throws SAXException {
+
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+
+        final Attributes attributes = mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(0);
+
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
+
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
+            @Override
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
+                return null;
+            }
+        };
+
+        gradient.getResult();
     }
 }

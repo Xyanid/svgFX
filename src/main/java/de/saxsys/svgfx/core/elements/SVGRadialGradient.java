@@ -18,9 +18,7 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
-import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import de.saxsys.svgfx.core.utils.Wrapper;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.CycleMethod;
@@ -32,7 +30,6 @@ import org.xml.sax.Attributes;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This Class represents a radial gradient from svg
@@ -73,28 +70,20 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
     //endregion
 
-    //region Override SVGGradientBase
-
-    @Override
-    protected final RadialGradient createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
-        return determineResult(null, null);
-    }
-
-    //endregion
 
     // region SVGGradientBase
 
     @Override
-    public RadialGradient createResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox,
+    public RadialGradient createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
                                        final Transform elementTransform) throws SVGException {
-        return determineResult(boundingBox, elementTransform);
+        return determineResult(elementBoundingBox, elementTransform);
     }
 
     // endregion
 
     // region Private
 
-    private RadialGradient determineResult(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox,
+    private RadialGradient determineResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
                                            final Transform elementTransform) throws SVGException {
         final List<Stop> stops = getStops();
 
@@ -110,7 +99,7 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
         final Wrapper<Point2D> focus = new Wrapper<>(new Point2D(focusX, focusY));
         final Wrapper<Double> radius = new Wrapper<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.RADIUS.getName(), Double.class, DEFAULT_RADIUS));
 
-        convertToRelativeCoordinates(center, focus, radius, boundingBox, elementTransform);
+        convertToRelativeCoordinates(center, focus, radius, elementBoundingBox, elementTransform);
 
         double diffX = focus.getOrFail().getX() - center.getOrFail().getX();
         double diffY = focus.getOrFail().getY() - center.getOrFail().getY();
@@ -132,10 +121,10 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
     private void convertToRelativeCoordinates(final Wrapper<Point2D> center,
                                               final Wrapper<Point2D> focus,
                                               final Wrapper<Double> radius,
-                                              final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> elementBoundingBoxSupplier,
+                                              final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
                                               final Transform elementTransform) throws SVGException {
 
-        final Optional<Transform> usedTransform = getTransform(elementTransform);
+        final Rectangle boundingBox = transformBoundingBox(elementBoundingBox, elementTransform);
 
         final GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
                                                                                  GradientUnit.class,
@@ -145,13 +134,11 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
 
         // when being in user space we first need to transform then make the values relative
         if (gradientUnit == GradientUnit.USER_SPACE_ON_USE) {
-            final Rectangle boundingBox = transformBoundingBox(elementBoundingBoxSupplier.getOrFail(), elementTransform);
-            usedTransform.ifPresent(transform -> transformPosition(center, focus, radius, transform));
+            getCombinedTransform(elementTransform).ifPresent(transform -> transformPosition(center, focus, radius, transform));
             convertToRelativeCoordinates(boundingBox, radius, points);
-        } else if (usedTransform.isPresent()) {
-            final Rectangle boundingBox = transformBoundingBox(elementBoundingBoxSupplier.getOrFail(), elementTransform);
+        } else {
             convertToAbsoluteCoordinates(boundingBox, radius, points);
-            transformPosition(center, focus, radius, usedTransform.get());
+            getGradientTransform().ifPresent(transform -> transformPosition(center, focus, radius, transform));
             convertToRelativeCoordinates(boundingBox, radius, points);
         }
     }

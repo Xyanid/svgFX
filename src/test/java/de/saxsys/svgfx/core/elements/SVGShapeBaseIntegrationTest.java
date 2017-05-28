@@ -18,7 +18,6 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -132,7 +131,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(ThrowableSupplier.class), any(Transform.class))).thenReturn(linearGradient);
+        when(gradientBase.createResult(any(SVGAttributeTypeRectangle.SVGTypeRectangle.class), any(Transform.class))).thenReturn(linearGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -178,7 +177,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(ThrowableSupplier.class), any(Transform.class))).thenReturn(radialGradient);
+        when(gradientBase.createResult(any(SVGAttributeTypeRectangle.SVGTypeRectangle.class), any(Transform.class))).thenReturn(radialGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -259,7 +258,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(ThrowableSupplier.class), any(Transform.class))).thenReturn(linearGradient);
+        when(gradientBase.createResult(any(SVGAttributeTypeRectangle.SVGTypeRectangle.class), any(Transform.class))).thenReturn(linearGradient);
 
         final Rectangle result = cut.getResult();
 
@@ -305,7 +304,7 @@ public class SVGShapeBaseIntegrationTest {
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
 
         dataProvider.storeData("test", gradientBase);
-        when(gradientBase.createResult(any(ThrowableSupplier.class), any(Transform.class))).thenReturn(radialGradient);
+        when(gradientBase.createResult(any(SVGAttributeTypeRectangle.SVGTypeRectangle.class), any(Transform.class))).thenReturn(radialGradient);
 
         final Rectangle result = cut.getResult();
 

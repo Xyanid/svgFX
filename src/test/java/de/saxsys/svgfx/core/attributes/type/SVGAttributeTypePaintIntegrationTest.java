@@ -182,7 +182,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint expectedPaint = mock(Paint.class);
 
         final SVGGradientBase gradientBase = mock(SVGGradientBase.class);
-        when(gradientBase.createResult(any(ThrowableSupplier.class), any(Transform.class))).thenReturn(expectedPaint);
+        when(gradientBase.createResult(any(SVGAttributeTypeRectangle.SVGTypeRectangle.class), any(Transform.class))).thenReturn(expectedPaint);
 
         dataProvider.storeData("test", gradientBase);
 
@@ -191,7 +191,7 @@ public class SVGAttributeTypePaintIntegrationTest {
         final Paint result = cut.getValue(() -> boundingBox, null);
 
         assertSame(expectedPaint, result);
-        verify(gradientBase, times(1)).createResult(any(ThrowableSupplier.class), any(Transform.class));
+        verify(gradientBase, times(1)).createResult(any(SVGAttributeTypeRectangle.SVGTypeRectangle.class), any(Transform.class));
     }
 
     //endregion
