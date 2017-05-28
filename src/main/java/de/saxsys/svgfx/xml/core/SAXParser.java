@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Stack;
 
 /**
  * Basic XML parser which uses a given elementFactory to process the data provided while parsing.
@@ -106,46 +107,34 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * Determines the data provider to be used to supply elements with data.
      */
     private final TElementFactory elementFactory;
-
     /**
      * Determines the dataprovider to be used for this parser.
      */
     private final TDocumentDataProvider documentDataProvider;
-
     /**
      * Determines the State.
      */
     private final ReadOnlyObjectWrapper<State> state = new ReadOnlyObjectWrapper<>(State.IDLE);
-
     /**
      * Contains the result of this handler, it may only be valid after this handler was used to parse actual data.
      */
     private TResult result;
-
     /**
      * Determines the amount of parsings done with this parser.
      */
     private long attemptedParses;
-
     /**
      * Determines the amount of successful parses.
      */
     private long successfulParses;
-
     /**
-     * The first processed element.
+     * The last element that has been popped from the {@link #elementStack}.
      */
-    private TElement firstElement;
-
+    private TElement lastStackElement;
     /**
-     * The previous processed element.
+     * The elements that have been processed by this parser.
      */
-    private TElement previousElement;
-
-    /**
-     * The currently processed element.
-     */
-    private TElement currentElement;
+    private final Stack<TElement> elementStack = new Stack<>();
 
     // endregion
 
@@ -381,16 +370,16 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
     @Override
     public final void startDocument() throws SAXException {
-        currentElement = null;
+        cleanUp();
         enteringDocument();
         setState(State.STARTING);
     }
 
     @Override
     public final void endDocument() throws SAXException {
-        result = leavingDocument(firstElement);
+        result = leavingDocument(lastStackElement);
         setState(State.FINISHED);
-        currentElement = null;
+        cleanUp();
     }
 
     @Override
@@ -400,16 +389,14 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         final TElement nextElement = elementFactory.createElement(qName, attributes, documentDataProvider);
         if (nextElement != null) {
-            if (firstElement == null) {
-                firstElement = nextElement;
+
+            if (!elementStack.isEmpty() && nextElement.keepElement()) {
+                elementStack.peek().addChild(nextElement);
             }
-            // we create a tree here if the element will be kept and we have a parent for the element
-            if (currentElement != null && nextElement.keepElement()) {
-                currentElement.addChild(nextElement);
-            }
-            previousElement = currentElement;
-            currentElement = nextElement;
-            currentElement.startProcessing();
+
+            elementStack.push(nextElement);
+
+            nextElement.startProcessing();
         }
 
         setState(State.PARSING_ENTERING_ELEMENT_FINISHED);
@@ -420,13 +407,9 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         setState(State.PARSING_LEAVING_ELEMENT);
 
-        if (currentElement != null && currentElement.getName().equals(qName)) {
-            currentElement.endProcessing();
-        }
-
-        // clear the previous element that was processed before the current one, so we can also end its processing if need be
-        if (previousElement != null) {
-            currentElement = previousElement;
+        if (!elementStack.isEmpty() && elementStack.peek().getName().equals(qName)) {
+            lastStackElement = elementStack.pop();
+            lastStackElement.endProcessing();
         }
 
         setState(State.PARSING_LEAVING_ELEMENT_FINISHED);
@@ -437,8 +420,8 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         setState(State.PARSING_ENTERING_ELEMENT_CHARACTERS);
 
-        if (currentElement != null) {
-            currentElement.processCharacterData(ch, start, length);
+        if (!elementStack.isEmpty()) {
+            elementStack.peek().processCharacterData(ch, start, length);
         }
 
         setState(State.PARSING_ENTERING_ELEMENT_CHARACTERS_FINISHED);
@@ -451,6 +434,15 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
     @Override
     public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
         return FAKE_ENTITY_SOURCE;
+    }
+
+    // endregion
+
+    // region Private
+
+    private void cleanUp() {
+        elementStack.clear();
+        lastStackElement = null;
     }
 
     // endregion
