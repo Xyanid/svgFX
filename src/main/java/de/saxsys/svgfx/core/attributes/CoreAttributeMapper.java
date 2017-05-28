@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -48,7 +48,7 @@ public class CoreAttributeMapper extends BaseAttributeMapper<SVGDocumentDataProv
     /**
      * Determines the gradient transformation of a gradient.
      */
-    public static final CoreAttributeMapper GRADIENT_TRANSFORM = new CoreAttributeMapper("gradientUnits", SVGAttributeTypeTransform::new);
+    public static final CoreAttributeMapper GRADIENT_TRANSFORM = new CoreAttributeMapper("gradientTransform", SVGAttributeTypeTransform::new);
     /**
      * Determines the spread method used in a gradient.
      */

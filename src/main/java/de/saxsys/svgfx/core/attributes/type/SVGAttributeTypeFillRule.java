@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.FillRuleMapping;
 import javafx.scene.shape.FillRule;
 import javafx.util.Pair;
 
@@ -55,7 +55,7 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
 
         FillRule result = null;
 
-        for (final Enumerations.FillRuleMapping mapping : Enumerations.FillRuleMapping.values()) {
+        for (final FillRuleMapping mapping : FillRuleMapping.values()) {
             if (mapping.getName().equals(cssText)) {
                 result = mapping.getRule();
                 break;
@@ -63,7 +63,7 @@ public class SVGAttributeTypeFillRule extends SVGAttributeType<FillRule, Void> {
         }
 
         if (result == null) {
-            throw new SVGException(SVGException.Reason.INVALID_FILL_RULE, String.format("Given %s can not be parsed into a fill rule", cssText));
+            throw new SVGException(String.format("Css text [%s] does not represent a valid fill rule", cssText));
         }
 
         return new Pair<>(result, null);

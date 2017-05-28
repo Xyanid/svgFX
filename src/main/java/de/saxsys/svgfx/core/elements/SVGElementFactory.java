@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,13 +14,9 @@
 package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
+import de.saxsys.svgfx.core.path.CommandParser;
 import de.saxsys.svgfx.xml.core.IElementFactory;
 import org.xml.sax.Attributes;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Creates all the needed svg elements.
@@ -29,56 +25,61 @@ import java.util.Map;
  */
 public class SVGElementFactory implements IElementFactory<SVGDocumentDataProvider, SVGElementBase<?>> {
 
-    //region Fields
+    // region Fields
 
-    /**
-     * Contains the constructor of all the svg elements that are known.
-     */
-    public static final Map<String, Constructor<? extends SVGElementBase<?>>> KNOWN_CLASSES = new HashMap<>();
+    private final CommandParser commandParser;
 
-    static {
-        try {
-            KNOWN_CLASSES.put(SVGCircle.ELEMENT_NAME, SVGCircle.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGClipPath.ELEMENT_NAME, SVGClipPath.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGDefinitions.ELEMENT_NAME, SVGDefinitions.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGEllipse.ELEMENT_NAME, SVGEllipse.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGGroup.ELEMENT_NAME, SVGGroup.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGLine.ELEMENT_NAME, SVGLine.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGLinearGradient.ELEMENT_NAME, SVGLinearGradient.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGPath.ELEMENT_NAME, SVGPath.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGPolygon.ELEMENT_NAME, SVGPolygon.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGPolyline.ELEMENT_NAME, SVGPolyline.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGRadialGradient.ELEMENT_NAME, SVGRadialGradient.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGRectangle.ELEMENT_NAME, SVGRectangle.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGRoot.ELEMENT_NAME, SVGRoot.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGStop.ELEMENT_NAME, SVGStop.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGStyle.ELEMENT_NAME, SVGStyle.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-            KNOWN_CLASSES.put(SVGUse.ELEMENT_NAME, SVGUse.class.getDeclaredConstructor(String.class, Attributes.class, SVGElementBase.class, SVGDocumentDataProvider.class));
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+    // endregion
 
+    // region Constructor
+
+    public SVGElementFactory(final CommandParser commandParser) {
+        this.commandParser = commandParser;
     }
 
-    //endregion
+    // endregion
 
-    //region Implements IElementFactory
+    // region Implements IElementFactory
 
     @Override
-    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
+    public SVGElementBase<?> createElement(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
 
-        Constructor constructor = KNOWN_CLASSES.get(name);
-
-        if (constructor != null) {
-            try {
-                return (SVGElementBase<?>) constructor.newInstance(name, attributes, parent, dataProvider);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+        if (SVGCircle.ELEMENT_NAME.equals(name)) {
+            return new SVGCircle(name, attributes, dataProvider);
+        } else if (SVGClipPath.ELEMENT_NAME.equals(name)) {
+            return new SVGClipPath(name, attributes, dataProvider);
+        } else if (SVGDefinitions.ELEMENT_NAME.equals(name)) {
+            return new SVGDefinitions(name, attributes, dataProvider);
+        } else if (SVGEllipse.ELEMENT_NAME.equals(name)) {
+            return new SVGEllipse(name, attributes, dataProvider);
+        } else if (SVGGroup.ELEMENT_NAME.equals(name)) {
+            return new SVGGroup(name, attributes, dataProvider);
+        } else if (SVGLine.ELEMENT_NAME.equals(name)) {
+            return new SVGLine(name, attributes, dataProvider);
+        } else if (SVGLinearGradient.ELEMENT_NAME.equals(name)) {
+            return new SVGLinearGradient(name, attributes, dataProvider);
+        } else if (SVGPath.ELEMENT_NAME.equals(name)) {
+            return new SVGPath(name, attributes, dataProvider, commandParser);
+        } else if (SVGPolygon.ELEMENT_NAME.equals(name)) {
+            return new SVGPolygon(name, attributes, dataProvider);
+        } else if (SVGPolyline.ELEMENT_NAME.equals(name)) {
+            return new SVGPolyline(name, attributes, dataProvider);
+        } else if (SVGRadialGradient.ELEMENT_NAME.equals(name)) {
+            return new SVGRadialGradient(name, attributes, dataProvider);
+        } else if (SVGRectangle.ELEMENT_NAME.equals(name)) {
+            return new SVGRectangle(name, attributes, dataProvider);
+        } else if (SVGRoot.ELEMENT_NAME.equals(name)) {
+            return new SVGRoot(name, attributes, dataProvider);
+        } else if (SVGStop.ELEMENT_NAME.equals(name)) {
+            return new SVGStop(name, attributes, dataProvider);
+        } else if (SVGStyle.ELEMENT_NAME.equals(name)) {
+            return new SVGStyle(name, attributes, dataProvider);
+        } else if (SVGUse.ELEMENT_NAME.equals(name)) {
+            return new SVGUse(name, attributes, dataProvider);
         }
 
         return null;
     }
 
-    //endregion
+    // endregion
 }

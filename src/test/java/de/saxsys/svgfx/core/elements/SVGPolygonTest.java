@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -48,15 +49,15 @@ public final class SVGPolygonTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertEquals(6, polygon.getResult().getPoints().size());
-        assertEquals(60.0d, polygon.getResult().getPoints().get(0), 0.01d);
-        assertEquals(20.0d, polygon.getResult().getPoints().get(1), 0.01d);
-        assertEquals(100.0d, polygon.getResult().getPoints().get(2), 0.01d);
-        assertEquals(40.0d, polygon.getResult().getPoints().get(3), 0.01d);
-        assertEquals(100.0d, polygon.getResult().getPoints().get(4), 0.01d);
-        assertEquals(80.0d, polygon.getResult().getPoints().get(5), 0.01d);
+        assertEquals(60.0d, polygon.getResult().getPoints().get(0), MINIMUM_DEVIATION);
+        assertEquals(20.0d, polygon.getResult().getPoints().get(1), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polygon.getResult().getPoints().get(2), MINIMUM_DEVIATION);
+        assertEquals(40.0d, polygon.getResult().getPoints().get(3), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polygon.getResult().getPoints().get(4), MINIMUM_DEVIATION);
+        assertEquals(80.0d, polygon.getResult().getPoints().get(5), MINIMUM_DEVIATION);
     }
 
     /**
@@ -72,18 +73,20 @@ public final class SVGPolygonTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        assertResultFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGPolygon::new,
+                          SVGPolygon.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        assertResultFails(SVGPolygon::new, SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGPolygon::new,
+                          SVGPolygon.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -96,7 +99,7 @@ public final class SVGPolygonTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGPolygon polygon = new SVGPolygon(SVGPolygon.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         try {
             assertEquals(0, polygon.getResult().getPoints().size());

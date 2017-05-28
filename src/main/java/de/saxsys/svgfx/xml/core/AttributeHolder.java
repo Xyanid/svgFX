@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -100,7 +100,9 @@ public abstract class AttributeHolder<TAttribute extends AttributeWrapper> {
     public final <TContent extends TAttribute> TContent getAttributeOrFail(final String name, final Class<TContent> clazz) throws SVGException {
         final TContent attribute = clazz.cast(attributes.get(name));
 
-        if (attribute == null) { throw new SVGException(SVGException.Reason.MISSING_ATTRIBUTE, String.format("Could not find attribute %s", name)); }
+        if (attribute == null) {
+            throw new SVGException(String.format("Could not find desired attribute [%s]", name));
+        }
 
         return attribute;
     }

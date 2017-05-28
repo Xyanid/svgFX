@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -52,11 +53,11 @@ public final class SVGStopTest {
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_OPACITY.getName());
         when(attributes.getValue(2)).thenReturn("0.5");
 
-        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
+        assertEquals(0.1d, stop.getResult().getOffset(), MINIMUM_DEVIATION);
         assertEquals(new Color(1.0d, 0.0d, 0.0d, 0.5d), stop.getResult().getColor());
-        assertEquals(0.5d, stop.getResult().getColor().getOpacity(), 0.01d);
+        assertEquals(0.5d, stop.getResult().getColor().getOpacity(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -75,9 +76,9 @@ public final class SVGStopTest {
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(2)).thenReturn("blue");
 
-        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(0.1d, stop.getResult().getOffset(), 0.01d);
+        assertEquals(0.1d, stop.getResult().getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, stop.getResult().getColor());
     }
 
@@ -97,35 +98,39 @@ public final class SVGStopTest {
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(2)).thenReturn("#000000");
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGStop::new,
+                          SVGStop.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("1.0");
         when(attributes.getValue(1)).thenReturn("A");
         when(attributes.getValue(2)).thenReturn("#000000");
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGStop::new,
+                          SVGStop.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("1.0");
         when(attributes.getValue(1)).thenReturn("1.0");
         when(attributes.getValue(2)).thenReturn("asdsagfa");
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_COLOR_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGStop::new,
+                          SVGStop.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(2)).thenReturn(PresentationAttributeMapper.COLOR.getName());
 
-        assertResultFails(SVGStop::new, SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_COLOR_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGStop::new,
+                          SVGStop.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -140,10 +145,11 @@ public final class SVGStopTest {
         when(attributes.getQName(0)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(0)).thenReturn("50.0");
 
-        assertResultFails(SVGRectangle::new, SVGRectangle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGStop::new,
+                          SVGStop.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -160,8 +166,8 @@ public final class SVGStopTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.STOP_COLOR.getName());
         when(attributes.getValue(1)).thenReturn("blue");
 
-        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStop stop = new SVGStop(SVGStop.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(0.5d, stop.getResult().getOffset(), 0.01d);
+        assertEquals(0.5d, stop.getResult().getOffset(), MINIMUM_DEVIATION);
     }
 }

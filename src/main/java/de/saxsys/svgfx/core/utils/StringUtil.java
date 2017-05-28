@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,9 +13,11 @@
 
 package de.saxsys.svgfx.core.utils;
 
-import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.interfaces.ThrowableBiConsumer;
+import de.saxsys.svgfx.core.interfaces.ThrowablePredicate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,29 +26,6 @@ import java.util.List;
  * @author by Xyanid on 28.10.2015.
  */
 public final class StringUtil {
-
-    // region Classes
-
-    /**
-     * This interface allows that {@link #splitByDelimiters(String, List)} to consume data an indicate whether to further add new characters or consume
-     * the currentData.
-     */
-    @FunctionalInterface
-    public interface SplitPredicate {
-        /**
-         * Called when a delimiter or the last character is read and will indicate whether the current read data can be used or not.
-         *
-         * @param data  the {@link String} containing the currently read data so far.
-         * @param index the index of the character in the original data that was currently read
-         *
-         * @return true if the currentData shall be consumed otherwise false if not.
-         *
-         * @throws SVGException in case the splitting is not possible due to invalid data ans so on.
-         */
-        boolean test(final String data, int index) throws SVGException;
-    }
-
-    // endregion
 
     // region Constructor
 
@@ -122,6 +101,28 @@ public final class StringUtil {
     }
 
     /**
+     * Determines if the given {@link String} is null or empty even after bring trimmed.
+     *
+     * @param data the {@link String} to check.
+     *
+     * @return true if the {@link String} is null or empty after trimmed otherwise false.
+     */
+    public static boolean isNullOrEmptyAfterTrim(final String data) {
+        return isNullOrEmpty(data) || isNullOrEmpty(data.trim());
+    }
+
+    /**
+     * Determines if the given {@link String} is not null or empty even after bring trimmed.
+     *
+     * @param data the {@link String} to check.
+     *
+     * @return true if the {@link String} is not null or empty after trimmed otherwise false.
+     */
+    public static boolean isNotNullOrEmptyAfterTrim(final String data) {
+        return !isNullOrEmptyAfterTrim(data);
+    }
+
+    /**
      * Strips the " characters at the start and end of the given string if present.
      *
      * @param data data to be used, must not be null or empty
@@ -140,36 +141,118 @@ public final class StringUtil {
 
     /**
      * Creates a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
-     *
-     * @param data       the data that needs to be split.
-     * @param delimiters the delimiters that indicate when the string needs to be split.
-     *
-     * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
-     *
-     * @throws SVGException when an error occurs during the splitting.
-     */
-    public static List<String> splitByDelimiters(final String data, final List<Character> delimiters) throws SVGException {
-        return splitByDelimiters(data, delimiters, (split, index) -> true);
-    }
-
-    /**
-     * Creates a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
+     * The delimiters are not part of the items in the list.
      *
      * @param data             the data that needs to be split.
      * @param delimiters       the delimiters that indicate when the string needs to be split.
-     * @param consumePredicate the {@link SplitPredicate} to use, which will determine if the currently split value will be part of the result.
+     * @param consumePredicate the {@link ThrowablePredicate} to use, which will determine if the currently split value will be part of the result.
+     * @param <E>              the type of exception to throw.
      *
-     * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters.
+     * @return a new {@link List} of {@link String}s that contain the data, which was split by any of the given delimiters, delimiters are not present in the list.
      *
-     * @throws SVGException when an error occurs during the splitting.
+     * @throws E when an error occurs during the splitting.
      */
-    public static List<String> splitByDelimiters(final String data, final List<Character> delimiters, final SplitPredicate consumePredicate) throws SVGException {
+    public static <E extends Exception> List<String> splitByDelimiters(final String data, final Collection<Character> delimiters, final ThrowablePredicate<String, E> consumePredicate) throws E {
 
         final List<String> result = new ArrayList<>();
+
+        splitByDelimiters(data, delimiters, (delimiter, split) -> {
+            if (consumePredicate.testOrFail(split)) {
+                result.add(split);
+            }
+        });
+
+        return result;
+    }
+
+    /**
+     * Parse the given data and split the string at every position that is a one of the provided delimiters.
+     * The data that has been read so far and the last know delimiter will be consumed by the {@link ThrowableBiConsumer}. Unless this function returns true, the data will be accumulated.
+     * <p>
+     * Imaging the following string with T and R being the sole delimiters. The following would happen:
+     * <table summary="describes behavior">
+     * <tr>
+     * <th>Provided data</th>
+     * <th>Consumption</th>
+     * <th>Delimiter</th>
+     * <th>Data</th>
+     * </tr>
+     * <tr>
+     * <td>"T"</td>
+     * <td>1.</td>
+     * <td>"T"</td>
+     * <td>null</td>
+     * </tr>
+     * <tr>
+     * <td>"123"</td>
+     * <td>1.</td>
+     * <td>null</td>
+     * <td>"123"</td>
+     * </tr>
+     * <tr>
+     * <td>"T123"</td>
+     * <td>1.</td>
+     * <td>"T"</td>
+     * <td>"123"</td>
+     * </tr>
+     * <tr>
+     * <td>"T123R"</td>
+     * <td>1.</td>
+     * <td>"T"</td>
+     * <td>"123"</td>
+     * </tr>
+     * <tr>
+     * <td></td>
+     * <td>2.</td>
+     * <td>"R"</td>
+     * <td>null</td>
+     * </tr>
+     * <tr>
+     * <td>"T123R567"</td>
+     * <td>1.</td>
+     * <td>"T"</td>
+     * <td>"123"</td>
+     * </tr>
+     * <tr>
+     * <td></td>
+     * <td>2.</td>
+     * <td>"R"</td>
+     * <td>"567"</td>
+     * </tr>
+     * <tr>
+     * <td>"T123R567T"</td>
+     * <td>1.</td>
+     * <td>"T"</td>
+     * <td>"123"</td>
+     * </tr>
+     * <tr>
+     * <td></td>
+     * <td>2.</td>
+     * <td>"R"</td>
+     * <td>"567"</td>
+     * </tr>
+     * <tr>
+     * <td></td>
+     * <td>3.</td>
+     * <td>"T"</td>
+     * <td>null</td>
+     * </tr>
+     * </table>
+     *
+     * @param data          the data that needs to be split.
+     * @param delimiters    the delimiters that indicate when the string needs to be split.
+     * @param splitConsumer the {@link ThrowableBiConsumer} which will consumeOrFail each split action.
+     * @param <E>           the type of exception to throw.
+     *
+     * @throws E when an error occurs during the splitting.
+     */
+    public static <E extends Exception> void splitByDelimiters(final String data, final Collection<Character> delimiters, final ThrowableBiConsumer<Character, String, E> splitConsumer) throws E {
+
         final StringBuilder builder = new StringBuilder();
 
         boolean isLastCharacter;
         boolean isDelimiter;
+        Character lastFoundDelimiter = null;
 
         for (int i = 0; i < data.length(); i++) {
             char character = data.charAt(i);
@@ -179,20 +262,33 @@ public final class StringUtil {
 
             if (isLastCharacter || isDelimiter) {
 
+                // needed in case we reached the end we need to apply the last character to the builder
                 if (isLastCharacter && !isDelimiter) {
                     builder.append(character);
                 }
 
-                if (builder.length() > 0 && consumePredicate.test(builder.toString(), i)) {
-                    result.add(builder.toString());
-                    builder.setLength(0);
+                // we only consumeOrFail if there is data or we have a previous delimiter found
+                if ((lastFoundDelimiter != null || builder.length() > 0)) {
+                    splitConsumer.acceptOrFail(lastFoundDelimiter, builder.toString());
+                }
+
+                // reset data
+                lastFoundDelimiter = null;
+                builder.setLength(0);
+
+                // if this character was a delimiter we will use it as the last know delimiter
+                if (isDelimiter) {
+                    lastFoundDelimiter = character;
                 }
             } else {
                 builder.append(character);
             }
         }
 
-        return result;
+        // special case in which the string is only one of the delimiters, so we consumeOrFail the delimiter with null data
+        if (lastFoundDelimiter != null) {
+            splitConsumer.acceptOrFail(lastFoundDelimiter, null);
+        }
     }
 
     //endregion

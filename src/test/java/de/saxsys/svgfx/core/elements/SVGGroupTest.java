@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.getChildren;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Xyanid on 05.10.2015.
  */
-@SuppressWarnings ("OptionalGetWithoutIsPresent")
+@SuppressWarnings ({"OptionalGetWithoutIsPresent", "ConstantConditions"})
 @RunWith (MockitoJUnitRunner.class)
 public final class SVGGroupTest {
 
@@ -56,17 +57,17 @@ public final class SVGGroupTest {
 
         final SVGDocumentDataProvider provider = new SVGDocumentDataProvider();
 
-        final SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, null, provider);
+        final SVGClipPath clipPath = new SVGClipPath("clipPath", attributes, provider);
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("50");
 
-        getChildren(clipPath).add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, provider));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS.getName());
         when(attributes.getValue(0)).thenReturn("25");
 
-        getChildren(clipPath).add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, clipPath, provider));
+        getChildren(clipPath).add(new SVGCircle(SVGCircle.ELEMENT_NAME, attributes, provider));
 
         assertEquals("test", clipPath.getAttributeHolder().getAttribute(CoreAttributeMapper.ID.getName(), SVGAttributeTypeString.class).get().getValue());
         Assert.assertNotNull(clipPath.getResult());
@@ -74,9 +75,9 @@ public final class SVGGroupTest {
         assertEquals(2, clipPath.getResult().getChildren().size());
 
         assertThat(clipPath.getResult().getChildren().get(0), instanceOf(Circle.class));
-        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), 0.01d);
+        assertEquals(50.0d, ((Circle) clipPath.getResult().getChildren().get(0)).getRadius(), MINIMUM_DEVIATION);
 
         assertThat(clipPath.getResult().getChildren().get(1), instanceOf(Circle.class));
-        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), 0.01d);
+        assertEquals(25.0d, ((Circle) clipPath.getResult().getChildren().get(1)).getRadius(), MINIMUM_DEVIATION);
     }
 }

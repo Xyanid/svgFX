@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.CycleMethodMapping;
 import javafx.scene.paint.CycleMethod;
 import javafx.util.Pair;
 
@@ -58,7 +58,7 @@ public class SVGAttributeTypeCycleMethod extends SVGAttributeType<CycleMethod, V
 
         CycleMethod result = null;
 
-        for (final Enumerations.CycleMethodMapping cycleMethod : Enumerations.CycleMethodMapping.values()) {
+        for (final CycleMethodMapping cycleMethod : CycleMethodMapping.values()) {
             if (cycleMethod.getName().equals(cssText)) {
                 result = cycleMethod.getMethod();
                 break;
@@ -66,7 +66,7 @@ public class SVGAttributeTypeCycleMethod extends SVGAttributeType<CycleMethod, V
         }
 
         if (result == null) {
-            throw new SVGException(SVGException.Reason.INVALID_CYCLE_METHOD, String.format("Given %s can not be parsed into a cycle method", cssText));
+            throw new SVGException(String.format("Css text [%s] does not present a valid cycle method", cssText));
         }
 
         return new Pair<>(result, null);

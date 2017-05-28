@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,12 +17,14 @@ import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Transform;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -47,20 +49,20 @@ public final class SVGPolyBaseTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,40 100,80");
 
-        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
 
         assertEquals(6, polyBase.getPoints().size());
-        assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
-        assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
-        assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
-        assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+        assertEquals(60.0d, polyBase.getPoints().get(0), MINIMUM_DEVIATION);
+        assertEquals(20.0d, polyBase.getPoints().get(1), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(2), MINIMUM_DEVIATION);
+        assertEquals(40.0d, polyBase.getPoints().get(3), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(4), MINIMUM_DEVIATION);
+        assertEquals(80.0d, polyBase.getPoints().get(5), MINIMUM_DEVIATION);
     }
 
     /**
@@ -76,21 +78,21 @@ public final class SVGPolyBaseTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20    100,40    100,80");
 
-        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
 
         assertEquals(6, polyBase.getPoints().size());
-        assertEquals(60.0d, polyBase.getPoints().get(0), 0.01d);
-        assertEquals(20.0d, polyBase.getPoints().get(1), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(2), 0.01d);
-        assertEquals(40.0d, polyBase.getPoints().get(3), 0.01d);
-        assertEquals(100.0d, polyBase.getPoints().get(4), 0.01d);
-        assertEquals(80.0d, polyBase.getPoints().get(5), 0.01d);
+        assertEquals(60.0d, polyBase.getPoints().get(0), MINIMUM_DEVIATION);
+        assertEquals(20.0d, polyBase.getPoints().get(1), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(2), MINIMUM_DEVIATION);
+        assertEquals(40.0d, polyBase.getPoints().get(3), MINIMUM_DEVIATION);
+        assertEquals(100.0d, polyBase.getPoints().get(4), MINIMUM_DEVIATION);
+        assertEquals(80.0d, polyBase.getPoints().get(5), MINIMUM_DEVIATION);
     }
 
     /**
@@ -103,10 +105,10 @@ public final class SVGPolyBaseTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -127,10 +129,10 @@ public final class SVGPolyBaseTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100 100,80");
 
-        final SVGPolyBase<Polygon> polyBase1 = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase1 = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -138,17 +140,16 @@ public final class SVGPolyBaseTest {
         try {
             polyBase1.getPoints();
             fail("Should not be able to get points");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,10 100");
 
-        final SVGPolyBase<Polygon> polyBase2 = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase2 = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
@@ -156,16 +157,15 @@ public final class SVGPolyBaseTest {
         try {
             polyBase2.getPoints();
             fail("Should not be able to get points");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_POINT_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
     /**
      * Ensures that points with a missing x or y position will cause an exception.
      */
-    @Test
-    public void whenAPointContainsInvalidDataAnSVGExceptionWillBeThrownDuringTheRetrievalOfThePoints() {
+    @Test (expected = SVGException.class)
+    public void whenAPointContainsInvalidDataAnSVGExceptionWillBeThrownDuringTheRetrievalOfThePoints() throws SVGException {
 
         final Attributes attributes = Mockito.mock(Attributes.class);
 
@@ -174,20 +174,15 @@ public final class SVGPolyBaseTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("60,20 100,A 100,80");
 
-        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
 
-        try {
-            polyBase.getPoints();
-            fail("Should not be able to get points");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
-        }
+        polyBase.getPoints();
     }
 
     /**
@@ -202,19 +197,19 @@ public final class SVGPolyBaseTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.POINTS.getName());
         when(attributes.getValue(0)).thenReturn("20,20 100,100 10,120");
 
-        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, null, new SVGDocumentDataProvider()) {
+        final SVGPolyBase<Polygon> polyBase = new SVGPolyBase<Polygon>("polygon", attributes, new SVGDocumentDataProvider()) {
 
             @Override
-            protected Polygon createResult(StyleSupplier styleSupplier) throws SVGException {
+            protected Polygon createResult(final SVGCssStyle style, final Transform ownTransform) throws SVGException {
                 return null;
             }
         };
 
-        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = polyBase.createBoundingBox();
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = polyBase.createBoundingBox(null);
 
-        assertEquals(10.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(20.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(120.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(10.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(20.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(120.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }

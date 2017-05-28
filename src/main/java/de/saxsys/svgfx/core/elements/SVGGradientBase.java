@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,12 +15,19 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeTransform;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.core.utils.SVGUtil;
+import de.saxsys.svgfx.core.utils.Wrapper;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -44,19 +51,33 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      *
      * @throws IllegalArgumentException if either value or dataProvider are null
      */
-    protected SVGGradientBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider)
+    protected SVGGradientBase(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider)
             throws IllegalArgumentException {
-        super(name, attributes, parent, dataProvider);
+        super(name, attributes, dataProvider);
     }
 
     //endregion
 
-    //region Public
+    // region Override SVGElementBase
+
+    @Override
+    public final boolean keepElement() {
+        return false;
+    }
+
+    @Override
+    public final void processCharacterData(char[] ch, int start, int length) throws SAXException {}
+
+    @Override
+    protected final void initializeResult(final TPaint paint, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {}
+
+    // endregion
+
+    // region Public
 
     /**
      * Gets the stops related to this gradient.
@@ -84,42 +105,116 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
         return stops;
     }
 
-    //endregion
+    // endregion
 
-    // region Override SVGElementBase
+    // region Protected
 
-    @Override
-    public boolean rememberElement() {
-        return true;
-    }
+    /**
+     * Converts the given coordinates into relative coordinates based on the given bounding box.
+     *
+     * @param boundingBox the bounding box to be use.
+     * @param points      the points to transform.
+     *
+     * @throws SVGException if an error occurs during the transformation.
+     */
+    protected final void convertToRelativeCoordinates(final Rectangle boundingBox,
+                                                      final List<Wrapper<Point2D>> points) throws SVGException {
 
-    @Override
-    public void startProcessing() throws SAXException {}
+        if (boundingBox.getWidth() == 0.0d || boundingBox.getHeight() == 0.0d) {
+            return;
+        }
 
-    @Override
-    public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
-
-    @Override
-    public void endProcessing() throws SAXException {
-        try {
-            storeElementInDocumentDataProvider();
-        } catch (final SVGException e) {
-            throw new SAXException(e);
+        for (final Wrapper<Point2D> point : points) {
+            point.set(new Point2D(Math.abs(boundingBox.getX() - point.getOrFail().getX()) / boundingBox.getWidth(),
+                                  Math.abs(boundingBox.getY() - point.getOrFail().getY()) / boundingBox.getHeight()));
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Converts the given coordinates into absolute coordinates based on the given bounding box.
      *
-     * @return false always.
+     * @param boundingBox the bounding box to be use.
+     * @param points      the points to transform.
+     *
+     * @throws SVGException if an error occurs during the transformation.
      */
-    @Override
-    public boolean canConsumeResult() {
-        return false;
+    protected final void convertToAbsoluteCoordinates(final Rectangle boundingBox,
+                                                      final List<Wrapper<Point2D>> points) throws SVGException {
+
+        if (boundingBox.getWidth() == 0.0d || boundingBox.getHeight() == 0.0d) {
+            return;
+        }
+
+        for (final Wrapper<Point2D> point : points) {
+            point.set(new Point2D(boundingBox.getX() + point.getOrFail().getX() * boundingBox.getWidth(),
+                                  boundingBox.getY() + point.getOrFail().getY() * boundingBox.getHeight()));
+        }
     }
 
-    @Override
-    protected final void initializeResult(final TPaint paint, final StyleSupplier styleSupplier) throws SVGException {}
+    /**
+     * Creates an adjusted {@link Rectangle} that is the given {@link SVGAttributeTypeRectangle.SVGTypeRectangle} which has the given {@link Transform} applied.
+     *
+     * @param boundingBox the {@link SVGAttributeTypeRectangle.SVGTypeRectangle} that represents the bounding box.
+     * @param transform   the {@link Transform} the transform to apply.
+     *
+     * @return a new {@link Rectangle} representing the transformed bounding box.
+     *
+     * @throws SVGException if an error occurs during the creation.
+     */
+    protected final Rectangle transformBoundingBox(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform transform) throws SVGException {
+
+        Rectangle result = new Rectangle(boundingBox.getMinX().getValue(),
+                                         boundingBox.getMinY().getValue(),
+                                         boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue(),
+                                         boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue());
+        if (transform != null) {
+            final Point2D minimum = transform.transform(result.getX(),
+                                                        result.getY());
+            final Point2D maximum = transform.transform(result.getX() + result.getWidth(),
+                                                        result.getY() + result.getHeight());
+            result = new Rectangle(minimum.getX(),
+                                   minimum.getY(),
+                                   maximum.getX() - minimum.getX(),
+                                   maximum.getY() - minimum.getY());
+        }
+        return result;
+    }
+
+    /**
+     * Returns a {@link Optional} containing the {@link CoreAttributeMapper#GRADIENT_TRANSFORM} of this gradient if present or {@link Optional#empty()}.
+     *
+     * @return a new {@link Optional} containing the {@link CoreAttributeMapper#GRADIENT_TRANSFORM} of this gradient if present or {@link Optional#empty()}.
+     *
+     * @throws SVGException if an error occurs during the retrieval of the transform cause by an incorrect matrix.
+     */
+    protected Optional<Transform> getGradientTransform() throws SVGException {
+        final Optional<SVGAttributeTypeTransform> ownTransform = getAttributeHolder().getAttribute(CoreAttributeMapper.GRADIENT_TRANSFORM.getName(), SVGAttributeTypeTransform.class);
+
+        if (ownTransform.isPresent()) {
+            return Optional.of(ownTransform.get().getValue());
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Will be used to get the correct transformation for the gradient if any.
+     *
+     * @param elementTransform the {@link Transform} supplied by the element that uses this gradient.
+     *
+     * @return a new {@link Optional} with the correct {@link Transform} or {@link Optional#empty()} if there is no transform.
+     *
+     * @throws SVGException if an error occurs during the retrieval of the transform cause by an incorrect matrix.
+     */
+    protected Optional<Transform> getCombinedTransform(final Transform elementTransform) throws SVGException {
+        Optional<Transform> usedTransform = getGradientTransform();
+
+        if (elementTransform != null) {
+            usedTransform = usedTransform.map(transform -> Optional.of(elementTransform.createConcatenation(transform))).orElseGet(() -> Optional.of(elementTransform));
+        }
+
+        return usedTransform;
+    }
 
     // endregion
 
@@ -131,10 +226,19 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
                 try {
                     stops.add(((SVGStop) child).getResult());
                 } catch (final SAXException e) {
-                    throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not create result for stop: %s", child));
+                    throw new SVGException(String.format("Could not create result for stop [%s]", child));
                 }
             }
         }
+    }
+
+    // endregion
+
+    // region Override SVGElementBase
+
+    @Override
+    protected final TPaint createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
+        throw new UnsupportedOperationException("May not create gradient with out an element");
     }
 
     // endregion
@@ -144,13 +248,14 @@ public abstract class SVGGradientBase<TPaint extends Paint> extends SVGElementBa
     /**
      * This method can be used to create a result, that depends on the provided {@link SVGElementBase}.
      *
-     * @param shape the {@link SVGShapeBase} requesting this gradient.
+     * @param elementBoundingBox the bounding box of the element .
+     * @param elementTransform   the {@link Transform} to apply.
      *
      * @return a new {@link TPaint}.
      *
      * @throws SVGException if an error occurs during the creation of the result.
      */
-    public abstract TPaint createResult(final SVGShapeBase<?> shape) throws SVGException;
+    public abstract TPaint createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox, final Transform elementTransform) throws SVGException;
 
     // endregion
 }

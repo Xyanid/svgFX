@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -56,8 +56,7 @@ public class SVGAttributeTypeRectangleIntegrationTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_RECTANGLE_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("1 2");
@@ -65,8 +64,7 @@ public class SVGAttributeTypeRectangleIntegrationTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_RECTANGLE_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("1 2 3");
@@ -74,8 +72,7 @@ public class SVGAttributeTypeRectangleIntegrationTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_RECTANGLE_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("1 2 3|4");
@@ -83,8 +80,7 @@ public class SVGAttributeTypeRectangleIntegrationTest {
         try {
             cut.getValue();
             fail("Should have thrown an SVGException");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_RECTANGLE_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 

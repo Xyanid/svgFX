@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,8 +20,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 16.10.2016.
@@ -50,16 +50,11 @@ public class SVGAttributeTypeLengthIntegrationTest {
     /**
      * When the test provided is not valid, an {@link SVGException} will be thrown.
      */
-    @Test
-    public void whenTheProvidedTextIsValidAnSVGExceptionWillBeThrown() {
+    @Test (expected = SVGException.class)
+    public void whenTheProvidedTextIsValidAnSVGExceptionWillBeThrown() throws SVGException {
         cut.setText("invalid");
 
-        try {
-            cut.getValue();
-            fail("Should not be able to get result when input value is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
-        }
+        cut.getValue();
     }
 
     /**
@@ -73,7 +68,7 @@ public class SVGAttributeTypeLengthIntegrationTest {
             final double value = random.nextDouble();
 
             cut.setText(String.format("%f%s", value, unit.getName()));
-            assertEquals(value, cut.getValue(), 0.01d);
+            assertEquals(value, cut.getValue(), MINIMUM_DEVIATION);
             assertEquals(unit, cut.getUnit());
         }
     }

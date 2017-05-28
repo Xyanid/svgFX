@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,9 +21,9 @@ import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeDouble;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypePaint;
 import de.saxsys.svgfx.core.css.SVGCssStyle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -52,11 +52,10 @@ public class SVGStop extends SVGElementBase<Stop> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGStop(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGStop(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -64,50 +63,32 @@ public class SVGStop extends SVGElementBase<Stop> {
     //region SVGElementBase
 
     @Override
-    public boolean rememberElement() {
+    public boolean keepElement() {
         return true;
     }
 
     @Override
-    public void startProcessing() throws SAXException {}
-
-    @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
-
-    @Override
-    public void endProcessing() throws SAXException {}
 
     /**
      * {@inheritDoc}
-     *
-     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
-     */
-    @Override
-    public boolean canConsumeResult() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}.
      * This stop used both the {@link PresentationAttributeMapper#STOP_COLOR} and {@link PresentationAttributeMapper#COLOR}, however
      * the {@link PresentationAttributeMapper#STOP_COLOR} is preferred if both are present. Furthermore if an
      * {@link PresentationAttributeMapper#STOP_OPACITY} is present, then it will overwrite the opacity of the original color.
      */
     @Override
-    protected final Stop createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Stop createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
-        final SVGCssStyle style = styleSupplier.get();
-
-        Color color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.STOP_COLOR.getName(), Color.class, null);
+        Color color = ownStyle.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.STOP_COLOR.getName(), Color.class, null);
         if (color == null) {
-            color = style.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.COLOR.getName(), Color.class, (Color) SVGAttributeTypePaint.DEFAULT_VALUE);
+            color = ownStyle.getAttributeHolder().getAttributeValue(PresentationAttributeMapper.COLOR.getName(), Color.class, (Color) SVGAttributeTypePaint.DEFAULT_VALUE);
         }
 
         if (color == null) {
-            throw new SVGException(SVGException.Reason.MISSING_COLOR, String.format("%s can not be created without a color", SVGStop.class.getSimpleName()));
+            throw new SVGException(String.format("[%s] can not be created without a color", SVGStop.class.getSimpleName()));
         }
 
-        final Optional<SVGAttributeTypeDouble> stopOpacity = style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class);
+        final Optional<SVGAttributeTypeDouble> stopOpacity = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.STOP_OPACITY.getName(), SVGAttributeTypeDouble.class);
         if (stopOpacity.isPresent()) {
             color = new Color(color.getRed(), color.getGreen(), color.getBlue(), stopOpacity.get().getValue());
         }
@@ -121,7 +102,9 @@ public class SVGStop extends SVGElementBase<Stop> {
     }
 
     @Override
-    protected final void initializeResult(final javafx.scene.paint.Stop stop, final StyleSupplier styleSupplier) throws SVGException {
+    protected final void initializeResult(final javafx.scene.paint.Stop stop,
+                                          final SVGCssStyle ownStyle,
+                                          final Transform ownTransform) throws SVGException {
     }
 
     //endregion

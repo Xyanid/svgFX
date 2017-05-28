@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -54,12 +55,12 @@ public final class SVGLineTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         when(attributes.getValue(3)).thenReturn("35");
 
-        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(50.0d, line.getResult().getStartX(), 0.01d);
-        assertEquals(100.0d, line.getResult().getStartY(), 0.01d);
-        assertEquals(25.0d, line.getResult().getEndX(), 0.01d);
-        assertEquals(35.0d, line.getResult().getEndY(), 0.01d);
+        assertEquals(50.0d, line.getResult().getStartX(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, line.getResult().getStartY(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, line.getResult().getEndX(), MINIMUM_DEVIATION);
+        assertEquals(35.0d, line.getResult().getEndY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -82,40 +83,44 @@ public final class SVGLineTest {
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getValue(1)).thenReturn("A");
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getValue(1)).thenReturn("75");
         when(attributes.getValue(2)).thenReturn("A");
         when(attributes.getValue(3)).thenReturn("25");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("100");
         when(attributes.getValue(1)).thenReturn("75");
         when(attributes.getValue(2)).thenReturn("50");
         when(attributes.getValue(3)).thenReturn("A");
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -135,37 +140,41 @@ public final class SVGLineTest {
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_X.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_X.getName());
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.START_Y.getName());
         when(attributes.getQName(1)).thenReturn(CoreAttributeMapper.END_X.getName());
         when(attributes.getQName(2)).thenReturn(CoreAttributeMapper.END_Y.getName());
 
-        assertResultFails(SVGLine::new, SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGLine::new,
+                          SVGLine.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -186,13 +195,13 @@ public final class SVGLineTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.END_Y.getName());
         when(attributes.getValue(3)).thenReturn("35");
 
-        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGLine line = new SVGLine(SVGLine.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox();
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = line.createBoundingBox(null);
 
-        assertEquals(15.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(25.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(35.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(100.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(15.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(35.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }

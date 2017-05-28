@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,9 +14,11 @@
 package de.saxsys.svgfx.core.utils;
 
 import de.saxsys.svgfx.core.SVGException;
+import de.saxsys.svgfx.core.interfaces.ThrowablePredicate;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,36 +67,17 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} will throw the expected exceptions.
+     * Ensures that {@link StringUtil#splitByDelimiters(String, Collection, ThrowablePredicate)} will throw the expected exceptions.
      */
     @Test (expected = SVGException.class)
     public void ensureThatAnExceptionIsThrownWhenThe() throws SVGException {
-        StringUtil.splitByDelimiters("Test", Collections.singletonList(' '), (currentData, index) -> {
-            throw new SVGException(SVGException.Reason.FAILED_TO_PARSE_IRI, "test");
-        });
+        StringUtil.splitByDelimiters("Test",
+                                     Collections.singletonList(' '),
+                                     (currentData, index) -> {throw new SVGException("test");});
     }
 
     /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} is able to split a string which contains spaces
-     * as expected.
-     */
-    @Test
-    public void ensureAStringContainingSpacesCorrectlyWillBeSplitCorrectly() throws SVGException {
-
-        final List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        final List<String> result = StringUtil.splitByDelimiters("  This  is a  test  ", delimiters, (currentData, index) -> true);
-
-        assertEquals(4, result.size());
-        assertEquals("This", result.get(0));
-        assertEquals("is", result.get(1));
-        assertEquals("a", result.get(2));
-        assertEquals("test", result.get(3));
-    }
-
-    /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} is able to split a string which contains multiple
+     * Ensures that {@link StringUtil#splitByDelimiters(String, Collection, ThrowablePredicate)} is able to split a string which contains multiple
      * delimiters.
      */
     @Test
@@ -105,7 +88,7 @@ public final class StringUtilTest {
         delimiters.add(',');
         delimiters.add(' ');
 
-        final List<String> result = StringUtil.splitByDelimiters(" This,is a;test", delimiters, (currentData, index) -> true);
+        final List<String> result = StringUtil.splitByDelimiters(" This,is a;test", delimiters, (currentData) -> true);
 
         assertEquals(4, result.size());
         assertEquals("This", result.get(0));
@@ -115,7 +98,7 @@ public final class StringUtilTest {
     }
 
     /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} will only process {@link String}s without
+     * Ensures that {@link StringUtil#splitByDelimiters(String, Collection, ThrowablePredicate)} will only process {@link String}s without
      * delimiters.
      */
     @Test
@@ -124,11 +107,13 @@ public final class StringUtilTest {
         final List<Character> delimiters = new ArrayList<>();
         delimiters.add(' ');
 
-        final List<String> result = StringUtil.splitByDelimiters(" This , is a test ", delimiters, (currentData, index) -> {
+        final List<String> result = StringUtil.splitByDelimiters(" This , is a test ", delimiters, (currentData) -> {
 
-            assertFalse(currentData.contains(" "));
-
-            return true;
+            if (currentData != null) {
+                assertFalse(currentData.contains(" "));
+                return true;
+            }
+            return false;
         });
 
         assertEquals(5, result.size());
@@ -139,50 +124,29 @@ public final class StringUtilTest {
         assertEquals("test", result.get(4));
     }
 
-    /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} will only process {@link String}s that are not
-     * empty.
-     */
     @Test
-    public void aStringThatWasSplitWillNeverContainEmptyStrings() throws SVGException {
+    public void ensureThatIsPossibleToDetermineIfStringAreEmptyOrNull() {
+        assertTrue(StringUtil.isNullOrEmpty(null));
+        assertTrue(StringUtil.isNullOrEmpty(""));
+        assertFalse(StringUtil.isNullOrEmpty(" "));
+        assertFalse(StringUtil.isNullOrEmpty("A"));
 
-        final List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        final List<String> result = StringUtil.splitByDelimiters(" This  , is a test ", delimiters, (currentData, index) -> {
-
-            assertTrue(currentData.length() > 0);
-
-            return true;
-        });
-
-        assertEquals(5, result.size());
-        assertEquals("This", result.get(0));
-        assertEquals(",", result.get(1));
-        assertEquals("is", result.get(2));
-        assertEquals("a", result.get(3));
-        assertEquals("test", result.get(4));
+        assertFalse(StringUtil.isNotNullOrEmpty(null));
+        assertFalse(StringUtil.isNotNullOrEmpty(""));
+        assertTrue(StringUtil.isNotNullOrEmpty(" "));
+        assertTrue(StringUtil.isNotNullOrEmpty("A"));
     }
 
-    /**
-     * Ensures that {@link StringUtil#splitByDelimiters(String, List, StringUtil.SplitPredicate)} is able to combine strings if the dataConsumer returns false. In this test we will use the
-     * {@link String} "1 , 2 3 , 4" and the result should be "1,2" and "3,4".
-     */
     @Test
-    public void aMoreComplexStringCanBeSplitBasedOnTheProvidedDataConsumerAndTheResultingStringWillBeAsExpected() throws SVGException {
+    public void ensureThatIsPossibleToDetermineIfStringAreEmptyOrNullAfterBeingTrimmed() {
+        assertTrue(StringUtil.isNullOrEmptyAfterTrim(null));
+        assertTrue(StringUtil.isNullOrEmptyAfterTrim(""));
+        assertTrue(StringUtil.isNullOrEmptyAfterTrim(" "));
+        assertFalse(StringUtil.isNullOrEmpty("A"));
 
-        final List<Character> delimiters = new ArrayList<>();
-        delimiters.add(' ');
-
-        final List<String> result = StringUtil.splitByDelimiters(" 1 , 2 3 , 4 ", delimiters, (currentData, index) -> {
-
-            assertFalse(currentData.contains(" "));
-
-            return currentData.charAt(currentData.length() - 1) != ',' && currentData.contains(",");
-        });
-
-        assertEquals(2, result.size());
-        assertEquals("1,2", result.get(0));
-        assertEquals("3,4", result.get(1));
+        assertFalse(StringUtil.isNotNullOrEmptyAfterTrim(null));
+        assertFalse(StringUtil.isNotNullOrEmptyAfterTrim(""));
+        assertFalse(StringUtil.isNotNullOrEmptyAfterTrim(" "));
+        assertTrue(StringUtil.isNotNullOrEmpty("A"));
     }
 }

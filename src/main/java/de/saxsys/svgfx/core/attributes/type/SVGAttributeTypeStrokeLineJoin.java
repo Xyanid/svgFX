@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,7 +54,7 @@ public class SVGAttributeTypeStrokeLineJoin extends SVGAttributeType<StrokeLineJ
         try {
             return new Pair<>(StrokeLineJoin.valueOf(cssText.toUpperCase()), null);
         } catch (IllegalArgumentException e) {
-            throw new SVGException(SVGException.Reason.INVALID_STROKE_LINE_JOIN, e);
+            throw new SVGException(String.format("Css text [%s] does not represent a valid stroke line join", cssText), e);
         }
     }
 

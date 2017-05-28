@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,8 +13,15 @@
 
 package de.saxsys.svgfx.core;
 
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.elements.SVGClipPath;
+import de.saxsys.svgfx.core.elements.SVGDefinitions;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
 import de.saxsys.svgfx.core.elements.SVGElementFactory;
+import de.saxsys.svgfx.core.elements.SVGGradientBase;
+import de.saxsys.svgfx.core.elements.SVGStop;
+import de.saxsys.svgfx.core.path.CommandParser;
+import de.saxsys.svgfx.core.path.commands.CommandFactory;
 import de.saxsys.svgfx.xml.core.SAXParser;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -29,13 +36,23 @@ import org.xml.sax.XMLReader;
  */
 public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElementFactory, SVGElementBase<?>> implements EntityResolver {
 
+    // region Constants
+
+    private static final CommandFactory COMMAND_FACTORY = new CommandFactory();
+
+    private static final CommandParser COMMAND_PARSER = new CommandParser(COMMAND_FACTORY);
+
+    private static final SVGElementFactory SVG_ELEMENT_FACTORY = new SVGElementFactory(COMMAND_PARSER);
+
+    // endregion
+
     // region Constructor
 
     /**
      * Creates a new instance of the parser and uses the given elementCreator.
      */
     public SVGParser() {
-        super(new SVGElementFactory(), new SVGDocumentDataProvider());
+        super(SVG_ELEMENT_FACTORY, new SVGDocumentDataProvider());
     }
 
     // endregion
@@ -54,11 +71,25 @@ public class SVGParser extends SAXParser<Group, SVGDocumentDataProvider, SVGElem
 
         if (element != null) {
             for (final SVGElementBase child : element.getUnmodifiableChildren()) {
-                result.getChildren().add((Node) child.getResult());
+                if (canConsumeElement(element)) {
+                    result.getChildren().add((Node) child.getResult());
+                }
             }
         }
 
         return result;
+    }
+
+    // endregion
+
+    // region Private
+
+    private boolean canConsumeElement(final SVGElementBase element) {
+        return !SVGClipPath.class.isAssignableFrom(element.getClass())
+               && !SVGDefinitions.class.isAssignableFrom(element.getClass())
+               && !SVGGradientBase.class.isAssignableFrom(element.getClass())
+               && !SVGCssStyle.class.isAssignableFrom(element.getClass())
+               && !SVGStop.class.isAssignableFrom(element.getClass());
     }
 
     // endregion

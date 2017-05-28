@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,8 +26,7 @@ public final class SVGUtil {
 
     // region Constructor
 
-    private SVGUtil() {
-    }
+    private SVGUtil() {}
 
     // endregion
 
@@ -39,14 +38,11 @@ public final class SVGUtil {
      * @param data the {@link String} to be stripped, must not be null or empty.
      *
      * @return the data striped of its IRI identifiers or null the string does not contain any IRI identifiers.
-     *
-     * @throws SVGException if data is null or empty.
-     *
      */
-    public static String stripIRIIdentifiers(final String data) throws SVGException {
+    public static String stripIRIIdentifiers(final String data) {
 
         if (StringUtil.isNullOrEmpty(data)) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given data must not be null or empty");
+            throw new IllegalArgumentException("given data must not be null or empty");
         }
 
         // initially we assume that the IRI_IDENTIFIER was used
@@ -95,11 +91,11 @@ public final class SVGUtil {
 
         final String reference = stripIRIIdentifiers(data);
         if (StringUtil.isNullOrEmpty(reference)) {
-            throw new SVGException(SVGException.Reason.INVALID_IRI_IDENTIFIER, String.format("Given data %s appears to not be a IRI reference.", data));
+            throw new IllegalArgumentException(String.format("Given data [%s] appears to not be a IRI reference.", data));
         }
 
         return dataProvider.getData(reference, clazz)
-                           .orElseThrow(() -> new SVGException(SVGException.Reason.MISSING_ELEMENT, String.format("Given reference %s could not be resolved", data)));
+                           .orElseThrow(() -> new SVGException(String.format("Given reference [%s] could not be resolved", data)));
     }
 
     // endregion

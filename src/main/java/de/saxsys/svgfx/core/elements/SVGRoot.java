@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,8 +15,9 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.Group;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -43,11 +44,10 @@ public class SVGRoot extends SVGElementBase<Group> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGRoot(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGRoot(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -58,7 +58,7 @@ public class SVGRoot extends SVGElementBase<Group> {
      * {@inheritDoc}
      */
     @Override
-    public boolean rememberElement() {
+    public boolean keepElement() {
         return true;
     }
 
@@ -77,25 +77,13 @@ public class SVGRoot extends SVGElementBase<Group> {
     public void processCharacterData(final char[] ch, final int start, final int length) throws SAXException {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void endProcessing() throws SAXException {
-    }
-
-    @Override
-    public boolean canConsumeResult() {
-        return false;
-    }
-
-    @Override
-    protected Group createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected Group createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         return null;
     }
 
     @Override
-    protected void initializeResult(final Group group, final StyleSupplier styleSupplier) throws SVGException {
+    protected void initializeResult(final Group group, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
     }
 

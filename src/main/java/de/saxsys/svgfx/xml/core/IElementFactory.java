@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import org.xml.sax.Attributes;
  *
  * @param <TDataProvider> the type of the {@link IDocumentDataProvider} @author Xyanid on 25.10.2015.
  */
-public interface IElementFactory<TDataProvider extends IDocumentDataProvider, TElement extends ElementBase<?, ?, TDataProvider, ?, ?, ?>> {
+public interface IElementFactory<TDataProvider extends IDocumentDataProvider, TElement extends ElementBase<?, ?, TDataProvider, ?, ?>> {
 
     /**
      * creates a new instance of the desired {@link ElementBase} using the given value as an indicator which instance
@@ -28,10 +28,9 @@ public interface IElementFactory<TDataProvider extends IDocumentDataProvider, TE
      *
      * @param name         local value of the element for which the {@link ElementBase} is to be created
      * @param attributes   attributes which are to be applied to the {@link ElementBase}
-     * @param parent       the parent to be used for the {@link ElementBase}
      * @param dataProvider the dataProvider to be used for the {@link ElementBase}
      *
      * @return a new instance of an {@link ElementBase}
      */
-    TElement createElement(String name, Attributes attributes, TElement parent, TDataProvider dataProvider);
+    TElement createElement(final String name, final Attributes attributes, final TDataProvider dataProvider);
 }

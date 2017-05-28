@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -97,7 +97,7 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
      *
      * @throws IllegalArgumentException if either key is null or empty or data is null.
      */
-    public final void storeData(final String key, SVGElementBase data) {
+    public final void storeData(final String key, final SVGElementBase data) {
 
         if (StringUtil.isNullOrEmpty(key)) {
             throw new IllegalArgumentException("given key must not be null or empty");
@@ -124,11 +124,11 @@ public class SVGDocumentDataProvider implements IDocumentDataProvider {
     public final <TData extends SVGElementBase> Optional<TData> getData(final String key, final Class<TData> clazz) throws SVGException {
 
         if (clazz == null) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given class must not be null or empty");
+            throw new IllegalArgumentException("given class must not be null or empty");
         }
 
         if (StringUtil.isNullOrEmpty(key)) {
-            throw new SVGException(SVGException.Reason.NULL_ARGUMENT, "given key must not be null or empty");
+            throw new IllegalArgumentException("given key must not be null or empty");
         }
 
         final SVGElementBase data = this.data.get(key);

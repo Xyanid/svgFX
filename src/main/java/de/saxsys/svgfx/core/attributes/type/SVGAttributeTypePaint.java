@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,10 +16,11 @@ package de.saxsys.svgfx.core.attributes.type;
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.elements.SVGGradientBase;
-import de.saxsys.svgfx.core.elements.SVGShapeBase;
+import de.saxsys.svgfx.core.interfaces.ThrowableSupplier;
 import de.saxsys.svgfx.core.utils.SVGUtil;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.transform.Transform;
 import javafx.util.Pair;
 
 /**
@@ -92,7 +93,7 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
         try {
             return new Pair<>(Color.web(text), null);
         } catch (final Exception e) {
-            throw new SVGException(SVGException.Reason.INVALID_COLOR_FORMAT, String.format("Color %s is invalid", text), e);
+            throw new SVGException(String.format("Css text [%s] is not a valid web color", text), e);
         }
     }
 
@@ -103,7 +104,8 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
     /**
      * Resolves the given data into a paint. The data must either be valid hex web color (e.g. #00FF00FF) or a reference which can be resolved into a {@link SVGGradientBase}.
      *
-     * @param shape the element for which this paint is
+     * @param boundingBox the {@link ThrowableSupplier} to use when the bounding box of the shape isn needed by the paint.
+     * @param transform   the {@link Transform} to use.
      *
      * @return {@link Paint} which represents the color
      *
@@ -112,11 +114,11 @@ public class SVGAttributeTypePaint extends SVGAttributeType<Paint, Void> {
      *                      </ul>
      */
     @SuppressWarnings ("unchecked")
-    public Paint getValue(final SVGShapeBase<?> shape) throws SVGException {
+    public Paint getValue(final ThrowableSupplier<SVGAttributeTypeRectangle.SVGTypeRectangle, SVGException> boundingBox, final Transform transform) throws SVGException {
 
         // its not possible to use the IRI_FRAGMENT_IDENTIFIER on colors so we will only resolve references if we are sure its not a color itself
         if (getText().startsWith(de.saxsys.svgfx.core.definitions.Constants.IRI_IDENTIFIER)) {
-            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(shape);
+            return SVGUtil.resolveIRI(getText(), getDocumentDataProvider(), SVGGradientBase.class).createResult(boundingBox.getOrFail(), transform);
         }
 
         return getValue();

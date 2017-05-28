@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -35,17 +35,17 @@ public final class Constants {
     /**
      * Determines the delimiter that separated a pair of points.
      */
-    public static char POINTS_DELIMITER = ' ';
+    public static char WHITESPACE = ' ';
 
     /**
      * Determines the delimiter that separated a the positions of a point.
      */
-    public static char POSITION_DELIMITER = ',';
+    public static char COMMA = ',';
 
     /**
      * Determines the delimiter that separated a the positions of a point.
      */
-    public static String POSITION_DELIMITER_STRING = String.valueOf(POSITION_DELIMITER);
+    public static String COMMA_STRING = String.valueOf(COMMA);
 
     //endregion
 

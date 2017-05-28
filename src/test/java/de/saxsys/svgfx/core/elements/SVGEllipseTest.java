@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static de.saxsys.svgfx.core.utils.TestUtils.assertResultFails;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -57,12 +58,12 @@ public final class SVGEllipseTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("35");
 
-        final SVGEllipse ellipse = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGEllipse ellipse = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        assertEquals(50.0d, ellipse.getResult().getCenterX(), 0.01d);
-        assertEquals(100.0d, ellipse.getResult().getCenterY(), 0.01d);
-        assertEquals(25.0d, ellipse.getResult().getRadiusX(), 0.01d);
-        assertEquals(35.0d, ellipse.getResult().getRadiusY(), 0.01d);
+        assertEquals(50.0d, ellipse.getResult().getCenterX(), MINIMUM_DEVIATION);
+        assertEquals(100.0d, ellipse.getResult().getCenterY(), MINIMUM_DEVIATION);
+        assertEquals(25.0d, ellipse.getResult().getRadiusX(), MINIMUM_DEVIATION);
+        assertEquals(35.0d, ellipse.getResult().getRadiusY(), MINIMUM_DEVIATION);
     }
 
     /**
@@ -84,40 +85,44 @@ public final class SVGEllipseTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("A");
         when(attributes.getValue(2)).thenReturn("25");
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("100");
         when(attributes.getValue(2)).thenReturn("A");
         when(attributes.getValue(3)).thenReturn("15");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getValue(0)).thenReturn("50");
         when(attributes.getValue(1)).thenReturn("100");
         when(attributes.getValue(2)).thenReturn("25");
         when(attributes.getValue(3)).thenReturn("A");
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -133,17 +138,19 @@ public final class SVGEllipseTest {
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_X.getName());
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
 
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
 
-        assertResultFails(SVGEllipse::new, SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider(), exception -> {
-            assertThat(exception.getCause(), instanceOf(SVGException.class));
-            assertEquals(SVGException.Reason.MISSING_ATTRIBUTE, ((SVGException) exception.getCause()).getReason());
-        });
+        assertResultFails(SVGEllipse::new,
+                          SVGEllipse.ELEMENT_NAME,
+                          attributes,
+                          new SVGDocumentDataProvider(),
+                          exception -> assertThat(exception.getCause(), instanceOf(SVGException.class)));
     }
 
     /**
@@ -163,13 +170,13 @@ public final class SVGEllipseTest {
         when(attributes.getQName(3)).thenReturn(CoreAttributeMapper.RADIUS_Y.getName());
         when(attributes.getValue(3)).thenReturn("15");
 
-        final SVGEllipse circle = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGEllipse circle = new SVGEllipse(SVGEllipse.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
-        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = circle.createBoundingBox();
+        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = circle.createBoundingBox(null);
 
-        assertEquals(25.0d, boundingBox.getMinX().getValue(), 0.01d);
-        assertEquals(75.0d, boundingBox.getMaxX().getValue(), 0.01d);
-        assertEquals(85.0d, boundingBox.getMinY().getValue(), 0.01d);
-        assertEquals(115.0d, boundingBox.getMaxY().getValue(), 0.01d);
+        assertEquals(25.0d, boundingBox.getMinX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(75.0d, boundingBox.getMaxX().getValue(), MINIMUM_DEVIATION);
+        assertEquals(85.0d, boundingBox.getMinY().getValue(), MINIMUM_DEVIATION);
+        assertEquals(115.0d, boundingBox.getMaxY().getValue(), MINIMUM_DEVIATION);
     }
 }

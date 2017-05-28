@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,5 +23,5 @@ import org.xml.sax.Attributes;
 @FunctionalInterface
 public interface SVGElementCreator<TResult extends SVGElementBase> {
 
-    TResult apply(final String name, final Attributes attributes, final SVGElementBase parent, final SVGDocumentDataProvider dataProvider);
+    TResult apply(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider);
 }

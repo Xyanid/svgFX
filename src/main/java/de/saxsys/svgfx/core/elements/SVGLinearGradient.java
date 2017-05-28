@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,15 +19,18 @@ import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
+import de.saxsys.svgfx.core.utils.Wrapper;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class represents the linear gradient element from svg
@@ -49,89 +52,87 @@ public class SVGLinearGradient extends SVGGradientBase<LinearGradient> {
 
     // endregion
 
-    //region Constructor
+    // region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGLinearGradient(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGLinearGradient(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
-    //endregion
-
-    //region Override SVGElementBase
-
-    @Override
-    protected final LinearGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
-        return determineResult(null);
-    }
-
-    //endregion
+    // endregion
 
     // region Implement SVGGradientBase
 
     @Override
-    public LinearGradient createResult(final SVGShapeBase<?> shape) throws SVGException {
-        return determineResult(shape);
+    public final LinearGradient createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox, final Transform elementTransform) throws SVGException {
+        return determineResult(elementBoundingBox, elementTransform);
     }
 
     // endregion
 
     // region Private
 
-    private LinearGradient determineResult(final SVGShapeBase<?> shape) throws SVGException {
+    private LinearGradient determineResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox, final Transform elementTransform)
+            throws SVGException {
 
         final List<Stop> stops = getStops();
         if (stops.isEmpty()) {
-            throw new SVGException(SVGException.Reason.MISSING_STOPS);
+            throw new SVGException("Given linear gradient does not have stop colors");
         }
 
-        final AtomicReference<Double> startX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
-        final AtomicReference<Double> startY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
-        final AtomicReference<Double> endX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, DEFAULT_END_X));
-        final AtomicReference<Double> endY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE));
+        final double startX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
+        final double startY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.START_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
+        final Wrapper<Point2D> start = new Wrapper<>(new Point2D(startX, startY));
+        final double endX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_X.getName(), Double.class, DEFAULT_END_X);
+        final double endY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.END_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE);
+        final Wrapper<Point2D> end = new Wrapper<>(new Point2D(endX, endY));
 
-        final Enumerations.GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
-                                                                                              Enumerations.GradientUnit.class,
-                                                                                              Enumerations.GradientUnit.OBJECT_BOUNDING_BOX);
+        convertToRelativeCoordinates(start, end, elementBoundingBox, elementTransform);
 
-        if (gradientUnit == Enumerations.GradientUnit.USER_SPACE_ON_USE) {
-            if (shape == null) {
-                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but the requesting shape is missing.");
-            }
-            adjustPosition(startX, startY, endX, endY, shape);
-        }
-
-
-        return new LinearGradient(startX.get(),
-                                  startY.get(),
-                                  endX.get(),
-                                  endY.get(),
+        return new LinearGradient(start.getOrFail().getX(),
+                                  start.getOrFail().getY(),
+                                  end.getOrFail().getX(),
+                                  end.getOrFail().getY(),
                                   true,
                                   getAttributeHolder().getAttributeValue(CoreAttributeMapper.SPREAD_METHOD.getName(), CycleMethod.class, SVGAttributeTypeCycleMethod.DEFAULT_VALUE),
                                   stops);
     }
 
-    private void adjustPosition(final AtomicReference<Double> startX,
-                                final AtomicReference<Double> startY,
-                                final AtomicReference<Double> endX,
-                                final AtomicReference<Double> endY,
-                                final SVGShapeBase<?> shape) throws SVGException {
+    private void convertToRelativeCoordinates(final Wrapper<Point2D> start,
+                                              final Wrapper<Point2D> end,
+                                              final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
+                                              final Transform elementTransform) throws SVGException {
 
-        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = shape.createBoundingBox();
-        final Double width = boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue();
-        final Double height = boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue();
+        final Rectangle boundingBox = transformBoundingBox(elementBoundingBox, elementTransform);
 
-        startX.set(Math.abs(boundingBox.getMinX().getValue() - startX.get()) / width);
-        startY.set(Math.abs(boundingBox.getMinY().getValue() - startY.get()) / height);
-        endX.set(Math.abs(boundingBox.getMinX().getValue() - endX.get()) / width);
-        endY.set(Math.abs(boundingBox.getMinY().getValue() - endY.get()) / height);
+        final GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
+                                                                                 GradientUnit.class,
+                                                                                 GradientUnit.OBJECT_BOUNDING_BOX);
+
+        final List<Wrapper<Point2D>> points = Arrays.asList(start, end);
+
+        // when being in user space we first need to transform then make the values relative
+        if (gradientUnit == GradientUnit.USER_SPACE_ON_USE) {
+            getCombinedTransform(elementTransform).ifPresent(transform -> transformPosition(transform, start, end));
+            convertToRelativeCoordinates(boundingBox, points);
+        } else {
+            convertToAbsoluteCoordinates(boundingBox, points);
+            getGradientTransform().ifPresent(transform -> transformPosition(transform, start, end));
+            convertToRelativeCoordinates(boundingBox, points);
+        }
+    }
+
+    private void transformPosition(final Transform transform,
+                                   final Wrapper<Point2D> start,
+                                   final Wrapper<Point2D> end) {
+        start.set(transform.transform(start.getOrFail()));
+        end.set(transform.transform(end.getOrFail()));
     }
 
     // endregion

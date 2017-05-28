@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,10 +15,11 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import de.saxsys.svgfx.xml.core.ElementBase;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -42,31 +43,20 @@ public class SVGClipPath extends SVGNodeBase<Group> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGClipPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGClipPath(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     // endregion
 
     // region SVGElementBase
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return false always.
-     */
     @Override
-    public boolean canConsumeResult() {
-        return false;
-    }
+    protected final Group createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
-    @Override
-    protected final Group createResult(final StyleSupplier styleSupplier) throws SVGException {
-
-        Group result = new Group();
+        final Group result = new Group();
 
         int counter = 0;
 
@@ -74,9 +64,11 @@ public class SVGClipPath extends SVGNodeBase<Group> {
             try {
                 // instead of letting the child use the clip path as its parent, we simply tell the child that the parent style to use is the style of the element using the clip path
                 final SVGElementBase actualChild = (SVGElementBase) child;
-                result.getChildren().add((Node) actualChild.createAndInitializeResult(() -> actualChild.getStyleAndResolveInheritance(styleSupplier.get())));
+
+                result.getChildren().add((Node) actualChild.createAndInitializeResult(ownStyle, ownTransform));
+
             } catch (final SVGException e) {
-                throw new SVGException(SVGException.Reason.FAILED_TO_GET_RESULT, String.format("Could not get result from child %d", counter), e);
+                throw new SVGException(String.format("Could not get result from child number [%d]", counter), e);
             }
 
             counter++;

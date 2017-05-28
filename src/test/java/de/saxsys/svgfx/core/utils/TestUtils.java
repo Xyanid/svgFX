@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -35,10 +35,9 @@ public class TestUtils {
     public static <TElement extends SVGElementBase<?>> void assertResultFails(final SVGElementCreator<TElement> creator,
                                                                               final String name,
                                                                               final Attributes attributes,
-                                                                              final SVGElementBase parent,
                                                                               final SVGDocumentDataProvider dataProvider,
                                                                               final Consumer<SAXException> exceptionPredicate) {
-        assertResultFails(creator.apply(name, attributes, parent, dataProvider), exceptionPredicate);
+        assertResultFails(creator.apply(name, attributes, dataProvider), exceptionPredicate);
     }
 
     /**

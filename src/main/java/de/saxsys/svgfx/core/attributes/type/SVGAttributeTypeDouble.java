@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -56,7 +56,7 @@ public class SVGAttributeTypeDouble extends SVGAttributeType<Double, Void> {
         try {
             return new Pair<>(Double.parseDouble(cssText.replaceAll(",", ".")), null);
         } catch (final NumberFormatException e) {
-            throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
+            throw new SVGException(String.format("Css text [%s] is not a valid number", cssText), e);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
 import javafx.util.Pair;
 
 /**
@@ -23,14 +23,14 @@ import javafx.util.Pair;
  *
  * @author Xyanid on 29.10.2015.
  */
-public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations.GradientUnit, Void> {
+public class SVGAttributeTypeGradientUnits extends SVGAttributeType<GradientUnit, Void> {
 
     // region Static
 
     /**
      * Determines the default value for this {@link SVGAttributeType}.
      */
-    public static final Enumerations.GradientUnit DEFAULT_VALUE = Enumerations.GradientUnit.OBJECT_BOUNDING_BOX;
+    public static final GradientUnit DEFAULT_VALUE = GradientUnit.OBJECT_BOUNDING_BOX;
 
     // endregion
 
@@ -53,11 +53,11 @@ public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations
      * @throws SVGException when any value inside the array is not a valid {@link SVGAttributeTypeGradientUnits}
      */
     @Override
-    protected Pair<Enumerations.GradientUnit, Void> getValueAndUnit(final String cssText) throws SVGException {
+    protected Pair<GradientUnit, Void> getValueAndUnit(final String cssText) throws SVGException {
 
-        Enumerations.GradientUnit gradientUnit = null;
+        GradientUnit gradientUnit = null;
 
-        for (final Enumerations.GradientUnit units : Enumerations.GradientUnit.values()) {
+        for (final GradientUnit units : GradientUnit.values()) {
             if (units.getName().equals(cssText)) {
                 gradientUnit = units;
                 break;
@@ -65,7 +65,7 @@ public class SVGAttributeTypeGradientUnits extends SVGAttributeType<Enumerations
         }
 
         if (gradientUnit == null) {
-            throw new SVGException(SVGException.Reason.INVALID_GRADIENT_UNIT_FORMAT, String.format("Given %s can not be parsed into a gradient unit", cssText));
+            throw new SVGException(String.format("Css text [%s] does not represent a valid gradient unit", cssText));
         }
 
         return new Pair<>(gradientUnit, null);

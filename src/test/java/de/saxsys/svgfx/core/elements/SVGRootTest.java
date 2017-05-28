@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -44,7 +44,7 @@ public final class SVGRootTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         assertNull(root.getResult());
     }
@@ -60,7 +60,7 @@ public final class SVGRootTest {
 
         when(attributes.getLength()).thenReturn(0);
 
-        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, null, dataProvider);
+        final SVGRoot root = new SVGRoot(SVGRoot.ELEMENT_NAME, attributes, dataProvider);
 
         root.startProcessing();
 

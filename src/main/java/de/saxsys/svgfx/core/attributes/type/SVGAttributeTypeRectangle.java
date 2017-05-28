@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -141,10 +141,12 @@ public class SVGAttributeTypeRectangle extends SVGAttributeType<SVGAttributeType
     @Override
     protected Pair<SVGTypeRectangle, Void> getValueAndUnit(final String text) throws SVGException {
 
-        final List<String> pointSplit = StringUtil.splitByDelimiters(text, Arrays.asList(Constants.POINTS_DELIMITER, Constants.POSITION_DELIMITER));
+        final List<String> pointSplit = StringUtil.splitByDelimiters(text,
+                                                                     Arrays.asList(Constants.WHITESPACE, Constants.COMMA),
+                                                                     StringUtil::isNotNullOrEmptyAfterTrim);
 
         if (pointSplit.size() != 4) {
-            throw new SVGException(SVGException.Reason.INVALID_RECTANGLE_FORMAT, String.format("%s does not provide minX, minY, maxX and maxY", text));
+            throw new SVGException(String.format("Css text [%s] does not provide minX, minY, maxX and maxY", text));
         }
 
         final SVGTypeRectangle point = new SVGTypeRectangle(getDocumentDataProvider());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package de.saxsys.svgfx.core.attributes.type;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.Matrix;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -26,6 +26,7 @@ import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -61,7 +62,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of matrix are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}}.
      */
     @Test
     public void aMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -72,12 +73,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, instanceOf(Affine.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        assertEquals(transform.getTx(), 5.0d, 0.01d);
-        assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 3.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 5.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 6.0d, MINIMUM_DEVIATION);
 
         cut.setText("matrix(1 2 3 4 5 6)");
         transform = cut.getValue();
@@ -85,12 +86,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, instanceOf(Affine.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 3.0d, 0.01d);
-        assertEquals(transform.getTx(), 5.0d, 0.01d);
-        assertEquals(transform.getMyx(), 2.0d, 0.01d);
-        assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 3.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 5.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 6.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -116,8 +117,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("matrix(1,2,3,4,5,6,7)");
@@ -125,8 +125,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("matrix(1,2,3,4,5,A)");
@@ -134,8 +133,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -143,7 +141,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of translate are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aTranslateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -155,12 +153,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 2.0d, MINIMUM_DEVIATION);
 
         cut.setText("translate(1 2)");
 
@@ -169,12 +167,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 2.0d, MINIMUM_DEVIATION);
 
         cut.setText("translate(1)");
 
@@ -183,12 +181,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Translate.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 1.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 1.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -214,8 +212,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("translate(1,A)");
@@ -223,8 +220,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -232,7 +228,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of scale are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aScaleMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -244,12 +240,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 0.0d, MINIMUM_DEVIATION);
 
         cut.setText("scale(1 2)");
 
@@ -258,12 +254,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 2.0d, 0.01d);
-        assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 0.0d, MINIMUM_DEVIATION);
 
         cut.setText("scale(1)");
 
@@ -272,12 +268,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
         assertNotNull(transform);
         assertThat(transform, new IsInstanceOf(Scale.class));
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 0.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 0.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -304,8 +300,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("scale(1,A)");
@@ -313,8 +308,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -322,7 +316,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of scale are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aRotateMatrixCanBeParsedWithOrWithoutComaAsSeparators() throws SVGException {
@@ -336,9 +330,9 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         Rotate rotate = (Rotate) transform;
 
-        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotX(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotY(), 3.0d, MINIMUM_DEVIATION);
 
         cut.setText("rotate(1 2 3)");
 
@@ -349,9 +343,9 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         rotate = (Rotate) transform;
 
-        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        assertEquals(rotate.getPivotX(), 2.0d, 0.01d);
-        assertEquals(rotate.getPivotY(), 3.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotX(), 2.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotY(), 3.0d, MINIMUM_DEVIATION);
 
         cut.setText("rotate(1)");
 
@@ -362,9 +356,9 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         rotate = (Rotate) transform;
 
-        assertEquals(rotate.getAngle(), 1.0d, 0.01d);
-        assertEquals(rotate.getPivotX(), 0.0d, 0.01d);
-        assertEquals(rotate.getPivotY(), 0.0d, 0.01d);
+        assertEquals(rotate.getAngle(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotX(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(rotate.getPivotY(), 0.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -391,8 +385,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("rotate(1,2,3, 4)");
@@ -400,8 +393,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("rotate(1,2,A)");
@@ -409,8 +401,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
@@ -418,7 +409,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
     /**
      * This test will create ensure that all types of skewX are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void aSkewMatrixCanBeParsedForXOrYDirection() throws SVGException {
@@ -432,7 +423,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         Shear shear = (Shear) transform;
 
-        assertEquals(shear.getX(), 1.0d, 0.01d);
+        assertEquals(shear.getX(), 1.0d, MINIMUM_DEVIATION);
 
         cut.setText("skewY(1)");
 
@@ -443,7 +434,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         shear = (Shear) transform;
 
-        assertEquals(shear.getY(), 1.0d, 0.01d);
+        assertEquals(shear.getY(), 1.0d, MINIMUM_DEVIATION);
     }
 
     /**
@@ -476,8 +467,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("skewY(1,2)");
@@ -485,8 +475,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_MATRIX_NUMBER_OF_ELEMENTS_DOES_NOT_MATCH, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("skewX(A)");
@@ -494,8 +483,7 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         cut.setText("skewY(A)");
@@ -503,14 +491,13 @@ public class SVGAttributeTypeTransformIntegrationTest {
         try {
             cut.getValue();
             fail("Should not be able to get result when matrix is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
+        } catch (final SVGException ignored) {
         }
     }
 
     /**
      * This test will create ensure that combined matrices (consisting of more then one matrix in the string) are supported are supported by
-     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Enumerations.Matrix, String, boolean)}.
+     * {@link SVGAttributeTypeTransform#getTransform(String)} and {@link SVGAttributeTypeTransform#getTransform(Matrix, String)}.
      */
     @Test
     public void multipleTransformMatricesWillBeCombined() throws SVGException {
@@ -521,12 +508,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         assertNotNull(transform);
 
-        assertEquals(transform.getMxx(), 1.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 4.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 1.0d, 0.01d);
-        assertEquals(transform.getTy(), 6.0d, 0.01d);
+        assertEquals(transform.getMxx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 6.0d, MINIMUM_DEVIATION);
 
         cut.setText("translate(1,2) scale(3, 4)");
 
@@ -534,12 +521,12 @@ public class SVGAttributeTypeTransformIntegrationTest {
 
         assertNotNull(transform);
 
-        assertEquals(transform.getMxx(), 3.0d, 0.01d);
-        assertEquals(transform.getMxy(), 0.0d, 0.01d);
-        assertEquals(transform.getTx(), 1.0d, 0.01d);
-        assertEquals(transform.getMyx(), 0.0d, 0.01d);
-        assertEquals(transform.getMyy(), 4.0d, 0.01d);
-        assertEquals(transform.getTy(), 2.0d, 0.01d);
+        assertEquals(transform.getMxx(), 3.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMxy(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTx(), 1.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyx(), 0.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getMyy(), 4.0d, MINIMUM_DEVIATION);
+        assertEquals(transform.getTy(), 2.0d, MINIMUM_DEVIATION);
     }
 
     //endregion

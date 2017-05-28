@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,19 +18,22 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.XLinkAttributeMapper;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
+import javafx.scene.transform.Transform;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -67,12 +70,12 @@ public final class SVGGradientBaseTest {
 
         final List<SVGElementBase> stops = new ArrayList<>();
 
-        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.2");
         when(attributes.getValue(1)).thenReturn("blue");
 
-        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, null, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, dataProvider));
 
         when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
 
@@ -80,14 +83,9 @@ public final class SVGGradientBaseTest {
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(0)).thenReturn("#test");
 
-        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(final StyleSupplier styleSupplier) throws SVGException {
-                return null;
-            }
-
-            @Override
-            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -96,10 +94,10 @@ public final class SVGGradientBaseTest {
 
         assertEquals(2, actualStops.size());
 
-        assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(0.1d, actualStops.get(0).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.RED, actualStops.get(0).getColor());
 
-        assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(0.2d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, actualStops.get(1).getColor());
     }
 
@@ -126,12 +124,12 @@ public final class SVGGradientBaseTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("red");
 
-        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, elementBase, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.2");
         when(attributes.getValue(1)).thenReturn("blue");
 
-        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, elementBase, dataProvider));
+        stops.add(new SVGStop(SVGStop.ELEMENT_NAME, attributes, dataProvider));
 
         when(elementBase.getUnmodifiableChildren()).thenReturn(stops);
 
@@ -140,14 +138,9 @@ public final class SVGGradientBaseTest {
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(0)).thenReturn("#test");
 
-        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(final StyleSupplier styleSupplier) throws SVGException {
-                return null;
-            }
-
-            @Override
-            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -159,21 +152,21 @@ public final class SVGGradientBaseTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("green");
 
-        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.4");
         when(attributes.getValue(1)).thenReturn("yellow");
 
-        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, dataProvider));
 
         final List<Stop> actualStops = gradient.getStops();
 
         assertEquals(2, actualStops.size());
 
-        assertEquals(0.3d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(0.3d, actualStops.get(0).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.GREEN, actualStops.get(0).getColor());
 
-        assertEquals(0.4d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(0.4d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.YELLOW, actualStops.get(1).getColor());
     }
 
@@ -192,14 +185,9 @@ public final class SVGGradientBaseTest {
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
         when(attributes.getValue(0)).thenReturn("#test");
 
-        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, null, dataProvider) {
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
             @Override
-            protected Color createResult(final StyleSupplier styleSupplier) throws SVGException {
-                return null;
-            }
-
-            @Override
-            public Color createResult(final SVGShapeBase<?> shape) throws SVGException {
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
                 return null;
             }
         };
@@ -211,12 +199,12 @@ public final class SVGGradientBaseTest {
         when(attributes.getQName(1)).thenReturn(PresentationAttributeMapper.COLOR.getName());
         when(attributes.getValue(1)).thenReturn("red");
 
-        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, dataProvider));
 
         when(attributes.getValue(0)).thenReturn("0.2");
         when(attributes.getValue(1)).thenReturn("blue");
 
-        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, gradient, dataProvider));
+        ((List<SVGElementBase<?>>) Whitebox.getInternalState(gradient, "children")).add(new SVGStop("stop", attributes, dataProvider));
 
         when(attributes.getLength()).thenReturn(1);
         when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
@@ -226,10 +214,35 @@ public final class SVGGradientBaseTest {
 
         assertEquals(2, actualStops.size());
 
-        assertEquals(0.1d, actualStops.get(0).getOffset(), 0.01d);
+        assertEquals(0.1d, actualStops.get(0).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.RED, actualStops.get(0).getColor());
 
-        assertEquals(0.2d, actualStops.get(1).getOffset(), 0.01d);
+        assertEquals(0.2d, actualStops.get(1).getOffset(), MINIMUM_DEVIATION);
         assertEquals(Color.BLUE, actualStops.get(1).getColor());
+    }
+
+    /**
+     * Ensures that the an {@link UnsupportedOperationException} if requesting the result.
+     */
+    @Test (expected = UnsupportedOperationException.class)
+    public void aGradientCanNotBeCreatedWithTheNormalResultMethod() throws SAXException {
+
+        final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
+
+        final Attributes attributes = mock(Attributes.class);
+
+        when(attributes.getLength()).thenReturn(0);
+
+        when(attributes.getQName(0)).thenReturn(XLinkAttributeMapper.XLINK_HREF.getName());
+        when(attributes.getValue(0)).thenReturn("#test");
+
+        final SVGGradientBase<Color> gradient = new SVGGradientBase<Color>("gradientbase", attributes, dataProvider) {
+            @Override
+            public Color createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox, final Transform elementTransform) throws SVGException {
+                return null;
+            }
+        };
+
+        gradient.getResult();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,9 +13,9 @@
 
 package de.saxsys.svgfx.core;
 
+import javafx.scene.Group;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Rectangle;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URL;
@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 05.10.2015.
@@ -50,7 +51,7 @@ public final class SVGParserTest {
         try {
             parser.parse(url.getFile());
         } catch (final Exception e) {
-            Assert.fail();
+            fail();
         }
 
         assertNotNull(parser.getResult());
@@ -62,26 +63,23 @@ public final class SVGParserTest {
     @Test
     public void parsingASVGFileThatHasADefsElementThatIsNotTheFirstElementInTheTreeWillStillAllowOtherElementsToUseTheReferencedElement() {
 
-        SVGParser parser;
-
-        parser = new SVGParser();
+        final SVGParser parser = new SVGParser();
 
         assertNull(parser.getResult());
 
-        URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/defsatlastposition.svg");
+        final URL url = getClass().getClassLoader().getResource("de/saxsys/svgfx/core/defsatlastposition.svg");
 
         assertNotNull(url);
 
         try {
             parser.parse(url.getFile());
         } catch (final Exception e) {
-            Assert.fail();
+            fail();
         }
 
-        assertNotNull(parser.getResult());
-        assertThat(parser.getResult().getChildren().get(0), instanceOf(Rectangle.class));
+        assertThat(parser.getResult(), instanceOf(Group.class));
 
-        final Rectangle rectangle = Rectangle.class.cast(parser.getResult().getChildren().get(0));
+        final Rectangle rectangle = Rectangle.class.cast(Group.class.cast(parser.getResult()).getChildren().get(0));
 
         assertThat(rectangle.getFill(), instanceOf(LinearGradient.class));
     }
@@ -105,7 +103,7 @@ public final class SVGParserTest {
         try {
             parser.parse(url.getFile());
         } catch (final Exception e) {
-            Assert.fail();
+            fail();
         }
 
         assertNotNull(parser.getResult());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,8 +16,9 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Polyline;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -43,11 +44,10 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGPolyline(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGPolyline(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -55,7 +55,7 @@ public class SVGPolyline extends SVGPolyBase<javafx.scene.shape.Polyline> {
     //region Constructor
 
     @Override
-    protected final Polyline createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Polyline createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         return new Polyline(getPoints().stream().mapToDouble(Double::doubleValue).toArray());
     }

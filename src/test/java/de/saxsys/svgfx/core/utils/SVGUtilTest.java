@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,16 +18,14 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.definitions.Constants;
 import de.saxsys.svgfx.core.elements.SVGCircle;
 import de.saxsys.svgfx.core.elements.SVGElementBase;
-import de.saxsys.svgfx.core.elements.SVGElementFactory;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
 
-import java.util.Map;
-
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -41,26 +39,14 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings ({"unchecked", "OptionalGetWithoutIsPresent"})
 public final class SVGUtilTest {
 
-    //region Fields
-
-    private final SVGElementFactory factory = new SVGElementFactory();
-
-    //endregion
-
     //region Tests
 
     /**
      * Ensures that {@link SVGUtil#stripIRIIdentifiers(String)} is able to resolve the url as expected.
      */
-    @Test
+    @Test (expected = IllegalArgumentException.class)
     public void ensureStripIRIExpectedExceptions() {
-
-        try {
-            SVGUtil.stripIRIIdentifiers(null);
-            fail("Should not be able to resolve empty string");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
-        }
+        SVGUtil.stripIRIIdentifiers(null);
     }
 
     /**
@@ -68,7 +54,6 @@ public final class SVGUtilTest {
      */
     @Test
     public void ensureSplitIRIWillStripStringFromIRIIdentifiers() throws SVGException {
-
         assertEquals("test", SVGUtil.stripIRIIdentifiers(Constants.IRI_IDENTIFIER + "test)"));
 
         assertEquals("test", SVGUtil.stripIRIIdentifiers(Constants.IRI_FRAGMENT_IDENTIFIER + "test"));
@@ -79,7 +64,6 @@ public final class SVGUtilTest {
      */
     @Test
     public void ensureSplitIRIWillReturnNullIfIRIIdentifiersCanNotBeStriped() throws SVGException {
-
         assertNull(SVGUtil.stripIRIIdentifiers("test)"));
 
         assertNull(SVGUtil.stripIRIIdentifiers("(#test"));
@@ -98,36 +82,34 @@ public final class SVGUtilTest {
         try {
             SVGUtil.resolveIRI(null, new SVGDocumentDataProvider(), SVGElementBase.class);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
+        } catch (final IllegalArgumentException | SVGException e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
         }
 
         try {
             SVGUtil.resolveIRI("", new SVGDocumentDataProvider(), SVGElementBase.class);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
+        } catch (final IllegalArgumentException | SVGException e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
         }
 
         try {
             SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", new SVGDocumentDataProvider(), null);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.NULL_ARGUMENT, e.getReason());
+        } catch (final IllegalArgumentException | SVGException e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
         }
 
         try {
             SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", new SVGDocumentDataProvider(), SVGElementBase.class);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.MISSING_ELEMENT, e.getReason());
+        } catch (final SVGException ignored) {
         }
 
         try {
             SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER, new SVGDocumentDataProvider(), SVGCircle.class);
             fail();
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_IRI_IDENTIFIER, e.getReason());
+        } catch (final IllegalArgumentException | SVGException ignored) {
         }
     }
 
@@ -144,7 +126,7 @@ public final class SVGUtilTest {
 
         final SVGDocumentDataProvider dataProvider = new SVGDocumentDataProvider();
 
-        ((Map<String, SVGElementBase>) Whitebox.getInternalState(dataProvider, "data")).put("test", factory.createElement("circle", attributes, null, dataProvider));
+        dataProvider.storeData("test", mock(SVGCircle.class));
 
         final SVGCircle circle = SVGUtil.resolveIRI(Constants.IRI_IDENTIFIER + "test)", dataProvider, SVGCircle.class);
 

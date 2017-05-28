@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,7 +38,7 @@ import java.io.StringReader;
  * @param <TElementFactory>       the type of the {@link IElementFactory} @author Xyanid on 24.10.2015.
  */
 public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocumentDataProvider, TElementFactory extends IElementFactory<TDocumentDataProvider, TElement>, TElement
-        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement, TElement>>
+        extends ElementBase<?, ?, TDocumentDataProvider, ?, TElement>>
         extends DefaultHandler
         implements EntityResolver {
 
@@ -131,6 +131,16 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
      * Determines the amount of successful parses.
      */
     private long successfulParses;
+
+    /**
+     * The first processed element.
+     */
+    private TElement firstElement;
+
+    /**
+     * The previous processed element.
+     */
+    private TElement previousElement;
 
     /**
      * The currently processed element.
@@ -378,7 +388,7 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
     @Override
     public final void endDocument() throws SAXException {
-        result = leavingDocument(currentElement);
+        result = leavingDocument(firstElement);
         setState(State.FINISHED);
         currentElement = null;
     }
@@ -388,12 +398,16 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
 
         setState(State.PARSING_ENTERING_ELEMENT);
 
-        final TElement nextElement = elementFactory.createElement(qName, attributes, currentElement, documentDataProvider);
+        final TElement nextElement = elementFactory.createElement(qName, attributes, documentDataProvider);
         if (nextElement != null) {
+            if (firstElement == null) {
+                firstElement = nextElement;
+            }
             // we create a tree here if the element will be kept and we have a parent for the element
-            if (currentElement != null && nextElement.rememberElement()) {
+            if (currentElement != null && nextElement.keepElement()) {
                 currentElement.addChild(nextElement);
             }
+            previousElement = currentElement;
             currentElement = nextElement;
             currentElement.startProcessing();
         }
@@ -407,13 +421,12 @@ public abstract class SAXParser<TResult, TDocumentDataProvider extends IDocument
         setState(State.PARSING_LEAVING_ELEMENT);
 
         if (currentElement != null && currentElement.getName().equals(qName)) {
-
             currentElement.endProcessing();
+        }
 
-            // clear the previous element that was processed before the current one, so we can also end its processing if need be
-            if (currentElement.getParent() != null) {
-                currentElement = currentElement.getParent();
-            }
+        // clear the previous element that was processed before the current one, so we can also end its processing if need be
+        if (previousElement != null) {
+            currentElement = previousElement;
         }
 
         setState(State.PARSING_LEAVING_ELEMENT_FINISHED);

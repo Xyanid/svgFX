@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -153,7 +153,7 @@ public class SVGAttributeTypeLength extends SVGAttributeType<Double, SVGAttribut
         try {
             return new Pair<>(Double.parseDouble(cssText.substring(0, cssText.length() - usedUnit.getName().length()).replaceAll(",", ".")), usedUnit);
         } catch (final NumberFormatException e) {
-            throw new SVGException(SVGException.Reason.INVALID_NUMBER_FORMAT, e);
+            throw new SVGException(String.format("Css text [%s] does not represent valid number", cssText), e);
         }
     }
 

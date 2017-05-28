@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +28,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -39,7 +40,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Xyanid on 05.10.2015.
  */
-@SuppressWarnings ("OptionalGetWithoutIsPresent")
+@SuppressWarnings ({"OptionalGetWithoutIsPresent", "ConstantConditions"})
 public final class SVGStyleTest {
 
     /**
@@ -55,7 +56,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px;}");
 
@@ -76,7 +77,7 @@ public final class SVGStyleTest {
                            .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                            .get()
                            .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -93,10 +94,10 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, dataProvider);
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, dataProvider);
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px;}");
 
-        assertFalse(style.rememberElement());
+        assertFalse(style.keepElement());
 
         style.endProcessing();
 
@@ -117,7 +118,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         ((StringBuilder) Whitebox.getInternalState(style, "characters")).append("circle {fill:orange;stroke:black;stroke-width:10px}");
 
@@ -139,7 +140,7 @@ public final class SVGStyleTest {
                      result.getAttributeHolder()
                            .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                            .get().getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -156,7 +157,7 @@ public final class SVGStyleTest {
         when(attributes.getQName(0)).thenReturn(CoreAttributeMapper.TYPE.getName());
         when(attributes.getValue(0)).thenReturn(SVGStyle.CSS_TYPE);
 
-        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, null, new SVGDocumentDataProvider());
+        final SVGStyle style = new SVGStyle(SVGStyle.ELEMENT_NAME, attributes, new SVGDocumentDataProvider());
 
         final StringBuilder builder = (StringBuilder) Whitebox.getInternalState(style, "characters");
 
@@ -196,7 +197,7 @@ public final class SVGStyleTest {
                                        .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                                        .get()
                                        .getValue(),
-                                 0.01d);
+                                 MINIMUM_DEVIATION);
                     break;
                 default:
                     Assert.fail();

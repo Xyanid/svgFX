@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,8 +18,9 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 import java.util.Optional;
@@ -47,11 +48,10 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGRectangle(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGRectangle(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -59,7 +59,7 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
     //region Override SVGElementBase
 
     @Override
-    protected final Rectangle createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Rectangle createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         return new Rectangle(getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_X.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
                              getAttributeHolder().getAttributeValue(CoreAttributeMapper.POSITION_Y.getName(), Double.class, SVGAttributeTypeLength.DEFAULT_VALUE),
@@ -72,23 +72,23 @@ public class SVGRectangle extends SVGShapeBase<Rectangle> {
      * Applies the corner radius if any.
      */
     @Override
-    protected void initializeResult(final Rectangle rect, final StyleSupplier styleSupplier) throws SVGException {
-        super.initializeResult(rect, styleSupplier);
+    protected void initializeResult(final Rectangle result, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
+        super.initializeResult(result, ownStyle, ownTransform);
 
         // note that we need to multiply the radius since the arc is a diameter for whatever reason
         final Optional<SVGAttributeTypeLength> radiusX = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_X.getName(), SVGAttributeTypeLength.class);
         if (radiusX.isPresent()) {
-            rect.setArcWidth(radiusX.get().getValue() * 2.0d);
+            result.setArcWidth(radiusX.get().getValue() * 2.0d);
         }
 
         final Optional<SVGAttributeTypeLength> radiusY = getAttributeHolder().getAttribute(CoreAttributeMapper.RADIUS_Y.getName(), SVGAttributeTypeLength.class);
         if (radiusY.isPresent()) {
-            rect.setArcHeight(radiusY.get().getValue() * 2.0d);
+            result.setArcHeight(radiusY.get().getValue() * 2.0d);
         }
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Rectangle rectangle) throws SVGException {
 
         final SVGAttributeTypeLength posX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.POSITION_X.getName(), SVGAttributeTypeLength.class);
         final SVGAttributeTypeLength posY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.POSITION_Y.getName(), SVGAttributeTypeLength.class);

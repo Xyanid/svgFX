@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,8 +18,9 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeLength;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
 import javafx.scene.shape.Line;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 /**
@@ -45,11 +46,10 @@ public class SVGLine extends SVGShapeBase<Line> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGLine(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGLine(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -57,7 +57,7 @@ public class SVGLine extends SVGShapeBase<Line> {
     //region Override SVGElementBase
 
     @Override
-    protected final Line createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final Line createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
         return new Line(getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_X.getName(), SVGAttributeTypeLength.class).getValue(),
                         getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_Y.getName(), SVGAttributeTypeLength.class).getValue(),
@@ -66,7 +66,7 @@ public class SVGLine extends SVGShapeBase<Line> {
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final Line shape) throws SVGException {
 
         final SVGAttributeTypeLength startX = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_X.getName(), SVGAttributeTypeLength.class);
         final SVGAttributeTypeLength startY = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.START_Y.getName(), SVGAttributeTypeLength.class);

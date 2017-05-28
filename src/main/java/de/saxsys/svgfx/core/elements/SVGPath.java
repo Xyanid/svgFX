@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,11 @@ import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeFillRule;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.path.CommandParser;
+import de.saxsys.svgfx.core.path.PathException;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
 import java.util.Optional;
@@ -41,18 +45,25 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
 
     // endregion
 
+    // region Field
+
+    private final CommandParser commandParser;
+
+    // endregion
+
     //region Constructor
 
     /**
      * Creates a new instance of he element using the given attributes and the parent.
      *
-     * @param name         value of the element
-     * @param attributes   attributes of the element
-     * @param parent       parent of the element
-     * @param dataProvider dataprovider to be used
+     * @param name          value of the element
+     * @param attributes    attributes of the element
+     * @param dataProvider  the {@link SVGDocumentDataProvider} to be used
+     * @param commandParser the {@link CommandParser} to use.
      */
-    SVGPath(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGPath(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider, final CommandParser commandParser) {
+        super(name, attributes, dataProvider);
+        this.commandParser = commandParser;
     }
 
     //endregion
@@ -60,7 +71,7 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
     //region Override SVGElementBase
 
     @Override
-    protected final javafx.scene.shape.SVGPath createResult(final StyleSupplier styleSupplier) throws SVGException {
+    protected final javafx.scene.shape.SVGPath createResult(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
         javafx.scene.shape.SVGPath result = new javafx.scene.shape.SVGPath();
 
         final Optional<SVGAttributeTypeString> path = getAttributeHolder().getAttribute(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class);
@@ -76,19 +87,36 @@ public class SVGPath extends SVGShapeBase<javafx.scene.shape.SVGPath> {
      * Applies the file rule to the path.
      */
     @Override
-    protected final void initializeResult(final javafx.scene.shape.SVGPath path, final StyleSupplier styleSupplier) throws SVGException {
-        super.initializeResult(path, styleSupplier);
+    protected final void initializeResult(final javafx.scene.shape.SVGPath result,
+                                          final SVGCssStyle ownStyle,
+                                          final Transform ownTransform) throws SVGException {
+        super.initializeResult(result, ownStyle, ownTransform);
 
-        final Optional<SVGAttributeTypeFillRule> fillRule = styleSupplier.get().getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class);
+        final Optional<SVGAttributeTypeFillRule> fillRule = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName(), SVGAttributeTypeFillRule.class);
         if (fillRule.isPresent()) {
-            path.setFillRule(fillRule.get().getValue());
+            result.setFillRule(fillRule.get().getValue());
         }
     }
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
-        // TODO figure out how to get the bounding box from a path
-        return null;
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final javafx.scene.shape.SVGPath shape) throws SVGException {
+
+        final String path = getAttributeHolder().getAttributeOrFail(CoreAttributeMapper.PATH_DESCRIPTION.getName(), SVGAttributeTypeString.class).getValue();
+
+        final Rectangle boundingBox;
+        try {
+            boundingBox = commandParser.getBoundingBox(path);
+        } catch (final PathException e) {
+            throw new SVGException(String.format("Could not parse path [%s]", path), e);
+        }
+
+        final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
+        result.getMinX().setText(String.format("%f", boundingBox.getX()));
+        result.getMinY().setText(String.format("%f", boundingBox.getY()));
+        result.getMaxX().setText(String.format("%f", boundingBox.getX() + boundingBox.getWidth()));
+        result.getMaxY().setText(String.format("%f", boundingBox.getY() + boundingBox.getHeight()));
+
+        return result;
     }
 
     //endregion

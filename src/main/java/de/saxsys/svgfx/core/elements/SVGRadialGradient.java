@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,15 +18,18 @@ import de.saxsys.svgfx.core.SVGException;
 import de.saxsys.svgfx.core.attributes.CoreAttributeMapper;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeCycleMethod;
 import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeRectangle;
-import de.saxsys.svgfx.core.css.StyleSupplier;
-import de.saxsys.svgfx.core.definitions.Enumerations;
+import de.saxsys.svgfx.core.definitions.enumerations.GradientUnit;
+import de.saxsys.svgfx.core.utils.Wrapper;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This Class represents a radial gradient from svg
@@ -58,105 +61,132 @@ public class SVGRadialGradient extends SVGGradientBase<RadialGradient> {
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    SVGRadialGradient(final String name, final Attributes attributes, final SVGElementBase<SVGDocumentDataProvider> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    SVGRadialGradient(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
 
     //endregion
 
-    //region Override SVGGradientBase
-
-    @Override
-    protected final RadialGradient createResult(final StyleSupplier styleSupplier) throws SVGException {
-        return determineResult(null);
-    }
-
-
-    //endregion
 
     // region SVGGradientBase
 
     @Override
-    public RadialGradient createResult(final SVGShapeBase<?> shape) throws SVGException {
-        return determineResult(shape);
+    public RadialGradient createResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
+                                       final Transform elementTransform) throws SVGException {
+        return determineResult(elementBoundingBox, elementTransform);
     }
 
     // endregion
 
     // region Private
 
-    private RadialGradient determineResult(final SVGShapeBase<?> shape) throws SVGException {
+    private RadialGradient determineResult(final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
+                                           final Transform elementTransform) throws SVGException {
         final List<Stop> stops = getStops();
 
         if (stops.isEmpty()) {
-            throw new SVGException(SVGException.Reason.MISSING_STOPS, "Given radial gradient does not have colors");
+            throw new SVGException("Given radial gradient does not have stop colors");
         }
 
-        final AtomicReference<Double> centerX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(),
-                                                                                                             Double.class,
-                                                                                                             DEFAULT_CENTER));
-        final AtomicReference<Double> centerY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(),
-                                                                                                             Double.class,
-                                                                                                             DEFAULT_CENTER));
-        final AtomicReference<Double> focusX = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_X.getName(),
-                                                                                                            Double.class,
-                                                                                                            centerX.get()));
-        final AtomicReference<Double> focusY = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_Y.getName(),
-                                                                                                            Double.class,
-                                                                                                            centerY.get()));
-        final AtomicReference<Double> radius = new AtomicReference<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.RADIUS.getName(),
-                                                                                                            Double.class,
-                                                                                                            DEFAULT_RADIUS));
+        final double centerX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_X.getName(), Double.class, DEFAULT_CENTER);
+        final double centerY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.CENTER_Y.getName(), Double.class, DEFAULT_CENTER);
+        final Wrapper<Point2D> center = new Wrapper<>(new Point2D(centerX, centerY));
+        final double focusX = getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_X.getName(), Double.class, centerX);
+        final double focusY = getAttributeHolder().getAttributeValue(CoreAttributeMapper.FOCUS_Y.getName(), Double.class, centerY);
+        final Wrapper<Point2D> focus = new Wrapper<>(new Point2D(focusX, focusY));
+        final Wrapper<Double> radius = new Wrapper<>(getAttributeHolder().getAttributeValue(CoreAttributeMapper.RADIUS.getName(), Double.class, DEFAULT_RADIUS));
 
-        // TODO apply transform
+        convertToRelativeCoordinates(center, focus, radius, elementBoundingBox, elementTransform);
 
-        final Enumerations.GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
-                                                                                              Enumerations.GradientUnit.class,
-                                                                                              Enumerations.GradientUnit.OBJECT_BOUNDING_BOX);
-
-        if (gradientUnit == Enumerations.GradientUnit.USER_SPACE_ON_USE) {
-            if (shape == null) {
-                throw new SVGException(SVGException.Reason.MISSING_ELEMENT, "Can not create linear gradient when user space is defined but the requesting shape is missing.");
-            }
-            adjustPosition(centerX, centerY, focusX, focusY, radius, shape);
-        }
-
-        double diffX = focusX.get() - centerX.get();
-        double diffY = focusY.get() - centerY.get();
+        double diffX = focus.getOrFail().getX() - center.getOrFail().getX();
+        double diffY = focus.getOrFail().getY() - center.getOrFail().getY();
 
         // here we check if x is 0 then use y or if y is 0 then use x, otherwise calculate
-        double distance = diffX == 0.0d ? Math.abs(diffY) : diffY == 0.0d ? Math.abs(diffX) : Math.hypot(diffX, diffY);
+        double focusDistance = getDistance(diffX, diffY);
 
         return new RadialGradient(Math.toDegrees(Math.atan2(diffY, diffX)),
-                                  distance > radius.get() ? 1.0d : distance / radius.get(),
-                                  centerX.get(),
-                                  centerY.get(),
+                                  // we need to adjust the focus distance to the radius here, eg focus distance of 0.5 with a radius of 0.5 is actually 0.25
+                                  focusDistance > radius.get() ? 1.0d : focusDistance / radius.get(),
+                                  center.getOrFail().getX(),
+                                  center.getOrFail().getY(),
                                   radius.get(),
                                   true,
                                   getAttributeHolder().getAttributeValue(CoreAttributeMapper.SPREAD_METHOD.getName(), CycleMethod.class, SVGAttributeTypeCycleMethod.DEFAULT_VALUE),
                                   stops);
     }
 
-    private void adjustPosition(final AtomicReference<Double> centerX,
-                                final AtomicReference<Double> centerY,
-                                final AtomicReference<Double> focusX,
-                                final AtomicReference<Double> focusY,
-                                final AtomicReference<Double> radius,
-                                final SVGShapeBase<?> shape) throws SVGException {
+    private void convertToRelativeCoordinates(final Wrapper<Point2D> center,
+                                              final Wrapper<Point2D> focus,
+                                              final Wrapper<Double> radius,
+                                              final SVGAttributeTypeRectangle.SVGTypeRectangle elementBoundingBox,
+                                              final Transform elementTransform) throws SVGException {
 
-        final SVGAttributeTypeRectangle.SVGTypeRectangle boundingBox = shape.createBoundingBox();
-        final Double width = boundingBox.getMaxX().getValue() - boundingBox.getMinX().getValue();
-        final Double height = boundingBox.getMaxY().getValue() - boundingBox.getMinY().getValue();
+        final Rectangle boundingBox = transformBoundingBox(elementBoundingBox, elementTransform);
 
-        centerX.set(Math.abs(boundingBox.getMinX().getValue() - centerX.get()) / width);
-        centerY.set(Math.abs(boundingBox.getMinY().getValue() - centerY.get()) / height);
-        focusX.set(Math.abs(boundingBox.getMinX().getValue() - focusX.get()) / width);
-        focusY.set(Math.abs(boundingBox.getMinY().getValue() - focusY.get()) / height);
-        radius.set(radius.get() / height);
+        final GradientUnit gradientUnit = getAttributeHolder().getAttributeValue(CoreAttributeMapper.GRADIENT_UNITS.getName(),
+                                                                                 GradientUnit.class,
+                                                                                 GradientUnit.OBJECT_BOUNDING_BOX);
+
+        final List<Wrapper<Point2D>> points = Arrays.asList(center, focus);
+
+        // when being in user space we first need to transform then make the values relative
+        if (gradientUnit == GradientUnit.USER_SPACE_ON_USE) {
+            getCombinedTransform(elementTransform).ifPresent(transform -> transformPosition(center, focus, radius, transform));
+            convertToRelativeCoordinates(boundingBox, radius, points);
+        } else {
+            convertToAbsoluteCoordinates(boundingBox, radius, points);
+            getGradientTransform().ifPresent(transform -> transformPosition(center, focus, radius, transform));
+            convertToRelativeCoordinates(boundingBox, radius, points);
+        }
+    }
+
+    private void transformPosition(final Wrapper<Point2D> center,
+                                   final Wrapper<Point2D> focus,
+                                   final Wrapper<Double> radius,
+                                   final Transform transform) {
+
+        final Wrapper<Point2D> radiusP = new Wrapper<>(new Point2D(center.getOrFail().getX() + radius.get(),
+                                                                   center.getOrFail().getY() + radius.get()));
+
+        center.set(transform.transform(center.getOrFail()));
+        focus.set(transform.transform(focus.getOrFail()));
+        radiusP.set(transform.transform(radiusP.getOrFail()));
+
+        // for radius we take a point on the circle apply transform then measure the new distance which is the radius
+        final double radiusXTmp = radiusP.getOrFail().getX() - center.getOrFail().getX();
+        final double radiusYTmp = radiusP.getOrFail().getY() - center.getOrFail().getY();
+        radius.set(radiusXTmp > radiusYTmp ? radiusXTmp : radiusYTmp);
+    }
+
+    private void convertToRelativeCoordinates(final Rectangle boundingBox,
+                                              final Wrapper<Double> radius,
+                                              final List<Wrapper<Point2D>> points) throws SVGException {
+
+        if (boundingBox.getWidth() == 0.0d || boundingBox.getHeight() == 0.0d) {
+            return;
+        }
+
+        convertToRelativeCoordinates(boundingBox, points);
+        radius.set(radius.get() / (boundingBox.getHeight() > boundingBox.getWidth() ? boundingBox.getHeight() : boundingBox.getWidth()));
+    }
+
+    private void convertToAbsoluteCoordinates(final Rectangle boundingBox,
+                                              final Wrapper<Double> radius,
+                                              final List<Wrapper<Point2D>> points) throws SVGException {
+
+        if (boundingBox.getWidth() == 0.0d || boundingBox.getHeight() == 0.0d) {
+            return;
+        }
+
+        convertToAbsoluteCoordinates(boundingBox, points);
+        radius.set(radius.get() * (boundingBox.getHeight() > boundingBox.getWidth() ? boundingBox.getHeight() : boundingBox.getWidth()));
+    }
+
+    private double getDistance(final double diffX, final double diffY) {
+        return diffX == 0.0d ? Math.abs(diffY) : diffY == 0.0d ? Math.abs(diffX) : Math.hypot(diffX, diffY);
     }
 
     // endregion

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,6 +33,7 @@ import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.shape.StrokeType;
 import org.junit.Test;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,7 +45,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Xyanid on 05.10.2015.
  */
-@SuppressWarnings ("OptionalGetWithoutIsPresent")
+@SuppressWarnings ({"OptionalGetWithoutIsPresent", "ConstantConditions"})
 public final class SVGCssStyleTest {
 
     //region Tests
@@ -77,7 +78,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -86,7 +87,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -117,7 +118,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -126,7 +127,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute("sumthing"));
         assertThat(style.getAttributeHolder().getAttribute("sumthing").get(), instanceOf(SVGAttributeTypeString.class));
@@ -194,7 +195,7 @@ public final class SVGCssStyleTest {
                                                                 .getAttribute(attribute.getName(), SVGAttributeTypeStrokeDashArray.class)
                                                                 .get()
                                                                 .getValue()) {
-                    assertEquals(10.0d, length.getValue(), 0.01d);
+                    assertEquals(10.0d, length.getValue(), MINIMUM_DEVIATION);
                 }
             } else if (attribute == PresentationAttributeMapper.STROKE_LINECAP) {
                 assertThat(style.getAttributeHolder().getAttribute(attribute.getName()).get(), instanceOf(SVGAttributeTypeStrokeLineCap.class));
@@ -209,9 +210,9 @@ public final class SVGCssStyleTest {
                 assertThat(style.getAttributeHolder().getAttribute(attribute.getName()).get(), instanceOf(SVGAttributeTypeString.class));
                 assertEquals("random", style.getAttributeHolder().getAttribute(attribute.getName(), SVGAttributeTypeString.class).get().getValue());
             } else if (attribute == PresentationAttributeMapper.STROKE_DASHOFFSET || attribute == PresentationAttributeMapper.STROKE_WIDTH) {
-                assertEquals(10.0d, style.getAttributeHolder().getAttribute(attribute.getName(), SVGAttributeTypeLength.class).get().getValue(), 0.01d);
+                assertEquals(10.0d, style.getAttributeHolder().getAttribute(attribute.getName(), SVGAttributeTypeLength.class).get().getValue(), MINIMUM_DEVIATION);
             } else {
-                assertEquals(10.0d, style.getAttributeHolder().getAttribute(attribute.getName(), SVGAttributeTypeDouble.class).get().getValue(), 0.01d);
+                assertEquals(10.0d, style.getAttributeHolder().getAttribute(attribute.getName(), SVGAttributeTypeDouble.class).get().getValue(), MINIMUM_DEVIATION);
             }
         }
     }
@@ -245,7 +246,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -254,7 +255,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         style.parseCssText(".st0{fill:none;stroke:#080808;/*{\"this is ;:a string\";:}*/stroke-width:4;stroke-miterlimit:11;}");
 
@@ -276,7 +277,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -285,7 +286,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -317,7 +318,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -326,7 +327,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         style.parseCssText(".st0{fill:none;clip-rule:\";{ar;asd:j}:sda;asd:\";stroke-width:4;stroke-miterlimit:12;}");
 
@@ -348,7 +349,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -357,7 +358,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
     }
 
     /**
@@ -393,7 +394,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_WIDTH.getName(), SVGAttributeTypeLength.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName()).get(), instanceOf(SVGAttributeTypeDouble.class));
@@ -402,7 +403,7 @@ public final class SVGCssStyleTest {
                           .getAttribute(PresentationAttributeMapper.STROKE_MITERLIMIT.getName(), SVGAttributeTypeDouble.class)
                           .get()
                           .getValue(),
-                     0.01d);
+                     MINIMUM_DEVIATION);
 
         assertNotNull(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName()));
         assertThat(style.getAttributeHolder().getAttribute(PresentationAttributeMapper.FILL_RULE.getName()).get(), instanceOf(SVGAttributeTypeFillRule.class));

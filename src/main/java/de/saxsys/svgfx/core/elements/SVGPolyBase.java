@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,25 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TShape> {
 
-    // region Static
-
-    /**
-     * Determines the delimiter that separated a pair of points.
-     */
-    private static char POINTS_DELIMITER = ' ';
-
-    /**
-     * Determines the delimiter that separated a the positions of a point.
-     */
-    private static char POSITION_DELIMITER = ',';
-
-    /**
-     * Determines the delimiter that separated a the positions of a point.
-     */
-    private static String POSITION_DELIMITER_STRING = String.valueOf(POSITION_DELIMITER);
-
-    // endregion
-
     //region Constructor
 
     /**
@@ -62,11 +43,10 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
      *
      * @param name         value of the element
      * @param attributes   attributes of the element
-     * @param parent       parent of the element
      * @param dataProvider dataprovider to be used
      */
-    protected SVGPolyBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider dataProvider) {
-        super(name, attributes, parent, dataProvider);
+    protected SVGPolyBase(final String name, final Attributes attributes, final SVGDocumentDataProvider dataProvider) {
+        super(name, attributes, dataProvider);
     }
 
     //endregion
@@ -99,7 +79,7 @@ public abstract class SVGPolyBase<TShape extends Shape> extends SVGShapeBase<TSh
     // region Implement SVGShapeBase
 
     @Override
-    public SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox() throws SVGException {
+    protected SVGAttributeTypeRectangle.SVGTypeRectangle createBoundingBox(final TShape shape) throws SVGException {
 
         final SVGAttributeTypeRectangle.SVGTypeRectangle result = new SVGAttributeTypeRectangle.SVGTypeRectangle(getDocumentDataProvider());
 

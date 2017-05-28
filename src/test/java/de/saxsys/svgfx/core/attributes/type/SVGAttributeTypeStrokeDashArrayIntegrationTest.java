@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,8 +20,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static de.saxsys.svgfx.core.TestUtil.MINIMUM_DEVIATION;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * @author Xyanid on 16.10.2016.
@@ -50,17 +50,12 @@ public class SVGAttributeTypeStrokeDashArrayIntegrationTest {
     /**
      * Invalid input data will cause the desired exception
      */
-    @Test
-    public void whenTheProvidedTextIsValidAnSVGExceptionWillBeThrown() {
+    @Test (expected = SVGException.class)
+    public void whenTheProvidedTextIsValidAnSVGExceptionWillBeThrown() throws SVGException {
 
         cut.setText("invalid");
 
-        try {
-            cut.getValue();
-            fail("Should not be able to get result when input value is invalid");
-        } catch (final SVGException e) {
-            assertEquals(SVGException.Reason.INVALID_NUMBER_FORMAT, e.getReason());
-        }
+        cut.getValue();
     }
 
     /**
@@ -87,12 +82,12 @@ public class SVGAttributeTypeStrokeDashArrayIntegrationTest {
             cut.setText(data.toString());
 
             for (final SVGAttributeTypeLength length : cut.getValue()) {
-                assertEquals(value, length.getValue(), 0.01d);
+                assertEquals(value, length.getValue(), MINIMUM_DEVIATION);
                 assertEquals(unit, length.getUnit());
             }
 
             for (final Double valueDouble : cut.getDashValues()) {
-                assertEquals(value, valueDouble, 0.01d);
+                assertEquals(value, valueDouble, MINIMUM_DEVIATION);
             }
         }
     }

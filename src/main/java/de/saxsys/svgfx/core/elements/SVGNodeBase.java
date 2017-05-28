@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Xyanid
+ * Copyright 2015 - 2017 Xyanid
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,11 +15,17 @@ package de.saxsys.svgfx.core.elements;
 
 import de.saxsys.svgfx.core.SVGDocumentDataProvider;
 import de.saxsys.svgfx.core.SVGException;
-import de.saxsys.svgfx.core.css.StyleSupplier;
+import de.saxsys.svgfx.core.attributes.PresentationAttributeMapper;
+import de.saxsys.svgfx.core.attributes.type.SVGAttributeTypeString;
+import de.saxsys.svgfx.core.css.SVGCssStyle;
+import de.saxsys.svgfx.core.utils.SVGUtil;
+import de.saxsys.svgfx.core.utils.StringUtil;
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.util.Optional;
 
 /**
  * This class represents a base class which contains shape element from svg.
@@ -37,11 +43,10 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
      *
      * @param name                 the name of the element
      * @param attributes           attributes of the element
-     * @param parent               parent of the element
      * @param documentDataProvider dataprovider to be used
      */
-    protected SVGNodeBase(final String name, final Attributes attributes, final SVGElementBase<?> parent, final SVGDocumentDataProvider documentDataProvider) {
-        super(name, attributes, parent, documentDataProvider);
+    protected SVGNodeBase(final String name, final Attributes attributes, final SVGDocumentDataProvider documentDataProvider) {
+        super(name, attributes, documentDataProvider);
     }
 
     //endregion
@@ -49,51 +54,54 @@ public abstract class SVGNodeBase<TNode extends Node> extends SVGElementBase<TNo
     // region Override SVGElementBase
 
     @Override
-    public boolean rememberElement() {
+    public boolean keepElement() {
         return true;
     }
 
     @Override
-    public void startProcessing() throws SAXException {}
-
-    @Override
     public void processCharacterData(char[] ch, int start, int length) throws SAXException {}
 
-    @Override
-    public void endProcessing() throws SAXException {
-        try {
-            storeElementInDocumentDataProvider();
-        } catch (SVGException e) {
-            throw new SAXException(e);
-        }
-    }
-
     /**
-     * {@inheritDoc}
-     *
-     * @return true if the element not not inside a {@link SVGClipPath} or {@link SVGGroup}, otherwise false.
+     * {@inheritDoc}Will apply the transformation to the element and add clipPath if available.
      */
     @Override
-    public boolean canConsumeResult() {
-        return !((getParent() instanceof SVGClipPath) || (getParent() instanceof SVGGroup));
-    }
+    protected void initializeResult(final TNode result, final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
 
-    /**
-     * {@inheritDoc}Will apply the transformation to the element.
-     */
-    @Override
-    protected void initializeResult(final TNode node, final StyleSupplier supplier) throws SVGException {
+        getTransformation().ifPresent(transform -> result.getTransforms().add(transform));
 
-        final Transform transform = getTransformation();
-        if (transform != null) {
-            node.getTransforms().add(transform);
-        }
-
-        final Node clip = getClipPath(supplier);
-        if (clip != null) {
-            node.setClip(clip);
-        }
+        getClipPath(ownStyle, ownTransform).ifPresent(result::setClip);
     }
 
     // endregion
+
+    // endregion
+
+    /**
+     * Returns a node which represents the clip path to be applied to this element.
+     *
+     * @param ownStyle the {@link SVGCssStyle} to be used when there is a {@link SVGClipPath} defined for the element and it needs a style.
+     *
+     * @return the clip path to use or null if this element does not have a clip path.
+     *
+     * @throws SVGException             when there is a {@link SVGClipPath} referenced but the reference can not be found in the {@link #documentDataProvider}.
+     * @throws IllegalArgumentException if the referenced {@link SVGClipPath} is an empty string.
+     */
+    private Optional<Node> getClipPath(final SVGCssStyle ownStyle, final Transform ownTransform) throws SVGException {
+
+        final Optional<SVGAttributeTypeString> referenceIRI = ownStyle.getAttributeHolder().getAttribute(PresentationAttributeMapper.CLIP_PATH.getName(), SVGAttributeTypeString.class);
+
+        if (referenceIRI.isPresent() && StringUtil.isNotNullOrEmpty(referenceIRI.get().getValue())) {
+            final SVGClipPath clipPath = SVGUtil.resolveIRI(referenceIRI.get().getValue(), getDocumentDataProvider(), SVGClipPath.class);
+
+            if (this != clipPath) {
+                return Optional.of(clipPath.createAndInitializeResult(ownStyle, ownTransform));
+            } else {
+                return Optional.empty();
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    // region
 }
