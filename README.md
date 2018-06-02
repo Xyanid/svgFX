@@ -3,9 +3,9 @@ This framework allows for svg graphics to be directly converted into native java
 
 [![Build Status](https://ci.xyanid.de/app/rest/builds/buildType:SvgFX_Build/statusIcon)](https://ci.xyanid.de/viewType.html?buildTypeId=SvgFX_Build&guest=1)
 
-###[Howto](../../wiki "Howto")###
+###[Howto](../../wiki "Howto")
 
-### Maven dependency###
+### Maven dependency
 
 #### Stable Release
 
@@ -13,9 +13,9 @@ This is the stable release that can be used in production.
 
 ```xml
 <dependency>
-		<groupId>de.saxsys</groupId>
-		<artifactId>svgfx</artifactId>
-		<version>2.0.1</version>
+  <groupId>de.saxsys</groupId>
+  <artifactId>svgfx</artifactId>
+  <version>2.0.1</version>
 </dependency>
 ```
 
@@ -25,8 +25,8 @@ Here you get new features. This release is unstable and shouldn't be used in pro
 
 ```xml
 <dependency>
-		<groupId>de.saxsys</groupId>
-		<artifactId>svgfx</artifactId>
-		<version>2.1.0-SNAPSHOT</version>
+  <groupId>de.saxsys</groupId>
+  <artifactId>svgfx</artifactId>
+  <version>2.1.0-SNAPSHOT</version>
 </dependency>
 ```
