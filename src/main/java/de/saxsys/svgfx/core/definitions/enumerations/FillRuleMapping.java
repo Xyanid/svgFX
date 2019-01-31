@@ -22,7 +22,7 @@ import javafx.scene.shape.FillRule;
  */
 public enum FillRuleMapping {
     EVEN_ODD("evenodd", FillRule.EVEN_ODD),
-    NON_ZERO("nonzero ", FillRule.NON_ZERO);
+    NON_ZERO("nonzero", FillRule.NON_ZERO);
 
     // region Fields
 
